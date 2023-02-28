@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<div id="main-data">
+    @Html.Partial("Lapor_Asset/SearchCriteria")
+    @Html.Partial("Lapor_Asset/CheckValidasiUser")
+    @Html.Partial("Lapor_Asset/Datagrid_Data")
+    @Html.Partial("Lapor_Asset/PopupForm")
+    @Html.Partial("Lapor_Asset/ModalForm")
+</div>
+@Html.Partial("Lapor_Asset/Javascript")
+
+

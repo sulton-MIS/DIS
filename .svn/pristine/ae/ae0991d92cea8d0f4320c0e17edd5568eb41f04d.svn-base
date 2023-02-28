@@ -1,0 +1,49 @@
+﻿@using AI070.Models.WP03004Master;
+@model TrainingDTO
+
+@{
+    Layout = "~/Views/WP03013/_Layout.cshtml";
+}
+
+<div class="container pl-0 pr-0">
+    <div class="pt-5">
+        <div class="row justify-content-between">
+            <main class="question-container col-9 ml-1" role="main">
+
+                <div class="tab-content" data-spy="scroll" id="v-pills-tabContent">
+
+                    <div class="tab-pane fade show active" id="v-pills-0" role="tabpanel" aria-labelledby="v-pills-0-tab">
+                        <h1 class="font-weight-lighter">@Model.Title</h1>
+                        <br />
+                        <div class="row ml-1">
+                            <h6>
+                                Download File :
+                            </h6>
+                            <a class="pl-1" href="@Model.FilePath" target="_blank">
+                                <h6>
+                                    @Model.FileName
+                                </h6>
+                            </a>
+                        </div>
+                        <br />
+
+                        @Html.Raw(@Model.Content)
+                    </div>
+                    @Html.ActionLink("Back To List", "TrainingPortal", new { }, new { @class = "btn btn-sm btn-success" })
+
+
+                </div>
+
+
+
+            </main>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+

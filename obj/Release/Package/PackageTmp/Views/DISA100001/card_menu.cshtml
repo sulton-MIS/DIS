@@ -1,0 +1,357 @@
+﻿@*@using AI070.Models;*@
+@*@using AI070.Models.Shared;*@
+@*@using AI070.Models.DISA100001Master;*@
+@{
+    var Reg_No = ViewData["RegNo"];
+}
+
+
+
+<style>
+    .menu-text-panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .menu-panel:hover {
+        background-color: rgb(84, 96, 125);
+        cursor: pointer;
+    }
+
+    hr {
+        margin: 0px 25px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border-width: 1px 0 0 0;
+        border-top: 1px solid #E3E3E3;
+    }
+
+    .row {
+        margin: 0;
+        padding: 0;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .menu-panel {
+            min-height: 250px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .menu-panel {
+            min-height: 350px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        .menu-text-list {
+            font-size: 18px;
+        }
+
+        .menu-text-master {
+            font-size: 20px;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    #title {
+        border: 0px solid !important;
+        border-bottom: 1px solid #eaeaea !important;
+        text-align: center;
+    }
+        /*#title:hover {
+            background: #234893;
+            border-bottom: 1px solid # !important;
+            text-align: center;
+            color: white !important;
+        }*/
+
+    #title h4{
+        font-family: 'Bookman Old Style';
+        color: darkcyan;
+    }
+
+</style>
+
+<input id="userLogin" style="display:none" type="text" value="@ViewData["User"]" />
+<input id="regLogin" style="display:none" type="text" value="@ViewData["RegNo"]" />
+
+<div id="menu-container" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-sm-3 col-md-3" style="border: none">
+                <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px;">
+                    <div class="panel panel-default" id="title">
+                        <h4><b> PENGADAAN ASSET </b></h4>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default menu-panel" data-target="List Request Data Asset">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-shopping-basket fa-menu-icon"></i><br />
+                                <b class="menu-text-list">LIST REQUEST ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3 col-md-3" style="border: none">
+                <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px;">
+                    <div class="panel panel-default" id="title">
+                        <h4><b> INVENTARISASI ASSET </b></h4>
+                    </div>
+                </div>
+                
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default  menu-panel" data-target="List Data Asset">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-book fa-menu-icon"></i><br />
+                                <b class="menu-text-list">LIST DATA MASTER ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-md-3" style="border: none">
+                <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px;">
+                    <div class="panel panel-default" id="title">
+                        <h4><b> LAPOR ASSET </b></h4>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default  menu-panel" data-target="List Lapor Data Asset">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                                <b class="menu-text-list">LIST LAPOR ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-md-3" style="border: none">
+                <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px;">
+                    <div class="panel panel-default" id="title">
+                        <h4><b> DISPOSE ASSET </b></h4>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default menu-panel" data-target="List Dispose Asset">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-trash-o fa-menu-icon"></i><br />
+                                <b class="menu-text-list">LIST DISPOSE ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top: 30px">
+        <div class="row">
+
+            <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px; border: 0px solid black">
+                <div class="panel panel-default" id="title">
+                    <h4><b> AUDIT ASSET </b></h4>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px; border: 0px solid black">
+                
+                <div class="col-sm-4 col-md-4" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="Input Audit Asset">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-pencil fa-menu-icon"></i><br />
+                                    <b class="menu-text-list">INPUT FORM AUDIT ASSET</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4 col-md-4" style="border: none">
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default  menu-panel" data-target="List Audit Asset Bulanan">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-moon-o fa-menu-icon"></i><br />
+                                <b class="menu-text-list">REPORT AUDIT BULANAN </b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-4" style="border: none">
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default  menu-panel" data-target="List Audit Asset Semester">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-calendar-check-o fa-menu-icon"></i><br />
+                                <b class="menu-text-list">REPORT AUDIT SEMESTER</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<!--<div id="menu-container" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+
+            <input id="userLogin" style="display:none" type="text" value="@ViewData["User"]" />
+            <input id="regLogin" style="display:none" type="text" value="@ViewData["RegNo"]" />
+
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="List Request Data Asset">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-shopping-basket fa-menu-icon"></i><br />
+                            <b class="menu-text-list">LIST REQUEST ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default  menu-panel" data-target="List Data Asset">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                            <b class="menu-text-list">LIST DATA MASTER ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default  menu-panel" data-target="List Lapor Data Asset">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                            <b class="menu-text-list">LIST LAPOR ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="Input Audit Asset">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-pencil fa-menu-icon"></i><br />
+                            <b class="menu-text-list">INPUT FORM AUDIT ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default  menu-panel" data-target="List Audit Asset Bulanan">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-moon-o fa-menu-icon"></i><br />
+                            <b class="menu-text-list">REPORT AUDIT BULANAN </b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default  menu-panel" data-target="List Audit Asset Semester">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-calendar-check-o fa-menu-icon"></i><br />
+                            <b class="menu-text-list">REPORT AUDIT SEMESTER</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="List Dispose Asset">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-trash-o fa-menu-icon"></i><br />
+                            <b class="menu-text-list">LIST DISPOSE ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>-->
+@*<div class="col-sm-12 col-md-4">
+        <div class="panel panel-default  menu-panel" data-target="#">
+            <div class="panel-body">
+                <p class="menu-text-panel">
+                    <i class="fa fa-sellsy fa-menu-icon"></i><br />
+                    <b class="menu-text-prodcost">SALES PRICE</b>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="panel panel-default  menu-panel" data-target="TANAOROSHI">
+            <div class="panel-body">
+                <p class="menu-text-panel">
+                    <i class="fa fa-sort-amount-desc fa-menu-icon"></i><br />
+                    <b class="menu-text-prodcost">TANAOROSHI</b>
+                </p>
+            </div>
+        </div>
+    </div>*@
+<!--</div>
+    </div>
+</div>-->

@@ -1,0 +1,109 @@
+﻿@using AI070.Models.PIS0101
+@{
+    var jsonPages = (List<string>)ViewData["JsonPages"];
+}
+
+<form role="form" class="form-horizontal" id="searchForm">
+    <div class="row">
+        <div class="col-xs-6" style="margin-top: 5px;">
+        </div>
+        <div class="col-xs-6 text-right">
+            <div class="form-group-xs _criteria">
+                <button class="btn btn-default btn-primary btn-xs hidden" id="btnNewPage" type="button">New Page</button>
+                <button class="btn btn-default btn-primary btn-xs" id="btnPrevPage" type="button">Prev Page</button>
+                <button class="btn btn-default btn-primary btn-xs" id="btnNextPage" type="button">Next Page</button>
+                <button class="btn btn-default btn-primary btn-xs" id="btnDelPage" type="button">Del Page</button>
+                <button class="btn btn-default btn-primary btn-xs" id="btnBack" type="button">Back</button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h5 id="pageNumberDisplay">Page 1</h5>
+    <div class="text-center" style="margin-bottom: 3px;">
+        <hr id="hrsrc" style="margin:0;padding:0;" />
+    </div>
+    <br />
+</form>
+<div class="_line-br"></div>
+<script type="text/javascript">
+
+    var setButtonMode = function () {
+        return;
+        if (currentPage <= 0) {
+            currentPage = 0;
+            $('#btnPrevPage').attr('disabled', 'disabled');
+        }
+        else $('#btnPrevPage').removeAttr('disabled');
+
+        if (currentPage >= (pages.length - 1)) {
+            currentPage = pages.length - 1;
+            $('#btnNextPage').attr('disabled', 'disabled');
+        }
+        else $('#btnNextPage').removeAttr('disabled');
+    };
+
+    var newPageOperation = function () {
+        pages.push([]);
+        currentPage = pages.length - 1;
+
+        loadPaper(null, true, true, mode || 'edit');
+        setButtonMode();
+    };
+
+    $('#btnNewPage').click(function () {
+        pages.push([]);
+        currentPage = pages.length - 1;
+
+        loadPaper(null, true, true, mode || 'edit');
+        setButtonMode();
+    });
+
+    $('#btnPrevPage').click(function () {
+        if (currentPage == 0) {
+            getMessage('MPISSTD053I', '', 'info', false);
+        }
+        else {
+            pages[currentPage] = savePaper();
+
+            if (currentPage <= 0) currentPage = 0;
+            else --currentPage;
+
+            loadPaper(null, true, true, mode || 'edit');
+            setButtonMode();
+        }
+    });
+
+    $('#btnNextPage').click(function () {
+        if ((currentPage + 1) == pages.length) {
+            var param = ['create a new page ?'];
+            getMessage('MPISSTD053C', param, 'confirmWithAction', newPageOperation);
+        }
+        else {
+            pages[currentPage] = savePaper();
+
+            if (currentPage >= pages.length) currentPage = pages.length;
+            else ++currentPage;
+
+            loadPaper(null, true, true, mode || 'edit');
+            setButtonMode();
+        }
+    });
+
+    $('#btnDelPage').click(function () {
+        var param = ['delete the page ?'];
+        getMessage('MPISSTD053C', param, 'confirmWithAction', deletePageOperation);
+    });
+
+    $('#btnBack').click(function () {
+        var headerPage = queryString('currentPage') || 1;
+        window.location.href = 'PIS0101?currentPage=' + encodeURIComponent(headerPage);
+    });
+
+    var deletePageOperation = function () {
+        pages.splice(currentPage, 1);
+        currentPage = 0;
+        loadPaper(null, true, true, mode || 'edit');
+        setButtonMode();
+    };
+
+</script>

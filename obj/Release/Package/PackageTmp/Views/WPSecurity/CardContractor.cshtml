@@ -1,0 +1,45 @@
+﻿<div class="row zero-padding">
+    <div class="col">
+        <h3 class="data-header">DATA CONTRACTOR</h3>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive" style="padding: 10px">
+            <table style="border-spacing: 10px;border-collapse: separate;">
+                <tr>
+                    <td style="width:125px;text-align:right">Employee Name : </td>
+                    <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchEmployeeName" /></td>
+                    <td style="width:80px;text-align:right">Company : </td>
+                    <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchCompany" /></td>
+                    <td><button onclick="getTabelContractor()" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Filter</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive" style="padding: 10px">
+            <table id="tabel-contractor" class="table table-striped table-borderless table-hover"style="width:100%">
+                <caption>List of Contractor</caption>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Employee Name</th>
+                        <th>Company</th>
+                        <th>PIC Status</th>
+                        <th>Safety Induction No</th>
+                        <th>Safety From</th>
+                        <th>Safety To</th>
+                        <th>Section</th>
+                        <th>INFO</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

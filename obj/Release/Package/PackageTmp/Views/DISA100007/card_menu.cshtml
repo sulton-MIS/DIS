@@ -1,0 +1,184 @@
+﻿
+@{
+    var Reg_No = ViewData["RegNo"];
+}
+
+
+
+<style>
+    .menu-text-panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .menu-panel:hover {
+        background-color: rgb(84, 96, 125);
+        cursor: pointer;
+    }
+
+    hr {
+        margin: 0px 25px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border-width: 1px 0 0 0;
+        border-top: 1px solid #E3E3E3;
+    }
+
+    .row {
+        margin: 0;
+        padding: 0;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .menu-panel {
+            min-height: 250px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .menu-panel {
+            min-height: 350px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        .menu-text-list {
+            font-size: 18px;
+        }
+
+        .menu-text-master {
+            font-size: 20px;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    #title {
+        border: 0px solid !important;
+        border-bottom: 1px solid #eaeaea !important;
+        text-align: center;
+    }
+        /*#title:hover {
+            background: #234893;
+            border-bottom: 1px solid # !important;
+            text-align: center;
+            color: white !important;
+        }*/
+
+    #title h4{
+        font-family: 'Bookman Old Style';
+        color: darkcyan;
+    }
+
+</style>
+
+<input id="userLogin" style="display:none" type="text" value="@ViewData["User"]" />
+<input id="regLogin" style="display:none" type="text" value="@ViewData["RegNo"]" />
+
+<div id="menu-container" class="container-fluid">
+    <div class="container-fluid" style="margin-top: 5px">
+        <div class="row">
+
+            <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px; border: 0px solid black">
+
+                <div class="col-sm-4 col-md-4" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="Waiting Approval Document">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                                    <b class="menu-text-list"> WAITING APPROVAL </b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4 col-md-4" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="Master List Document">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-book fa-menu-icon"></i><br />
+                                    <b class="menu-text-list"> LIST MASTER DOCUMENT</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4 col-md-4" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="List Pinjam Document">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-tasks fa-menu-icon"></i><br />
+                                    <b class="menu-text-list"> LIST PINJAM DOKUMEN </b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12" style="margin-top: 0px; margin-left: 0px; border: 0px solid black">
+                @*<div class="col-sm-6 col-md-6" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="List Pinjam Document">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-newspaper-o fa-menu-icon"></i><br />
+                                    <b class="menu-text-list"> LIST PEMINJAMAN DOKUMEN </b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                @*<div class="col-sm-6 col-md-6" style="border: none">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="panel panel-default menu-panel" data-target="List Pengembalian Document">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-check fa-menu-icon"></i><br />
+                                    <b class="menu-text-list"> LIST PENGEMBALIAN DOKUMEN </b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+
+
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,30 @@
+﻿<div class="row">
+
+    <div class="col-lg-5 col-md-5 col-sm-12">
+        <div id="LeftSideFilter">
+            @{Html.RenderAction("QuestionFilter", new { identifyId = "LeftSide" });}
+        </div>
+        <div id="LeftSideTable">
+
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-12 align-center align-middle" style=" padding-top : 50px">
+        <div style=" padding-bottom : 20px">
+            <button type="button" class="btn btn-success btn-xs" id="moveRight" style="width: 80px;" onclick=moveToSubject()><i class="fa fa-angle-double-left"></i> To Left </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-danger btn-xs" id="moveLeft" style="width: 80px;" onclick=removeFromSubject()>To Right <i class="fa fa-angle-double-right"></i></button>
+        </div>
+    </div>
+
+    <div class="col-lg-5 col-md-5 col-sm-12">
+        <div id="RightSideFilter">
+            @{Html.RenderAction("QuestionFilter", new { identifyId = "RightSide" });}
+        </div>
+        <div id="RightSideTable">
+
+        </div>
+    </div>
+
+</div>

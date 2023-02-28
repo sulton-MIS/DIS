@@ -1,0 +1,184 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR140001Master;
+@{
+
+//List<AreaModel> Areas = (List<AreaModel>)ViewData["Area"];
+//List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+//List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+
+}
+
+<style>
+    input[type=checkbox] {
+        /*visibility: hidden;*/
+        margin-top: 5px;
+        height: 20px;
+        width: 20px;
+        border: 1px solid;
+        cursor: pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-6" style="border: 0px solid">
+        <div class="form-group row">
+            <div class="col-lg-12" style="margin-top: 0px">
+                <div class="col-lg-6" style="margin-top: 5px">
+                    <label>NIK Opr <span style="color:red">*</span></label>
+                    <input id="addNik" type="number" class="form-control" data-index="1" />
+                </div>
+                <div class="col-lg-6" style="margin-top: 5px">
+                    <label>Nama Opr </label>
+                    <input id="addNama" type="text" class="form-control" disabled />
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-lg-6" style="margin-top: 5px">
+                    <label>ID Bundle </label>
+                    <input type="text" class="form-control" id="TXT_ADD_BUNDLECODE" placeholder="Scan This..." data-index="2">
+                </div>
+                <div class="col-lg-6" style="margin-top: 5px">
+                    <br />
+                    <button type="button" class="btn btn-default btn-xs" onclick="Clear()" style="width: 80px;"> Clear</button>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-sm-6 ">
+                    <label>Berat per bundle (Gram) :</label>
+                    <div class="col-md-12 section-wrapper-1">
+                        <div class="col-lg-3">
+                            <label>Standard </label>
+                            <input id="addBeratBundleStandar" value="0" type="text" class="form-control" disabled />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Aktual </label>
+                            <input id="addBeratBundleAktual" type="number" class="form-control" oninput="AutoBeratBundleAct()" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 ">
+                    <label>Jumlah per bundle (Pcs) :</label>
+                    <div class="col-md-12 section-wrapper-1">
+                        <div class="col-lg-3">
+                            <label>Standard </label>
+                            <input id="addJumlahBundleStandar" value="0" type="text" class="form-control" disabled />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Aktual </label>
+                            <input id="addJumlahBundleAktual" value="0" type="text" class="form-control" disabled />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-md-6">
+                    <label>Jenis Lotto  </label>
+                    <input id="JENIS_LOTTO" type="text" class="form-control" disabled />
+                </div>
+                <div class="col-md-6">
+                    <label>Status Lotto </label>
+                    <input type="text" maxlength="25" class="form-control space-input" id="addStatusLotto" disabled>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-md-12">
+                    <label>Keterangan </label>
+                    <textarea type="text" class="form-control space-input input-project" id="TXT_ADD_NOTED" disabled></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    @*===================================================== DETAIL ===================================================================================*@
+    <div class="col-lg-6" style="">
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-lg-12">
+                <label>Data Grid Serial (PCS)</label>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="row space-bottom">
+                <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+                    <div style="border: 1px solid #ccc; overflow:scroll; position: relative;">
+                        <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+                        <div id="tScrollHead" style="width: 100%; border-right:1px solid #fff">
+                            <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%;">ID Produksi</th>
+                                        <th style="width: 15%;">Dmc Code</th>
+                                        <th style="width: 10%;">ID Proses</th>
+                                        <th style="width: 20%;">Nama Proses</th>
+                                        <th style="width: 15%;">Serial</th>
+                                        <th style="width: 10%;">Lot No</th>
+                                        @*<th style="width: 15%;">Rata - Rata Aktual</th>*@
+                                        <th style="width: 20%;">Nama Opr</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <!--data grid detail-->
+                        <div id="tScrollBody" style="height: 180px;">
+                            <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                                <tbody id="TBL_ADD_DETAIL" style="display: none;">
+                                    <tr>
+                                        <td style="width: 20%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_IDPROD" maxlength="50">
+                                        </td>
+                                        <td style="width: 15%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_DMCCODE">
+                                        </td>
+                                        <td style="width: 10%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_IDPROSES">
+                                        </td>
+                                        <td style="width: 20%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_NAMAPROSES">
+                                        </td>
+                                        <td style="width: 15%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_SERIAL">
+                                        </td>
+                                        <td style="width: 10%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_LOTNO">
+                                        </td>
+                                        @*<td style="width: 15%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_BERAT_PCS">
+                                        </td>*@
+                                        <td style="width: 20%; padding:0!important">
+                                            <input type="text" disabled class="form-control space-input" id="TXT_ADD_NAMA">
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+
+                                <tbody id="TBL_LIST_DETAIL">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <label>Status Checker</label>
+                <input type="text" class="form-control" id="SHOW_STATUS_CHECKER" disabled>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" class="form-group" id="addCheck_OK" value="OK" data-index="3">
+                &nbsp;
+                <label style="font-size: 22px">Check OK</label>
+            </div>
+        </div>
+        <div class="row" id="GroupSave" style="text-align: right">
+            <button id="btn_cancel" type="button" class="btn btn-danger btn-sm" onclick="cancelAdd()">Cancel</button>
+            <button id="btn_submit" type="button" onclick="SubmitTrx()" class="btn btn-primary btn-sm"><span id="spnsubmit">Submit</span></button>
+        </div>
+        
+
+    </div>
+</div>

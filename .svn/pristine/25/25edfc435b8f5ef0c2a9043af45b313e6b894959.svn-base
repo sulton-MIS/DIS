@@ -1,0 +1,19 @@
+﻿@using AD021.Models;
+@{
+    List<SystemMaster> tack = (List<SystemMaster>)ViewData["Tack"];
+    Int64 target = (Int64)ViewData["OK_Ratio_Target"];
+}
+<table class="table table-tree _tb-role" style="border-bottom:solid #020a5c; background-color:#020a5c;">  
+    <tbody> 
+        <tr> 
+            <td style="width: 150px">Tack Time : @tack.FirstOrDefault().SYSTEM_VALUE_TEXT'</td>  
+            <td rowspan="3" style="font-size: 51px;text-align: center;">SHOWER TEST</td> 
+        </tr> 
+        <tr>
+            <td>Eff : 96%</td> 
+        </tr> 
+        <tr> 
+            <td>OK Ratio : @target%</td>  
+        </tr> 
+    </tbody>
+</table>

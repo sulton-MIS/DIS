@@ -1,0 +1,507 @@
+﻿
+<script>
+    var SITE_URL = window.location.href+"/";
+    
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+        $('.select2').select2({
+            width: '100%'
+        });
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        locationChange();
+        locationChange('','edit');
+
+        $('#addArea').change(function () {
+            locationChange(this.value);
+        });
+
+        $('#editArea').change(function () {
+            locationChange(this.value, 'edit');
+        });
+
+        $('#addUsername').change(function () {
+            $.ajax({
+                url: SITE_URL + 'getUserData',
+                data: {
+                    USERNAME: this.value
+                },
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        $('#addNoReg').val(e.data[0].REG_NO);
+                        $('#addEmail').val(e.data[0].EMAIL);
+                        $('#addFirstName').val(e.data[0].FIRST_NAME);
+                        $('#addLastName').val(e.data[0].LAST_NAME);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+        $('#editUsername').change(function () {
+            $.ajax({
+                url: SITE_URL + 'getUserData',
+                data: {
+                    USERNAME: this.value
+                },
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        $('#editNoReg').val(e.data[0].REG_NO);
+                        $('#editEmail').val(e.data[0].EMAIL);
+                        $('#editFirstName').val(e.data[0].FIRST_NAME);
+                        $('#editLastName').val(e.data[0].LAST_NAME);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+    });
+
+    function locationChange(area_id, type) {
+        if (type == 'edit') {
+            if (area_id == undefined || area_id == '') {
+                area_id = $('#editArea').val();    
+            }
+            $('.editLoc').attr('disabled', true);
+            $('[editarea=' + area_id + ']').attr('disabled', false).select2({ width: '100%' });
+            $('#editLocation').val($('#editLocation option:not([disabled]):first').val()).select2({width:'100%'})
+        } else {
+            if(area_id == undefined) {
+                area_id = $('#addArea').val();    
+            }
+            $('.addLoc').attr('disabled', true);
+            $('[area=' + area_id + ']').attr('disabled', false).select2({ width: '100%' });
+            $('#addLocation').val($('#addLocation option:not([disabled]):first').val()).select2({width:'100%'})
+        }
+    }
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Add New
+    function addNew() {
+        var NOREG = $('#addNoReg').val();
+        var USERNAME = $('#addUsername').val();
+        var ROLE = $('#addRole').val();
+        var EMAIL = $('#addEmail').val();
+        var FIRST_NAME = $('#addFirstName').val();
+        var LAST_NAME = $('#addLastName').val();
+        var AREA = $('#addArea').val();
+        var LOCATION = $('#addLocation').val();
+
+        var sts = true;
+
+        if (NOREG == null || NOREG == "") {
+            toastr.warning('No Reg Cannot Be Empty');
+            sts = false;
+        }
+
+        if (USERNAME == null || USERNAME == "") {
+            toastr.warning('Username Cannot Be Empty');
+            sts = false;
+        }
+
+        if (EMAIL == null || EMAIL == "") {
+            toastr.warning('Email Cannot Be Empty');
+            sts = false;
+        }
+
+        if (ROLE == null || ROLE == "") {
+            toastr.warning('ROLE Cannot Be Empty');
+            sts = false;
+        }
+
+        if (sts == false) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                NOREG: NOREG,
+                EMAIL: EMAIL,
+                USERNAME: USERNAME,
+                FIRST_NAME: FIRST_NAME,
+                LAST_NAME: LAST_NAME,
+                ROLE: ROLE,
+                AREA: AREA,
+                LOCATION : LOCATION
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.Exec[0].LINE_STS);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var NOREG = $('#editNoReg');
+        var USERNAME = $('#editUsername');
+        var ROLE = $('#editRole');
+        var EMAIL = $('#editEmail');
+        var FIRST_NAME = $('#editFirstName');
+        var LAST_NAME = $('#editLastName');
+        var AREA = $('#editArea');
+        var LOCATION = $('#editLocation');
+        var Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        NOREG.val(Send_Var[1]);
+        USERNAME.val(Send_Var[2]);
+        ROLE.val(Send_Var[4]);
+        EMAIL.val(Send_Var[3]);
+        FIRST_NAME.val(Send_Var[5]);
+        LAST_NAME.val(Send_Var[6]);
+        AREA.val(Send_Var[7]);
+        LOCATION.val(Send_Var[8]);
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var NOREG = $('#editNoReg').val();
+                var USERNAME = $('#editUsername').val();
+                var ROLE = $('#editRole').val();
+                var EMAIL = $('#editEmail').val();
+                var FIRST_NAME = $('#editFirstName').val();
+                var LAST_NAME = $('#editLastName').val();
+                var AREA = $('#editArea').val();
+                var LOCATION = $('#editLocation').val();
+                var Send_Var = ID+","+NOREG+","+USERNAME+","+ROLE+","+EMAIL+","+FIRST_NAME+","+LAST_NAME+","+AREA+","+LOCATION;
+
+                var sts = true;
+
+                if (NOREG == null || NOREG == "") {
+                    toastr.warning('No Reg Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (USERNAME == null || USERNAME == "") {
+                    toastr.warning('Username Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (EMAIL == null || EMAIL == "") {
+                    toastr.warning('Email Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (ROLE == null || ROLE == "") {
+                    toastr.warning('ROLE Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (sts == false) {
+                    return;
+                }
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP04003/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                         console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+                    
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0] ;
+                    }
+                    
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP04003/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+                    
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchItemName').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                ITEM_NAME: "xxxxxX",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        $('#addNoReg').val('');
+        $('#addUsername').val('').select2({width: '100%'});
+        $('#addRole').val('');
+        $('#addEmail').val('');
+        $('#addFirstName').val('');
+        $('#addLastName').val('');
+        $('#modalForm').modal();
+
+    });
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {   
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var NOREG = $('#searchNoReg').val();
+        var USERNAME = $('#searchUsername').val();
+        var EMAIL = $('#searchEmail').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                NOREG: NOREG,
+                USERNAME: USERNAME,
+                EMAIL: EMAIL
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+                
+                
+                //// time unit
+                //var time_unit_val = Var.split(',')[6].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_unit_val).prop('disabled', true);
+                
+                //// time value 
+                //var time_value_val = Var.split(',')[7].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_value_val).prop('disabled', true);
+                //$('#' + time_value_val).attr('placeholder', Var.split(',')[2].replace(/^\s+|\s+$/g, ''));
+
+                //// exec time
+                //var exec_time_val = Var.split(',')[8].replace(/^\s+|\s+$/g, '');
+                //$('#' + exec_time_val).prop('disabled', true);
+
+                //// status
+                //var status_val = Var.split(',')[9].replace(/^\s+|\s+$/g, '');
+                //$('#' + status_val).prop('disabled', true);
+                                
+
+                // tombol save edit
+                //var save_edit = Var.split(',')[11].replace(/^\s+|\s+$/g, '');
+
+                //// tombol cancel edit
+                //var cancel_edit = Var.split(',')[12].replace(/^\s+|\s+$/g, '');
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

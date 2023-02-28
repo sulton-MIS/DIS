@@ -1,0 +1,35 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@DATA_ID VARCHAR(MAX) = @DATA_ID;
+
+
+SET @@QUERY = '';
+SET @@QUERY = '
+	SELECT ISNULL(max(ROW_NUM),0) FROM 
+	(
+	SELECT ROW_NUMBER() OVER (ORDER BY id_trans ASC) ROW_NUM,
+	id_trans as ID, 
+	*
+	FROM  ad_dis_pc_master_transportation	
+	WHERE 1=1	
+';
+
+IF(@ITEM_CODE <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND item_code LIKE ''%'+RTRIM(@ITEM_CODE)+'%'' ';
+	END
+
+IF(@JENIS_TRANSPORTATION <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND jenis_transportation LIKE ''%'+RTRIM(@JENIS_TRANSPORTATION)+'%'' ';
+	END
+
+IF(@TRANSPORTATION_COST <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND TRANSPORTATION_COST LIKE ''%'+RTRIM(@TRANSPORTATION_COST)+'%'' ';
+	END
+
+SET @@QUERY = @@QUERY+ ') AS TB';
+
+
+EXEC(@@QUERY);
+

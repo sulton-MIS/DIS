@@ -1,0 +1,36 @@
+﻿@Html.Partial("view_ManualBook")
+@Html.Partial("view_References")
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default" style="border: none">
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div style="position: relative; top: 0px; text-align: left;">
+                    <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+
+                <div style="position: relative; top: 10px; text-align: right;">
+                    <button id="openBook" class="btn btn-dark btn-xs"><i class="fa fa-book"></i> Manual Book</button>
+                    <div class="dropdown" style="position:relative">
+                        <button class="btn btn-dark btn-xs"><i class="fa fa-info-circle"></i> Application References</button>
+                        <div class="dropdown-content">
+                            <a id="openFileROI"> Document ROAI </a>
+                            <a id="openFileURD"> Document URD </a>
+                            <a id="openFileFSD"> Document FSD </a>
+                            <a id="openFileTest"> Document Test (PT & UAT) </a>
+                            <a id="openFileTraining"> Document Training & Implementasi </a>
+                            <a id="openFileEvaluasi"> Document Evaluasi </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

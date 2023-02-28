@@ -1,0 +1,883 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISR190002") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_detail').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        enterKey_Press();
+
+        eventAutoSearchTyping();
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            editNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+
+        //$('#searchStatus').on('change', function () {
+        //    if (this.value == 'Other') {
+        //        $('#otherStatus').show();
+        //    } else {
+        //        $('#otherStatus').hide();
+        //    }
+        //});
+
+        //Auto Clear Form Print
+        //clearPrint();
+
+        //Auto focus Kolom ID Produksi
+        $('#searchIDSeisan').focus();
+
+        //CheckSpecialPrint
+        $('#editSpecialPrint').change(function () {
+            if (!this.checked == true) {
+                $('#display_special_print').hide();
+            } else {
+                $('#display_special_print').show();
+
+                //$("#editPengganti1").prop('disabled', !this.checked);
+                //$("#editPengganti2").prop('disabled', !this.checked);
+                //$("#editTambahan1").prop('disabled', !this.checked);
+                //$("#editTambahan2").prop('disabled', !this.checked);
+                //$("#editTambahan3").prop('disabled', !this.checked);
+                //$('#checkPengganti').prop('checked', this.checked);
+
+            }
+        });
+        $('#editSpecialPrint').prop('checked', false);
+        $('#editSpecialPrint').trigger('change');
+
+
+        //CheckSimilar
+        $('#checkSimilar').change(function () {
+            $("#editSimilar").prop('disabled', !this.checked);
+        });
+        $('#checkSimilar').prop('checked', false);
+        $('#checkSimilar').trigger('change');
+
+        //CheckLotIhouse
+        $('#checkLotIhouse').change(function () {
+            $("#editLotIhouse").prop('disabled', !this.checked);
+        });
+        $('#checkLotIhouse').prop('checked', false);
+        $('#checkLotIhouse').trigger('change');
+
+        //Hide Display LotIhouse
+        $('#Display_LotIhouse').hide();
+
+        //CheckSearchSimilar
+        $('#checkSearchSimilar').change(function () {
+            //alert(this.checked)
+
+            if (this.checked == true) {
+                $("#selectSimilarTipe").prop('disabled', false);
+
+                changeKolomSimilar();
+            } else {
+                $("#selectSimilarTipe").prop('disabled', true);
+
+                $("#selectSimilarTipe").select2('destroy');
+                $('#selectSimilarTipe').each(function () {
+                    $(this).select2({ dropdownParent: $(this).parent() });
+                });
+                $("#selectSimilarTipe").val('--- Search ---');
+
+                $('#editSimilar').val('');
+            }
+           
+
+        });
+        $('#checkSearchSimilar').prop('checked', false);
+        $('#checkSearchSimilar').trigger('change');
+
+        //CheckPengganti
+        $('#checkPengganti').change(function () {
+            if (!this.checked == true) {
+                $("#editPengganti1").prop('disabled', !this.checked);
+                $("#editPengganti2").prop('disabled', !this.checked);
+
+                $("#editTambahan1").prop('disabled', this.checked);
+                $("#editTambahan2").prop('disabled', this.checked);
+                $("#editTambahan3").prop('disabled', this.checked);
+            }
+            else {
+                $("#editPengganti1").prop('disabled', !this.checked);
+                $("#editPengganti2").prop('disabled', !this.checked);
+
+                $("#editTambahan1").prop('disabled', this.checked);
+                $("#editTambahan2").prop('disabled', this.checked);
+                $("#editTambahan3").prop('disabled', this.checked);
+            }
+
+        });
+        $('#checkPengganti').prop('checked', false);
+        $('#checkPengganti').trigger('change');
+
+        //CheckTambahan
+        $('#chekTambahan').change(function () {
+            if (this.checked == true) {
+                $("#editTambahan1").prop('disabled', !this.checked);
+                $("#editTambahan2").prop('disabled', !this.checked);
+                $("#editTambahan3").prop('disabled', !this.checked);
+
+                $("#editPengganti1").prop('disabled', this.checked);
+                $("#editPengganti2").prop('disabled', this.checked);
+            } else if (this.checked == false) {
+                $("#editTambahan1").prop('disabled', !this.checked);
+                $("#editTambahan2").prop('disabled', !this.checked);
+                $("#editTambahan3").prop('disabled', !this.checked);
+
+                $("#editPengganti1").prop('disabled', !this.checked);
+                $("#editPengganti2").prop('disabled', !this.checked);
+            }
+
+        });
+        $('#chekTambahan').prop('checked', false);
+        $('#chekTambahan').trigger('change');
+
+
+        //Set Value Printer
+        var NAMA_PRINTER = localStorage.getItem("selectPrinter");
+        if (NAMA_PRINTER) {
+            $("#selectPrinter").val(NAMA_PRINTER);
+        }
+        $("#selectPrinter").select2();
+        $("#selectPrinter").on("change", function (evt) {
+            var NAMA_PRINTER = $(evt.target).val();
+            localStorage.setItem("selectPrinter", NAMA_PRINTER);
+        })
+
+
+
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    //Change Similar Kolom with Search Similar
+    function changeKolomSimilar() {
+        $('#selectSimilarTipe').change(function () {
+            //alert(this.value)
+            var SELECT_SIMILAR = this.value;
+
+            $('#editSimilar').val(SELECT_SIMILAR);
+
+        });
+    }
+    
+
+    function add_check() {
+        //var TARGET_DATE = ($('#addDate').val()).replace('T', ' ');
+        //var TARGET_AMOUNT = $('#addTargetAmount').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var ID_SEISAN = $('#searchIDSeisan').val();
+        var ID_HINMOKU = $('#editIDHinmoku').val();
+        var OTHER_LOTNO = $('#editLot').val();
+        var QTY = $('#editQty').val();
+        var ADM_IT = $('#editADM_IT').val();
+        var ADM_IT = $('#editADM_IT').val();
+
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    function print_check() {
+        var ID_SEISAN = $('#searchIDSeisan').val();
+        var ID_HINMOKU = $('#editIDHinmoku').val();
+        var OTHER_LOTNO = $('#editLot').val();
+        var QTY = $('#editQty').val();
+        var ADM_IT = $('#editADM_IT').val();
+        var SIMILAR = $('#editSimilar').val();
+        var OPT_PRESS = $('#editOpt_Press').val();
+        var OPT_LAM = $('#editOpt_Lam').val();
+        var TINTA_DOT = $('#editJenisTintaDot').val();
+        var QTY_PRINT = $('#editQtyPrint').val();
+
+        var GANTI1 = $('#editGanti1').val();
+        var GANTI2 = $('#editGanti2').val();
+
+        var LOT_IHOUSE = "";
+        if ('#checkLotIhouse' == true) {
+            LOT_IHOUSE = $('#editLotIhouse').val();
+        }
+
+        var GLASS_BUWON = "";
+        if ('#editGlassBuwon' == true) {
+            GLASS_BUWON = "BW";
+        }
+
+        var AFTER_LAMINATE = "";
+        if ('#editAfterLaminate' == true) {
+            AFTER_LAMINATE = "LAMINATE";
+        }
+
+        //var PENGGANTI = "";
+        var PENGGANTI1 = "";
+        var PENGGANTI2 = "";
+        if ('#checkPengganti' == true) {
+            PENGGANTI1 = $('#editPengganti1').val();
+            PENGGANTI2 = $('#editPengganti2').val();
+            //PENGGANTI = PENGGANTI1 + "/" + PENGGANTI2;
+        }
+
+        //var TAMBAHAN = "";
+        var TAMBAHAN1 = "";
+        var TAMBAHAN2 = "";
+        var TAMBAHAN3 = "";
+        if ('#chekTambahan' == true) {
+            TAMBAHAN1 = $('#editTambahan1').val();
+            TAMBAHAN2 = $('#editTambahan2').val();
+            TAMBAHAN3 = $('#editTambahan3').val();
+            //TAMBAHAN = TAMBAHAN1 + "/" + TAMBAHAN2 + "/" + TAMBAHAN3;
+        }
+
+
+        var sts = true;
+
+        if (ID_SEISAN == null || ID_SEISAN == "") {
+            toastr.error("Please fill column ID_SEISAN!");
+        }
+        else if (ID_HINMOKU == null || ID_HINMOKU == "") {
+            toastr.error("Please fill column ID_HINMOKU!");
+        }
+        else if (QTY_PRINT == null || QTY_PRINT == "") {
+            toastr.error("Please fill column QTY PRINT!");
+        }
+        else {
+            if (sts == false) {
+                return;
+            } else {
+                $('#PopupForm_PrintConfirm').modal();
+            }
+        }
+
+
+    }
+
+
+    function confirm_print() {
+        var ID_SEISAN = $('#searchIDSeisan').val();
+        var ID_HINMOKU = $('#editIDHinmoku').val();
+        var QTY_PRINT = $('#editQtyPrint').val();
+        var PRINTER_NAME = $('#selectPrinter').val();
+
+        var sts = true;
+
+        if (/^[a-zA-Z0-9- ]*$/.test(ID_SEISAN) == false) {
+            sts = false;
+            toastr.error('Your search string contains illegal characters.');
+        }
+        if (ID_SEISAN == null || ID_SEISAN == "") {
+            sts = false;
+            toastr.error("Please fill column ID_SEISAN!");
+        }
+        if (ID_HINMOKU == null || ID_HINMOKU == "") {
+            sts = false;
+            toastr.error("Please fill column ID_HINMOKU!");
+        }
+        if (QTY_PRINT == null || QTY_PRINT == "") {
+            sts = false;
+            toastr.error("Please fill column QTY PRINT!");
+        }
+
+        if (PRINTER_NAME == null || PRINTER_NAME == "" || PRINTER_NAME == "--- Pilih Printer ---") {
+            sts = false;
+            toastr.error("Please select printer!");
+        }
+
+        if (sts == true) {
+            printLabel();
+        } else {
+            return;
+        }
+
+    }
+
+    function printLabel() {
+        var ID_SEISAN = $('#searchIDSeisan').val();
+        var ID_HINMOKU = $('#editIDHinmoku').val();
+        var OTHER_LOTNO = $('#editLot').val();
+        var QTY = $('#editQty').val();
+        var ADM_IT = $('#editADM_IT').val();
+        var SIMILAR = "";
+        var OPT_PRESS = $('#editOpt_Press').val();
+        var OPT_LAM = $('#editOpt_Lam').val();
+        var TINTA_DOT = $('#editJenisTintaDot').val();
+        var QTY_PRINT = $('#editQtyPrint').val();
+        var PRINTER_NAME = $('#selectPrinter').val();
+
+        var LOT_IHOUSE = $('#editLotIhouse').val();
+
+        var SIMILAR_CHECKED = $('#checkSimilar').is(":checked");
+        if (SIMILAR_CHECKED == true) {
+            SIMILAR = $('#editSimilar').val();
+        } else {
+            SIMILAR = "";
+        }
+        
+        var GLASS_BUWON_CHECKED = $('#editGlassBuwon').is(":checked");
+        var GLASS_BUWON = "";
+        if (GLASS_BUWON_CHECKED == true) {
+            GLASS_BUWON = "BW";
+        } else {
+            GLASS_BUWON = "";
+        }
+
+        var AFTER_LAMINATE_CHECKED = $('#editAfterLaminate').is(":checked");
+        var AFTER_LAMINATE = "";
+        if (AFTER_LAMINATE_CHECKED == true) {
+
+            //Konfirmasi Button
+            if (confirm('Yakin ini After Laminate?')) {
+                AFTER_LAMINATE = "LAMINATE"; //Yes confirm
+            } else {
+                return; //No confirm
+            }
+
+        } else {
+            AFTER_LAMINATE = "";
+        }
+
+        var display_special_print = $('#editSpecialPrint').is(":checked");
+        var PENGGANTI1 = "";
+        var PENGGANTI2 = "";
+        var chekPengganti = $('#checkPengganti').is(":checked");
+        if (chekPengganti == true) {
+            PENGGANTI1 = $('#editPengganti1').val();
+            PENGGANTI2 = $('#editPengganti2').val();
+        }
+
+        var TAMBAHAN1 = "";
+        var TAMBAHAN2 = "";
+        var TAMBAHAN3 = "";
+        var chekTambahan = $('#chekTambahan').is(":checked");
+        if (chekTambahan == true) {
+            var TAMBAHAN1 = $('#editTambahan1').val();
+            var TAMBAHAN2 = $('#editTambahan2').val();
+            var TAMBAHAN3 = $('#editTambahan3').val();
+        }
+
+        $.ajax({
+            type: "POST",
+            url: 'DISR190002/Print_Data',
+            data: {
+                PRINTER_NAME: PRINTER_NAME,
+                ID_SEISAN: ID_SEISAN,
+                ID_HINMOKU: ID_HINMOKU,
+                OTHER_LOTNO: OTHER_LOTNO,
+                LOT_IHOUSE: LOT_IHOUSE,
+                QTY: QTY,
+                ADM_IT: ADM_IT,
+                SIMILAR_CHECKED: SIMILAR_CHECKED,
+                SIMILAR: SIMILAR,
+                OPT_PRESS: OPT_PRESS,
+                OPT_LAM: OPT_LAM,
+                TINTA_DOT: TINTA_DOT,
+                QTY_PRINT: QTY_PRINT,
+                GLASS_BUWON_CHECKED: GLASS_BUWON_CHECKED,
+                GLASS_BUWON: GLASS_BUWON,
+                AFTER_LAMINATE_CHECKED: AFTER_LAMINATE_CHECKED,
+                AFTER_LAMINATE: AFTER_LAMINATE,
+                display_special_print: display_special_print,
+                chekPengganti: chekPengganti,
+                PENGGANTI1: PENGGANTI1,
+                PENGGANTI2: PENGGANTI2,
+                chekTambahan: chekTambahan,
+                TAMBAHAN1: TAMBAHAN1,
+                TAMBAHAN2: TAMBAHAN2,
+                TAMBAHAN3: TAMBAHAN3
+            },
+            success: function (data) {
+                if (data.sts == "true") {
+                    var Pathfile = "";
+                    if (data.ListFile.length > 0) {
+                        for (let i = 0; i < data.ListFile.length; i++){
+                            Pathfile = data.ListFile[i];
+                            //alert(file);
+                            jsWebClientPrint.print('&PRINTER_NAME=' + PRINTER_NAME + '&Pathfile=' + Pathfile);
+                        }
+                    }
+
+                    var delayWaiting = 5000; //5 second
+
+                    //Delete Files from Directory after 'delayWaiting' ...
+                    const await = new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve(deleteFiles()); //Delete files temp
+                        }, delayWaiting);
+                    });
+
+                    await.then(() => await);
+
+                    toastr.success('Berhasil print!');
+                    //clearForm();
+
+                } else {
+                    toastr.error(data.Message);
+                }
+            }
+        });
+
+    }
+
+    function deleteFiles() {
+        $.ajax({
+            type: "POST",
+            url: 'DISR190002/deleteFiles',
+            data: {},
+            success: function (data) {
+                if (data.sts == "true") {
+                    //toastr.success('Berhasil Delete!');
+                } else {
+                    toastr.error('Error Delete Files!');
+                }
+            }
+        });
+    }
+
+    function clearForm() {
+        $('#editIDSeisan').val('');
+        $('#editIDHinmoku').val('');
+        $('#editLot').val('');
+        $('#editQty').val('');
+        $('#editADM_IT').val('');
+        $('#editSimilar').val('');
+        $('#editOpt_Press').val('');
+        $('#editOpt_Lam').val('');
+        $('#editJenisTintaDot').val('');
+        $('#editQtyPrint').val('');
+        $('#editLotIhouse').val();
+
+        $('#checkSimilar').prop("checked", false);
+        $("#editSimilar").prop('disabled', true);
+
+        $('#checkLotIhouse').prop("checked", false);
+        $("#editLotIhouse").prop('disabled', true);
+
+        $('#editGlassBuwon').prop("checked", false);
+        $('#editAfterLaminate').prop("checked", false);
+
+        $('#checkPengganti').prop("checked", true);
+        $('#editPengganti1').val('');
+        $('#editPengganti2').val('');
+
+        $('#chekTambahan').prop("checked", false);
+        $('#editTambahan1').val('');
+        $('#editTambahan2').val('');
+        $('#editTambahan3').val('');
+
+    }
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+
+    //Refresh Halaman
+    function refreshPage() {
+        localStorage.clear(); //clear data -> ''
+        location.reload();
+    }
+
+    //tombol clear
+    function clear_search() {
+        refreshPage();
+    }
+    //tombol clear
+    function clear_search_ItemCode() {
+        $('#searchItemCode').val('');
+    }
+
+    //event auto search
+    function eventAutoSearchTyping() {
+        var ID_SEISAN = document.getElementById("searchIDSeisan").value;
+        if (ID_SEISAN.length < 17 && ID_SEISAN.length > 20 && !ID_SEISAN.includes("S")) {
+            toastr.warning("Please input the correct ID Produksi!!");
+            //$('#searchIDSeisan').val('');
+            //OnSearch(1);
+
+        } else {
+            OnSearch(1);
+
+            var ID_SEISAN = $('#searchIDSeisan').val();
+
+            var ID_HINMOKU = "";
+            var OTHER_LOTNO = "";
+
+            $.ajax({
+                url: SITE_URL + 'get_Tipe',
+                data: {
+                    ID_SEISAN: ID_SEISAN.trim()
+                },
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        ID_HINMOKU = e.data[0].ID_HINMOKU;
+                        OTHER_LOTNO = e.data[0].OTHER_LOTNO;
+
+                        $('#editIDHinmoku').val(ID_HINMOKU);
+                        $('#editLot').val(OTHER_LOTNO);
+
+                        if (ID_HINMOKU.includes("-T")) {
+                            $('#Display_GlassBuwon').hide();
+                            $('#Display_LotIhouse').show();
+                            $('#editLotIhouse').focus();
+                        } else {
+                            $('#Display_GlassBuwon').show();
+                            $('#Display_LotIhouse').hide();
+                        }
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+    }
+
+    //search by Enter
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            if ($('#searchIDSeisan').val() == "") {
+                toastr.warning("PLEASE INPUT ID PRODUKSI!");
+            } else {
+                OnSearch(1);
+
+                var ID_SEISAN = $('#searchIDSeisan').val();
+
+                var ID_HINMOKU = "";
+                var OTHER_LOTNO = "";
+
+                $.ajax({
+                    url: SITE_URL + 'get_Tipe',
+                    data: {
+                        ID_SEISAN: ID_SEISAN.trim()
+                    },
+                    success: function (e) {
+                        if (e.data.length > 0) {
+                            ID_HINMOKU = e.data[0].ID_HINMOKU;
+                            OTHER_LOTNO = e.data[0].OTHER_LOTNO;
+
+                            $('#editIDHinmoku').val(ID_HINMOKU);
+                            $('#editLot').val(OTHER_LOTNO);
+
+                            if (ID_HINMOKU.includes("-T")) {
+                                $('#Display_GlassBuwon').hide();
+                                $('#Display_LotIhouse').show();
+                                $('#Display_LotIhouse').focus();
+                            } else {
+                                $('#Display_GlassBuwon').show();
+                                $('#Display_LotIhouse').hide();
+                            }
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+                
+            }
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+    }
+
+    // tombol search ID Produksi
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol search Item Code
+    $("#btn_search_ItemCode").on("click", function () {
+        OnSearchItemCode(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        //$('#addDate').val().replace('T', ' ');
+        //$('#addTargetAmount').val();
+        //$('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data ID Produksi
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data ID Produksi
+    function searchData(page, size) {
+        var ID_SEISAN = $('#searchIDSeisan').val();
+        var ID_HINMOKU = $('#searchItemCode').val();
+
+        if (ID_SEISAN != "") {
+            var ID_SEISAN_LENGTH = ID_SEISAN.replace(/ /g, '').length;
+
+            if (ID_SEISAN_LENGTH > 15) {
+                Last_Record_Per_Page = $("#paging").val();
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + 'Search_Data',
+                    async: false,
+                    data: {
+                        start: page,
+                        display: size,
+                        DATA_ID: $("#data_nm").val(),
+                        EXECUTION_TIME: $("#exec_time_cd").val(),
+                        TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                        STATUS_ACTIVE: $("#sts_cd").val(),
+                        ID_SEISAN: ID_SEISAN
+                        , ID_HINMOKU: ID_HINMOKU
+
+                    },
+                    success: function (data) {
+                        $("#Datagrid_Data").html(data);
+                        $("#paging").val(Last_Record_Per_Page);
+                        if ($('#cntPage').val() == "1") {
+                            $('#btn_clear').prop('disabled', false);
+                        } else {
+                            $('#btn_clear').prop('disabled', false);
+                        }
+
+                        scroll_and_checkbox();
+                        cek_perdata();
+                    }
+                });
+            }
+            //else {
+            //    toastr.warning('PLEASE INPUT ID PRODUKSI CORRECTLY!')
+            //}
+        }
+        else {
+            toastr.warning("PLEASE INPUT ID PRODUKSI!");
+        }
+
+
+    }
+
+    //Tombol search ItemCode (Similar Type)
+    function OnSearchItemCode(page) {
+        searchDataItemCode(page, $('#paging').val());
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data ItemCode (Similar Type)
+    function searchDataItemCode(page, size) {
+        var CODE = $('#searchItemCode').val();
+
+        if (CODE != "") {
+            Last_Record_Per_Page = $("#paging").val();
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + 'Search_Data_ItemCode',
+                async: false,
+                data: {
+                    start: page,
+                    display: size,
+                    DATA_ID: $("#data_nm").val(),
+                    EXECUTION_TIME: $("#exec_time_cd").val(),
+                    TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                    STATUS_ACTIVE: $("#sts_cd").val(),
+                    CODE: CODE
+
+                },
+                success: function (data) {
+                    $("#GridTable").html(data);
+                    $("#paging").val(Last_Record_Per_Page);
+                    if ($('#cntPage').val() == "1") {
+                        $('#btn_clear').prop('disabled', false);
+                    } else {
+                        $('#btn_clear').prop('disabled', false);
+                    }
+
+                    scroll_and_checkbox();
+                    cek_perdata();
+                }
+            });
+        }
+        else {
+            toastr.warning("Harap isi Item Code");
+        }
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_detail').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_detail').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_detail').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                    $('#btn_detail').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    //---------------- Do printing... ---------------------
+    function doPrinting() {
+        if (jspmWSStatus()) {
+            //create ClientPrintJob
+            var cpj = new JSPM.ClientPrintJob();
+
+            //Set Printer info
+            //var myPrinter = $('#selectPrinter').val();
+            var myPrinter = new JSPM.InstalledPrinter($('#selectPrinter').val());
+            cpj.clientPrinter = myPrinter;
+
+            //Set XLS file
+            var local_file = $("#input-local-xls-file").prop('files');
+            var my_file = null;
+
+            if (local_file && local_file.length > 0) {
+                my_file = new JSPM.PrintFileXLS(local_file[0], JSPM.FileSourceType.BLOB, local_file[0].name, 1);
+                alert(my_file);
+            } else if ($("#input-file-url").val().length > 0) {
+                my_file = new JSPM.PrintFileXLS($("#input-file-url").val(), JSPM.FileSourceType.URL, "myFileToPrint.xls", 1);
+            } else {
+                alert('Must specify a local file or a URL!');
+                return;
+            }
+
+            //set file printing settings...
+            my_file.pageFrom = parseInt($('#pageFrom').val());
+            my_file.pageTo = parseInt($('#pageTo').val());
+
+            //add file to ClientPrintJob
+            cpj.files.push(my_file);
+
+            //Send print job to printer!
+            cpj.sendToClient();
+        }
+    }
+
+
+
+</script>

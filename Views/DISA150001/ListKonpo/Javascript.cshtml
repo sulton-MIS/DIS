@@ -1,0 +1,524 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA150001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        jQuery('#btn_search').click();
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function add_check() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var JENIS_PACKING = $('#addJenisPacking').val();
+        var QTY_PCS = $('#addQtyPcs').val();
+        var FACTORY_SIZE = $('#addFactorySize').val();
+        var INDIRECT = $('#addIndirect').val();
+        var BERAT = $('#addBerat').val();
+        var PANJANG = $('#addPanjang').val();
+        var LEBAR = $('#addLebar').val();
+        var TINGGI = $('#addTinggi').val();
+        var HARGA = $('#addHarga').val();
+
+        var sts = true;
+
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var ITEM_CODE = $('#editItemCode').val();
+        var JENIS_PACKING = $('#editJenisPacking').val();
+        var QTY_PCS = $('#editQtyPcs').val();
+        var FACTORY_SIZE = $('#editFactorySize').val();
+        var INDIRECT = $('#editIndirect').val();
+        var BERAT = $('#editBerat').val();
+        var PANJANG = $('#editPanjang').val();
+        var LEBAR = $('#editLebar').val();
+        var TINGGI = $('#editTinggi').val();
+        var HARGA = $('#editHarga').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+
+    //tombol Add New
+    function addNew() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var JENIS_PACKING = $('#addJenisPacking').val();
+        var QTY_PCS = $('#addQtyPcs').val();
+        var FACTORY_SIZE = $('#addFactorySize').val();
+        var INDIRECT = $('#addIndirect').val();
+        var BERAT = $('#addBerat').val();
+        var PANJANG = $('#addPanjang').val();
+        var LEBAR = $('#addLebar').val();
+        var TINGGI = $('#addTinggi').val();
+        var HARGA = $('#addHarga').val();
+
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Add_New_ListKonpo',
+            async: false,
+            data: {
+                ITEM_CODE: ITEM_CODE,
+                JENIS_PACKING: JENIS_PACKING,
+                QTY_PCS: QTY_PCS,
+                FACTORY_SIZE: FACTORY_SIZE,
+                INDIRECT: INDIRECT,
+                BERAT: BERAT,
+                PANJANG: PANJANG,
+                LEBAR: LEBAR,
+                TINGGI: TINGGI,
+                HARGA: HARGA,
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    clear_add();
+                    //MoveFoto('#addFoto', REGNUMBER);
+                    //MoveFotoCertificate('#addFotoCertificate', REGNUMBER);
+                    //MoveFotoID('#addFotoID', ID_SAGYOSHA);
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                    $('#btnNo').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var JENIS_PACKING = $('#addJenisPacking').val();
+        var QTY_PCS = $('#addQtyPcs').val();
+        var FACTORY_SIZE = $('#addFactorySize').val();
+        var INDIRECT = $('#addIndirect').val();
+        var BERAT = $('#addBerat').val();
+        var PANJANG = $('#addPanjang').val();
+        var LEBAR = $('#addLebar').val();
+        var TINGGI = $('#addTinggi').val();
+        var HARGA = $('#addHarga').val();
+
+    }
+
+    //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var ITEM_CODE = $('#editItemCode');
+        var JENIS_PACKING = $('#editJenisPacking');
+        var QTY_PCS = $('#editQtyPcs');
+        var FACTORY_SIZE = $('#editFactorySize');
+        var INDIRECT = $('#editIndirect');
+        var BERAT = $('#editBerat');
+        var PANJANG = $('#editPanjang');
+        var LEBAR = $('#editLebar');
+        var TINGGI = $('#editTinggi');
+        var HARGA = $('#editHarga');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        ID.val(Send_Var[0]);
+        ITEM_CODE.val(Send_Var[1]);
+        JENIS_PACKING.val(Send_Var[2]);
+        QTY_PCS.val(Send_Var[3]);
+        FACTORY_SIZE.val(Send_Var[4]);
+        INDIRECT.val(Send_Var[5]);
+        BERAT.val(Send_Var[6]);
+        PANJANG.val(Send_Var[7]);
+        LEBAR.val(Send_Var[8]);
+        TINGGI.val(Send_Var[9]);
+        HARGA.val(Send_Var[10]);
+
+
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var ITEM_CODE = $('#editItemCode').val();
+                var JENIS_PACKING = $('#editJenisPacking').val();
+                var QTY_PCS = $('#editQtyPcs').val();
+                var FACTORY_SIZE = $('#editFactorySize').val();
+                var INDIRECT = $('#editIndirect').val();
+                var BERAT = $('#editBerat').val();
+                var PANJANG = $('#editPanjang').val();
+                var LEBAR = $('#editLebar').val();
+                var TINGGI = $('#editTinggi').val();
+                var HARGA = $('#editHarga').val();
+                var Send_Var = ID + "," + ITEM_CODE + "," + JENIS_PACKING + "," + QTY_PCS + "," + FACTORY_SIZE + "," + INDIRECT + "," + BERAT + "," + PANJANG + "," + LEBAR + "," + TINGGI + "," + HARGA;
+
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../Update_Data_ListKonpo',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + '../Delete_Data_ListKonpo',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchItemCode').val('');
+        $('#searchJenisPacking').val('');
+        $('#searchHarga').val('');
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_ListKonpo',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addItemCode').val();
+        $('#addJenisPacking').val();
+        $('#addQtyPcs').val();
+        $('#addFactorySize').val();
+        $('#addIndirect').val();
+        $('#addBerat').val();
+        $('#addPanjang').val();
+        $('#addLebar').val();
+        $('#addTinggi').val();
+        $('#addHarga').val();
+        $('#addTmk').val('');
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var ITEM_CODE = $('#searchItemCode').val();
+        var JENIS_PACKING = $('#searchJenisPacking').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_ListKonpo',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                ITEM_CODE: ITEM_CODE,
+                JENIS_PACKING: JENIS_PACKING
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

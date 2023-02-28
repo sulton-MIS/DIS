@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+
+@if (ViewData["fitur_audit"] == "Fitur_Audit_Bulanan")
+{
+    <div id="main-data">
+        @Html.Partial("Audit_Asset/SearchCriteria")
+        @Html.Partial("Audit_Asset/CheckValidasiUser")
+        @Html.Partial("Audit_Asset/Datagrid_Data_Bulanan")
+        @Html.Partial("Audit_Asset/PopupForm")
+        @Html.Partial("Audit_Asset/ModalForm")
+    </div>
+
+    @Html.Partial("Audit_Asset/Javascript_Audit_Bulanan")
+
+}
+else if (ViewData["fitur_audit"] == "Fitur_Audit_Semester")
+{
+    <div id="main-data">
+        @Html.Partial("Audit_Asset/SearchCriteria")
+        @Html.Partial("Audit_Asset/CheckValidasiUser")
+        @Html.Partial("Audit_Asset/Datagrid_Data_Semester")
+        @Html.Partial("Audit_Asset/PopupForm")
+        @Html.Partial("Audit_Asset/ModalForm")
+    </div>
+
+    @Html.Partial("Audit_Asset/Javascript_Audit_Semester")
+}
+
+
+

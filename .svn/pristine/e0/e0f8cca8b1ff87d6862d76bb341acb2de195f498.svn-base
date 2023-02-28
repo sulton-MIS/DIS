@@ -1,0 +1,131 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03005;
+
+@{
+    List<KeyList> GetRegNo = (List<KeyList>)ViewData["GetRegNo"];
+    List<KeyList> GetCompany = (List<KeyList>)ViewData["GetCompany"];
+    List<WP03005Master> dataParticipant = (List<WP03005Master>)ViewData["dataParticipant"];
+}
+<style>
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+</style>
+
+
+<div class="row" style="margin-top: -13px; margin-left: 10px; margin-right: 10px">
+    <div class="col-xs-12 col-sm-12 col-md-11">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>Employe Name : </td>
+                                    <td>
+                                        <input id="employeName" class="form-control" type="text" />
+                                    </td>
+                                    <td>Company : </td>
+                                    <td>
+                                        <input id="companyName" class="form-control" type="text" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_Data()"><i class="fa fa-eraser"></i> Clear</button>
+
+                            <div class="dropdown" style="float:right; padding-left: 4px">
+                                <button class="btn btn-yellow btn-xs dropdown-toggle" style="width: 80px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                                <div class="dropdown-content " style="text-align:left;">
+                                    <a class="dropdown-item" href="#" onclick="printPDF()">PRINTOUT PDF</a>
+                                    <a class="dropdown-item" href="#" onclick="printEXCEL()">PRINTOUT EXCEL</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

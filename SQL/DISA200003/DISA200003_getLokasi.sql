@@ -1,0 +1,1 @@
+﻿SELECT id_tb_m_lokasi, kd_lokasi as kd_lokasi, nama_lokasi as nama_lokasi FROM ad_dis_ma_lokasi_asset order by cast(kd_lokasi as int) + 1 

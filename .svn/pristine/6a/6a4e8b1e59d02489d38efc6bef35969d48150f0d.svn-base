@@ -1,0 +1,157 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02003Master;
+
+@{
+    List<ProjectModel> Project = (List<ProjectModel>)ViewData["Project"];
+    List<CompanyModel> Company = (List<CompanyModel>)ViewData["Company"];
+    //List<LocationModel> Location = (List<LocationModel>)ViewData["Project_Location"];
+    //List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h4>@ViewData["Title"]</h4></label>
+    </div>
+</div>
+
+<div id="formSearch" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    @*<td>Project Name: </td>
+        <td><input id="searchProjectName" class="form-control" type="text" /></td>
+        <td>From : </td>
+        <td><input id="searchDate" class="form-control" type="date" /></td>
+        <td>To : </td>
+        <td><input id="searchDateTo" class="form-control" type="date" /></td>*@
+                                    <td>Project Name : </td>
+                                    <td>
+                                        <select id="searchProjectName" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Project != null)
+                                                {
+                                                    if (Project.Count() > 0)
+                                                    {
+                                                        foreach (var item in Project)
+                                                        {
+                                                            <option value="@item.PROJECT_CODE">@item.PROJECT_NAME</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>Company : </td>
+                                    <td>
+                                        <select id="searchCompany" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Company != null)
+                                                {
+                                                    if (Company.Count() > 0)
+                                                    {
+                                                        foreach (CompanyModel item in Company)
+                                                        {
+                                                            <option value="@item.ID_TB_M_COMPANY">@item.COMPANY_NAME</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            <option>Other</option>
+                                        </select>
+                                    </td>
+                                    <td>TITLE KYK : </td>
+                                    <td> <input id="searchTitleKYK" class="form-control" /></td>
+                                </tr>
+                                @*<tr>
+                                    <td>Project Location : </td>
+                                    <td>
+                                        <select id="searchLocation" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Location != null)
+                                                {
+                                                    if (Location.Count() > 0)
+                                                    {
+                                                        foreach (LocationModel item in Location)
+                                                        {
+                                                            <option value="@item.ID_TB_M_LOCATION">@item.LOC_NAME</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>From : </td>
+                                    <td>
+                                        <input id="searchTime" type="time" class="form-control" />
+                                    </td>
+                                    <td>To : </td>
+                                    <td>
+                                        <input id="searchTimeTo" type="time" class="form-control" />
+                                    </td>
+                                    <td>Status : </td>
+                                    <td>
+                                        <select id="searchStatus" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Status != null)
+                                                {
+                                                    if (Status.Count() > 0)
+                                                    {
+                                                        foreach (StatusModel item in Status)
+                                                        {
+                                                            <option value="@item.ID">@item.Status</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            <option>Other</option>
+                                        </select>
+                                    </td>
+                                    <td><input id="otherStatus" style="display:none" type="text" /></td>
+                                </tr>*@
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick="showAdd()"><i class="fa fa-plus"></i> New</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

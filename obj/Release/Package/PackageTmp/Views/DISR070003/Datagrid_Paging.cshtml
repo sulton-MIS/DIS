@@ -1,0 +1,242 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.DISR070003Master;
+@{
+    PagingModel_DISR070003 _page = (PagingModel_DISR070003)ViewData["PagingDISR070003"];
+    string _prevHref = "#";
+    string _nextHref = "#";
+    string _LastRecord = "#";
+}
+
+<style type="text/css">
+    .pagination {
+        border-radius: 2px;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pagination > li > a,
+        .pagination > li > span {
+            background-color: transparent;
+            border: 0 none;
+        }
+
+            .pagination > li > a:hover,
+            .pagination > li > a:focus {
+                text-decoration: none;
+            }
+
+            .pagination > li > a:hover,
+            .pagination > li > span:hover,
+            .pagination > li > a:focus,
+            .pagination > li > span:focus {
+                color: #4f93e3;
+                background-color: #eee;
+                border-color: #ddd;
+            }
+
+        .pagination > .active > a,
+        .pagination > .active > span,
+        .pagination > .active > a:hover,
+        .pagination > .active > span:hover,
+        .pagination > .active > a:focus,
+        .pagination > .active > span:focus,
+        .pagination > .active > span > a,
+        .pagination > .active > span > a:hover,
+        .pagination > .active > span > a:focus {
+            color: white !important;
+            cursor: default;
+            background-color: #4f93e3;
+            border-color: #4f93e3;
+        }
+
+        .pagination > li:first-child > a,
+        .pagination > li:first-child > span,
+        .pagination > li:last-child > a,
+        .pagination > li:last-child > span {
+            margin-left: 0;
+            border: 0 none;
+            border-radius: 0;
+        }
+
+    .pagination-row label,
+    .pagination-row span {
+        color: black !important;
+        font-weight: normal !important;
+    }
+</style>
+
+@if (_page != null)
+{
+    if (_page.CountData > 0)
+    {
+        <input id="cntPage" value="1" style="display:none!important" />
+        <div class="col-xs-12 col-sm-9" style="height: 30px;">
+            <ul class="pagination pagination-sm hidden-xs">
+
+                <li>
+                    <span class="_pagination-label">Showing @_page.StartData to @_page.EndData of @_page.CountData row(s)</span>
+                </li>
+                <li>
+                    @{
+                        _nextHref = "javascript: OnSearch(" + Convert.ToString(1) + ")";
+                        <a href="@_nextHref"><span>First</span></a>
+                    }
+                </li>
+                <li>
+                    @if (_page.PositionPage > 1)
+                    {
+                        _prevHref = "javascript: OnSearch(" + Convert.ToString(_page.PositionPage - 1) + ")";
+                        <a href="@_prevHref"><span>Prev</span></a>
+                    }
+                    else
+                    {
+                        <span>Prev</span>
+                    }
+                </li>
+
+                @for (int p = 1; p <= _page.ListIndex.Count; p++)
+                {
+                    if ((p >= _page.PositionPage) && (p <= @_page.EndData))
+                    {
+                        if (@p == _page.PositionPage)
+                        {
+                            <li class="active">
+                                <a href="javascript: OnSearch(@p)">@p</a>
+                            </li>
+                        }
+                        else
+                        {
+                            if (p <= _page.PositionPage + 2)
+                            {
+                                <li>
+                                    <a href="javascript: OnSearch(@p)">@p</a>
+                                </li>
+                            }
+                        }
+                    }
+                }
+
+                <li>
+                    @if (_page.PositionPage < _page.ListIndex.Count)
+                    {
+                        _nextHref = "javascript: OnSearch(" + Convert.ToString(_page.PositionPage + 1) + ")";
+                        <a href="@_nextHref"><span>Next</span></a>
+                    }
+                    else
+                    {
+                        <span>Next</span>
+                    }
+                </li>
+                <li>
+                    @{
+                        _LastRecord = "javascript: OnSearch(" + Convert.ToString(_page.ListIndex.Count()) + ")";
+                        <a href="@_LastRecord"><span>Last</span></a>
+                    }
+                </li>
+                <li><span class="_pagination-empty"></span></li>
+                <li>
+                    <input id="ValidationPage" value="@_page.ListIndex.Count" style="display:none!important" readonly />
+                    <span class="_pagination-goto">
+                        <input id="page_goto" type="text" class="_number-only" style="border:1px solid #DDD; height: 21px; font-size: 8pt; padding: 2px; width: 40px;" maxlength="4" onkeypress="return event.charCode <= 57" />
+                    </span>
+                </li>
+                <li>
+                    <span class="_pagination-goto">
+                        <button type="button" class="_btn-go" style="height: 21px;" onclick="javascript: OnSearchGoTo($('#paging').val());">Go</button>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-3 text-right" style="height: 30px; padding-top: 3px;">
+            <div class="form-inline">
+                <span>Size</span>&nbsp;
+                <select class="input-xs" style="height: 25px;" id="paging" onchange="OnSearch(1)">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+    }
+    else
+    {
+        <input id="cntPage" value="0" style="display:none!important" />
+        <div class="col-xs-12 col-sm-9" style="height: 30px;">
+            <ul class="pagination pagination-sm hidden-xs">
+
+                <li>
+                    <span class="_pagination-label">Showing 0 to 0 of 0 row(s)</span>
+                </li>
+                <li><span>First</span></li>
+                <li><span>Prev</span></li>
+                <li><span>Next</span></li>
+                <li><span>Last</span></li>
+                <li><span class="_pagination-empty"></span></li>
+                <li>
+                    <input id="ValidationPage" value="@_page.ListIndex.Count" style="display:none!important" readonly />
+                    <span class="_pagination-goto">
+                        <input id="page_goto" type="text" class="_number-only" style="border:1px solid #DDD; height: 21px; font-size: 8pt; padding: 2px; width: 40px;" maxlength="4" onkeypress="return event.charCode <= 57" />
+                    </span>
+                </li>
+                <li>
+                    <span class="_pagination-goto">
+                        <button type="button" class="_btn-go" style="height: 21px;" onclick="javascript: OnSearchGoTo($('#paging').val());">Go</button>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-3 text-right" style="height: 30px; padding-top: 3px;">
+            <div class="form-inline">
+                <span>Size</span>&nbsp;
+                <select class="input-xs" style="height: 25px;" id="paging" onchange="OnSearch()">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <input id="cntPage" value="0" style="display:none!important" />
+    <div class="col-xs-12 col-sm-9" style="height: 30px;">
+        <ul class="pagination pagination-sm hidden-xs">
+
+            <li>
+                <span class="_pagination-label">Showing 0 to 0 of 0 row(s)</span>
+            </li>
+            <li><span>First</span></li>
+            <li><span>Prev</span></li>
+            <li><span>Next</span></li>
+            <li><span>Last</span></li>
+            <li><span class="_pagination-empty"></span></li>
+            <li>
+                <input id="ValidationPage" value="0" style="display:none!important" readonly />
+                <span class="_pagination-goto">
+                    <input id="page_goto" type="text" class="_number-only" style="border:1px solid #DDD; height: 21px; font-size: 8pt; padding: 2px; width: 40px;" maxlength="4" onkeypress="return event.charCode <= 57" />
+                </span>
+            </li>
+            <li>
+                <span class="_pagination-goto">
+                    <button type="button" class="_btn-go" style="height: 21px;" onclick="javascript: OnSearchGoTo($('#paging').val());">Go</button>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xs-12 col-sm-3 text-right" style="height: 30px; padding-top: 3px;">
+        <div class="form-inline">
+            <span>Size</span>&nbsp;
+            <select class="input-xs" style="height: 25px;" id="paging" onchange="OnSearch()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+    </div>
+}

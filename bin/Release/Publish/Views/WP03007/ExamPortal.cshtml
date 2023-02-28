@@ -1,0 +1,59 @@
+﻿@using AI070.Models.WP03007;
+@model IEnumerable<MasterExamSubject>
+
+@{
+    ViewBag.Title = "Exam Portal";
+    ViewBag.Breadcum = "Exam Portal";
+    int UserId = (int)ViewData["UserId"];
+    Layout = "~/Views/WP03007/_Layout.cshtml";
+}
+
+<div class="container pl-0 pr-0">
+    <h2 class="font-weight-bold mt-5 mb-4" style="font-size: 18px">Choose what Exam you want.</h2>
+
+    <div class="row row-cols-1" style="width: 80%">
+        @foreach (MasterExamSubject item in Model)
+        {
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+
+                        @* Jika menggunakan DateTime.Now, validasi melihat jam, menit dan detik *@
+                        @* Jika menggunakan DateTime.Today, validasi hanya melihat tanggal saja *@
+                        @if (item.ExamPeriodStart <= DateTime.Today && item.ExamPeriodEnd >= DateTime.Today)
+                        {
+
+                            if (item.Remedial == 0)
+                            {
+                                <p class="card-text">Anda belum melakukan ujian. Silahkan memulai ujian jika anda sudah siap.</p>
+                                @Html.ActionLink("Go To Exam", "Start", new { UserId = UserId, SubjectId = item.Id }, new { @class = "btn btn-success" })
+                            }
+                            else if (item.Remedial <= item.MaxRemedial)
+                            {
+                                <p class="card-text">Anda sudah pernah melakukan ujian. Perbaiki nilai anda di remedial ini.</p>
+                                @Html.ActionLink("Go To Remedial", "Start", new { UserId = UserId, SubjectId = item.Id }, new { @class = "btn btn-success" })
+                            }
+                            else
+                            {
+                                <p class="card-text">Anda telah selesai melakukan ujian ini. Silahkan pilih ujian lainnnya.</p>
+                                @Html.ActionLink("Go", "Index", new { UserId = UserId, SubjectId = item.Id }, new { @class = "btn btn-secondary disabled", @aria_disabled = "true" })
+                            }
+                        }
+                        @*else if (item.ExamPeriodStart > DateTime.Today)
+                        {
+                            <p class="card-text">Ujian ini belum dapat di mulai. Dan akan di mulai pada @item.ExamPeriodStart.ToString("dd-MM-yyyy hh:mm")</p>
+                        }
+                        else if (item.ExamPeriodEnd <= DateTime.Today)
+                        {
+                            <p class="card-text">Periode Ujian ini sudah selesai pada @item.ExamPeriodEnd.ToString("dd-MM-yyyy hh:mm") yang lalu.</p>
+                        }*@
+                    </div>
+
+				</div>
+
+			</div>
+        }
+    </div>
+
+</div>

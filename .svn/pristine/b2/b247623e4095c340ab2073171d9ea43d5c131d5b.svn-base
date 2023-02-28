@@ -1,0 +1,61 @@
+﻿
+    <div id="workflowDetail" style="display:none;">
+        <div><h2> Detail</h2></div>
+
+        <div id="exTab2" >
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#1" data-toggle="tab">Project Detail</a>
+                </li>
+                <li>
+                    <a href="#2" data-toggle="tab">Approval Division</a>
+                </li>
+                <li>
+                    <a href="#3" data-toggle="tab">Approval Coordinator</a>
+                </li>
+            </ul>
+
+            <div class="tab-content ">
+                <div class="tab-pane active" id="1">
+                    <div class="row">
+                        <h3>Project Name: <span id="projectName"></span></h3>
+                        <hr />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label>IMPB</label></div>
+                        <div class="col-md-6"><span id="impb"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label>Project Job</label></div>
+                        <div class="col-md-6"><span id="job"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label>Responsible Person</label></div>
+                        <div class="col-md-6"><span id="responsible_Person"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label>Leader</label></div>
+                        <div class="col-md-6"><span id="leader"></span></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6"><label>Supervisor Contractor</label></div>
+                        <div class="col-md-6"><span id="sp_Contractor"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label>Total Worker</label></div>
+                        <div class="col-md-6"><span id="sp_Contractor"></span></div>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="2">
+                    @Html.Partial("DivisionApproval")
+                </div>
+                <div class="tab-pane" id="3">
+                    @Html.Partial("CoordinatorApproval")
+                </div>
+            </div>
+        </div>
+
+        <button type="button" style="top:10px;" class="btn btn-info btn-sm" onclick="back()">Back</button>
+    </div>

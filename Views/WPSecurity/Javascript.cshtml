@@ -1,0 +1,535 @@
+﻿<script src="~/Content/QRScanner/jquery.qrcode.min.js"></script>
+<script>
+    var GET_SITE_URL = (window.location.href).split('/');
+    var SITE_URL = "";
+    var Message = [];
+    var scanQR = "";
+    var HealtyCheck = false;
+    var HealtyMessage = '';
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "WPMember") {
+            SITE_URL = SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+     //Get Message From TB_M_MESSAGE 
+    $.ajax({
+    url: "Message/GenerateMessage",
+    success: function (e) {
+            Message = e.res;
+        },
+        error: function (e) {
+            toastr.error('Generate Message Error, Not Instance to the Object');
+        }
+    });
+
+    var timer_scan = 0;
+
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            (getMenu == "DASHBOARD") ? DASHBOARD() : (getMenu == "TEST") ? TEST() : (getMenu == "SCAN") ? SCAN() : DATA();
+
+            $.ajax({
+                url: SITE_URL + 'HealtyCheck',
+                dataType: 'JSON',
+                async: false,
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        HealtyCheck = true;
+                        HealtyMessage = e.data[0].MESSAGE_TEXT;
+                    }
+                }
+            });
+            
+            //Qr Code Scanner Checker
+            //Html5Qrcode.getCameras().then(devices => {
+            //    if (devices && devices.length) {
+            //        var cameraId = devices[0].id;
+            //        // Create instance of the object. The only argument is the "id" of HTML element created above.
+            //        // Create instance of the object. The only argument is the "id" of HTML element created above.
+            //        const html5QrCode = new Html5Qrcode("reader");
+            //        if (getMenu == "SCAN") {
+            //            html5QrCode.start(
+            //                cameraId,     // retreived in the previous step.
+            //                {
+            //                    fps: 60,    // sets the framerate to 10 frame per second
+            //                    qrbox: 150  // sets only 250 X 250 region of viewfinder to
+            //                    // scannable, rest shaded.
+            //                },
+            //                qrCodeMessage => {
+            //                    // do something when code is read. For example:
+            //                    //console.log(`QR Code detected: ${qrCodeMessage}`);
+            //                    $('#scanQR').val(qrCodeMessage);
+            //                    if (timer_scan == 0) {
+            //                        getDataScan();
+            //                        timer_scan = 1;
+            //                        scanQR = qrCodeMessage;
+            //                    }
+            //                },
+            //                errorMessage => {
+            //                    // parse error, ideally ignore it. For example:
+            //                    console.log(`QR Code no longer in front of camera.`);
+            //                })
+            //                .catch(err => {
+            //                    // Start failed, handle it. For example,
+            //                    console.log(`Unable to start scanning, error: ${err}`);
+            //                });
+            //        } else {
+            //            html5QrCode.stop().then(ignore => {
+            //                // QR Code scanning is stopped.
+            //            }).catch(err => {
+            //                // Stop failed, handle it.
+            //            });
+            //        }
+
+            //    }
+            //}).catch(err => {
+            //    // handle err
+            //});
+
+            //$('#data-container').show();
+        });
+
+        $('#scanQR').change(function () {
+            getDataScan((this.value).toString());
+            
+        });
+
+        $('.button-back').click(function () {
+            $('#menu-container').show();
+            $('#scan-container').hide();
+            $('#data-container').hide();
+        });
+
+        getTabelContractor();
+    });
+
+    //Generate Message
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            
+            if (MSG_ID == M) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                return NEW_TXT;
+            }
+        }
+    }
+
+    function getDataScan(tmp) {
+        $('#scanQR').val('');
+
+        if (tmp != null && tmp != undefined) {
+            scanQR = tmp;
+        } else {
+            scanQR = $('#scanQR').val();
+        }
+        
+        
+        if (scanQR.length < 4) {
+            scanQR = 'IMPB-' + scanQR;
+
+        }
+        $('#QRcode').html('');
+        $('#QRcode').qrcode({ text: scanQR, width: 190, height: 190 });
+            $.ajax({
+                url: SITE_URL + "getDataScan",
+                data: {
+                    scanQR: scanQR
+                },
+                beforeSend: function (e) {
+                    clear_scan();
+                },
+                success: function (e) {
+                    
+                    var datas = $.extend(e.employee_details[0], e.get_implementor[0], e.get_impb_detail[0]);
+                   
+                    if (datas != null) {
+                        $('#QRnotFound').hide();
+                        setTimeout(function () {
+                            timer_scan = 0;
+                        },2500);
+
+                        $('#button-status').removeClass('btn-danger').addClass('btn-success');
+                        var ID = datas.ID;
+                        var ID_PROJECT = datas.ID_PROJECT;
+                        var IMPB_NO = datas.IMPB_NO;
+                        var NAMA_PROYEK = datas.PROJECT_NAME;
+                        var AREA = datas.AREA;
+                        var LOKASI_PROYEK = datas.LOKASI_PROYEK;
+                        var STATUS_IJIN_KERJA = datas.STATUS_IJIN_KERJA;
+                        var DIVISI = datas.DIVISI;
+                        var PELAKSANA_PROYEK = datas.PELAKSANA_PROYEK;
+                        var BAGIAN = datas.SECTION_OR_DIV;
+                        var PIMPINAN_PELAKSANAAN = datas.PIMPINAN_PELAKSANA;
+                        var PENGAWAS_PELAKSANAAN = datas.PENGAWAS_PELAKSANA;
+                        var MULAI_PELAKSANAAN = datas.MULAI_PELAKSANAAN;
+                        var AKHIR_PELAKSANAAN = datas.AKHIR_PELAKSANAAN;
+                        var JAM_PELAKSANAAN = datas.JAM_PELAKSANAAN;
+                        var FOTO = datas.FOTO;
+                        var REG_NO = datas.REG_NO;
+                        var ANZEN_LEADER = datas.ANZEN_LEADER;
+                        var ANZEN_NO = datas.ANZEN_SERTIFICATE_NO;
+                        var ANZEN_VALID_FROM = datas.ANZEN_DT_FROM;
+                        var ANZEN_VALID_TO = datas.ANZEN_DT_TO;
+                        var EMAIL = datas.EMAIL; 
+                        var FIRST_NAME = datas.FIRST_NAME;
+                        var LAST_NAME = datas.LAST_NAME;
+                        var NO_SAFETY_INDUCTION = datas.SAFETY_INDUCTION_NO;
+                        var VALID_DARI = datas.VALID_DARI;
+                        var VALID_SAMPAI = datas.VALID_SAMPAI;
+                        var SECTION = datas.SECTION;
+                        var GENDER = datas.GENDER;
+                        var ALAMAT = datas.ADDRESS;
+                        var SECURITY_CHECK = datas.SECURITY_CHECK;
+                        $('#user-id').val(ID);
+                        $('#project-id').val(ID_PROJECT);
+                        $('#inputRegNo').val(REG_NO);
+                        $('#inputAnzenLeader').val(ANZEN_LEADER);
+                        $('#inputFirstName').val(FIRST_NAME);
+                        $('#inputLastName').val(LAST_NAME);
+                        $('#inputImpbNo').val(IMPB_NO);
+                        $('#inputNoSafetyInduction').val(NO_SAFETY_INDUCTION);
+                        $('#inputValidDari').val(VALID_DARI);
+                        $('#inputValidSampai').val(VALID_SAMPAI);
+                        $('#inputSection').val(SECTION);
+                        $('#inputGender').val(GENDER)
+                        var GET_SITE_URL_IMAGE = (window.location.href).split('/');
+                        var SITE_URL_IMAGE = "";
+                        for (var i = 0; i < GET_SITE_URL_IMAGE.length; i++) {
+                            if (GET_SITE_URL_IMAGE[i] != "WPSecurity") {
+                                SITE_URL_IMAGE = SITE_URL_IMAGE + GET_SITE_URL_IMAGE[i] + "/";
+                            }
+                        }
+
+                        var IMAGE_PATH = SITE_URL_IMAGE + 'Content/Upload/Foto/' + REG_NO + '.PNG';
+                        $('.foto-container').css({ 'background-image': 'URL('+IMAGE_PATH+')'});
+
+                        //if (SECURITY_CHECK == 'OUT') {
+                        //    $('#modal-confirm-tittle').text(' Apakah anda yakin mengijinkannya keluar ?');
+                        //    $('#button-confirm').text('Ijinkan Keluar');
+                        //} else if(SECURITY_CHECK == 'IN') {
+                        //    $('#modal-confirm-tittle').text(' Apakah anda yakin mengijinkannya masuk ?');
+                        //    $('#button-confirm').text('Ijinkan Masuk');
+                        //}
+
+                        $('#inputEmail').val(EMAIL);
+                        $('#inputAlamat').val(ALAMAT);
+                        $('#inputAnzenNo').val(ANZEN_NO);
+                        $('#inputAnzenValidDari').val(ANZEN_VALID_FROM);
+                        $('#inputAnzenValidSampai').val(ANZEN_VALID_TO);
+                        $('#inputNamaProyek').val(NAMA_PROYEK);
+                        $('#inputArea').val(AREA);
+                        $('#inputLokasiProyek').val(LOKASI_PROYEK);
+                        $('#inputStatusIjinKerja').val(STATUS_IJIN_KERJA);
+                        $('#inputDivisi').val(DIVISI);
+                        $('#inputPelaksanaProyek').val(PELAKSANA_PROYEK);
+                        $('#inputBagian').val(BAGIAN);
+                        $('#inputPimpinan').val(PIMPINAN_PELAKSANAAN);
+                        $('#inputPengawas').val(PENGAWAS_PELAKSANAAN);
+                        $('#inputMulaiPelaksanaan').val(MULAI_PELAKSANAAN);
+                        $('#inputAkhirPelaksanaan').val(AKHIR_PELAKSANAAN);
+                        $('#inputJamPelaksanaan').val(JAM_PELAKSANAAN);
+                        $('#button-confirm').attr('disabled', false);
+                        $('#button-clear').attr('disabled', false);
+
+                        var d = new Date();
+                        var dateNow = parseInt(d.getFullYear()) + (parseInt((d.getMonth()) + 1) * 100 ) + parseInt((d.getDate()));
+                        var totalValidTo = 0;
+                        var totalPelaksanaan = 0;
+                        var totalAkhirPelaksanaan = 0;
+
+                        if (VALID_SAMPAI != null && VALID_SAMPAI != '') {
+                            totalValidTo = parseInt((VALID_SAMPAI.split('/'))[2].substr(0, 4)) + (parseInt((VALID_SAMPAI.split('/'))[1])*100) + parseInt((VALID_SAMPAI.split('/'))[0]);
+                        }
+
+                        if (MULAI_PELAKSANAAN != null && MULAI_PELAKSANAAN != '') {
+                            totalPelaksanaan = parseInt((MULAI_PELAKSANAAN.split('-'))[0].substr(0, 4)) + (parseInt((MULAI_PELAKSANAAN.split('-'))[1])* 100 ) + parseInt((MULAI_PELAKSANAAN.split('-'))[2]);
+                        }
+
+                        if (AKHIR_PELAKSANAAN != null && AKHIR_PELAKSANAAN != '') {
+                            totalAkhirPelaksanaan = parseInt((AKHIR_PELAKSANAAN.split('-'))[0].substr(0, 4)) + (parseInt((AKHIR_PELAKSANAAN.split('-'))[1])*100) + parseInt((AKHIR_PELAKSANAAN.split('-'))[2]);
+                        }
+
+                        if (datas.IMPB_NO == "" || datas.IMPB_NO == null) {
+                            $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                            if (scanQR.substring(0, 4) == 'IMPB') {
+                                $('#button-status').text(GenerateMessage('SCR001', ''));
+                                $('#inputImpbNo').val(scanQR);
+                                $('#deniedSound')[0].play();
+                                $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                            }
+                            else {
+                                $('#button-status').text(GenerateMessage('SCR002', ''));
+                                $('#deniedSound')[0].play();
+                                $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                            }
+                        }else if (dateNow > totalValidTo) {
+                            $('#button-status').text(GenerateMessage('SCR006', ''));
+                            $('#deniedSound')[0].play();
+                            $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                        } else if (dateNow < totalPelaksanaan) {
+                            $('#button-status').text(GenerateMessage('SCR007', ''));
+                            $('#deniedSound')[0].play();
+                            $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                        } else if (datas.CHECK_IN == 1) {
+                            Check_data();
+                        } else if (dateNow > totalAkhirPelaksanaan) {
+                            $('#button-status').text(GenerateMessage('SCR008', ''));
+                            $('#deniedSound')[0].play();
+                            $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                        } else {
+                            Check_data();
+                        }
+                            $('#button-confirm').attr('disabled', true);
+                            $('#button-clear').attr('disabled', false);
+                    } else {
+                        $('#QRcode').html("<div id='QRnotFound'></div>");
+                        if (scanQR.substring(0, 4) == 'IMPB') {
+                            $('#button-status').text(GenerateMessage('SCR001', ''));
+                            $('#inputImpbNo').val($('#scanQR').val());
+                        } else {
+                            $('#button-status').text(GenerateMessage('SCR003', ''));
+                            $('#button-confirm').attr('disabled', true);
+                            
+                        }
+                        $('#deniedSound')[0].play();
+                        
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    $('#deniedSound')[0].play();
+                }
+            });
+    }
+
+    function clear_scan(scan) {
+        
+        if (scan == true) {
+            $('#scanQR').val('');
+            $('#QRcode').html("<div id='QRnotFound'></div>");
+        }
+        
+        $('#inputRegNo').val('');
+        $('#inputAnzenLeader').val('');
+        $('#inputFirstName').val('');
+        $('#inputLastName').val('');
+        $('#inputImpbNo').val('');
+        $('#inputNoSafetyInduction').val('');
+        $('#inputValidDari').val('');
+        $('#inputValidSampai').val('');
+        $('#inputSection').val('');
+        var IMAGE_PATH = '';
+        $('.foto-container').css({ 'background-image': 'URL('+IMAGE_PATH+')'});
+        $('#inputGender').val("");
+        $('#inputEmail').val('');
+        $('#inputAlamat').val('');
+        $('#inputNamaProyek').val('');
+        $('#inputArea').val('');
+        $('#inputLokasiProyek').val('');
+        $('#inputStatusIjinKerja').val('');
+        $('#inputDivisi').val('');
+        $('#inputPelaksanaProyek').val('');
+        $('#inputBagian').val('');
+        $('#inputPimpinan').val('');
+        $('#inputPengawas').val('');
+        $('#inputMulaiPelaksanaan').val('');
+        $('#inputAkhirPelaksanaan').val('');
+        $('#inputJamPelaksanaan').val('');
+        $('#button-confirm').attr('disabled', true);
+        //$('#button-clear').attr('disabled', true);
+        $('#button-status').removeClass('btn-success').addClass('btn-danger');
+        
+    }
+
+    function TEST() {
+        //location.href = 'WPSecurity/index';
+        //var win = window.open(SITE_URL+'TEST/test', '_blank');
+        var win = window.open(SITE_URL +'TEST', '_blank');
+        win.focus();
+    }
+    function DASHBOARD() {
+        var win = window.open(SITE_URL+'Dashboard', '_blank');
+        win.focus();
+    }
+
+    function SCAN() {
+        $('#menu-container').hide();
+        $('#scan-container').show();
+        $('#scanQR').focus();
+    }
+
+    function DATA() {
+        $('#menu-container').hide();
+        $('#data-container').show();
+    }
+
+    function confirmation() {
+        $('#Confirmation_CheckIN').modal();
+    }
+
+    function Check_data() {
+        var ContractorCheckOut = false;
+        
+        if (HealtyCheck == true) {
+            $.ajax({
+            url: SITE_URL + 'checkOutScan',
+            data: {
+                ID: $('#user-id').val(),
+                IMPB_NO: $('#inputImpbNo').val()
+                },
+            async: false,
+            success: function (e) {
+                if (e.data.length > 0) {
+                    ContractorCheckOut = true;
+                }
+            }
+            });
+        }
+
+        if (ContractorCheckOut == false) {
+            var r = confirm(HealtyMessage);
+            if (r) {
+                processCheckSecurity();
+            }
+        } else {
+            processCheckSecurity();
+        }
+        
+    }
+
+    function processCheckSecurity() {
+        $.ajax({
+            url: SITE_URL + 'CHECK_DATA_SECURITY',
+            data: {
+                ID: $('#user-id').val(),
+                IMPB_NO: $('#inputImpbNo').val()
+            },
+            success: function (e) {
+                if (e.data.length > 0) {
+                    if (e.data[0].LINE_STS == 'FALSE') {
+                        $('#deniedSound')[0].play();
+                        $('#button-status').text(GenerateMessage('SCR004', ''));
+                        $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                    } else {
+                        $('#button-status').text(GenerateMessage('SCR005', ''));
+                        $('#grantedSound')[0].play();
+                        $('#button-status').removeClass('btn-danger').addClass('btn-success');
+                    }
+                }
+                 else {
+                    $('#deniedSound')[0].play();
+                    $('#button-status').text(GenerateMessage('SCR004', ''));
+                    $('#button-status').removeClass('btn-success').addClass('btn-danger');
+                }
+            }
+        });
+    }
+
+    function getTabelContractor() {
+        var EMPLOYEE_NAME = $('#searchEmployeeName').val();
+        var DEPARTEMENT = $('#searchDepartement').val();
+        var IMPLEMENT_FROM = $('#searchImplementDateFrom').val();
+        var IMPLEMENT_TO = $('#searchImpelementDateTo').val();
+
+        $('#tabel-contractor').DataTable().destroy();
+        $('#tabel-contractor').DataTable({
+        ajax: {
+            url : SITE_URL + 'GetContractor',
+            method: 'POST',
+            data: {
+                EMPLOYEE_NAME: EMPLOYEE_NAME,
+                COMPANY: COMPANY,
+                IMPLEMENT_FROM: IMPLEMENT_FROM,
+                IMPLEMENT_TO: IMPLEMENT_TO
+            },
+            global:false
+        },
+    
+        columns: [
+            { data: 'id', render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { data: 'FULLNAME', name: 'FULLNAME', width: 150 },
+            { data: 'COMPANY', name: 'COMPANY', width: 200 },
+            { data: 'PIC_STATUS', name: 'PIC_STATUS' },
+            { data: 'SAFETY_INDUCTION_NO', name: 'SAFETY_INDUCTION_NO', width: 100 },
+            {
+                data: 'SAFETY_INDUCTION_FROM', name: 'SAFETY_INDUCTION_FROM', class:"text-center", render: function (data, type, row) {
+                    var date = new Date();
+
+                    return data;
+                }
+            },
+            { data: 'SAFETY_INDUCTION_TO', name: 'SAFETY_INDUCTION_TO', class:"text-center" },
+            { data: 'SECTION', name: 'SECTION' },
+            { data: 'IDENTITY_NO', render: function (data, type, row, meta) {
+                    return "<button style='font-size:10px' onclick='getModalContractor(`"+data+"`)' class='btn btn-info btn-xs'><i class='fa fa-eye'></i> INFO</button>";
+                }
+            },
+        
+        ]
+    });
+
+    }
+
+    function getModalContractor(id) {
+        
+
+        $.ajax({
+            url: SITE_URL + 'getDataScan',
+            data: {
+                scanQR: id
+            },
+            success: function (e) {
+                var datas = $.extend(e.employee_details[0], e.get_implementor[0], e.get_impb_detail[0]);
+                var GENDER = datas.GENDER;
+                var REG_NO = datas.REG_NO;
+                $('#viewGender').val(GENDER);
+                var GET_SITE_URL_IMAGE = (window.location.href).split('/');
+                var SITE_URL_IMAGE = "";
+                for (var i = 0; i < GET_SITE_URL_IMAGE.length; i++) {
+                    if (GET_SITE_URL_IMAGE[i] != "WPSecurity") {
+                        SITE_URL_IMAGE = SITE_URL_IMAGE + GET_SITE_URL_IMAGE[i] + "/";
+                    }
+                }
+
+                var IMAGE_PATH = SITE_URL_IMAGE + 'Content/Upload/Foto/' + REG_NO + '.PNG';
+                $('#foto-contractor').attr('src', IMAGE_PATH);
+
+                $('#viewRegNo').val(datas.REG_NO);
+                $('#viewSertificateNo').val(datas.ANZEN_SERTIFICATE_NO);
+                $('#viewCompany').val(datas.COMPANY);
+                $('#viewValidDari').val(datas.ANZEN_DT_FROM);
+                $('#viewValidSampai').val(datas.ANZEN_DT_TO);
+                $('#viewEmail').val(datas.EMAIL);
+                $('#viewFirstName').val(datas.FIRST_NAME);
+                $('#viewLastName').val(datas.LAST_NAME);
+                $('#viewNoSafetyInduction').val(datas.SAFETY_INDUCTION_NO);
+                $('#viewSValidDari').val(datas.VALID_DARI);
+                $('#viewSValidSampai').val(datas.VALID_SAMPAI);
+                $('#viewSection').val(datas.SECTION);
+                $('#viewGender').val(datas.GENDER);
+                $('#viewAlamat').val(datas.ADDRESS);
+                $('#viewPicStatus').val(datas.PIC_STATUS);
+                $('#viewTipeIdentitas').val(datas.IDENTITY_TYPE);
+                $('#viewNoIdentitas').val(datas.NO_IDENTITY);
+                $('#viewPhone').val(datas.PHONE);
+                $('#modalContractor').modal();
+            }
+        });
+        
+    }
+
+</script>
+

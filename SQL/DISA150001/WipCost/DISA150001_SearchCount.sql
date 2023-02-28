@@ -1,0 +1,54 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@DATA_ID VARCHAR(MAX) = @DATA_ID;
+
+
+SET @@QUERY = '';
+SET @@QUERY = '
+	SELECT ISNULL(max(ROW_NUM),0) FROM 
+	(
+	SELECT 
+		ROW_NUMBER() OVER (ORDER BY DMC_TYPE ASC) ROW_NUM,		
+		DMC_TYPE as ID
+        ,DMC_TYPE as DMC_CODE_PARTS
+		,[MATERIAL_COST]
+        ,[FINISH_GOODS]
+        ,[PRINTING]
+        ,[LAMINATING_AKHIR]
+        ,[WASHING_GLASS]
+        ,[SCRIBE]
+        ,[HOGOSIRU]
+        ,[PUNCHING]
+        ,[SUDAH_PRESS]
+        ,[SUDAH_KAPTONTAPE]
+        ,[SUDAH_CHUKAN]
+        ,[SUDAH_FPC]
+        ,[SUDAH_HEATSEAL]
+        ,[SUDAH_HARIAWASE]
+        ,[SUDAH_AGING]
+        ,[SUDAH_OVEN]
+        ,[SUDAH_HOKYOTAPE]
+        ,[SUDAH_DOUBLETAPE]
+        ,[SUDAH_FUREKENSA]
+        ,[SUDAH_CEK_KELENGKAPAN]
+        ,[SUDAH_DENKI]
+        ,[SUDAH_GAIKAN]
+        ,[LABOR_COST]
+        ,[ORIGINAL_LABOR_COST]
+        ,[INDIRECT]
+        ,[MANUFACTURING_COST]
+        ,[FLG_STATUS_PROD]
+    FROM [ad_dis_pc_wip_cost]
+	WHERE 1=1	
+';
+
+IF(@DMC_CODE_PARTS <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND DMC_TYPE LIKE ''%'+RTRIM(@DMC_CODE_PARTS)+'%'' ';
+	END
+
+
+SET @@QUERY = @@QUERY+ ') AS TB';
+
+
+EXEC(@@QUERY);
+

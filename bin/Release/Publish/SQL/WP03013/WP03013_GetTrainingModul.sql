@@ -1,0 +1,13 @@
+﻿SELECT  [ID_TB_M_LEARN_MOD_TRAINING]
+      ,[TITLE]
+      ,[DESCRIPTION]
+      ,[CONTENT_TRAINING]
+      ,[FILE_NAME]
+      ,[TRAINING_FOR]
+      ,[CREATED_BY]
+      ,[CREATED_DT]
+      ,[UPDATED_BY]
+      ,[UPDATED_DT]
+      ,[FILE_PATH]
+  FROM [AB070_DB].[dbo].[TB_M_LEARN_MODULE_TRAINING]
+  WHERE IS_DELETED = 0

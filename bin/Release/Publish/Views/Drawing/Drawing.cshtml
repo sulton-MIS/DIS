@@ -1,0 +1,155 @@
+﻿@using Newtonsoft.Json
+@{
+////Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .page {
+        /*padding: 20mm;*/
+        /*margin: 10mm auto;*/
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .pageA4P {
+        width: 210mm;
+        min-height: 297mm;
+    }
+
+    .pageA4L {
+        width: 297mm;
+        min-height: 210mm;
+    }
+
+    .pageA3P {
+        width: 297mm;
+        min-height: 420mm;
+    }
+
+    .pageA3L {
+        width: 420mm;
+        min-height: 297mm;
+    }
+
+    .paper {
+        border: 1px #D3D3D3 solid;
+        background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
+    }
+
+    .paperDummy {
+        border: 1px #D3D3D3 solid;
+        background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
+    }
+
+    .paperA4P {
+        width: 595px;
+        height: 842px;
+    }
+
+    .paperA4L {
+        width: 842px;
+        height: 595px;
+    }
+
+    .paperA3P {
+        width: 842px;
+        height: 1190px;
+    }
+
+    .paperA3L {
+        width: 1190px;
+        height: 842px;
+    }
+</style>
+
+<script type="text/javascript" src="@Url.Content("~/Content/raphael/raphael-min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/raphael/raphael.free_transform.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/raphael/raphael.json.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/raphael/raphael.helper.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/raphael/raphael.export.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/AI070/DrawEngine.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/AI070/d3.js")"></script>
+
+<div class="col-xs-12">
+    @Html.Partial("_View")
+</div>
+
+<script type="text/javascript" language="javascript">
+
+    var pages = [];
+
+    var pagesData = @(Html.Raw(JsonConvert.SerializeObject(ViewData["JsonPages"])));
+    for (var i = 0; i < pagesData.length; i++) {
+        pages.push(pagesData[i]);
+    }
+    //test 2
+    //$('#tempJson').text(pages[0]);
+
+    var currentPage = 0;
+    var mode = 'edit';
+
+    // get query string
+    var getUrlVars = function () {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    };
+
+    var mouseDownX = 0;
+    var mouseDownY = 0;
+    var selectedElement;
+    var path;
+    var rect;
+    var circ;
+    var text;
+    var pathCounter = 0;
+    var rectCounter = 0;
+    var circCounter = 0;
+    var textCounter = 0;
+    var fieldCounter = 0;
+    var setCounter = 0;
+    var imgCounter = 0;
+    var ft;
+
+    var orientation = $('#hiddenOrientationValue').text();
+    var pageType = $('#hiddenPageTypeValue').text();
+
+    //A4P
+    //var paper = Raphael("paper", 595, 842);
+    //paper.setViewBox(0, 0, 595, 842, true);
+
+    var _orientation = orientation;
+    if(_orientation == '0') _orientation = 'Portrait';
+    if(_orientation == '1') _orientation = 'Landscape';
+    var paperSize = pageType + _orientation.substring(0,1);
+    if (paperSize == null || paperSize == '') paperSize = 'A3L';
+    $('.paper').removeClass('paperA3L');
+    $('.paper').removeClass('paperA3P');
+    $('.paper').removeClass('paperA4L');
+    $('.paper').removeClass('paperA4P');
+
+    $('.paper').addClass('paper' + paperSize);
+
+    var paperW = $('.paper').width();
+    var paperH = $('.paper').height();
+
+    var paper = Raphael("paper", paperW, paperH);
+    paper.setViewBox(0, 0, paperW, paperH, true);
+    paper.setSize('100%', '100%');
+    
+    var init = function (pageNumber) {
+        if (pageNumber > pages.length) pageNumber = pages.length - 1;
+
+        currentPage = 0;
+        loadPaper(null, true,true, mode || 'edit');
+    };
+
+    init(0);
+
+</script>

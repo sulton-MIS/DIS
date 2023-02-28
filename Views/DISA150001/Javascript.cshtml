@@ -1,0 +1,98 @@
+﻿
+<script>   
+    //MENU CARD
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            (getMenu == "PRODCOST") ? PRODCOST() :
+            (getMenu == "TANAOROSHI") ? TANAOROSHI() :
+            (getMenu == "PRICELIST") ? PRICELIST() :
+            (getMenu == "CONV_TABLE") ? CONV_TABLE() : 
+            (getMenu == "TYPE_CUST") ? TYPE_CUST() :
+            (getMenu == "CHINRITSU") ? CHINRITSU() : 
+            (getMenu == "CHOKORITSU") ? CHOKORITSU() : 
+            (getMenu == "LISTKONPO") ? LISTKONPO() :
+            (getMenu == "TRANSPORT") ? TRANSPORT() :
+            (getMenu == "UNIT_PRICE") ? UNIT_PRICE() :
+            DATA();
+
+        });
+    });
+
+    //function CONV_TABLE() {
+    //    $('#menu-container').hide();
+    //    $('#convTable-container').show();
+    //}
+
+    function CONV_TABLE() {
+        /*var win = window.open(SITE_URL + 'ConventionTable', '_blank');*/
+        var win = window.open(SITE_URL + '../DIST060001', '_blank');
+        win.focus();
+    }
+
+    function TYPE_CUST() {
+        var win = window.open(SITE_URL + 'TypeCustomer', '_blank');
+        win.focus();
+    }
+
+    function CHINRITSU() {
+        var win = window.open(SITE_URL + 'Chinritsu', '_blank');
+        win.focus();
+    }
+
+    function CHOKORITSU() {
+        var win = window.open(SITE_URL + 'Chokoritsu', '_blank');
+        win.focus();
+    }
+
+    function TANAOROSHI() {
+        var win = window.open(SITE_URL + 'WipCost', '_blank');
+        win.focus();
+    }
+
+    function PRICELIST() {
+        var win = window.open(SITE_URL + 'PriceList', '_blank');
+        win.focus();
+    }
+
+    function LISTKONPO() {
+        var win = window.open(SITE_URL + 'ListKonpo', '_blank');
+        win.focus();
+    }
+
+    function TRANSPORT() {
+        var win = window.open(SITE_URL + 'Transport', '_blank');
+        win.focus();
+    }
+   
+    function UNIT_PRICE() {
+        var win = window.open(SITE_URL + 'UnitPrice', '_blank');
+        win.focus();
+    }
+
+    function PRODCOST() {
+        $('#menu-container').hide();
+        //$('#Tanaoroshi-container').hide();
+        $('#prodCost-container').show();        
+    }
+
+    //function TANAOROSHI() {
+    //    $('#menu-container').hide();
+    //    $('#prodCost-container').hide(); 
+    //    //$('#Tanaoroshi-container').show();
+    //}
+
+    function back_summary() {
+        location.href = "/DISA150001";                
+        //$('#prodCost-data-detail').hide();
+        //$('#prodCost-container').show();        
+    }
+
+    function back_menu() {
+        //location.href = "/DISA150001";
+        $('#menu-container').show();
+        $('#prodCost-container').hide();        
+    }
+
+    
+</script>

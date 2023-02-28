@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AI070</name>
+    </assembly>
+    <members>
+        <member name="M:AI070.Controllers.DISA150001Controller.WipCost">
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        </member>
+        <member name="M:AI070.Controllers.DISA150001Controller.PriceList">
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        </member>
+        <member name="M:AI070.Controllers.DISA150001Controller.ConventionTable">
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        </member>
+        <member name="M:AI070.Controllers.Util.CSTDNPOIUtil.CopyRow(NPOI.HSSF.UserModel.HSSFSheet,System.Int32,System.Int32)">
+            <summary>
+            HSSFRow Copy Command
+            
+            Description:  Inserts a existing row into a new row, will automatically push down
+                          any existing rows.  Copy is done cell by cell and supports, and the
+                          command tries to copy all properties available (style, merged cells, values, etc...)
+            </summary>
+            <param name="workbook">Workbook containing the worksheet that will be changed</param>
+            <param name="worksheet">WorkSheet containing rows to be copied</param>
+            <param name="sourceRowNumber">Source Row Number</param>
+            <param name="destinationRowNumber">Destination Row Number</param>
+        </member>
+        <member name="T:AI070.Helpers.Utility">
+            <summary>
+            Utility
+            </summary>
+        </member>
+        <member name="M:AI070.Helpers.Utility.GetInstalledPrinters">
+            <summary>
+            Get installed printer
+            </summary>
+            <returns>Collection of printer name</returns>
+        </member>
+        <member name="M:AI070.Helpers.Utility.GetDefaultPrinter">
+            <summary>
+            Get default printer
+            </summary>
+            <returns>Default printer name</returns>
+        </member>
+        <member name="M:AI070.Helpers.Utility.GetPrinterByName(System.String)">
+            <summary>
+            Get printer by name
+            </summary>
+            <param name="printerName">Printer name</param>
+            <returns>Find pronter result or default printer</returns>
+        </member>
+        <member name="M:AI070.Helpers.Utility.ImageToBase64(System.Drawing.Image,System.Drawing.Imaging.ImageFormat)">
+            <summary>
+            Image to base 64 string
+            </summary>
+            <param name="image">Image to be converted</param>
+            <param name="format">Image format</param>
+            <returns>base 64 string image</returns>
+        </member>
+        <member name="M:AI070.Helpers.Utility.Base64ToImage(System.String)">
+            <summary>
+            base 64 string to image
+            </summary>
+            <param name="base64String">Base 64 string image</param>
+            <returns>Image result</returns>
+        </member>
+        <member name="M:AI070.Helpers.Utility.SvgToImage(System.String,System.String)">
+            <summary>
+            Convert svg string to png image
+            </summary>
+            <param name="svgString">Svg string</param>
+            <param name="filename">Filename</param>
+            <returns>Convertion result</returns>
+        </member>
+        <member name="T:AI070.Models.DISA150001Master.PagingModel_DISA150001">
+            
+        </member>
+        <member name="P:AI070.Models.STD.Validation.Result">
+            <summary>
+            Result
+            </summary>
+        </member>
+        <member name="P:AI070.Models.STD.Validation.Message">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <member name="P:AI070.Models.STD.Validation.Param">
+            <summary>
+            Param
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,148 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+
+@{
+    List<DISA150001_Chinritsu_Master> ListProses = (List<DISA150001_Chinritsu_Master>)ViewData["name_kotei"];
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD CHINRITSU </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">NAMA PROSES</label>
+                        <select class="form-control select2" id="addNameKotei" required>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- Pilih Proses --- </option>
+                            @{
+                                if (ListProses != null)
+                                {
+                                    if (ListProses.Count() > 0)
+                                    {
+                                        foreach (DISA150001_Chinritsu_Master item in ListProses)
+                                        {
+                                            <option value="@item.NAME_KOTEI">@item.NAME_KOTEI</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                        <div class="col-md-6">
+                            <label class="required">ID PROSES</label>
+                            <input id="addIdKotei" required type="text" class="form-control" disabled="" />
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>PART</label>
+                            @*<input id="addFactory" required type="text" class="form-control" />*@
+                            <select class="form-control" id="addPart" name="dropdown">
+                                <option id="addPart" value="F" selected="selected"> F </option>
+                                <option id="addPart" value="G" selected="selected"> G </option>
+                                <option id="addPart" value="T" selected="selected"> T </option>
+                                <option id="addPart" value="A" selected="selected"> A </option>
+                                <option id="addPart" value="P" selected="selected"> P </option>                                
+                                <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH PART --- </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>FACTORY</label>
+                            @*<input id="addFactory" required type="text" class="form-control" />*@
+                            <select class="form-control" id="addFactory" name="dropdown">
+                                <option id="addFactory" value="assembly" selected="selected"> assembly </option>
+                                <option id="addFactory" value="etching" selected="selected"> etching </option>
+                                <option id="addFactory" value="kompo" selected="selected"> kompo </option>
+                                <option id="addFactory" value="non printing" selected="selected"> non printing </option>
+                                <option id="addFactory" value="press" selected="selected"> press </option>
+                                <option id="addFactory" value="printing" selected="selected"> printing </option>                             
+                                <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH FACTORY --- </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>CHINRITSU</label>
+                            <input id="addChinritsu" required type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT CHINRITSU </h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">NAMA PROSES</label>
+                        <input id="editNameKotei" required type="text" class="form-control" disabled="" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">ID PROSES</label>
+                        <input id="editIdKotei" required type="text" class="form-control" disabled="" />
+                    </div>
+                    <input id="EditID" required type="hidden" class="form-control" disabled="" />
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>PART</label>
+                        @*<input id="editFactory" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editPart" name="dropdown">
+                            <option id="editPart" value="F" selected="selected"> F </option>
+                            <option id="editPart" value="G" selected="selected"> G </option>
+                            <option id="editPart" value="T" selected="selected"> T </option>
+                            <option id="editPart" value="A" selected="selected"> A </option>
+                            <option id="editPart" value="P" selected="selected"> P </option>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH PART --- </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>FACTORY</label>
+                        @*<input id="editFactory" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editFactory" name="dropdown">
+                            <option id="editFactory" value="assembly" selected="selected"> assembly </option>
+                            <option id="editFactory" value="etching" selected="selected"> etching </option>
+                            <option id="editFactory" value="kompo" selected="selected"> kompo </option>
+                            <option id="editFactory" value="non printing" selected="selected"> non printing </option>
+                            <option id="editFactory" value="press" selected="selected"> press </option>
+                            <option id="editFactory" value="printing" selected="selected"> printing </option>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH FACTORY --- </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>CHINRITSU</label>
+                        <input id="editChinritsu" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

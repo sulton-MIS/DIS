@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+
+<div class="col-xs-12" >
+<div id="divsearch">
+    @Html.Partial("_Search")
+    </div>
+</div>
+ 
+<div class="col-xs-12">
+    @Html.Partial("_View")
+    @Html.Partial("_Modal")
+</div>
+@section BodyScript{ 
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/bootstrap-datepicker.js")"></script>  
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/daterangepicker.js")"></script>
+}
+
+<script type="text/javascript" language="javascript">
+     $(document).ready(function () {
+        //onGetCounter(1);
+        
+            $("._datepicker").datepicker({
+                autoclose: true,
+                format: 'dd M yyyy',
+                minViewMode: 'date'
+            });
+    });
+
+    function onGetCounter(page) {
+        var sz= $("#cbosizegrid").val();
+        if(sz==null){sz=10;}
+        $.ajax({
+            type: "Post",
+            url: "@Html.Toyota().Page.GetActionUrl("getCounterApp")",
+            data: {
+                    application:$("#txtappsearch").val(),  
+                    periodeFrom: $("#txtappperiodefrom").val(),
+                    periodeTo: $("#txtappperiodeto").val(),
+                    functionname: $("#txtfunction").val(),
+                    username: $("#txtusername").val(),
+                    page:page,
+                    size:sz
+                  },
+            beforeSend:function () {$('#btnSearch').button('loading');},
+            success: function (result) { 
+                    $("#grdcounter").html(result); 
+                    $("#cbosizegrid").val(sz);
+                  },
+            complete:function () {$('#btnSearch').button('reset');}
+        }); 
+    }
+
+    $("#cbosizegrid").change(function () {
+        onGet(1);
+    }); 
+
+    $("#btnClearSearch").click(function () {
+        onClearSearch();
+        
+    });
+
+    $("#btnSearch").click(function () {
+        onGetCounter(1);
+    });
+     
+    function onCallback(pg)
+    {
+        var mx= $("#txtmaxpg").val();
+        if((pg<=mx)&&(pg>0)){
+            onGetCounter(pg);
+        }
+        else{
+            msgWarning('Page not found');
+        }
+    }
+
+    function onClearSearch() {
+        $.ajax({
+            type: "Post",
+            url: "@Html.Toyota().Page.GetActionUrl("getDefaultDate")",
+            data: {}, 
+            success: function (result) {  
+                    $('#txtappperiodefrom').val(result[0].substring(3));
+                    $('#txtappperiodeto').val(result[1].substring(3));
+                    $("#txtappsearch").val(""); 
+                    onGet(1);
+            }
+        });   
+    }
+     
+    $("#btnDownload").click(function () {
+        var from = $('#txtappperiodefrom').val();
+        var to = $('#txtappperiodeto').val();
+        var app = $('#txtappsearch').val(); 
+            $.fileDownload("/VisitCounterApp/DownloadReport", {
+                httpMethod: "POST",
+                data: {
+                    from: from,
+                    to: to,
+                    application: app
+                }
+            }); 
+    });
+</script>
+ 

@@ -1,0 +1,257 @@
+﻿<script>
+var SITE_URL = window.location.href + "/";
+    var ListDataWorkingHours = [];
+    var ListPekerjaan = "";
+    var ListDampakPIC = "";
+    var ListBahayaPIC = "";
+    var ListUser = "";
+    var ListShift = "";
+    var Message = [];
+    var CountShift = 0;
+    var RiskCount = 0;
+    var RiskValue = 0.0;
+    var RiskGrade = "";
+    var RiskAvg = 0.0;
+    var PelaksanaValue = "";
+
+    var GET_SITE_URL = (window.location.href).split('/');
+        var NEW_SITE_URL = "";
+
+        for (var i = 0; i < GET_SITE_URL.length; i++) {
+            if (GET_SITE_URL[i] != "WP02002") {
+                NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+            }
+    }
+
+$(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+        $('#inputForm').hide();
+
+       
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('.hksafety').hide();
+        $('.hkenv').hide();
+
+        $('.select2').select2({ width: '100%' });
+        $('.select2_height').select2({ width: '100%' });
+
+        $.ajax({
+            url: NEW_SITE_URL + "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP020") {
+                        $('#modal-submit-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+});
+
+
+// tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+function OnSearch(page)
+    {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+ function searchData(page, size) {
+
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                PROJECT_CODE: $('#searchProjectCode').val(),
+                PROJECT_NAME: $('#searchProjectName').val(),
+                DATE_FROM: $('#searchDate').val(),
+                DATE_TO: $('#searchDateTo').val(),
+                COMPANY: $('#searchCompany').val(),
+                LOCATION: $('#searchLocation').val(),
+                DIVISION: $('#searchDivision').val(),
+                WP_IMPB_NO: $('#searchIMPB').val(),
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+
+                //// time unit
+                //var time_unit_val = Var.split(',')[6].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_unit_val).prop('disabled', true);
+
+                //// time value
+                //var time_value_val = Var.split(',')[7].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_value_val).prop('disabled', true);
+                //$('#' + time_value_val).attr('placeholder', Var.split(',')[2].replace(/^\s+|\s+$/g, ''));
+
+                //// exec time
+                //var exec_time_val = Var.split(',')[8].replace(/^\s+|\s+$/g, '');
+                //$('#' + exec_time_val).prop('disabled', true);
+
+                //// status
+                //var status_val = Var.split(',')[9].replace(/^\s+|\s+$/g, '');
+                //$('#' + status_val).prop('disabled', true);
+
+
+                // tombol save edit
+                //var save_edit = Var.split(',')[11].replace(/^\s+|\s+$/g, '');
+
+                //// tombol cancel edit
+                //var cancel_edit = Var.split(',')[12].replace(/^\s+|\s+$/g, '');
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    function clear_search() {
+        $('#searchProjectCode').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                PROJECT_CODE: "xxxxxxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    function viewDetail(item) {
+        console.log(item);
+        $("#workflowDetail").show();
+        $('#searchForm').hide();
+        $('#GridProject').hide();
+        $("#SearchCriteriaForm").hide();
+        $("#projectName").text(item.PROJECT_NAME);
+        $("#impb").text(item.WP_IMPB_NO);
+        $("#leader").text(item.SUPERVISOR_NAME);
+        $("#sp_Contractor").text(item.LEADER_NAME);
+        $("#job").text(item.JOB_NAME);
+        $("#responsible_Person").text(item.CREATED_BY);
+    }
+
+    function back() {
+        $("#workflowDetail").hide();
+        $('#searchForm').show();
+        $('#GridProject').show();
+        $("#SearchCriteriaForm").show();
+    }
+    </script>

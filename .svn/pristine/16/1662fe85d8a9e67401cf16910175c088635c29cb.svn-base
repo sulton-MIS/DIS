@@ -1,0 +1,32 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<!--form confirm delete data-->
+<div id="Confirmation_CheckIN" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+
+                <div id="modal-confirm-tittle"> Apakah anda yakin mengijinkannya masuk ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" onclick="Check_data()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>

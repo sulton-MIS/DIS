@@ -1,0 +1,33 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50) = @START;
+DECLARE @@DISPLAY VARCHAR(50) = @DISPLAY;
+
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY kd_lokasi + 0 ASC) ROW_NUM,
+	kd_lokasi as ID, 
+	*
+	FROM ad_dis_ma_lokasi_asset		
+	WHERE 1=1
+';
+
+IF(@KD_LOKASI <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND kd_lokasi LIKE ''%'+RTRIM(@KD_LOKASI)+'%'' ';
+	END
+IF(@NAMA_LOKASI <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND nama_lokasi LIKE ''%'+RTRIM(@NAMA_LOKASI)+'%'' ';
+	END
+
+SET @@QUERY = @@QUERY +') as TB ';
+
+IF(@@START > 0 AND @@DISPLAY > 0)
+BEGIN	
+	SET @@QUERY = @@QUERY +' WHERE ROW_NUM BETWEEN '+@@START+' AND '+@@DISPLAY+' ORDER BY kd_lokasi + 0 ASC';
+END
+
+EXEC(@@QUERY)

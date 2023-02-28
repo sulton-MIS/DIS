@@ -1,0 +1,268 @@
+﻿<style>
+    #target {
+        width: 9vw;
+        height: 9vw;
+        min-height: 85px;
+        min-width: 85px;
+        padding: 1vw;
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        border: green solid 2px;
+        font-size: small;
+    }
+
+        #target h3 {
+            text-align: center;
+            margin: 0;
+        }
+
+    #draggable {
+        padding: 0.5em;
+        top: 10vh;
+        left: 10vw;
+        height: auto!important;
+        width: auto!important;
+        position: fixed;
+    }
+
+    body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .mybutton {
+        position: absolute;
+        z-index: 9;
+    }
+
+    .ui-rotatable-handle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .help {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        cursor:help;
+        transform: translate(-50%, -50%);
+    }
+
+    .area-title {
+        position: absolute;
+        bottom:0;
+        left: 50%;
+        cursor: help;
+        transform: translate(-50%, -50%);
+    }
+
+    #border-color {
+        position: absolute;
+        display: flex;
+        bottom: 0px;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .border-green {
+        height: 25px;
+        width: 25px;
+        background-color:green;
+        display:inline-block;
+        cursor:pointer;
+    }
+
+    .border-yellow {
+        height: 25px;
+        width: 25px;
+        background-color: yellow;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .border-red {
+        height: 25px;
+        width: 25px;
+        background-color: red;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .border-area-location {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border: white solid 2px;
+    }
+
+    .new-border-area-location {
+        position: absolute;
+    }
+
+    .popover {
+        width: 470px;
+        max-width: 500px;
+    }
+
+    .miniLocation {
+        position:absolute;
+        left: 50%;
+        top: 50%;
+        font-size: 40px;
+        color: red;
+        transform: translate(-50%, -50%);
+    }
+
+    .saveLocation {
+        left: 50%;
+        transform: translate(-50%, -50%);
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid" id="area-container" style="display:none">
+    <div class="row">
+        <div class="col" id="area-content-container">
+            
+            <img id="image-area-full" src="" style="width:100vw; height:100vh" />
+            <div id="draggable">
+                <div id="target">
+                    <button onclick="getPosition()" class="btn btn-primary btn-xs saveLocation">SAVE</button><br />
+                    <span class="area-title">LOCATION</span><br />
+                    <i data-toggle="popover" data-html="true" data-placement="top" title="How to use (?)" data-content="* Drag the square to move the area location. <br> * You can resize the box by dragging the border on right or bottom. <br> You can rotate the square by click angel icon hold and move diagonal or with scroll mouse. <br> * You can change the border color by clik color on square" class="fa fa-question-circle help"></i>
+
+                    @*<div id="border-color">
+            <span onclick="changeborder('green')" class="border-green"></span>
+            <span onclick="changeborder('yellow')" class="border-yellow"></span>
+            <span onclick="changeborder('red')" class="border-red"></span>
+        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var rotate = 0;
+    var topPos = $('#draggable').position().top;
+    var leftPos = $('#draggable').position().left;
+    var widthSquare = $('#draggable').width(); 
+    var heightSquare = $('#draggable').height();
+    var widthSquare2 = $('#target').width();
+    var heightSquare2 = $('#target').height();
+    
+
+    var windowWidth = window.innerWidth;
+    var windowHeight = window.innerHeight;
+    var borderArea = "green";
+    $(document).ready(function () {
+        //$('#target').resizable({
+        //    resize: function (e, ui) {
+        //        var height = ui.size.height;
+        //        var width = ui.size.width;
+        //        if (height > 100 || width > 100) {
+        //            $('.area-title').show();
+        //        } else {
+        //            $('.area-title').hide();
+        //        }
+        //    }
+        //}).rotatable({
+        //    rotate: function (event, ui) {
+        //        rotate = ui.angle.current;
+        //    }
+        //});
+
+        $('#target').resizable({
+            resize: function (e, ui) {
+                var height = ui.size.height;
+                var width = ui.size.width;
+                if (height > 100 || width > 100) {
+                    $('.area-title').show();
+                } else {
+                    $('.area-title').hide();
+                }
+            }
+        });
+
+        $('#draggable').draggable();
+        
+        $('[data-toggle="popover"]').popover();
+        $('[data-toggle="popover"]').on('mouseleave', function () {
+
+        setTimeout(function () {
+            $('.popover').fadeOut('slow');
+        }, 2000);
+        });
+    });
+
+    function changeborder(color) {
+        $('#target').css('border-color', color);
+        borderArea = color;
+    }
+
+    function getCurrentRotationFixed( elid ) {
+      var el = document.getElementById(elid);
+      var st = window.getComputedStyle(el, null);
+      var tr = st.getPropertyValue("-webkit-transform") ||
+           st.getPropertyValue("-moz-transform") ||
+           st.getPropertyValue("-ms-transform") ||
+           st.getPropertyValue("-o-transform") ||
+           st.getPropertyValue("transform") ||
+           "fail...";
+
+      if( tr !== "none") {
+        console.log('Matrix: ' + tr);
+
+        var values = tr.split('(')[1];
+          values = values.split(')')[0];
+          values = values.split(',');
+        var a = values[0];
+        var b = values[1];
+        var c = values[2];
+        var d = values[3];
+
+        var scale = Math.sqrt(a*a + b*b);
+        var radians = Math.atan2(b, a);
+        if ( radians < 0 ) {
+          radians += (2 * Math.PI);
+        }
+        var angle = Math.round( radians * (180/Math.PI));
+        /**/
+    
+      } else {
+        var angle = 0;
+      }
+
+      // works!
+        console.log('Rotate: ' + angle + 'deg');
+        return angle;
+}
+
+    function getPosition(){
+        topPos = $('#draggable').position().top;
+        leftPos = $('#draggable').position().left;
+        widthSquare = $('#draggable').width(); 
+        heightSquare = $('#draggable').height();
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+
+        //rotate = getCurrentRotationFixed('target');
+        var miniMapWidth = $('#image-area').width();
+        var miniMapHeight = $('#image-area').height();
+        var width = $('.border-area-location').width();
+        var height = $('.border-area-location').height();
+        $('.border-area-location').css('border-color', borderArea);
+        $('.border-area-location').css('top', (topPos / windowHeight) * 100 + 2.5 +'%');
+        $('.border-area-location').css('left', (leftPos / windowWidth) * 100 +'%');
+        $('.border-area-location').css('width', (widthSquare / windowWidth) * 100 +1 + '%');
+        $('.border-area-location').css('height', (heightSquare / windowHeight) * 100+ '%');
+        $('.border-area-location').css('transform', 'rotate('+ rotate + 'rad)');
+
+    saveLocationArea()
+   }
+</script>

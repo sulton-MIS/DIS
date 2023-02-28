@@ -1,0 +1,577 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA150001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            OnSearch(1);
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        enterKey_Press();
+        jQuery('#btn_search').click();
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function add_check() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var LOT_SIZE = $('#addLotSize').val();
+        var MASTER_QTY = $('#addMasterQty').val();
+        var BOX_QTY = $('#addBoxQty').val();
+        var WEIGHT = $('#addWeight').val();
+        var TOTAL_WEIGHT = $('#addTotalWeight').val();
+        var JENIS_TRANSPORTATION = $('#addJenisTransportation').val();
+        var TRANSPORTATION_COST = $('#addTransportationCost').val();
+        var AWB_FREE_JPN = $('#addAwbFreeJpn').val();
+        var EDI_FREE_AIR_JPN = $('#addEdiFreeAirJpn').val();
+        var AMS_FREE_JPN = $('#addAmsFreeJpn').val();
+        var TRUCKING_0_250_KG_JPN = $('#addTrucking_0_250_Kg').val();
+        var HANDLING_AIR_UNDER_50_KG_JPN = $('#addHandlingAir_Under_50_Kg').val();
+        var HANDLING_AIR_UPTO_50_KG = $('#addHandlingAir_Up_50_Kg').val();
+        var TOTAL_COST = $('#addTotalCost').val();
+
+        var sts = true;
+
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var ITEM_CODE = $('#editItemCode').val();
+        var LOT_SIZE = $('#editLotSize').val();
+        var MASTER_QTY = $('#editMasterQty').val();
+        var BOX_QTY = $('#editBoxQty').val();
+        var WEIGHT = $('#editWeight').val();
+        var TOTAL_WEIGHT = $('#editTotalWeight').val();
+        var JENIS_TRANSPORTATION = $('#editJenisTransportation').val();
+        var TRANSPORTATION_COST = $('#editTransportationCost').val();
+        var AWB_FREE_JPN = $('#editAwbFreeJpn').val();
+        var EDI_FREE_AIR_JPN = $('#editEdiFreeAirJpn').val();
+        var AMS_FREE_JPN = $('#editAmsFreeJpn').val();
+        var TRUCKING_0_250_KG_JPN = $('#editTrucking_0_250_Kg').val();
+        var HANDLING_AIR_UNDER_50_KG_JPN = $('#editHandlingAir_Under_50_Kg').val();
+        var HANDLING_AIR_UPTO_50_KG = $('#editHandlingAir_Up_50_Kg').val();
+        var TOTAL_COST = $('#editTotalCost').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+
+    //tombol Add New
+    function addNew() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var LOT_SIZE = $('#addLotSize').val();
+        var MASTER_QTY = $('#addMasterQty').val();
+        var BOX_QTY = $('#addBoxQty').val();
+        var WEIGHT = $('#addWeight').val();
+        var TOTAL_WEIGHT = $('#addTotalWeight').val();
+        var JENIS_TRANSPORTATION = $('#addJenisTransportation').val();
+        var TRANSPORTATION_COST = $('#addTransportationCost').val();
+        var AWB_FREE_JPN = $('#addAwbFreeJpn').val();
+        var EDI_FREE_AIR_JPN = $('#addEdiFreeAirJpn').val();
+        var AMS_FREE_JPN = $('#addAmsFreeJpn').val(); 
+        var TRUCKING_0_250_KG_JPN = $('#addTrucking_0_250_Kg').val();
+        var HANDLING_AIR_UNDER_50_KG_JPN = $('#addHandlingAir_Under_50_Kg').val();
+        var HANDLING_AIR_UPTO_50_KG = $('#addHandlingAir_Up_50_Kg').val();
+        var TOTAL_COST = $('#addTotalCost').val();
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../ADD_NEW_TRANSPORT',
+            async: false,
+            data: {
+                ITEM_CODE: ITEM_CODE,
+                LOT_SIZE: LOT_SIZE,
+                MASTER_QTY: MASTER_QTY,
+                BOX_QTY: BOX_QTY,
+                WEIGHT: WEIGHT,
+                TOTAL_WEIGHT: TOTAL_WEIGHT,
+                JENIS_TRANSPORTATION: JENIS_TRANSPORTATION,
+                TRANSPORTATION_COST: TRANSPORTATION_COST,
+                AWB_FREE_JPN: AWB_FREE_JPN,
+                EDI_FREE_AIR_JPN: EDI_FREE_AIR_JPN,
+                AMS_FREE_JPN: AMS_FREE_JPN,
+                TRUCKING_0_250_KG_JPN: TRUCKING_0_250_KG_JPN,
+                HANDLING_AIR_UNDER_50_KG_JPN: HANDLING_AIR_UNDER_50_KG_JPN,
+                HANDLING_AIR_UPTO_50_KG: HANDLING_AIR_UPTO_50_KG,
+                TOTAL_COST: TOTAL_COST,
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    jQuery('#btn_search').click();
+                    clear_add();                   
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                    $('#btnNo').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var ITEM_CODE = $('#addItemCode').val();
+        var LOT_SIZE = $('#addLotSize').val();
+        var MASTER_QTY = $('#addMasterQty').val();
+        var BOX_QTY = $('#addBoxQty').val();
+        var WEIGHT = $('#addWeight').val();
+        var TOTAL_WEIGHT = $('#addTotalWeight').val();
+        var JENIS_TRANSPORTATION = $('#addJenisTransportation').val();
+        var TRANSPORTATION_COST = $('#addTransportationCost').val();
+        var AWB_FREE_JPN = $('#addAwbFreeJpn').val();
+        var EDI_FREE_AIR_JPN = $('#addEdiFreeAirJpn').val();
+        var AMS_FREE_JPN = $('#addAmsFreeJpn').val();
+        var TRUCKING_0_250_KG_JPN = $('#addTrucking_0_250_Kg').val();
+        var HANDLING_AIR_UNDER_50_KG_JPN = $('#addHandlingAir_Under_50_Kg').val();
+        var HANDLING_AIR_UPTO_50_KG = $('#addHandlingAir_Up_50_Kg').val();
+        var TOTAL_COST = $('#addTotalCost').val();
+
+    }
+
+    //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var ITEM_CODE = $('#editItemCode');
+        var LOT_SIZE = $('#editLotSize');
+        var MASTER_QTY = $('#editMasterQty');
+        var BOX_QTY = $('#editBoxQty');
+        var WEIGHT = $('#editWeight');
+        var TOTAL_WEIGHT = $('#editTotalWeight');
+        var JENIS_TRANSPORTATION = $('#editJenisTransportation');
+        var TRANSPORTATION_COST = $('#editTransportationCost');
+        var AWB_FREE_JPN = $('#editAwbFreeJpn');
+        var EDI_FREE_AIR_JPN = $('#editEdiFreeAirJpn');
+        var AMS_FREE_JPN = $('#editAmsFreeJpn');
+        var TRUCKING_0_250_KG_JPN = $('#editTrucking_0_250_Kg');
+        var HANDLING_AIR_UNDER_50_KG_JPN = $('#editHandlingAir_Under_50_Kg');
+        var HANDLING_AIR_UPTO_50_KG = $('#editHandlingAir_Up_50_Kg');
+        var TOTAL_COST = $('#editTotalCost');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        ID.val(Send_Var[0]);
+        ITEM_CODE.val(Send_Var[1]);
+        LOT_SIZE.val(Send_Var[2]);
+        MASTER_QTY.val(Send_Var[3]);
+        BOX_QTY.val(Send_Var[4]);
+        WEIGHT.val(Send_Var[5]);
+        TOTAL_WEIGHT.val(Send_Var[6]);
+        JENIS_TRANSPORTATION.val(Send_Var[7]);
+        TRANSPORTATION_COST.val(Send_Var[8]);
+        AWB_FREE_JPN.val(Send_Var[9]);
+        EDI_FREE_AIR_JPN.val(Send_Var[10]);
+        AMS_FREE_JPN.val(Send_Var[11]);
+        TRUCKING_0_250_KG_JPN.val(Send_Var[12]);
+        HANDLING_AIR_UNDER_50_KG_JPN.val(Send_Var[13]);
+        HANDLING_AIR_UPTO_50_KG.val(Send_Var[14]);
+        TOTAL_COST.val(Send_Var[15]);
+
+
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var ITEM_CODE = $('#editItemCode').val();
+                var LOT_SIZE = $('#editLotSize').val();
+                var MASTER_QTY = $('#editMasterQty').val();
+                var BOX_QTY = $('#editBoxQty').val();
+                var WEIGHT = $('#editWeight').val();
+                var TOTAL_WEIGHT = $('#editTotalWeight').val();
+                var JENIS_TRANSPORTATION = $('#editJenisTransportation').val();
+                var TRANSPORTATION_COST = $('#editTransportationCost').val();
+                var AWB_FREE_JPN = $('#editAwbFreeJpn').val();
+                var EDI_FREE_AIR_JPN = $('#editEdiFreeAirJpn').val();
+                var AMS_FREE_JPN = $('#editAmsFreeJpn').val();
+                var TRUCKING_0_250_KG_JPN = $('#editTrucking_0_250_Kg').val();
+                var HANDLING_AIR_UNDER_50_KG_JPN = $('#editHandlingAir_Under_50_Kg').val();
+                var HANDLING_AIR_UPTO_50_KG = $('#editHandlingAir_Up_50_Kg').val();
+                var TOTAL_COST = $('#editTotalCost').val();
+                var Send_Var = ID + "," + ITEM_CODE + "," + LOT_SIZE + "," + MASTER_QTY + "," + BOX_QTY + "," + WEIGHT + "," + TOTAL_WEIGHT + "," + JENIS_TRANSPORTATION + "," + TRANSPORTATION_COST + "," + AWB_FREE_JPN + "," + EDI_FREE_AIR_JPN + "," + AMS_FREE_JPN + "," + TRUCKING_0_250_KG_JPN + "," + HANDLING_AIR_UNDER_50_KG_JPN + "," + HANDLING_AIR_UPTO_50_KG + "," + TOTAL_COST;
+
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../Update_Data_Transport',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + '../Delete_Data_Transport',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchItemCode').val('');
+        $('#searchJenisTransportation').val('');
+        $('#searchTransportationCost').val('');
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Transport',            
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addItemCode').val();
+        $('#addLotSize').val();
+        $('#addMasterQty').val();
+        $('#addBoxQty').val();
+        $('#addWeight').val();
+        $('#addTotalWeight').val();
+        $('#addJenisTransportation').val();
+        $('#addTransportationCost').val();
+        $('#addAwbFreeJpn').val();
+        $('#addEdiFreeAirJpn').val();
+        $('#addAmsFreeJpn').val();
+        $('#addTrucking_0_250_Kg').val();
+        $('#addHandlingAir_Under_50_Kg').val();
+        $('#addHandlingAir_Up_50_Kg').val();
+        $('#addTotalCost').val();
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var ITEM_CODE = $('#searchItemCode').val();
+        var JENIS_TRANSPORTATION = $('#searchJenisTransportation').val();
+        var TRANSPORTATION_COST = $('#searchTransportationCost').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Transport',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                ITEM_CODE: ITEM_CODE,
+                JENIS_TRANSPORTATION: JENIS_TRANSPORTATION,
+                TRANSPORTATION_COST: TRANSPORTATION_COST
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

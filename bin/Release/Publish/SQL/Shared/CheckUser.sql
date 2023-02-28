@@ -1,0 +1,8 @@
+﻿if exists (SELECT * FROM TB_M_EMPLOYEE WHERE USERNAME = (CASE WHEN ISNUMERIC(@USERNAME) = 1 THEN ''+@USERNAME+'' ELSE @USERNAME END ) AND PASSWORD = @PASSWORD)
+begin 
+	select 1
+end
+else 
+begin
+select 0
+end

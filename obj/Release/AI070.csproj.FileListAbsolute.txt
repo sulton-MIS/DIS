@@ -1,0 +1,322 @@
+D:\2Program DIS\DIS System\wp\bin\AI070.dll.config
+D:\2Program DIS\DIS System\wp\bin\AI070.dll
+D:\2Program DIS\DIS System\wp\bin\AI070.pdb
+D:\2Program DIS\DIS System\wp\bin\Newtonsoft.Json.dll
+D:\2Program DIS\DIS System\wp\bin\Rotativa.dll
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csprojAssemblyReference.cache
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csproj.CopyComplete
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.dll
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.pdb
+E:\Source Code Baru\wp\bin\AI070.dll.config
+E:\Source Code Baru\wp\bin\AI070.dll
+E:\Source Code Baru\wp\bin\AI070.pdb
+E:\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\wp\bin\Rotativa.dll
+E:\Source Code Baru\wp\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\wp\obj\Release\AI070.csproj.CopyComplete
+E:\Source Code Baru\wp\obj\Release\AI070.dll
+E:\Source Code Baru\wp\obj\Release\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll
+E:\Sulton\Source Code Baru\wp\bin\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\wp\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.dll
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.pdb
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll
+E:\Sulton\Source Code Baru\DIS\bin\AI070.pdb
+E:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.dll
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.pdb
+E:\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Source Code Baru\DIS\bin\AI070.dll
+E:\Source Code Baru\DIS\bin\AI070.pdb
+E:\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Source Code Baru\DIS\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\DIS\obj\Release\AI070.csproj.CopyComplete
+E:\Source Code Baru\DIS\obj\Release\AI070.dll
+E:\Source Code Baru\DIS\obj\Release\AI070.pdb
+D:\DIS\DIS_2022021_new3\DIS\bin\AI070.dll.config
+D:\DIS\DIS_2022021_new3\DIS\bin\AI070.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\AI070.pdb
+D:\DIS\DIS_2022021_new3\DIS\bin\Neodynamic.SDK.WebClientPrint.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\Newtonsoft.Json.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\Rotativa.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\System.Runtime.CompilerServices.Unsafe.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\System.Text.Encoding.CodePages.dll
+D:\DIS\DIS_2022021_new3\DIS\bin\System.Text.Encoding.CodePages.xml
+D:\DIS\DIS_2022021_new3\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+D:\DIS\DIS_2022021_new3\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\DIS\DIS_2022021_new3\DIS\obj\Release\AI070.csproj.CopyComplete
+D:\DIS\DIS_2022021_new3\DIS\obj\Release\AI070.dll
+D:\DIS\DIS_2022021_new3\DIS\obj\Release\AI070.pdb
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\AI070.dll.config
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\AI070.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\AI070.pdb
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Microsoft.Win32.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\netstandard.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.AppContext.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Collections.Concurrent.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Collections.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Collections.NonGeneric.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Collections.Specialized.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.EventBasedAsync.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.TypeConverter.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Console.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Data.Common.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Contracts.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Debug.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.FileVersionInfo.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Process.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.StackTrace.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.TextWriterTraceListener.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Tools.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.TraceSource.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Tracing.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Drawing.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Dynamic.Runtime.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.Calendars.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.Extensions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.Compression.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.Compression.ZipFile.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.DriveInfo.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.Watcher.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.IsolatedStorage.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.MemoryMappedFiles.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.Pipes.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.IO.UnmanagedMemoryStream.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Linq.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Expressions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Parallel.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Queryable.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Http.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.NameResolution.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.NetworkInformation.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Ping.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Requests.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Security.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.Sockets.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebHeaderCollection.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebSockets.Client.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebSockets.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ObjectModel.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.Extensions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Resources.Reader.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Resources.ResourceManager.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Resources.Writer.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.CompilerServices.VisualC.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Extensions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Handles.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.InteropServices.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Numerics.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Formatters.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Json.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Xml.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Claims.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Algorithms.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Csp.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Encoding.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Primitives.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.X509Certificates.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.SecureString.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.Extensions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Text.RegularExpressions.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Overlapped.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Tasks.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Tasks.Parallel.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Thread.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.ThreadPool.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Timer.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.ValueTuple.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.ReaderWriter.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XDocument.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XmlDocument.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XmlSerializer.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XPath.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XPath.XDocument.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\BouncyCastle.Crypto.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\GemBox.Spreadsheet.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\LinqToExcel.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Neodynamic.SDK.WebClientPrint.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Newtonsoft.Json.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Remotion.Data.Linq.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Remotion.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Remotion.Interfaces.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Rotativa.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\SautinSoft.ExcelToPdf.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Compression.Portable.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Licensing.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.XlsIO.Portable.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.DirectoryServices.AccountManagement.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.CompilerServices.Unsafe.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.Windows.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.CodePages.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\GemBox.Spreadsheet.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\LinqToExcel.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\SautinSoft.ExcelToPdf.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Compression.Portable.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.XlsIO.Portable.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.DirectoryServices.AccountManagement.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.Windows.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.CodePages.xml
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csproj.CopyComplete
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.dll
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.pdb
+\\192.168.0.10\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+D:\BackupVR\DIS\Source Code\DIS\bin\AI070.dll.config
+D:\BackupVR\DIS\Source Code\DIS\bin\AI070.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\AI070.pdb
+D:\BackupVR\DIS\Source Code\DIS\bin\Microsoft.Win32.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\netstandard.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.AppContext.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Collections.Concurrent.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Collections.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Collections.NonGeneric.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Collections.Specialized.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.EventBasedAsync.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ComponentModel.TypeConverter.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Console.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Data.Common.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Contracts.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Debug.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.FileVersionInfo.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Process.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.StackTrace.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.TextWriterTraceListener.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Tools.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.TraceSource.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Diagnostics.Tracing.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Drawing.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Dynamic.Runtime.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.Calendars.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Globalization.Extensions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.Compression.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.Compression.ZipFile.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.DriveInfo.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.FileSystem.Watcher.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.IsolatedStorage.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.MemoryMappedFiles.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.Pipes.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.IO.UnmanagedMemoryStream.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Linq.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Expressions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Parallel.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Linq.Queryable.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Http.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.NameResolution.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.NetworkInformation.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Ping.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Requests.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Security.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.Sockets.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebHeaderCollection.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebSockets.Client.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Net.WebSockets.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ObjectModel.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.Extensions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Reflection.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Resources.Reader.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Resources.ResourceManager.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Resources.Writer.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.CompilerServices.VisualC.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Extensions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Handles.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.InteropServices.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Numerics.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Formatters.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Json.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.Serialization.Xml.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Claims.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Algorithms.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Csp.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Encoding.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.Primitives.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Cryptography.X509Certificates.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.SecureString.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.Extensions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Text.RegularExpressions.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Overlapped.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Tasks.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Tasks.Parallel.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Thread.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.ThreadPool.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Threading.Timer.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.ValueTuple.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.ReaderWriter.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XDocument.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XmlDocument.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XmlSerializer.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XPath.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Xml.XPath.XDocument.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\BouncyCastle.Crypto.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\GemBox.Spreadsheet.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\LinqToExcel.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Neodynamic.SDK.WebClientPrint.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Newtonsoft.Json.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Remotion.Data.Linq.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Remotion.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Remotion.Interfaces.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Rotativa.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\SautinSoft.ExcelToPdf.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Compression.Portable.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Licensing.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.XlsIO.Portable.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.DirectoryServices.AccountManagement.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Runtime.CompilerServices.Unsafe.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.Windows.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.CodePages.dll
+D:\BackupVR\DIS\Source Code\DIS\bin\GemBox.Spreadsheet.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\LinqToExcel.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\SautinSoft.ExcelToPdf.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.Compression.Portable.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\Syncfusion.XlsIO.Portable.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\System.DirectoryServices.AccountManagement.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Security.Principal.Windows.xml
+D:\BackupVR\DIS\Source Code\DIS\bin\System.Text.Encoding.CodePages.xml
+D:\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csprojAssemblyReference.cache
+D:\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.csproj.CopyComplete
+D:\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.dll
+D:\BackupVR\DIS\Source Code\DIS\obj\Release\AI070.pdb

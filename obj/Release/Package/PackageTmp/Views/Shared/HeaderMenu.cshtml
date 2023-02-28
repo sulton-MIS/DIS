@@ -1,0 +1,62 @@
+﻿@using Toyota.Common.Credential
+@using Toyota.Common
+@using AI070.Models;
+@{    
+    Layout = null;
+    User user = Html.Toyota().Page.User;
+    UserInfo userInfo = (UserInfo)ViewData["UserInfo"];
+    if (userInfo == null) {
+        UserInfo UserinfoTemp = new UserInfo();
+        UserinfoTemp.Username = "NA";
+        UserinfoTemp.PlantName = "NA";
+        userInfo = UserinfoTemp;
+    }
+    if (user == null)
+    {
+        User UserTemp = new User();
+        UserTemp.FirstName = "NA";
+        UserTemp.LastName = "NA";
+        user = UserTemp;
+    }
+
+}
+
+<div class="navbar-buttons navbar-header pull-right hidden-xs" role="navigation">
+	<ul class="nav ace-nav">
+        <li id="plant-info" style="margin-right: 10px;color: white;">
+            @{
+                @*if (userInfo.PlantName != null)
+                {
+                    <span>@userInfo.PlantName |</span>
+                }
+
+                if (userInfo.LocationName != null)
+                {
+                    <span>@userInfo.LocationName |</span>
+                }
+
+                if (userInfo.LocationDisplay != null)
+                {
+                    <span>@userInfo.LocationDisplay |</span>
+                }*@
+
+                if (userInfo.Company != null)
+                {
+                    <span>@userInfo.Company</span>
+                }
+
+            }
+
+        </li>
+        <li id="clock"></li>
+		<li class="blue">
+			<a href="Profile" title="Welcome, @user.Name">
+				<img class="nav-user-photo" src="@Url.Content("~/Content/Bootstrap/avatars/anonymous.jpg")" alt="Jason's Photo" />
+				<span class="user-info">
+					@user.FirstName
+                    <br />@user.LastName
+				</span>
+			</a>
+		</li>
+	</ul>
+</div>

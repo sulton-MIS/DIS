@@ -1,0 +1,196 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade" style="overflow-y:auto !important;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add New Exam Subject</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="required">TITLE</label>
+                        <input type="text" maxlength="100" id="addTITLE" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">PASS SCORE REQUIREMENT</label>
+                        <input type="number" maxlength="20" id="addPASSING_SCORE_REQUIREMENT" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">EXAM DURATION (in Minutes)</label>
+                        <input type="number" maxlength="20" id="addEXAM_DURATION" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DATE EXAM PERIOD START</label>
+                        <input type="text" class="form-control datepicker" id="addDATE_EXAM_PERIOD_START">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">DATE EXAM PERIOD END</label>
+                        <input type="text" class="form-control datepicker" data-date-format="mm/dd/yyyy" id="addDATE_EXAM_PERIOD_END">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>REMEDIAL</label>
+                        <select class="form-control" onchange="HidenValue('add',this.value)" id="addREMEDIAL_select">
+                            <option value="1">Yes</option>
+                            <option selected="selected" value="2">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="required" id="addREMEDIAL_input_times">TIMES</label>
+                        <input type="number" maxlength="20" id="addREMEDIAL_input" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EXAM TYPE</label>
+                        <select class="form-control" id="addEXAM_TYPE">
+                            <option value="Random">Random</option>
+                            <option value="Uniform">Uniform</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">TOTAL PUBLISHED</label>
+                        <input type="number" maxlength="20" id="addTOTAL_PUBLISHED" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">IS PUBLISHED</label>
+                        <select class="form-control" id="addIS_PUBLISHED">
+                            <option value="1">Published</option>
+                            <option value="0">Unpublished</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EXAM FOR</label>
+                        <select class="form-control" id="addExam_For">
+                            <option value="Internal">Internal</option>
+                            <option value="Eksternal">Eksternal</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade" style="overflow-y:auto !important;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit Exam Subject</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <!--ID Value Hide-->
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+
+                    <div class="col-md-12">
+                        <label class="required">TITLE</label>
+                        <input type="text" maxlength="100" id="EditTITLE" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">PASS SCORE REQUIREMENT</label>
+                        <input type="number" maxlength="20" id="EditPASSING_SCORE_REQUIREMENT" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">EXAM DURATION (in Minutes)</label>
+                        <input type="number" maxlength="20" id="EditEXAM_DURATION" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DATE EXAM PERIOD START</label>
+                        <input type="text" class="form-control datepicker" id="EditDATE_EXAM_PERIOD_START">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">DATE EXAM PERIOD END</label>
+                        <input type="text" class="form-control datepicker" id="EditDATE_EXAM_PERIOD_END">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>REMEDIAL</label>
+                        <select class="form-control" onchange="HidenValue('Edit',this.value)" id="EditREMEDIAL_select">
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="required" id="EditREMEDIAL_input_times">TIMES</label>
+                        <input type="number" value="1" maxlength="20" id="EditREMEDIAL_input" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EXAM TYPE</label>
+                        <select class="form-control" id="EditEXAM_TYPE">
+                            <option value="Random">Random</option>
+                            <option value="Uniform">Uniform</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="required">TOTAL PUBLISHED</label>
+                        <input type="number" maxlength="20" id="EditTOTAL_PUBLISHED" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">IS PUBLISHED</label>
+                        <select class="form-control" id="EditIS_PUBLISHED">
+                            <option value="1">Published</option>
+                            <option value="0">Unpublished</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EXAM FOR</label>
+                        <select class="form-control" id="EditExam_For">
+                            <option value="Internal">Internal</option>
+                            <option value="Eksternal">Eksternal</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

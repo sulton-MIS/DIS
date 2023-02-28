@@ -1,0 +1,207 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+@{
+    List<DISA150001_TypeCust_Master> ListDmcType = (List<DISA150001_TypeCust_Master>)ViewData["dmc_type"];
+    List<DISA150001_TypeCust_Master> ListCustomer = (List<DISA150001_TypeCust_Master>)ViewData["customer"];
+    List<DISA150001_TypeCust_Master> GetIndirectSga = (List<DISA150001_TypeCust_Master>)ViewData["indirect_sga"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD TYPE CUSTOMER </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DMC TYPE</label>
+                        @*<input id="addDmcType" required type="text" class="form-control" />*@
+                        <select class="form-control select2" id="addDmcType" required>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH --- </option>
+                            @{
+                                if (ListDmcType != null)
+                                {
+                                    if (ListDmcType.Count() > 0)
+                                    {
+                                        foreach (DISA150001_TypeCust_Master item in ListDmcType)
+                                        {
+                                            <option value="@item.Dmc_Type">@item.Dmc_Type</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">CUSTOMER</label>
+                        @*<input id="addCustomer" required type="text" class="form-control" />*@
+                        <select class="form-control select2" id="addCustomer" required>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH --- </option>
+                            @{
+                                if (ListCustomer != null)
+                                {
+                                    if (ListCustomer.Count() > 0)
+                                    {
+                                        foreach (DISA150001_TypeCust_Master item in ListCustomer)
+                                        {
+                                            <option value="@item.Customer">@item.Customer</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 required">
+                        <label class="required">TOUCH PANEL DIMENSION</label>
+                        <input id="addTouchPanelSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>WIS VERSION</label>
+                        <input id="addWisVersion" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SGA</label>
+                        @*<input type="text" class="form-control" id="addSga" disabled="">*@
+                        @{
+                            if (GetIndirectSga != null)
+                            {
+                                if (GetIndirectSga.Count() > 0)
+                                {
+                                    foreach (DISA150001_TypeCust_Master item in GetIndirectSga)
+                                    {
+                                        <input id="addSga" value="@item.Sga" required type="text" class="form-control" disabled="" />
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <label>IN DIRECT</label>
+                        @*<input id="addInDirect" required type="text" class="form-control" disabled="" />*@
+                        @{
+                            if (GetIndirectSga != null)
+                            {
+                                if (GetIndirectSga.Count() > 0)
+                                {
+                                    foreach (DISA150001_TypeCust_Master item in GetIndirectSga)
+                                    {
+                                        <input id="addInDirect" value="@item.In_Direct" required type="text" class="form-control" disabled=""/>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row">                      
+                    <div class="col-md-6">
+                        <label>LOT SIZE</label>
+                        @*<input id="addLotSize" required type="text" class="form-control" />*@
+                            <select class="form-control" id="addLotSize" name="dropdown">
+                                <option id="addLotSize" value="10" selected="selected"> 10 </option>
+                                <option id="addLotSize" value="20" selected="selected"> 20 </option>
+                                <option id="addLotSize" value="50" selected="selected"> 50 </option>
+                                <option id="addLotSize" value="100" selected="selected"> 100 </option>
+                                <option id="addLotSize" value="200" selected="selected"> 200 </option>
+                                <option id="addLotSize" value="300" selected="selected"> 300 </option>
+                                <option id="addLotSize" value="400" selected="selected"> 400 </option>
+                                <option id="addLotSize" value="500" selected="selected"> 500 </option>
+                                <option id="addLotSize" value="1000" selected="selected"> 1000 </option>
+                                <option id="addLotSize" value="5000" selected="selected"> 5000 </option>
+                                @*<option id="addLotSize" value="" selected="selected">  </option>*@
+                                <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH --- </option>
+                            </select>
+                    </div>
+                </div>               
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT TYPE CUST </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DMC TYPE</label>
+                        <input id="editDmcType" required type="text" class="form-control" disabled="" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>CUSTOMER</label> 
+                        <input id="editCustomer" required type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TOUCH PANEL DIMENSION</label>
+                        <input id="editTouchPanelSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>WIS VERSION</label>
+                        <input id="editWisVersion" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SGA</label>
+                        <input type="text" class="form-control" id="editSga" disabled="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>IN DIRECT</label>
+                        <input id="editInDirect" required type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>LOT SIZE</label>
+                        @*<input id="editLotSize" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editLotSize" name="dropdown">
+                            <option id="editLotSize" value="10" selected="selected"> 10 </option>
+                            <option id="editLotSize" value="20" selected="selected"> 20 </option>
+                            <option id="editLotSize" value="50" selected="selected"> 50 </option>
+                            <option id="editLotSize" value="100" selected="selected"> 100 </option>
+                            <option id="editLotSize" value="200" selected="selected"> 200 </option>
+                            <option id="editLotSize" value="300" selected="selected"> 300 </option>
+                            <option id="editLotSize" value="400" selected="selected"> 400 </option>
+                            <option id="editLotSize" value="500" selected="selected"> 500 </option>
+                            <option id="editLotSize" value="1000" selected="selected"> 1000 </option>
+                            <option id="editLotSize" value="5000" selected="selected"> 5000 </option>
+                            @*<option id="addLotSize" value="" selected="selected">  </option>*@
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH --- </option>
+                        </select>
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

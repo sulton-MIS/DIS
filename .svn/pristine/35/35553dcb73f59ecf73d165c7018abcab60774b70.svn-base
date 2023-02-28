@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .label-check {
+        border: 1px solid #88a;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, .3) inset;
+        border-radius: 10%;
+        width: 1.5vw;
+        height: 2vh;
+    }
+
+    .check-input {
+        display: none
+    }
+
+    input:checked + .label-check {
+        background-color: black;
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, .1) inset;
+    }
+</style>
+<link href="~/Content/UI/jquery-ui.css" rel="stylesheet" />
+<script src="~/Content/UI/jquery-ui.js"></script>
+<link href="~/Content/UI/jquery.ui.rotatable.css" rel="stylesheet" />
+<script src="~/Content/UI/jquery.ui.rotatable.min.js"></script>
+@Html.Partial("SearchCriteria")
+@Html.Partial("Datagrid_Data")
+@Html.Partial("InputForm")
+@Html.Partial("Javascript")
+@Html.Partial("PopupForm")
+@Html.Partial("AreaMapping")
+
+
+
+

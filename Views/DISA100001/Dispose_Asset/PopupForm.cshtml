@@ -1,0 +1,258 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+
+
+<!--form confirm delete data-->
+<div id="Confirmation_Delete_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+
+                <div id="modal-delete-tittle"> Are you sure want to Delete this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" onclick="delete_data()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm add data-->
+<div id="PopupForm_AddNewConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <div id="modal-save-tittle"> Are you sure want to Save this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Add_New" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Add_New" onclick="addNew()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm delete detail data (multiple insert)-->
+<div id="PopupForm_Delete_Detail_Confirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+                <div class="modal-delete-tittle"> Are you sure want to Delete this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm_Delete_List" onclick="confirmDelete()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--form confirm submit -->
+<div id="PopupForm_Submit_Detail_Confirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="submit_ID" />
+                <div class="modal-submit-tittle"> Are you sure want to Submit this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm_Submit_Pekerjaan" onclick="confirmSubmit()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--form confirm update data-->
+<div id="PopupForm_EditConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="edit_ID" />
+                <input type="text" style="display:none" id="edit_NO" />
+
+                <div id="modal-update-tittle"> Are you sure want to Update this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Edit_Data" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Edit_Data" onclick="updateData()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--form confirm Download data-->
+<div id="Confirmation_Download_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                @*<input type="text" style="display:none" id="delete_ID" />*@
+
+                <div> Are you sure want to Download this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="download_data()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm Download data-->
+<div id="Confirmation_PrintOut_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                @*<input type="text" style="display:none" id="delete_ID" />*@
+                <input type="text" style="display: none" id="printout_NO_DISPOSE" />
+                @*<input type="text" style="display: none" id="printout_NO_ASSET" />*@
+                @*<input type="text" style="display: none" id="printout_KETERANGAN" />*@
+                @*<input type="text" style="display: none" id="printout_STATUS_KONDISI" />*@
+                <input type="text" style="display: none" id="printout_CREATED_BY" />
+                <input type="text" style="display: none" id="printout_DEPT_HEAD_USER_CREATED" />
+                <input type="text" style="display: none" id="printout_AMS_CREATED" />
+                <input type="text" style="display: none" id="printout_DEPT_HEAD_AMS_CREATED" />
+                <input type="text" style="display: none" id="printout_ACKNOWLEDGE_BY" />
+                <input type="text" style="display: none" id="printout_DEPT_USER" />
+
+                <div> Are you sure want to Print Out this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="print_out_dispose()" id="btn_Confirm_Printout" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------- form Approve Data Dispose ---------------->
+<div id="PopupForm_ApproveDataDispose" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="fa fa-close"></i>
+                </button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display: none" id="dt_ID" />
+                <input type="text" style="display: none" id="dt_ID_TB_M_DISPOSE" />
+                <input type="text" style="display: none" id="dt_NO_DISPOSE" />
+                <input type="text" style="display: none" id="dt_NO_ASSET" />
+                <input type="text" style="display: none" id="dt_STATUS_APPROVAL" />
+
+                <div id="modal-update-tittle"> Are you sure want to Approve this data?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm" onclick="approveSaved()" class="btn btn-primary btn-sm" style="width: 90px;" data-dismiss="modal"><i class="fa fa-check"></i> Approve</button>
+                <button type="button" id="btn_Reject" onclick="rejectCheck()" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-close"></i> Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------- Form Reject Dispose Data ------------------->
+<div id="PopupForm_RejectConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display: none" id="data_reject_ID" />
+                <input type="text" style="display: none" id="data_reject_ID_TB_M_DISPOSE" />
+                <input type="text" style="display: none" id="data_reject_NO_DISPOSE" />
+                <input type="text" style="display: none" id="data_reject_NO_ASSET" />
+                <input type="text" style="display: none" id="data_reject_STATUS_APPROVAL" />
+
+                <div id="modal-update-tittle"> Are you sure want to Reject this data?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm_Edit_Data" onclick="rejectSaved()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>

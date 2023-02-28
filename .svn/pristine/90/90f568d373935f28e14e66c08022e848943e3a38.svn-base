@@ -1,0 +1,47 @@
+﻿
+
+.question-container {
+	position: relative;
+	justify-content: space-between;
+	flex-direction: column;
+	min-height: 400px;
+	display: flex;
+}
+
+	.question-container .question-body {
+		position: relative;
+		justify-content: flex-start;
+		display: flex;
+	}
+
+	.question-container .btn-holder {
+		position: relative;
+		right: 20px;
+		bottom: 20px;
+		justify-content: flex-end;
+		display: flex;
+	}
+
+.dl-horizontal dt {
+	white-space: normal;
+}
+
+input,
+select,
+textarea {
+	max-width: 280px;
+}
+
+
+.exam-varification {
+	margin-top: 5px;
+	background-color: rgb(255, 255, 255);
+	background-position-x: 0%;
+	background-position-y: 0%;
+	background-repeat: repeat;
+	background-attachment: scroll;
+	background-image: none;
+	background-size: auto;
+	background-origin: padding-box;
+	background-clip: border-box;
+}

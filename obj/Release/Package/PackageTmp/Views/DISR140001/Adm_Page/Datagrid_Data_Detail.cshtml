@@ -1,0 +1,198 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR140001Master;
+@{
+    List<DISR140001Master> DataWP = (List<DISR140001Master>)ViewData["DataDISR140001"];
+    //List<DISR140001> Status_Cmb = (List<DISR140001>)ViewData["Status_Cmb"];
+    //List<DISR140001> Time_Cmb = (List<DISR140001>)ViewData["Time_Cmb"];
+    //List<DISR140001> ExecTime_Cmb = (List<DISR140001>)ViewData["Time_Cmb"];
+    //List<DISR140001> Model_type = (List<DISR140001>)ViewData["Model_type"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    //List<LocationModel> Location = (List<LocationModel>)ViewData["Project_Location"];
+    //List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+
+<style>
+    table {
+        background-color: white !important;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    #tr1 {
+        border: 1px solid black;
+        height: 150px;
+    }
+
+    #tr2 {
+        text-align: center;
+        border: 1px solid black;
+        height: 10px;
+    }
+
+    /*======================================================================*/
+    /*============================ CUSTOM BUTTON ===========================*/
+    /*======================================================================*/
+
+    .btn_print {
+        display: inline-block;
+        background-color: rgba(244, 143, 28, 0.8);
+        height: 35px;
+        width: 75px !important;
+        /*width: 100%;*/
+        color: white;
+        border: 1px solid;
+        border-radius: 3px 3px 5px;
+    }
+
+        .btn_print:hover {
+            display: inline-block;
+            background-color: white;
+            height: 35px;
+            width: 75px !important;
+            /*width: 100%;*/
+            color: darkorange;
+            border: 1px solid;
+            border-radius: 3px 3px 5px;
+        }
+
+</style>
+
+<div class="row" id="GridProject">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;" rowspan="2">Action</th>
+                            <th style="width: 60px;" rowspan="2">No</th>
+                            <th style="width: 150px;" rowspan="2">ID Bundle</th>
+                            <th style="width: 150px;" rowspan="2">ID Produksi</th>
+                            <th style="width: 150px;" rowspan="2">ID Proses</th>
+                            <th style="width: 250px;" rowspan="2">Nama Proses</th>
+                            <th style="width: 150px;" rowspan="2">Trans Date</th>
+                            <th style="width: 200px;" rowspan="2">Dmc Code</th>
+                            <th style="width: 200px;" rowspan="2">Lot. No</th>
+                            <th style="width: 200px;" rowspan="2">Serial No.</th>
+                            <th style="width: 50px;" rowspan="2">Jml Print</th>
+                            <th style="width: 450px;" colspan="3">Operator By</th>
+                            <th style="width: 450px;" colspan="3">Checker Cek</th>
+                            <th style="width: 200px;" rowspan="2">Keterangan</th>
+                        </tr>
+                        <tr>
+                            <!--Colspan dari "Created By"-->
+                            <th style="width: 150px;">NIK</th>
+                            <th style="width: 150px;">Nama</th>
+                            <th style="width: 150px;">Shift</th>
+
+                            <!--Colspan Dari "Checker Cek"-->
+                            <th style="width: 150px; ">Status Check</th>
+                            <th style="width: 150px; ">Nama</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="22" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 350px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISR140001Master item in DataWP)
+                                    {
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px; text-align: center">
+                                                        <input type="hidden" id="rowData-@item.ID" value="@Json.Encode(item)" />
+                                                        @*<button id="@item.ID" onclick="historyData(this)" type="button" class="cstm_btn">Show</button>*@
+                                                        <button id="btn_print_data" type="button" onclick="PrintDataProject(this)" data-title="@item.ID" class="btn_print"><i class="fa fa-print"></i> Print</button>
+                                                        @*<button type="button" data-title="@item.ID" onclick="EditDataProject(this)" class="btn btn-primary btn-xs" id="btn_edit_data" name="btn_edit_data" style="width: 60px; margin-left:3px;"><i class="fa fa-pencil-square-o"></i> Edit</button>*@
+                                                        @*<button type="button" onclick="DeleteDataProject('@item.ID')" data-title="@item.ID" class="btn btn-danger btn-xs" id="btn_delete_data" name="btn_delete_data" style="width: 60px; margin-left:3px;"><i class="fa fa-trash-o"></i> Delete</button>*@
+                                                    </td>
+                                                    <td style="width: 60px; text-align: right">
+                                                        @number
+                                                    </td>
+                                                    <td style="width: 150px"> @item.ID_BUNDLE </td>
+                                                    <td style="width: 150px"> @item.ID_BUNDLE </td>
+                                                    <td style="width: 150px"> @item.ID_PROSES </td>
+                                                    <td style="width: 250px"> @item.NAMA_PROSES </td>
+                                                    <td style="width: 150px"> @item.TRANS_DATE </td>
+                                                    <td style="width: 200px"> @item.DMC_CODE </td>
+                                                    <td style="width: 200px"> @item.LOT_NO </td>
+                                                    <td style="width: 200px"> @item.SERIAL </td>
+                                                    <td style="width: 50px;text-align:center"> @item.JML_PRINT </td>
+                                                    <td style="width: 150px;text-align:center"> @item.NIK_GAIKAN </td>
+                                                    <td style="width: 150px;" class="wrapword"> @item.OPR_GAIKAN</td>
+                                                    <td style="width: 150px;text-align:center"> @item.SHIFT </td>
+                                                    <td style="width: 150px;text-align:center"> 
+                                                        @if(item.STATUS_CHECKER == "True") { 
+                                                            <i class="fa fa-check"></i>
+                                                        }
+                                                    </td>
+                                                    <td style="width: 150px"> @item.CHECKER </td>
+                                                    <td style="width: 150px; text-align:center">  @item.CHECKER_DATE </td>
+                                                    <td style="width: 200px;" class="wrapword"> @item.KETERANGAN</td>
+
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="14" id="partialPaging">
+                        @Html.Partial("Adm_Page/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>

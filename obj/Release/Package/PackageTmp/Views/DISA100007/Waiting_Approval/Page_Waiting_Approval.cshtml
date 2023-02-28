@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+
+<div id="main-data">
+    @Html.Partial("Waiting_Approval/CheckValidasiUser")
+    @Html.Partial("Waiting_Approval/SearchCriteria")
+
+    @if (ViewData["fitur_jenis_transaksi"] == "taruh")
+    {
+        @Html.Partial("Waiting_Approval/Datagrid_Data")
+    }
+    else if (ViewData["fitur_jenis_transaksi"] == "pinjam")
+    {
+        @Html.Partial("Waiting_Approval/Datagrid_Data_Pinjam")
+    }
+
+    @Html.Partial("Waiting_Approval/PopupForm")
+    @Html.Partial("Waiting_Approval/ModalForm")
+
+</div>
+
+@Html.Partial("Waiting_Approval/Javascript")

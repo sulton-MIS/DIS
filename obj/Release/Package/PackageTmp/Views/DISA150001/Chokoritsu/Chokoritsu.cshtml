@@ -1,0 +1,17 @@
+﻿@*@{
+        Layout = "~/Views/SharedWPLogin/_Layout.cshtml";
+    }*@
+
+@{
+    Layout = "~/Views/Shared_Production_Cost/_Layout.cshtml";
+}
+
+
+<div id="main-data">
+    @Html.Partial("Chokoritsu/SearchCriteria")
+    @Html.Partial("Chokoritsu/Datagrid_Data")
+    @Html.Partial("Chokoritsu/PopupForm")
+    @Html.Partial("Chokoritsu/ModalForm")
+    @Html.Partial("Chokoritsu/Javascript")
+</div>
+

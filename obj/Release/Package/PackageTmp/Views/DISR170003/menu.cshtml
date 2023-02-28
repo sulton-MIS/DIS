@@ -1,0 +1,82 @@
+﻿<style>
+    .menu-text-panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align:center;
+        vertical-align: middle;
+    }
+
+    .menu-panel:hover {
+        background-color: rgb(84, 96, 125);
+        cursor: pointer;
+    }
+
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border: 0;
+        border-top: 2px solid black;
+    }
+
+    .row{
+        margin:0;
+        padding:0;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .menu-panel {
+            min-height: 250px;
+        }
+
+        .fa-menu-icon{
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .menu-panel {
+            min-height: 350px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        .menu-text{
+            font-size: 25px;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+    
+</style>
+
+<div id="menu-container" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default  menu-panel" data-target="DATA">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-users fa-menu-icon"></i><br />
+                            <b class="menu-text">DATA CONTRACTOR</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,636 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var CounterIMPB = 0;
+    var DataIMPB = [];
+    var IMPBSelected = {};
+    var ListPekerjaan = [];
+    var ListDampakPIC = [];
+    var ListBahayaPIC = [];
+    var ListUser = [];
+    var ListDataWorking = [];
+    var ListData = [];
+    var ListDataIdentification = [];
+    var ListDataImpact = [];
+    var ListDataSupervision = [];
+    var ListDataProd = [];
+    var ListDataLotto = [];
+    var ListDataDmcCode = [];
+    var status_edit_or_no = false;
+    var DeleteProjectID = "";
+    var Message = [];
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+    var NO_BUNDEL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "CHECKER_PAGE") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $(".form-control").prop("autocomplete", "off");
+        //$('#addCheck_OK').prop("disabled", true);
+
+        $("#addNik").focus();
+
+        $("#addSerial").prop("disabled", true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: NEW_SITE_URL + "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('.modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('.modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('.modal-update-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP020") {
+                        $('.modal-submit-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+        $('.select2').select2({ width: '100%' });
+
+        $("#btn_submit").prop("disabled", true);
+        $("#btn_cancel").prop("disabled", true);
+
+    });
+
+    //Get Nama Operator
+    $('#addNik').change(function () {
+        //alert(this.value)
+        var id_sagyosha = this.value;
+
+        $.ajax({
+            url: SITE_URL + '../get_Data_Operator',
+            data: {
+                id_sagyosha: id_sagyosha
+            },
+            success: function (e) {
+                if (e.data.length > 0) {
+                    $('#addNama').val(e.data[0].name_sagyosha);
+                } else {
+                    $('#addNama').val('');
+                    toastr.error("Operator Tidak Terdaftar !!");
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    //Get Detail ID Bundle
+    $('#TXT_ADD_BUNDLECODE').change(function () {
+        var ID_BUNDLE = this.value;
+        BindData_Detail_Gaikan(ID_BUNDLE);
+    });
+
+    function BindData_Detail_Gaikan(ID_BUNDLE) {
+        $('#TBL_LIST_DETAIL').html('');
+
+        var Var = "";
+        var serial_no = "";
+
+        $.ajax({
+            type: "GET",
+            url: '../DISR140001/getDetailGaikan',
+            async: false,
+            data: { ID_BUNDLE: ID_BUNDLE },
+            success: function (res) {
+                console.log(res);
+                if (res.sts == "TRUE") {
+                    if (res.list.length > 0) {
+                        for (var i = 0; i < res.list.length; i++) {
+                            tableBuilder(res.list[i].ID_PRODUKSI, res.list[i].DMC_CODE, res.list[i].ID_PROSES, res.list[i].NAMA_PROSES, res.list[i].SERIAL, res.list[i].LOTNO,
+                                res.list[i].NAMA);
+                        }
+
+                        $('#addStatusLotto').val(res.list[0].STATUS_LOTTO);
+                        $('#JENIS_LOTTO').val(res.list[0].JENIS_LOTTO);
+                        $('#addBeratBundleStandar').val(res.list[0].BERAT_BUNDLE_STD);
+                        $('#addBeratBundleAktual').val(res.list[0].BERAT_BUNDLE_ACT);
+                        $('#addJumlahBundleStandar').val(res.list[0].QTY_BUNDLE_STD);
+                        $('#addJumlahBundleAktual').val(res.list[0].QTY_BUNDLE_ACT);
+                        $('#TXT_ADD_NOTED').val(res.list[0].KETERANGAN);
+                        $('#SHOW_STATUS_CHECKER').val(res.list[0].STATUS_CHECKER);
+
+                        var status_checker = $('#SHOW_STATUS_CHECKER').val();
+
+                        if (status_checker == "True") {
+                            $('#SHOW_STATUS_CHECKER').val("Sudah Scan").trigger("change");
+                            $('#addCheck_OK').prop("disabled", true);
+                            $('#addCheck_OK').prop('checked', true);
+                        }
+                        else {
+                            $('#SHOW_STATUS_CHECKER').val("Belum Scan").trigger("change");
+                            $('#addCheck_OK').prop("disabled", false);
+                            $('#addCheck_OK').prop('checked', false);
+                        }
+                    }
+                    else {
+                        toastr.warning("ID Bundel ini tidak ada di Database!");
+
+                        $('#TXT_ADD_BUNDLECODE').focus();
+                    }
+                }
+                else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //Change Submit Button
+    $('#addCheck_OK').change(function () {
+        if (this.checked == true) {
+            $("#btn_submit").prop("disabled", false);
+            $("#btn_cancel").prop("disabled", false);
+        } else {
+            $("#btn_submit").prop("disabled", true);
+            $("#btn_cancel").prop("disabled", true);
+        }
+    });
+
+    //Get DMC Code
+    $('#addIDProduksi').change(function () {
+        //alert(this.value)
+        var id_seisan = this.value;
+
+        $.ajax({
+            url: SITE_URL + '../get_Data_Seihin',
+            data: {
+                id_seisan: id_seisan.trim()
+            },
+            success: function (e) {
+                if (e.data.length > 0) {
+
+                    id_seihin = e.data[0].id_seihin;
+                    $('#addDmcCode').val(id_seihin);
+
+                    GetConvertionTable(id_seihin);
+
+                } else {
+                    $('#addDmcCode').val('');
+                    $('#addBeratBundleStandar').val('');
+                    $('#addJumlahBundleStandar').val('');
+                    $('#addBeratPcsStandar').val('');
+
+
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    //Get Nama Proses
+    $('#addIDProses').change(function () {
+        //alert(this.value)
+        var id_kotei = this.value;
+
+        $.ajax({
+            url: SITE_URL + '../get_Data_Proses',
+            data: {
+                id_kotei: id_kotei
+            },
+            success: function (e) {
+                if (e.data.length > 0) {
+                    $('#addNamaProses').val(e.data[0].name_kotei);
+                } else {
+                    $('#addNamaProses').val('');
+                    toastr.error("Proses Tidak Terdaftar !!");
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    function backPage() {
+        window.location.href = '../DISR140001';
+    }
+
+    //sort data index
+    $('.form-group').on('keydown', 'input', 'button', function (event) {
+        var TxtActBundle = $('#addBeratBundleAktual').val();
+        if (event.which == 13) {
+            event.preventDefault();
+            var $this = $(event.target);
+            var index = parseFloat($this.attr('data-index'));
+            $('[data-index="' + (index + 1).toString() + '"]').focus();
+
+            if (TxtActBundle != '') {
+                var vld = validationDataDetail();
+
+                if (vld.ValidationState == true) {
+                    document.getElementById("BTN_ADD_SHOW_DETAIL").click();
+                }
+            }
+        } 
+    });
+
+
+    //Get Jenis Lott No
+    function eventAutoTypingSerial() {
+        var lot_no = document.getElementById("addSerial").value;
+
+        var serial = document.getElementById("RD_Serial");
+        var digital = document.getElementById("RD_Digital");
+        var standard = document.getElementById("RD_Standard");
+
+        //Check serial di database
+        var checkserial = CheckSerial_DB(lot_no);
+
+        if (checkserial == true) {
+            $("#addSerial").focus();
+
+            return;
+        }
+
+        if (serial.checked == true) {
+            lot_no = lot_no.substring(0, 5);
+        } else if (digital.checked == true) {
+            lot_no = lot_no.substring(10, 15);
+        } else if (standard.checked == true) {
+            lot_no = lot_no.substring(0, 5);
+        } else {
+            toastr.error("Jenis Serial Belum Di Pilih !!");
+        }
+
+        $('#addLotNo').val(lot_no);
+
+        return;
+    };
+
+    //Count Jumlah bundle Act & Rata - rata berat pcs Act
+    function AutoBeratBundleAct() {
+        var berat_bundle_act = document.getElementById("addBeratBundleAktual").value;
+        var berat_bundle_std = document.getElementById("addBeratBundleStandar").value;
+        var jumlah_bundle_std = document.getElementById("addJumlahBundleStandar").value;
+
+        var jumlah_bundle_act = 0;
+        var avg_berat_pcs_act = 0;
+
+        jumlah_bundle_act = berat_bundle_act / (berat_bundle_std / jumlah_bundle_std);
+        avg_berat_pcs_act = berat_bundle_act / jumlah_bundle_act;
+
+        jumlah_bundle_act = Math.round(jumlah_bundle_act);
+        avg_berat_pcs_act = Math.round(avg_berat_pcs_act);
+
+        $('#addJumlahBundleAktual').val(jumlah_bundle_act);
+        $('#addBeratPcsAktual').val(avg_berat_pcs_act);
+
+    };
+
+    //Get Convertion Table
+    function GetConvertionTable(id_seihin) {
+            $.ajax({
+                url: SITE_URL + '../get_Data_ConvertionTable',
+                data: {
+                    id_seihin: id_seihin
+                },
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        $('#addBeratBundleStandar').val(e.data[0].BundleWeight);
+                        $('#addJumlahBundleStandar').val(e.data[0].BundleQty);
+                        $('#addBeratPcsStandar').val(e.data[0].PcsWeight);
+
+                        var berat_bundle = e.data[0].BundleWeight;
+                        var qty_bundle = e.data[0].BundleQty;
+                        var berat_pcs = e.data[0].PcsWeight;
+
+                        if (berat_bundle == null || qty_bundle == null || berat_pcs == null) {
+                            $('#ConvertionTable_PopUp').modal();
+                            $("#addIDProduksi").val('');
+                            $("#addDmcCode").val('');
+                        }
+                        
+                    } 
+                },
+                error: function () {
+                    toastr.warning("Error!!");
+                }
+            });
+    }
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    $('input:radio').click(function () {
+        if ($('input[name=JenisLotto]:checked').length > 0) {
+            $("#addSerial").prop("disabled", false);
+        } else {
+            $("#addSerial").prop("disabled", true);
+        }
+    });
+
+    function GetListOption(element) {
+        var arr = [];
+        $('#' + element + ' option').each(function () {
+            var objdt = {
+                values: $(this).val(),
+                texts: $(this).text()
+            }
+            arr.push(objdt);
+        });
+        return arr;
+    }
+
+    function MappingListOption(element, arr) {
+        $('#' + element).html('');
+
+        arr.forEach(function (item, index) {
+            $('#' + element).append("<option value=" + item.values + ">" + item.texts + "</option>");
+        });
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    $('.btnEditProject').on('click', function () {
+        var data = this.data('title');
+        //alert(data);
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function refreshPage() {
+        //Clear Cache Application
+        $.ajax({
+            url: "",
+            context: document.body,
+            success: function (s, x) {
+                $('html[manifest=saveappoffline.appcache]').attr('content', '');
+                $(this).html(s);
+            }
+        });
+
+        location.reload();
+    }
+
+    function Clear() {
+        //$('.form-control').val('');
+        $('#TXT_ADD_BUNDLECODE').val('');
+        $('#addBeratBundleStandar').val('');
+        $('#addBeratBundleAktual').val('');
+        $('#addJumlahBundleStandar').val('');
+        $('#addJumlahBundleAktual').val('');
+        $('#JENIS_LOTTO').val('');
+        $('#addStatusLotto').val('');
+        $('#TXT_ADD_NOTED').val('');
+        $('#SHOW_STATUS_CHECKER').val('');
+        $('#addCheck_OK').prop('disabled', false);
+        $('#addCheck_OK').prop('checked', false);
+
+        $('input[name=JenisLotto]').prop('checked', false);
+        $("#addSerial").prop("disabled", true);
+
+        $('#TBL_LIST_DETAIL').html(''); //Clear Detail List Tabel
+
+        $("#TXT_ADD_BUNDLECODE").focus();
+    }
+
+    function tableBuilder(_IDProd, _DmcCode, _IdProses, _NamaProses, _Serial, _LotNo, _Nama) {
+        var statusDetailList = "";
+
+        var html = '<tr>';
+
+        html += '<td style="width: 20%; padding:1!important" class="row-projectName">' + _IDProd + '</td>';
+        html += '<td style="width: 15%; padding:1!important">' + _DmcCode + '</td>';
+        html += '<td style="width: 10%; padding:1!important">' + _IdProses + '</td>';
+        html += '<td style="width: 20%; padding:1!important">' + _NamaProses + '</td>';
+        html += '<td style="width: 15%; padding:1!important; text-align:center">' + _Serial + '</td>';
+        html += '<td style="width: 10%; padding:1!important; text-align:center">' + _LotNo + '</td>';
+        //html += '<td style="width: 15%; padding:1!important">' + _BeratBdlAct + '</td>';
+        html += '<td style="width: 20%; padding:1!important">' + _Nama + '</td>';
+        html += '</tr>'
+
+        $('#TBL_LIST_DETAIL').append(html);
+        $('#TBL_ADD_DETAIL').hide();
+    }
+
+    //=========================================================================================================================
+    //=================================================== VALIDASI DATA GAIKAN ================================================
+    //=========================================================================================================================
+
+    function SubmitTrx() {
+        $('#submit_ID').val('submit');
+
+        if ($('#Approve_1').val() != "True") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        } else {
+            add_check();
+        }
+    }
+
+    function add_check() {
+        var ValidationState = true;
+        var ValidationMessage = "";
+
+        var NIK = $('#addNik').val();
+        var ID_BUNDLE = $('#TXT_ADD_BUNDLECODE').val();
+
+        if (NIK == "") {
+            toastr.warning("Please fill column NIK!");
+            ValidationState = false;
+        }
+
+        if (ID_BUNDLE == "") {
+            toastr.warning("Please fill column ID BUNDLE!");
+            ValidationState = false;
+        }
+
+        if (ValidationState == false) {
+            return;
+        } else {
+            $('#PopupForm_SubmitConfirm').modal();
+        }
+    }
+
+    function confirmSubmit() {
+        var NIK = $('#addNik').val();
+        var ID_BUNDLE = $('#TXT_ADD_BUNDLECODE').val();
+
+        //alert(checkboxOK);
+        var Method = '../VALIDASI_DATA';
+
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: SITE_URL + Method,
+            data: {
+                NIK: NIK,
+                ID_BUNDLE: ID_BUNDLE
+            },
+            success: function (res) {
+                console.log(res);
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Submit Successfuly");
+
+                    BindData_Detail_Gaikan(ID_BUNDLE);
+
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //<---------------------------------------------- Collecting Data ------------------------------------------------>
+
+    function getListDetail() {
+        var _list = [];
+
+        $('#TBL_LIST_DETAIL > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            _data["ID_PRODUKSI"] = $(value).find('td:first-child').text();
+            _data["DMC_CODE"] = $(value).find('td:nth-child(2)').text();
+            _data["ID_PROSES"] = $(value).find('td:nth-child(3)').text();
+            _data["NAMA_PROSES"] = $(value).find('td:nth-child(4)').text();
+            _data["SERIAL"] = $(value).find('td:nth-child(5)').text();
+            _data["LOTNO"] = $(value).find('td:nth-child(6)').text();
+            //_data["BERAT_PCS_ACT"] = $(value).find('td:nth-child(7)').text();
+            _data["NAMA"] = $(value).find('td:nth-child(7)').text();
+
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function CheckSerial_DB(value) {
+        var Exist = "";
+
+        var SERIAL_NO = value;
+        var DMC_CODE = lot_no = document.getElementById("addDmcCode").value;
+
+        $.ajax({
+            url: SITE_URL + '../check_Serial_DB',
+            data: {
+                SERIAL_NO: SERIAL_NO,
+                DMC_CODE: DMC_CODE
+            },
+            async: false,
+            success: function (res) {
+                var status = "false";
+
+                if (res.isExist == true) {
+                    status = res.isExist;
+                    $("#serial_val").html(SERIAL_NO);
+                    $('#DuplicateSerial_DB_PopUp').modal();
+                    $("#addSerial").val('');
+                    $("#addBeratBundleAktual").val('');
+
+                    $("#addSerial").focus();
+                }
+
+                Exist = status;
+            }
+        });
+
+        return Exist;
+    }
+
+    function CheckStatusLotto(value, arr) {
+        var isExist = false;
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] != value) {
+                isExist = true;
+                break;
+            }
+        }
+
+        return isExist;
+    }
+
+    function CheckExistsSerial(value, arr) {
+        var isExist = false;
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
+    }
+
+    function CheckExistsDmcCode(value, arr) {
+        var isExist = false;
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
+    }
+
+    function formatDate(date) {
+        var monthNames = [
+            "Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct",
+            "Nov", "Dec"
+        ];
+
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
+</script>

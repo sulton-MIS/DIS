@@ -1,0 +1,151 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.WP04002Master;
+@{
+    List<AuthModel> Auth = (List<AuthModel>)ViewData["Authorizations"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">ADD ROLE MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>AUTHORIZATION</label>
+                        <select id="addAuthorization" name="addAuth" class="form-control">
+                            @{
+                                if (Auth != null)
+                                {
+                                    if (Auth.Count > 0)
+                                    {
+                                        foreach (AuthModel item in Auth)
+                                        {
+                                            <option value="@item.ID">@item.AUTH_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>ROLE NAME</label>
+                        <input type="text" maxlength="100" id="addRoleName" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>ROLE DESCRIPTION</label>
+                        <textarea type="text" id="addRoleDescription" class="form-control" placeholder="">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>SESSION TIME OUT</label>
+                        <input type="number" id="addSessionTimeOut" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>LOCK TIME OUT</label>
+                        <input type="number" id="addLockTimeOut" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>ROLE STATUS</label>
+                        <select id="addRoleStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="addNew()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit ROLE MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>AUTHORIZATION</label>
+                        <select id="editAuthorization" name="editAuth" class="form-control">
+                            @{
+                                if (Auth != null)
+                                {
+                                    if (Auth.Count > 0)
+                                    {
+                                        foreach (AuthModel item in Auth)
+                                        {
+                                            <option value="@item.ID">@item.AUTH_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>ROLE NAME</label>
+                        <input type="text" maxlength="100" id="EditID" style="display:none" class="form-control" placeholder="">
+                        <input type="text" maxlength="100" id="editRoleName" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="pediting:0;">
+                        <label>ROLE DESCRIPTION</label>
+                        <textarea type="text" id="editRoleDescription" class="form-control" placeholder="">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>SESSION TIME OUT</label>
+                        <input type="number" id="editSessionTimeOut" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>LOCK TIME OUT</label>
+                        <input type="number" id="editLockTimeOut" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>ROLE STATUS</label>
+                        <select id="editRoleStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="updateData()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;" data-dismiss="modal"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>

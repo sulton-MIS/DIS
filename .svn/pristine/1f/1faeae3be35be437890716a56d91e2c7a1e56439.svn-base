@@ -1,0 +1,21 @@
+﻿<table width="100%">
+    <tbody>
+        <tr>
+            <td width="10%">
+                Distribusi :
+            </td>
+            <td width="20%">
+                a. Pelaksana / Vendor (Putih)
+            </td>
+            <td width="20%">
+                b. Security (Merah)
+            </td>
+            <td width="30%">
+                c. Departemen / User bersangkutan (Kuning)
+            </td>
+            <td width="20%">
+                d. P2K3 Comitte / Safety (Biru)
+            </td>
+        </tr>
+    </tbody>
+</table>

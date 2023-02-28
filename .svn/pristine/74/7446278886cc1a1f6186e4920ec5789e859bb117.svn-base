@@ -1,0 +1,164 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02001Master;
+@{
+    List<CompanyModel> Company = (List<CompanyModel>)ViewData["Company"];
+    List<EmployeeModel> Employee = (List<EmployeeModel>)ViewData["Employee"];
+
+}
+
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <label class="section-title">
+                <u>A. Header</u>
+            </label>
+            <div class="form-group">
+                <label>No. IPMB </label>
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-xs-3 ">
+                        <input type="text" class="form-control space-input" style="width:76%" id="WP02001_TXT_ADD_NOIPMB1" maxlength="4" value="IPMB" disabled>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-xs-3">
+                        <input type="text" class="form-control space-input" style="width:76%" id="WP02001_TXT_ADD_NOIPMB2"
+                               maxlength="3" value="SHE" disabled>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-xs-3">
+                        <input type="text" class="form-control space-input" style="width:76%" id="WP02001_TXT_ADD_NOIPMB3"
+                               maxlength="3">
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-xs-3">
+                        <input type="text" class="form-control space-input" style="width:76%" id="WP02001_TXT_ADD_NOIPMB4"
+                               maxlength="3">
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+                <label for="WP02001_DDL_ADD_AREA">Area</label>
+                <select class="form-control space-input" id="WP02001_DDL_ADD_AREA">
+                    <option value="">- select -</option>
+                    @{
+                        if (Areas != null)
+                        {
+                            if (Areas.Count() > 0)
+                            {
+                                foreach (AreaModel item in Areas)
+                                {
+                                    <option value="@item.ID_TB_M_AREA" >@item.AREA_NAME</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+
+            </div>*@
+        </div>
+        <div class="col-lg-6 ">
+            <label class="section-title">
+                <u>C. Pelaksana Proyek</u>
+            </label>
+            <div class="form-check" style="margin-bottom:20px;">
+                <label>Pelaksana Dari :</label>
+                <div class="row">
+                    <div class="col-lg-2 unset-padding-chkbox ">
+                        <input class="form-check-input cbpelaksana" type="radio" value="TMMI" name="pelaksana" id="WP02001_CHK_ADD_TMMIN">
+                        <label class="form-check-label" for="WP02001_CHK_ADD_STNEW">
+                            TMMIN
+                        </label>
+                    </div>
+                    <div class="col-lg-2 unset-padding-chkbox ">
+                        <input class="form-check-input ace-checkbox-2 cbpelaksana" type="radio" name="pelaksana" value="VENDOR" id="WP02001_CHK_ADD_ST">
+                        <label class="form-check-label" for="WP02001_CHK_ADD_CTR">
+                            Kontraktor
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Bagian / PT. / CV. </label>
+                @*<input type="text" maxlength="25" class="form-control space-input" id="WP02001_TXT_ADD_BAGIAN" placeholder="Pengisian Bagian/ PT. / CV.">*@
+                <select class="form-control space-input" id="WP02001_DDL_ADD_BAGIAN" disabled>
+                    <option value="">- select -</option>
+                    @{
+                        if (Company != null)
+                        {
+                            if (Company.Count() > 0)
+                            {
+                                foreach (CompanyModel item in Company)
+                                {
+                                    <option style="display:none" value="@item.ID_TB_M_COMPANY" code="@item.COMPANY_CODE">@item.COMPANY_NAME</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="row" style="margin:unset">
+                <div class="col-lg-6 section-wrapper-child">
+                    <label class="section-title-child">
+                        <b><u>Pimpinan</u></b>
+                    </label>
+                    <div class="form-group">
+                        <label>Nama </label>
+                        <select class="form-control space-input" id="WP02001_DDL_ADD_NAMALEAD" disabled>
+                            <option value="">- select -</option>
+                            @{
+                                if (Employee != null)
+                                {
+                                    if (Employee.Count() > 0)
+                                    {
+                                        foreach (EmployeeModel item in Employee)
+                                        {
+                                            <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY,@item.PIC_STATUS" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No A/L </label>
+                        <input type="text" class="form-control space-input" id="WP02001_TXT_ADD_NOALLEAD" disabled placeholder="Pengisian No A/L Pimpinan">
+                    </div>
+                    <div class="form-group">
+                        <label>No HP </label>
+                        <input type="text" class="form-control space-input" disabled id="WP02001_TXT_ADD_NOHPLEAD" placeholder="Pengisian No HP Pimpinan">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 section-wrapper-child">
+                    <label class="section-title-child">
+                        <b><u>Pengawas</u></b>
+                    </label>
+                    <div class="form-group">
+                        <label>Nama </label>
+                        <select class="form-control space-input" id="WP02001_DDL_ADD_NAMAPGWS" disabled>
+                            <option value="">- select -</option>
+                            @{
+                                if (Employee != null)
+                                {
+                                    if (Employee.Count() > 0)
+                                    {
+                                        foreach (EmployeeModel item in Employee)
+                                        {
+                                            <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY,@item.PIC_STATUS" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No A/L </label>
+                        <input type="text" class="form-control space-input" id="WP02001_TXT_ADD_NOALPGWS" placeholder="Pengisian No A/L Pengawas" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>No HP </label>
+                        <input type="text" class="form-control space-input" id="WP02001_TXT_ADD_NOHPPGWS" placeholder="Pengisian No HP Pengawas" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

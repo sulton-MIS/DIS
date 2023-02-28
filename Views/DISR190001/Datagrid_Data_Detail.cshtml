@@ -1,0 +1,207 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR190001Master;
+@{
+    List<DISR190001Detail> DataDetail = (List<DISR190001Detail>)ViewData["DataDetail"];
+    List<DISR190001Detail_Parts> Detail_Parts = (List<DISR190001Detail_Parts>)ViewData["Detail_Parts"];
+}
+
+@Html.Partial("Layout_Datagrid_Detail")
+
+
+<style>
+    input:read-only {
+        box-shadow: none;
+        background-color: white;
+    }
+
+</style>
+
+
+<script>
+    $("tr").click(function () {
+        $(this).addClass("selected").siblings().removeClass("selected");
+    });
+
+    var ID_PRODUKSI = localStorage.getItem('show_IDProduksi') || $('#show_IDProduksi').val();
+    $('#show_IDProduksi').val(ID_PRODUKSI).change(function () {
+        var val = $(this).val();
+        localStorage.setItem('show_IDProduksi', val);
+    });
+
+    var CODE = localStorage.getItem('showCode');
+    $('#CODE').val(CODE).change(function () {
+        var val = $(this).val();
+        localStorage.setItem('CODE', val);
+    });
+
+
+    function back() {
+        //var ID_PRODUKSI = MyID.id.valueOf();
+        var ID_PRODUKSI = $('#ID_PRODUKSI').val();
+        localStorage.setItem("show_IDProduksi_last", ID_PRODUKSI);
+
+        var CODE = localStorage.getItem('showCode');
+        //var ID_SEIHIN = $('#ID_SEIHIN').val();
+        localStorage.setItem("show_IDSeihin_last", CODE);
+
+        var LOT_NO = localStorage.getItem('showLot');
+        localStorage.setItem("show_LotNo_last", LOT_NO);
+
+        location.href = "/DISR190001";
+        //OnSearch(1);
+    }
+
+</script>
+
+<!-- Hidden to set localstorage-->
+<input type="hidden" id="ID_PRODUKSI" value="@ViewData["ID_PRODUKSI"]" />
+<input type="hidden" id="ID_SEIHIN" value="@ViewData["ID_HINMOKU"]" />
+<input type="hidden" id="LOT_NO" value="@ViewData["LOT_NO"]" />
+
+@*<input type="text" id="ID_SEIHIN" value="@localstorage.getItem('show_LotNo_last')" />*@
+
+
+<div class="row" style="margin-top: -13px; margin-left: 10px; margin-right: 10px;">
+    <div class="col-xs-12 col-sm-12 col-md-11">
+        <h2><b>[@ViewData["Title"]]</b></h2>
+
+        <div class="menu_atas" style="margin-top: 30px;">
+            <p>
+                <h5>ID Produksi : <input type="text" readonly value="@ViewData["ID_PRODUKSI"]" style="border: 0px none; " /> </h5>
+                <h5>DMC Type : <input type="text" readonly style="border: 0px none;" value="@ViewData["ID_HINMOKU"]" /> </h5>
+                <h5>Lot No : <input type="text" readonly style="border: 0px none; " value="@ViewData["LOT_NO"]" /> </h5>
+            </p>
+        </div>
+
+        <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden; margin-top:10px;" id="Detail_Proses">
+            <p style="width: 20%; color: blue; text-decoration: underline;">
+                <b>Schedule Proses</b>
+            </p>
+            <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+                <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+                <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border:none">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No.</th>
+                                <th style="width: 400px;">Proses</th>
+                                @*<th style="width: 100px;">Lot No.</th>*@
+                                <th style="width: 50px;">OK</th>
+                                <th style="width: 50px;">NG</th>
+                                <th style="width: 50px;">PND</th>
+                                <th style="width: 100px;">NIK</th>
+                                <th style="width: 200px;">NAMA OPR</th>
+                                <th style="width: 200px;">ADM</th>
+                            </tr>
+                        </thead>
+                        @{
+                            if (DataDetail == null || DataDetail.Count == 0)
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="10" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+
+                <!--data grid-->
+                <div id="tScrollBody" style="height: 180px;">
+                    <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none">
+                        <tbody id="tableBody">
+                            <!----><!----><!---->
+                            @{
+                                if (DataDetail != null)
+                                {
+                                    if (DataDetail.Count > 0)
+                                    {
+                                        var number = 1;
+                                        foreach (DISR190001Detail item in DataDetail)
+                                        {
+                                            <tr id="row-@number" class="row-@item.ID">
+                                                <td class="align-center align-middle" style="width: 50px"> @number </td>
+                                                <td class="align-left align-middle" style="width: 400px"> @item.NAME_KOTEI </td>
+                                                @*<td class="align-left align-middle" style="width: 100px"> @item.OTHER_LOTNO </td>*@
+                                                <td class="align-right align-middle" style="width: 50px"> @item.AMNT_OK</td>
+                                                <td class="align-right align-middle" style="width: 50px"> @item.AMNT_NG</td>
+                                                <td class="align-right align-middle" style="width: 50px"> @item.AMNT_PND</td>
+                                                <td class="align-left align-middle" style="width: 100px"> @item.ID_SAGYOSHA1 </td>
+                                                <td class="align-left align-middle" style="width: 200px"> @item.NAME_SAGYOSHA1 </td>
+                                                <td class="align-left align-middle" style="width: 200px"> @item.Z_INPUTUSER_ADM </td>
+                                            </tr>
+                                            number++;
+                                        }
+                                    }
+                                }
+                            }
+                            <!----><!----><!---->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden; margin-top:30px; margin-bottom:100px;" id="tb_Detail_Parts">
+            <p style="width: 20%; color: blue; text-decoration: underline;">
+                <b>Detail Material</b>
+            </p>
+            <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+                <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+                <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 80%; table-layout: fixed; border:none">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No.</th>
+                                <th style="width: 250px;">CODE</th>
+                                <th style="width: 250px;">KCODE</th>
+                                <th style="width: 650px;">NAME</th>
+                            </tr>
+                        </thead>
+                        @{
+                            if (Detail_Parts == null || Detail_Parts.Count == 0)
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="10" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div id="tScrollBody" style="height: 500px;">
+                    <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 80%; table-layout: fixed; border: none">
+                        <tbody id="tableBody">
+                            @{
+                                if (Detail_Parts != null)
+                                {
+                                    if (Detail_Parts.Count > 0)
+                                    {
+                                        var number = 1;
+                                        foreach (DISR190001Detail_Parts item in Detail_Parts)
+                                        {
+                                            <tr id="row-@number" class="row-@item.ID">
+                                                <td class="align-center align-middle" style="width: 50px"> @number </td>
+                                                <td class="align-left align-middle" style="width: 250px"> @item.CODE </td>
+                                                <td class="align-left align-middle" style="width: 250px"> @item.KCODE</td>
+                                                <td class="align-left align-middle" style="width: 650px"> @item.NAME</td>
+                                            </tr>
+                                            number++;
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col align-right align-bottom">
+        @*<button type="button" class="btn btn-danger btn-sm btn-close" id="@ViewData["ID_PRODUKSI"]" onclick="back(this)"><i class="fa fa-close"></i></button>*@
+        <button type="button" class="btn btn-danger btn-sm btn-close" onclick="back(this)"><i class="fa fa-close"></i></button>
+        <!--<button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" id="@*.ViewData["ID_SEIHIN"]*@" onclick="back(this)"><i class="fa fa-close"></i></button>-->
+    </div>
+
+</div>
+
+

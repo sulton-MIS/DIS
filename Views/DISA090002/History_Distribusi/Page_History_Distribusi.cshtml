@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<div id="main-data">
+    @Html.Partial("History_Distribusi/SearchCriteria")
+    @Html.Partial("History_Distribusi/Datagrid_Data")
+    @Html.Partial("History_Distribusi/PopupForm")
+    @Html.Partial("History_Distribusi/ModalForm")
+</div>
+@Html.Partial("History_Distribusi/Javascript")

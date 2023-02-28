@@ -1,0 +1,818 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA150001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            OnSearch(1);
+
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+    }
+
+    $(document).ready(function () {        
+        enterKey_Press();
+        jQuery('#btn_search_Chokoritsu').click();
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+                        
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }                
+            }
+        }
+    }
+
+    //allow-numeric-0-9-decimal-value-textbox
+    $(function () {
+        $("input[id*='addYieldPrintingFilm']\
+            ,input[id *= 'addYieldPrintingGlass']\
+            ,input[id *= 'addYieldPrintingTail']\
+            ,input[id *= 'addYieldPrintingOverlay']\
+            ,input[id *= 'addYieldScribe']\
+            ,input[id *= 'addYieldFilmInspection']\
+            ,input[id *= 'addYieldFilmKabuInspection']\
+            ,input[id *= 'addYieldGlassInspection']\
+            ,input[id *= 'addYieldOverlyInspection']\
+            ,input[id *= 'addYieldTailElectrical']\
+            ,input[id *= 'addYieldTailCosmetic']\
+            ,input[id *= 'addYieldAssembly']\
+            ,input[id *= 'addYieldFinalAssembly']\
+            ,input[id *= 'addYieldElectricalInspection']\
+            ,input[id *= 'addYieldFinalInspection']\
+            ,input[id *= 'addYieldDenkiFilm']\
+            ,input[id *= 'addYieldDenkiGlass']\
+            ,input[id*='editYieldPrintingFilm']\
+            ,input[id *= 'editYieldPrintingGlass']\
+            ,input[id *= 'editYieldPrintingTail']\
+            ,input[id *= 'editYieldPrintingOverlay']\
+            ,input[id *= 'editYieldScribe']\
+            ,input[id *= 'editYieldFilmInspection']\
+            ,input[id *= 'editYieldFilmKabuInspection']\
+            ,input[id *= 'editYieldGlassInspection']\
+            ,input[id *= 'editYieldOverlyInspection']\
+            ,input[id *= 'editYieldTailElectrical']\
+            ,input[id *= 'editYieldTailCosmetic']\
+            ,input[id *= 'editYieldAssembly']\
+            ,input[id *= 'editYieldFinalAssembly']\
+            ,input[id *= 'editYieldElectricalInspection']\
+            ,input[id *= 'editYieldFinalInspection']\
+            ,input[id *= 'editYieldDenkiFilm']\
+            ,input[id *= 'editYieldDenkiGlass']\
+        ").keydown(function (event) {
+
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+
+            if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                (event.keyCode >= 96 && event.keyCode <= 105) ||
+                event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+                event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+            } else {
+                event.preventDefault();
+            }
+
+            if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                event.preventDefault();
+            //if a decimal has been added, disable the "."-button
+
+        });
+    });
+
+    function add_check() {
+        var ValidationState = true;
+        var ValidationMessage = "";
+
+        var ProyekData = {
+            DMC_TYPE: $('#addDmcType').val(),
+            YIELD_PRINTING_FILM: $('#addYieldPrintingFilm').val(),
+            YIELD_PRINTING_GLASS: $('#addYieldPrintingGlass').val(),
+            YIELD_PRINTING_TAIL: $('#addYieldPrintingTail').val(),
+            YIELD_PRINTING_OVERLAY: $('#addYieldPrintingOverlay').val(),
+            YIELD_SCRIBE: $('#addYieldScribe').val(),
+            YIELD_FILM_MIDLE_INSPECTION: $('#addYieldFilmInspection').val(),
+            YIELD_FILM_KABU_MIDLE_INSPECTION: $('#addYieldFilmKabuInspection').val(), 
+            YIELD_GLASS_MIDLE_INSPECTION: $('#addYieldGlassInspection').val(),
+            YIELD_OVERLAY_MIDLE_INSPECTION: $('#addYieldOverlyInspection').val(),
+            YIELD_TAIL_ELECTRICAL: $('#addYieldTailElectrical').val(),
+            YIELD_TAIL_COSMETIC: $('#addYieldTailCosmetic').val(),
+            YIELD_ASSEMBLY: $('#addYieldAssembly').val(),
+            YIELD_FINAL_ASSEMBLY: $('#addYieldFinalAssembly').val(),
+            YIELD_ELECTRICAL_INSPECTION: $('#addYieldElectricalInspection').val(),
+            YIELD_FINAL_INSPECTION: $('#addYieldFinalInspection').val(),
+            YIELD_DENKI_FILM: $('#addYieldDenkiFilm').val(),
+            YIELD_DENKI_GLASS: $('#addYieldDenkiGlass').val()
+        }
+
+        if (ProyekData.DMC_TYPE == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert DMC TYPE!"
+        }
+        else if (ProyekData.YIELD_PRINTING_FILM == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING FILM!"
+        }
+        else if (ProyekData.YIELD_PRINTING_GLASS == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING GLASS!"
+        }
+        else if (ProyekData.YIELD_PRINTING_TAIL == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING TAIL!"
+        }
+        else if (ProyekData.YIELD_PRINTING_OVERLAY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING OVERLAY!"
+        }
+        else if (ProyekData.YIELD_SCRIBE == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD SCRIBE!"
+        }
+        else if (ProyekData.YIELD_FILM_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FILM MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_FILM_KABU_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FILM KABU MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_GLASS_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD GLASS MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_OVERLAY_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD OVERLAY MIDLE INSPECTION"
+        }
+        else if (ProyekData.YIELD_TAIL_ELECTRICAL == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD TAIL ELECTRICAL!"
+        }
+        else if (ProyekData.YIELD_TAIL_COSMETIC == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD TAIL COSMETIC!"
+        }
+        else if (ProyekData.YIELD_ASSEMBLY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD ASSEMBLY!"
+        }
+        else if (ProyekData.YIELD_FINAL_ASSEMBLY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FINAL ASSEMBLY!"
+        }
+        else if (ProyekData.YIELD_ELECTRICAL_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD ELECTRICAL INSPECTION!"
+        }
+        else if (ProyekData.YIELD_FINAL_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FINAL INSPECTION!"
+        }
+        else if (ProyekData.YIELD_DENKI_FILM == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD DENKI FILM"
+        }
+        else if (ProyekData.YIELD_DENKI_GLASS == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD DENKI GLASS"
+        }
+
+        if (ValidationState != true) {
+            toastr.error(ValidationMessage);
+            return;
+        }
+        else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+      
+    }
+
+    function edit_check() {
+        var ValidationState = true;
+        var ValidationMessage = "";
+
+        var ProyekData = {
+            DMC_TYPE: $('#editDmcType').val(),
+            YIELD_PRINTING_FILM: $('#editYieldPrintingFilm').val(),
+            YIELD_PRINTING_GLASS: $('#editYieldPrintingGlass').val(),
+            YIELD_PRINTING_TAIL: $('#editYieldPrintingTail').val(),
+            YIELD_PRINTING_OVERLAY: $('#editYieldPrintingOverlay').val(),
+            YIELD_SCRIBE: $('#editYieldScribe').val(),
+            YIELD_FILM_MIDLE_INSPECTION: $('#editYieldFilmInspection').val(),
+            YIELD_FILM_KABU_MIDLE_INSPECTION: $('#editYieldFilmKabuInspection').val(),
+            YIELD_GLASS_MIDLE_INSPECTION: $('#editYieldGlassInspection').val(),
+            YIELD_OVERLAY_MIDLE_INSPECTION: $('#editYieldOverlyInspection').val(),
+            YIELD_TAIL_ELECTRICAL: $('#editYieldTailElectrical').val(),
+            YIELD_TAIL_COSMETIC: $('#editYieldTailCosmetic').val(),
+            YIELD_ASSEMBLY: $('#editYieldAssembly').val(),
+            YIELD_FINAL_ASSEMBLY: $('#editYieldFinalAssembly').val(),
+            YIELD_ELECTRICAL_INSPECTION: $('#editYieldElectricalInspection').val(),
+            YIELD_FINAL_INSPECTION: $('#editYieldFinalInspection').val(),
+            YIELD_DENKI_FILM: $('#editYieldDenkiFilm').val(),
+            YIELD_DENKI_GLASS: $('#editYieldDenkiGlass').val()
+        }
+
+        if (ProyekData.DMC_TYPE == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert DMC TYPE!"
+        }
+        else if (ProyekData.YIELD_PRINTING_FILM == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING FILM!"
+        }
+        else if (ProyekData.YIELD_PRINTING_GLASS == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING GLASS!"
+        }
+        else if (ProyekData.YIELD_PRINTING_TAIL == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING TAIL!"
+        }
+        else if (ProyekData.YIELD_PRINTING_OVERLAY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD PRINTING OVERLAY!"
+        }
+        else if (ProyekData.YIELD_SCRIBE == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD SCRIBE!"
+        }
+        else if (ProyekData.YIELD_FILM_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FILM MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_FILM_KABU_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FILM KABU MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_GLASS_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD GLASS MIDLE INSPECTION!"
+        }
+        else if (ProyekData.YIELD_OVERLAY_MIDLE_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD OVERLAY MIDLE INSPECTION"
+        }
+        else if (ProyekData.YIELD_TAIL_ELECTRICAL == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD TAIL ELECTRICAL!"
+        }
+        else if (ProyekData.YIELD_TAIL_COSMETIC == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD TAIL COSMETIC!"
+        }
+        else if (ProyekData.YIELD_ASSEMBLY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD ASSEMBLY!"
+        }
+        else if (ProyekData.YIELD_FINAL_ASSEMBLY == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FINAL ASSEMBLY!"
+        }
+        else if (ProyekData.YIELD_ELECTRICAL_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD ELECTRICAL INSPECTION!"
+        }
+        else if (ProyekData.YIELD_FINAL_INSPECTION == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD FINAL INSPECTION!"
+        }
+        else if (ProyekData.YIELD_DENKI_FILM == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD DENKI FILM"
+        }
+        else if (ProyekData.YIELD_DENKI_GLASS == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert YIELD DENKI GLASS"
+        }
+
+        if (ValidationState != true) {
+            toastr.error(ValidationMessage);
+            return;
+        }
+        else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+       
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        add_check();
+        /*$('#PopupForm_AddNewConfirm').modal();*/
+    }
+
+    
+    //tombol Add New
+    function addNew() {               
+        var DMC_TYPE = $('#addDmcType').val();
+        var YIELD_PRINTING_FILM = $('#addYieldPrintingFilm').val();
+        var YIELD_PRINTING_GLASS = $('#addYieldPrintingGlass').val();
+        var YIELD_PRINTING_TAIL = $('#addYieldPrintingTail').val();
+        var YIELD_PRINTING_OVERLAY = $('#addYieldPrintingOverlay').val();
+        var YIELD_SCRIBE = $('#addYieldScribe').val();
+        var YIELD_FILM_MIDLE_INSPECTION = $('#addYieldFilmInspection').val();
+        var YIELD_FILM_KABU_MIDLE_INSPECTION = $('#addYieldFilmKabuInspection').val();
+        var YIELD_GLASS_MIDLE_INSPECTION = $('#addYieldGlassInspection').val();
+        var YIELD_OVERLAY_MIDLE_INSPECTION = $('#addYieldOverlyInspection').val();
+        var YIELD_TAIL_ELECTRICAL = $('#addYieldTailElectrical').val();
+        var YIELD_TAIL_COSMETIC = $('#addYieldTailCosmetic').val();
+        var YIELD_ASSEMBLY = $('#addYieldAssembly').val();
+        var YIELD_FINAL_ASSEMBLY = $('#addYieldFinalAssembly').val();
+        var YIELD_ELECTRICAL_INSPECTION = $('#addYieldElectricalInspection').val();
+        var YIELD_FINAL_INSPECTION = $('#addYieldFinalInspection').val();
+        var YIELD_DENKI_FILM = $('#addYieldDenkiFilm').val();
+        var YIELD_DENKI_GLASS = $('#addYieldDenkiGlass').val();
+       
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../ADD_NEW_Chokoritsu',
+            async: false,
+            data: {
+                DMC_TYPE: DMC_TYPE,
+                YIELD_PRINTING_FILM: YIELD_PRINTING_FILM,
+                YIELD_PRINTING_GLASS: YIELD_PRINTING_GLASS,
+                YIELD_PRINTING_TAIL: YIELD_PRINTING_TAIL,
+                YIELD_PRINTING_OVERLAY: YIELD_PRINTING_OVERLAY,
+                YIELD_SCRIBE: YIELD_SCRIBE,
+                YIELD_FILM_MIDLE_INSPECTION: YIELD_FILM_MIDLE_INSPECTION,
+                YIELD_FILM_KABU_MIDLE_INSPECTION: YIELD_FILM_KABU_MIDLE_INSPECTION,
+                YIELD_GLASS_MIDLE_INSPECTION: YIELD_GLASS_MIDLE_INSPECTION,
+                YIELD_OVERLAY_MIDLE_INSPECTION: YIELD_OVERLAY_MIDLE_INSPECTION,
+                YIELD_TAIL_ELECTRICAL: YIELD_TAIL_ELECTRICAL,
+                YIELD_TAIL_COSMETIC: YIELD_TAIL_COSMETIC,
+                YIELD_ASSEMBLY: YIELD_ASSEMBLY,
+                YIELD_FINAL_ASSEMBLY: YIELD_FINAL_ASSEMBLY,
+                YIELD_ELECTRICAL_INSPECTION: YIELD_ELECTRICAL_INSPECTION,
+                YIELD_FINAL_INSPECTION: YIELD_FINAL_INSPECTION,
+                YIELD_DENKI_FILM: YIELD_DENKI_FILM,
+                YIELD_DENKI_GLASS: YIELD_DENKI_GLASS
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    clear_add();                    
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                    $('#btnNo').click();
+                    OnSearch(1);
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {                
+        var DMC_TYPE = $('#addDmcType').val('');
+        var YIELD_PRINTING_FILM = $('#addYieldPrintingFilm').val('');
+        var YIELD_PRINTING_GLASS = $('#addYieldPrintingGlass').val('');
+        var YIELD_PRINTING_TAIL = $('#addYieldPrintingTail').val('');
+        var YIELD_PRINTING_OVERLAY = $('#addYieldPrintingOverlay').val('');
+        var YIELD_SCRIBE = $('#addYieldScribe').val('');
+        var YIELD_FILM_MIDLE_INSPECTION = $('#addYieldFilmInspection').val('');
+        var YIELD_FILM_KABU_MIDLE_INSPECTION = $('#addYieldFilmKabuInspection').val('');
+        var YIELD_GLASS_MIDLE_INSPECTION = $('#addYieldGlassInspection').val('');
+        var YIELD_OVERLAY_MIDLE_INSPECTION = $('#addYieldOverlyInspection').val('');
+        var YIELD_TAIL_ELECTRICAL = $('#addYieldTailElectrical').val('');
+        var YIELD_TAIL_COSMETIC = $('#addYieldTailCosmetic').val('');
+        var YIELD_ASSEMBLY = $('#addYieldAssembly').val('');
+        var YIELD_FINAL_ASSEMBLY = $('#addYieldFinalAssembly').val('');
+        var YIELD_ELECTRICAL_INSPECTION = $('#addYieldElectricalInspection').val('');
+        var YIELD_FINAL_INSPECTION = $('#addYieldFinalInspection').val('');
+        var YIELD_DENKI_FILM = $('#addYieldDenkiFilm').val('');
+        var YIELD_DENKI_GLASS = $('#addYieldDenkiGlass').val('');
+       
+    }
+
+     //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var DMC_TYPE = $('#editDmcType');
+        var YIELD_PRINTING_FILM = $('#editYieldPrintingFilm');
+        var YIELD_PRINTING_GLASS = $('#editYieldPrintingGlass');
+        var YIELD_PRINTING_TAIL = $('#editYieldPrintingTail');
+        var YIELD_PRINTING_OVERLAY = $('#editYieldPrintingOverlay');
+        var YIELD_SCRIBE = $('#editYieldScribe');
+        var YIELD_FILM_MIDLE_INSPECTION = $('#editYieldFilmInspection');
+        var YIELD_FILM_KABU_MIDLE_INSPECTION = $('#editYieldFilmKabuInspection');
+        var YIELD_GLASS_MIDLE_INSPECTION = $('#editYieldGlassInspection');
+        var YIELD_OVERLAY_MIDLE_INSPECTION = $('#editYieldOverlyInspection');
+        var YIELD_TAIL_ELECTRICAL = $('#editYieldTailElectrical');
+        var YIELD_TAIL_COSMETIC = $('#editYieldTailCosmetic');
+        var YIELD_ASSEMBLY = $('#editYieldAssembly');
+        var YIELD_FINAL_ASSEMBLY = $('#editYieldFinalAssembly');
+        var YIELD_ELECTRICAL_INSPECTION = $('#editYieldElectricalInspection');
+        var YIELD_FINAL_INSPECTION = $('#editYieldFinalInspection');
+        var YIELD_DENKI_FILM = $('#editYieldDenkiFilm');
+        var YIELD_DENKI_GLASS = $('#editYieldDenkiGlass');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        ID.val(Send_Var[0]);
+        DMC_TYPE.val(Send_Var[1]);
+        YIELD_PRINTING_FILM.val(Send_Var[2]);
+        YIELD_PRINTING_GLASS.val(Send_Var[3]);
+        YIELD_PRINTING_TAIL.val(Send_Var[4]);
+        YIELD_PRINTING_OVERLAY.val(Send_Var[5]);
+        YIELD_SCRIBE.val(Send_Var[6]);
+        YIELD_FILM_MIDLE_INSPECTION.val(Send_Var[7]);
+        YIELD_FILM_KABU_MIDLE_INSPECTION.val(Send_Var[8]);
+        YIELD_GLASS_MIDLE_INSPECTION.val(Send_Var[9]);
+        YIELD_OVERLAY_MIDLE_INSPECTION.val(Send_Var[10]);
+        YIELD_TAIL_ELECTRICAL.val(Send_Var[11]);
+        YIELD_TAIL_COSMETIC.val(Send_Var[12]);
+        YIELD_ASSEMBLY.val(Send_Var[13]);
+        YIELD_FINAL_ASSEMBLY.val(Send_Var[14]);
+        YIELD_ELECTRICAL_INSPECTION.val(Send_Var[15]);
+        YIELD_FINAL_INSPECTION.val(Send_Var[16]);
+        YIELD_DENKI_FILM.val(Send_Var[17]);
+        YIELD_DENKI_GLASS.val(Send_Var[18]);    
+
+       
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var DMC_TYPE = $('#editDmcType').val();
+                var YIELD_PRINTING_FILM = $('#editYieldPrintingFilm').val();
+                var YIELD_PRINTING_GLASS = $('#editYieldPrintingGlass').val();
+                var YIELD_PRINTING_TAIL = $('#editYieldPrintingTail').val();
+                var YIELD_PRINTING_OVERLAY = $('#editYieldPrintingOverlay').val();                
+                var YIELD_SCRIBE = $('#editYieldScribe').val();
+                var YIELD_FILM_MIDLE_INSPECTION = $('#editYieldFilmInspection').val();
+                var YIELD_FILM_KABU_MIDLE_INSPECTION = $('#editYieldFilmKabuInspection').val();
+                var YIELD_GLASS_MIDLE_INSPECTION = $('#editYieldGlassInspection').val();
+                var YIELD_OVERLAY_MIDLE_INSPECTION = $('#editYieldOverlyInspection').val();
+                var YIELD_TAIL_ELECTRICAL = $('#editYieldTailElectrical').val();
+                var YIELD_TAIL_COSMETIC = $('#editYieldTailCosmetic').val();
+                var YIELD_ASSEMBLY = $('#editYieldAssembly').val();
+                var YIELD_FINAL_ASSEMBLY = $('#editYieldFinalAssembly').val();
+                var YIELD_ELECTRICAL_INSPECTION = $('#editYieldElectricalInspection').val();
+                var YIELD_FINAL_INSPECTION = $('#editYieldFinalInspection').val();
+                var YIELD_DENKI_FILM = $('#editYieldDenkiFilm').val();
+                var YIELD_DENKI_GLASS = $('#editYieldDenkiGlass').val();      
+                var Send_Var = ID + "," + DMC_TYPE + "," + YIELD_PRINTING_FILM + "," + YIELD_PRINTING_GLASS + "," + YIELD_PRINTING_TAIL + "," + YIELD_PRINTING_OVERLAY + "," + YIELD_SCRIBE + "," + YIELD_FILM_MIDLE_INSPECTION + "," + YIELD_FILM_KABU_MIDLE_INSPECTION + "," + YIELD_GLASS_MIDLE_INSPECTION + "," + YIELD_OVERLAY_MIDLE_INSPECTION + "," + YIELD_TAIL_ELECTRICAL + "," + YIELD_TAIL_COSMETIC + "," + YIELD_ASSEMBLY + "," + YIELD_FINAL_ASSEMBLY + "," + YIELD_ELECTRICAL_INSPECTION + "," + YIELD_FINAL_INSPECTION + "," + YIELD_DENKI_FILM + "," + YIELD_DENKI_GLASS;
+
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../Update_Data_Chokoritsu',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();                        
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + '../Delete_Data_Chokoritsu',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+   
+ 
+
+    // tombol new
+    $("#btn_new").on("click", function () {                
+        $('#addDmcType').val();
+        $('#addYieldPrintingFilm').val();
+        $('#addYieldPrintingGlass').val();
+        $('#addYieldPrintingTail').val();
+        $('#addYieldPrintingOverlay').val();
+        $('#addYieldScribe').val();
+        $('#addYieldFilmInspection').val();
+        $('#addYieldFilmKabuInspection').val();
+        $('#addYieldGlassInspection').val();
+        $('#addYieldOverlyInspection').val();
+        $('#addYieldTailElectrical').val();
+        $('#addYieldTailCosmetic').val();
+        $('#addYieldAssembly').val();
+        $('#addYieldFinalAssembly').val();
+        $('#addYieldElectricalInspection').val();
+        $('#addYieldFinalInspection').val();
+        $('#addYieldDenkiFilm').val();
+        $('#addYieldDenkiGlass').val();
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    //tombol clear
+    function clear_search_Chokoritsu() {
+        $('#searchDmcType').val('');     
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Chokoritsu',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val()                
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+
+    // tombol search
+    $("#btn_search_Chokoritsu").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var DMC_TYPE = $('#searchDmcType').val();        
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Chokoritsu',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),               
+                DMC_TYPE: DMC_TYPE               
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+ 
+
+
+</script>

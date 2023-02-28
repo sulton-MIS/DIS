@@ -1,0 +1,490 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+@using AI070.Models;
+@using AI070.Models.Shared;
+@{
+    List<AreaInfo> AreaInfo = (List<AreaInfo>)ViewData["AreaInfo"];
+    UserInfo UserInfo = (UserInfo)ViewData["UserInfo"];
+    Random rand = new Random((int)DateTime.Now.Ticks);
+    
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("Dashboard_style")
+
+    <div id="widget-content">
+        <button id="btn-show" onclick="showMenuNav()" class="btn btn-info btn-xs">
+            @*<i class="fa fa-tasks"></i>*@ Show Menu
+        </button>
+
+        @*<button id="btn-full" onclick="requestFullScreen(element)" class="btn btn-info btn-xs">
+            <i class="fa fa-tasks"></i> Show Menu
+        </button>*@
+
+        <select class="selectArea">
+            @{
+                if (AreaInfo != null)
+                {
+                    if (AreaInfo.Count > 0)
+                    {
+                        foreach (AreaInfo item in AreaInfo)
+                        {
+                            <option image="@(item.IMAGE_PATH)?code=@(rand.Next(1, 1000))" areacd="@item.AREA_CD" value="@item.ID">@item.AREA_NAME</option>
+
+                        }
+                    }
+                }
+            }
+        </select>
+
+        <img class="imagebox" style="height: 100%; width: 100%" src="@AreaInfo[0].IMAGE_PATH" />
+
+        <div class="BoxControlContractor">
+            <div class="hideButton">
+                <span class="hideBox pull-right" style="color: black; font-size:1.8vw;"><i class="fa fa-eye-slash hideBoxIcon"></i></span>
+            </div>
+            <div class="content-box">
+                Date : <label style="font-size: 1.5vw" class="dateNow">?</label></p>
+                <p>
+                    <img style="margin-top:-12px" class="home-icon" src="~/Content/Images/company.svg" /> Contractor<span id="home-contractor" class="pull-right">0 / 0</span>
+                </p>
+                <p>
+                    <img style="margin-top:-12px; height:2vw; width:5vh" class="home-icon" src="~/Content/Images/workers2.png" /> Workers <span id="home-workers" class="pull-right">0 / 0</span>
+                </p>
+                <p>
+                    <img style="margin-top:-12px" class="home-icon" src="~/Content/Images/warn.svg" />
+                    Category (L/M/H) <span id="home-category" class="pull-right">0 / 0 / 0</span>
+                </p>
+                <p>
+                    <img style="margin-top:-12px" class="home-icon" src="~/Content/Images/alarm.svg" /> Incident (L/M/H) <span id="home-incident" class="pull-right">0 / 0 / 0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+<div id="loading">
+    <div class="real-center">
+        @Html.Partial("Loading")<br />
+        <img style="margin-left:-20%" src="~/Content/Images/loading.svg" />
+    </div>
+</div>
+<script>
+    var SITE_URL = (window.location.href).split('?')[0] + "/";
+    console.log((SITE_URL).split('/'));
+    if ($.inArray('Home', (SITE_URL).split('/')) == -1) {
+        SITE_URL = SITE_URL;
+    }
+    var WINDOW_URL = window.location.href;
+    //var url = getQueryString('api');
+    var getParameter = getParameterByName("Areacd");
+    var zIndex = 1000;
+    var menu = false;
+    var statusHide = false;
+    var idSquare = 0;
+    var Message = [];
+    var Top_breadcrumbs = $('#breadcrumbs').position().top;
+    var Height_breadcrumbs = $('#breadcrumbs').height();
+
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+          results = regex.exec(location.search);
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    $.ajax({
+        url: "Message/GenerateMessage",
+        success: function (e) {
+            Message = e.res;
+
+            for (var i = 0; i < Message.length; i++) {
+                var MSG_ID = Message[i].MSG_ID;
+                if (MSG_ID == "MWP005") {
+                    $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                } else if (MSG_ID == "MWP006") {
+                    $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                } else if (MSG_ID == "MWP007") {
+                    $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                }
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        hideMenuNav();
+        if (getParameter != null && getParameter != '') {
+        $('.selectArea').val($(".selectArea [areacd=" + getParameter + "]").val());
+            $.get($('.selectArea option:selected').attr('image'))
+                .done(function () {
+                if ($('.selectArea option:selected').attr('image') == undefined) {
+                    GenerateMessage('', 'MWP022');
+                    $('.imagebox').attr('src', '');
+                } else {
+                    var d = new Date();
+                    $('.imagebox').attr('src', $('.selectArea option:selected').attr('image')+'?code='+d.getDate()+d.getHours()+d.getMinutes+d.getSeconds());
+                }
+            }).fail(function () {
+                GenerateMessage('', 'MWP022');
+                $('.imagebox').attr('src', '');
+            });
+        }
+        var default_area = @UserInfo.Area;
+        if (getParameter != null && getParameter != '') {
+            getIMPBDetail($('.selectArea').val());
+        } else if (default_area != null) {
+            $('.selectArea').val(default_area);
+            $('.imagebox').attr('src', $('.selectArea option:selected').attr('image'));
+            getIMPBDetail(default_area);
+        }
+
+        setInterval(function (e) {
+            getIMPBDetail($('.selectArea').val(),'noloading');
+        }, 60000)
+
+        setTimeout(function () {
+            $( "#loading" ).fadeOut( "slow", function() {
+              });
+        }, 2000);
+
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+
+        setInterval(function () {
+            var d = new Date();
+            $('.dateNow').text(d.getDate()+"-"+monthNames[d.getMonth()]+"-"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds());
+        }, 1000);
+
+        $('.selectArea').change(function () {
+            $.get($('.selectArea option:selected').attr('image'))
+                .done(function () {
+                if ($('.selectArea option:selected').attr('image') == undefined) {
+                    GenerateMessage('', 'MWP022');
+                    $('.imagebox').attr('src', '');
+                } else {
+                    $('.imagebox').attr('src', $('.selectArea option:selected').attr('image'));
+                }
+            }).fail(function () {
+                GenerateMessage('', 'MWP022');
+                $('.imagebox').attr('src', '');
+            });
+            $('.square-widget').remove();
+            $('.popover').hide();
+            idSquare = 0;
+            getIMPBDetail(this.value);
+
+
+        });
+        getHomeContent();
+    });
+
+    function requestFullScreen(element) {
+        var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+        if (requestMethod) { // Native full screen.
+            requestMethod.call(element);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+    }
+
+    function getHomeContent() {
+        $.ajax({
+        url: SITE_URL+"getHomeContent",
+        data: {
+            AREA : $('.selectArea').val()
+        },
+            success: function (e) {
+                if (e.data.length > 0) {
+                    var incidentL = (e.data[0].Incident[0].INCIDENT_L == null) ? 0 : e.data[0].Incident[0].INCIDENT_L;
+                    var incidentM = (e.data[0].Incident[0].INCIDENT_M == null) ? 0 : e.data[0].Incident[0].INCIDENT_M;
+                    var incidentH = (e.data[0].Incident[0].INCIDENT_H == null) ? 0 : e.data[0].Incident[0].INCIDENT_H;
+
+                    $('#home-contractor').text(e.data[0].TotalCompany);
+                    $('#home-workers').text(e.data[0].WorkersCheckIn + " / " + e.data[0].AllWorkers);
+                    $('#home-incident').text(e.data[0].Incident[0].INCIDENT_L+ " / " + e.data[0].Incident[0].INCIDENT_M + " / " + e.data[0].Incident[0].INCIDENT_H);
+                    $('#home-category').text(incidentL + " / " + incidentM + " / " + incidentH);
+                } else {
+                    $('#home-contractor').text(0);
+                    $('#home-workers').text(0+" / "+0);
+                    $('#home-incident').text(0+" / "+0+" / "+0);
+                    $('#home-category').text(0+" / "+0+" / "+0);
+                }
+            
+        },
+        error:function(e){
+            console.log(e)
+        }
+    });
+    }
+
+    var elem = document.body; // Make the body go full screen.
+    //requestFullScreen(elem);
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            var MSG_TYPE = Message[i].MSG_TYPE;
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (MSG_TYPE == "Info") {
+                    toastr.success(NEW_TXT);
+                } else if (MSG_TYPE == "Warning") {
+                    toastr.warning(NEW_TXT);
+                } else {
+                    toastr.error(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    $('.hideBox').click(function () {
+        if (statusHide == false) {
+            $(".BoxControlContractor").animate({ "left": "+=50vw" }, "slow");
+            $(".selectArea").animate({ "left": "-=100vw" }, "slow");
+            $("#btn-show").animate({ "left": "-=100vw" }, "slow");
+            $('.hideBoxIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+            statusHide = true;
+        } else {
+            $(".BoxControlContractor").animate({ "left": "-=50vw" }, "slow");
+            $(".selectArea").animate({ "left": "+=100vw" }, "slow");
+            $("#btn-show").animate({ "left": "+=100vw" }, "slow");
+            $('.hideBoxIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+            statusHide = false;
+        }
+    })
+
+    function getIMPBDetail(AREA, noloading) {
+        $.ajax({
+            url: SITE_URL + "getIMPBDetail",
+            data: {
+                AREA : AREA
+            },
+            beforeSend: function () {
+                if (noloading != undefined) {
+
+                } else {
+                    $("#loading").fadeIn("slow", function () {
+                    });
+                }
+
+            },
+            success: function (e) {
+                var datas = e.data;
+                idSquare = 0;
+                if (e.data.length > 0) {
+                    $('.square-widget').remove();
+                    $('.popover').remove();
+                    for (var i = 0; i < e.data.length; i++) {
+                        createSquare(datas[i]);
+                    }
+
+                    getHomeContent();
+                }
+
+                if (e.data.length > 1) {
+                    for (var b = 0; b < e.data.length; b++) {
+                        for (var c = 0; c < e.data.length; c++) {
+                            if (b != c) {
+                                var colision = overlaps('square-' + b, 'square-' + c);
+                                if (colision == true) {
+                                    if ($('#square-' + c).hasClass('pad-green')) {
+                                        $('#square-'+c).addClass('colision-green');
+                                    } else if ($('#square-' + c).hasClass('pad-yellow')) {
+                                        $('#square-'+c).addClass('colision-yellow');
+                                    } else {
+                                        $('#square-'+c).addClass('colision-red');
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                $('[data-toggle="popover"]').popover();
+                $("#loading").fadeOut("slow", function () {
+              });
+            }
+        });
+    }
+
+    function createSquare(datas) {
+        var TOP = (datas.TOP_POSITION / datas.WINDOW_HEIGHT) * 100 + '%';
+        var LEFT = (datas.LEFT_POSITION / datas.WINDOW_WIDTH) * 100 + '%';
+        var WIDTH = ((datas.WIDTH / datas.WINDOW_WIDTH * 100)) + '%';
+        var HEIGHT = ((datas.HEIGHT / datas.WINDOW_HEIGHT * 100)) + '%';
+        var ROTATION = datas.ROTATION + 'Rad';
+        var PING = datas.PING;
+        var PING_IMAGE = "";
+        var CHECK_HENKANTEN = false;
+        var WORK_ICON = '<span class="work-icon">';
+        var HENKANTEN = '';
+        var DANGER_LEVEL = 'LOW';
+        var INCIDENT_URL = '';
+        if (datas.BORDER_COLOR == 'yellow') {
+            DANGER_LEVEL = 'MEDIUM';
+        } else if (datas.BORDER_COLOR == 'red') {
+            DANGER_LEVEL = 'HIGH';
+        }
+
+        if (PING == 1) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m1.png" class="ping-green" />';
+        } else if (PING == 2) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m2.png" class="ping-yellow" />';
+        } else if (PING == 3) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m3.png" class="ping-red" />';
+        }
+
+        if (PING > 0) {
+            INCIDENT_URL = '<tr><td>INCIDENT</td><td><a>: GO TO INCIDENT DETAIL</a></td></tr>';
+        }
+
+        var placement = 'top';
+        if ((datas.TOP_POSITION / datas.WINDOW_HEIGHT) * 100 < 35) {
+            placement = 'bottom';
+        }
+
+        $.ajax({
+            url: SITE_URL + 'getWorkingType',
+            data: {
+                IMPB: datas.IMPB
+            },
+            success: function (e) {
+                var icon_temp = [];
+                for (var i = 0; i < e.Data.length; i++) {
+                    var data_icon = e.Data[i].ICON;
+                    if (icon_temp.indexOf(data_icon) < 0) {
+                        icon_temp.push(data_icon);
+                        WORK_ICON = WORK_ICON + '<img class="icon-danger edit-icon" data-type="edit" data-icon="" src="/Content/Images/Icon/'+data_icon+'.png" />';
+                    }
+                }
+            },
+            async: false
+        });
+
+        $.ajax({
+            url: SITE_URL + 'getIMPBHenkanten',
+            data: {
+                IMPB: datas.IMPB
+            },
+            success: function (e) {
+
+                if (e != null) {
+                    if (e.Data.length > 0) {
+                        if (e.Data[0].HENKANTEN_ENV == 'true' || e.Data[0].HENKANTEN_SAFETY == 'true') {
+                            CHECK_HENKANTEN = true;
+                        }
+                    }
+                }
+            },
+            async: false
+        });
+
+        if (CHECK_HENKANTEN == true) {
+            HENKANTEN = '<span class="henkanten-icon real-center"><i class="fa fa-h-square"></i></span>';
+        }
+
+        WORK_ICON = WORK_ICON + "</span>";
+        $('#widget-content').append('<div id="square-'+(idSquare++)+'" data-toggle="popover" data-html="true" data-placement="'+placement+'" title="<b style=text-transform:uppercase;>Project Name : ' + datas.PROJECT_NAME + '<b>" data-content="<table><tr><td>IMPB : </td><td> : '+datas.IMPB+'</td></tr><tr><td>Project Job</td><td>: '+datas.PROJECT_JOBS+'</td></tr><tr> <td>Responsible Person </td><td> : ' + datas.CREATED_BY + '</td></tr><tr><td>Supervisor TMMIN </td><td> : ' + datas.SUPERVISOR_TMMIN + '</td></tr><tr><td>Leader </td><td> : ' + datas.LEADER + '</td></tr><tr><td>Contractor </td><td>: ' +
+                datas.SECTION + '</td></tr><tr><td>Supervisor Contractor </td><td> : ' + datas.SUPERVISOR + '</td></tr><td>Total Worker</td> <td> : ' + datas.TOTAL_CHECK_IN + '/ ' + datas.TOTAL_EMPLOYEE + '</td></tr><tr><td>Risk Level </td><td> : ' + DANGER_LEVEL + '</td></tr>'+INCIDENT_URL+'</table>" class="square-widget pad y n pad-' + datas.BORDER_COLOR + '" style="top:' + TOP + ';left:' + LEFT + ';width:' + WIDTH + ';height:' + HEIGHT + ';z-index:'+(zIndex--)+';transform:rotate(' + ROTATION + ')">' +
+            HENKANTEN+'<span class="real-center">'+PING_IMAGE+'</span>'+WORK_ICON+'</div>');
+    }
+
+    var overlaps = (function () {
+        function getPositions( elem ) {
+            var pos, width, height, x, y;
+            x = document.getElementById(elem).offsetTop;
+            y = document.getElementById(elem).offsetLeft;
+            width = document.getElementById(elem).offsetWidth;
+            height = document.getElementById(elem).offsetHeight;
+            return [ [ x, x + width ], [ y, y + height ] ];
+        }
+
+        function comparePositions( p1, p2 ) {
+            var r1, r2;
+            r1 = p1[0] < p2[0] ? p1 : p2;
+            r2 = p1[0] < p2[0] ? p2 : p1;
+            return r1[1] > r2[0] || r1[0] === r2[0];
+        }
+
+        return function ( a, b ) {
+            var pos1 = getPositions( a ),
+                pos2 = getPositions(b);
+            //console.log(pos1 + " : " + pos2);
+            return comparePositions( pos1[0], pos2[0] ) && comparePositions( pos1[1], pos2[1] );
+        };
+    })();
+
+    function showMenuNav() {
+        if (menu == false) {
+            $('#navbar').animate({ "top": "+=50vh" }, "slow").css('z-index', '100');
+            $('#breadcrumbs').animate({ "top": "+=50vh" }, "slow").css('z-index', '99');
+            $('#sidebar').animate({ "left": "0" }, "slow");
+            $('#section-pageheader').animate({ "left": "+=50vh" }, "slow").css('z-index', '99');
+            $('.control-label.text-muted').animate({ "left": "+=50vh" }, "slow").css('z-index', '99');
+            menu = true;
+            Top_breadcrumbs = $('#breadcrumbs').position().top+ (window.innerHeight * 50 / 100);
+            Height_breadcrumbs = $('#breadcrumbs').height();
+            var th_breadcrumbs = Top_breadcrumbs + Height_breadcrumbs;
+            
+            if (window.innerWidth < 992) {
+                $(".selectArea").animate({ "top": "+=" + (th_breadcrumbs) + "px" }, "slow");
+                $('#btn-show').animate({ "top": "+=" + (th_breadcrumbs) + "px" }, "slow").text('Hide Menu');
+            } else {
+                var sidebar_width = $('#sidebar').width();
+                $(".selectArea").animate({ "top": "+=" + (th_breadcrumbs) + "px", "left": "+=" + (sidebar_width - 10) + "px" }, "slow");
+                $('#btn-show').animate({ "top": "+=" + (th_breadcrumbs) + "px", "left": "+=" + (sidebar_width - 10) + "px"  }, "slow").text('Hide Menu');
+            }
+            
+        } else {
+            hideMenuNav();
+            menu = false;
+            $('#btn-show').animate({ "left": "27%", "top": "1vh" }, "slow").text('Show Menu');
+            $(".selectArea").animate({ "left": "1vw", "top": "1vh" }, "slow");
+            
+        }
+    }
+
+    window.addEventListener("orientationchange", function () {
+        if (menu == false) {
+            $('#navbar').animate({ "top": "+=50vh" }, "slow").css('z-index', '100');
+            $('#breadcrumbs').animate({ "top": "+=50vh" }, "slow").css('z-index', '99');
+            $('#sidebar').animate({ "left": "0" }, "slow");
+            $('#section-pageheader').animate({ "left": "+=50vh" }, "slow").css('z-index', '99');
+            $('.control-label.text-muted').animate({ "left": "+=50vh" }, "slow").css('z-index', '99');
+        }
+        menu = false;
+        $('#btn-show').animate({ "left": "27%", "top": "1vh" }, "slow").text('Show Menu');
+        $(".selectArea").animate({ "left": "1vw", "top": "1vh" }, "slow");
+        if (statusHide == true) {
+            $(".BoxControlContractor").animate({ "left": "-=50vw" }, "slow");
+            $('.hideBoxIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+            statusHide = false;
+        }
+        hideMenuNav();
+    });
+
+    function hideMenuNav() {
+        $('#navbar').animate({ "top": "-=50vh" }, "slow");
+        $('#breadcrumbs').animate({ "top": "-50vh" }, "slow");
+        $('#sidebar').animate({ "left": "-=50vw" }, "slow");
+        $('#section-pageheader').animate({ "top": "-=50vh" }, "slow").css('z-index', '99');
+        $('.control-label.text-muted').animate({ "left": "-=50vh" }, "slow").css('z-index', '99');
+    }
+
+</script>

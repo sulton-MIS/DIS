@@ -1,0 +1,468 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "Setting_DB") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_detail').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        enterKey_Press();
+        jQuery('#btn_search').click();
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            editNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function clearCache() {
+        //Clear Cache Application
+        $.ajax({
+            url: "",
+            context: document.body,
+            success: function (s, x) {
+                $('html[manifest=saveappoffline.appcache]').attr('content', '');
+                $(this).html(s);
+            }
+        });
+    }
+
+    //------------------------------------------------------ TAMBAH DATA ---------------------------------------------
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#modalForm').modal();
+    });
+    function add_check() {
+        var NAMA_MESIN = $('#addNamaMesin').val();
+        var PATH_MESIN = $('#addPathMesin').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function addNew() {
+        var NAMA_MESIN = $('#addNamaMesin').val();
+        var PATH_MESIN = $('#addPathMesin').val();
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../ADD_NEW',
+            async: false,
+            data: {
+                NAMA_MESIN: NAMA_MESIN,
+                PATH_MESIN: PATH_MESIN
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+
+        clear_add();
+        jQuery('#btn_search').click();
+    }
+
+    function clear_add() {
+        //Tambah Data
+        $('.form-control').val('');
+        $('#modalForm').modal('hide');
+
+        //Edit Data
+        $('#btn_edit').attr('disabled', true);
+        $('#modalEditForm').modal('hide');
+    }
+
+    //-------------------------------------------- UPDATE DATA ---------------------------------------
+    //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var NAMA_MESIN = $('#editNamaMesin');
+        var PATH_MESIN = $('#editPathMesin');
+        var ID = $('#EditID');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        NAMA_MESIN.val(Send_Var[0]);
+        PATH_MESIN.val(Send_Var[1]);
+        ID.val(Send_Var[2]);
+
+        $('#modalEditForm').modal();
+
+    });
+
+    function edit_check() {
+        var NAMA_MESIN = $('#editNamaMesin').val();
+        var PATH_MESIN = $('#editPathMesin').val();
+        var ID = $('#EditID').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    function cancel_edit() {
+        //var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var NAMA_MESIN = $('#editNamaMesin').val();
+                var PATH_MESIN = $('#editPathMesin').val();
+                var ID = $('#EditID').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: '../DISA090002/Update_Data',
+                    async: false,
+                    data: {
+                        NAMA_MESIN: NAMA_MESIN,
+                        PATH_MESIN: PATH_MESIN,
+                        ID: ID
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        clear_add();
+                        jQuery('#btn_search').click();
+                        //clearCache();
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    //------------------------------------------------ DELETE DATA ------------------------------------------
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '../DISA090002/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchNamaMesin').val('');
+        var NAMA_MESIN = $("#searchNamaMesin").val();
+        var PAGE_VIEWER = 'Page_SettingDB';
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+                NAMA_MESIN: NAMA_MESIN,
+                PAGE_VIEWER: PAGE_VIEWER
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+
+    //----------------------------------------------------- SEARCH DATA --------------------------------------------
+    // tombol search ID Produksi
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    //search by Enter
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            if ($('#searchIDSeisan').val() == "") {
+                toastr.warning("PLEASE INPUT ID PRODUKSI!");
+            } else {
+                OnSearch(1);
+            }
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+    }
+
+    // tombol pencarian data ID Produksi
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data ID Produksi
+    function searchData(page, size) {
+        var NAMA_MESIN = $("#searchNamaMesin").val();
+        var PAGE_VIEWER = 'Page_SettingDB';
+
+        Last_Record_Per_Page = $("#paging").val();
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                NAMA_MESIN: NAMA_MESIN,
+                PAGE_VIEWER: PAGE_VIEWER
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+
+
+    }
+
+    
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_detail').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_detail').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_detail').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                    $('#btn_detail').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

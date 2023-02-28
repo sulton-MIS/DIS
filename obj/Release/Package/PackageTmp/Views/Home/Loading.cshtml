@@ -1,0 +1,54 @@
+﻿
+<div class="toyota_loading"><div class="loading_div">
+<div></div><div></div><div></div><div></div>
+</div></div>
+<style type="text/css">
+@@keyframes loading_div {
+  0% { transform: scale(1.1) }
+  100% { transform: scale(1) }
+}
+.loading_div div {
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  top: 12.666666666666668px;
+  left: 12.666666666666668px;
+  background: #87b87f;
+  animation: loading_div 0.6329113924050632s cubic-bezier(0,0.5,0.5,1) infinite;
+  animation-delay: -0.18987341772151897s;
+}
+.loading_div div:nth-child(2) {
+  top: 12.666666666666668px;
+  left: 101.33333333333331px;
+  background: #4f99c6;
+  animation-delay: -0.12658227848101267s;
+}
+.loading_div div:nth-child(3) {
+  top: 101.33333333333331px;
+  left: 12.666666666666668px;
+  background: #d15b47;
+  animation-delay: 0s;
+}
+.loading_div div:nth-child(4) {
+  top: 101.33333333333331px;
+  left: 101.33333333333331px;
+  background: #ffb752;
+  animation-delay: -0.06329113924050633s;
+}
+.toyota_loading {
+  width: 190px;
+  height: 190px;
+  display: inline-block;
+  overflow: hidden;
+  background: rgba(241, 242, 243, 0);
+}
+.loading_div {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+}
+.loading_div div { box-sizing: content-box; }
+</style>

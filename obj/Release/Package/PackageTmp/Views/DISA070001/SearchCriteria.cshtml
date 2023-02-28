@@ -1,0 +1,107 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA070001Master;
+@{
+//List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+//List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+//List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td>HALTE :</td>
+                                    <td>
+                                        <select class="form-control" id="searchHalte" name="dropdown">
+                                            <option id="searchHalte" value="1" selected="selected"> 1 </option>
+                                            <option id="searchHalte" value="2" selected="selected"> 2 </option>
+                                            <option id="searchHalte" value="3" selected="selected"> 3 </option>
+                                            <option id="searchHalte" value="4" selected="selected"> 4 </option>
+                                            <option id="searchHalte" value="5" selected="selected"> 5 </option>
+                                            <option id="searchHalte" value="6" selected="selected"> 6 </option>
+                                            <option id="searchHalte" value="7" selected="selected"> 7 </option>
+                                            <option id="searchHalte" value="8" selected="selected"> 8 </option>
+                                            <option id="searchHalte" value="9" selected="selected"> 9 </option>
+                                            <option id="searchHalte" value="10" selected="selected"> 10 </option>
+                                            <option id="searchHalte" value="" selected="selected">  </option>
+                                        </select>
+                                    </td>
+                                    <td>DATE :</td>
+                                    <td>                                                                          
+                                        <input id="searchDate" type="text" class="form-control datepicker" />
+                                    </td>
+                                    <td>TIME : </td>
+                                    <td>
+                                        <select class="form-control" id="searchTime" name="dropdown">
+                                            <option id="searchTime" value="07:30-08:30" selected="selected"> 07:30-08:30 </option>
+                                            <option id="searchTime" value="08:30-09:30" selected="selected"> 08:30-09:30 </option>
+                                            <option id="searchTime" value="09:30-10:40" selected="selected"> 09:30-10:40 </option>
+                                            <option id="searchTime" value="10:40-12:30" selected="selected"> 10:40-12:30 </option>
+                                            <option id="searchTime" value="12:30-13:30" selected="selected"> 12:30-13:30 </option>
+                                            <option id="searchTime" value="13:30-14:30" selected="selected"> 13:30-14:30 </option>
+                                            <option id="searchTime" value="14:30-16:00" selected="selected"> 14:30-16:00 </option>
+                                            <option id="searchTime" value="16:00-17:00" selected="selected"> 16:00-17:00 </option>
+                                            <option id="searchTime" value="17:00-18:30" selected="selected"> 17:00-18:30 </option>
+                                            <option id="searchTime" value="18:30-19:30" selected="selected"> 18:30-19:30 </option>
+                                            <option id="searchTime" value="19:30-20:30" selected="selected"> 19:30-20:30 </option>
+                                            <option id="searchTime" value="20:30-21:30" selected="selected"> 20:30-21:30 </option>
+                                            <option id="searchTime" value="21:30-22:30" selected="selected"> 21:30-22:30 </option>
+                                            <option id="searchTime" value="22:30-23:30" selected="selected"> 22:30-23:30 </option>
+                                            <option id="searchTime" value="23:30-00:30" selected="selected"> 23:30-00:30 </option>
+                                            <option id="searchTime" value="00:30-01:30" selected="selected"> 00:30-01:30 </option>
+                                            <option id="searchTime" value="01:30-02:30" selected="selected"> 01:30-02:30 </option>
+                                            <option id="searchTime" value="02:30-03:30" selected="selected"> 02:30-03:30 </option>
+                                            <option id="searchTime" value="03:30-05:30" selected="selected"> 03:30-05:30 </option>
+                                            <option id="searchTime" value="05:30-06:30" selected="selected"> 05:30-06:30 </option>
+                                            <option id="searchTime" value="06:30-07:30" selected="selected"> 06:30-07:30 </option>
+                                            <option id="searchTime" value="" selected="selected"> </option>
+                                        </select>
+                                    </td>                                                                  
+                                                                      
+                                    <td style="text-align:right;padding:0!important">
+                                        <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                                        <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                                        <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-success btn-xs" id="btn_upload" style="width: 80px;" onclick=""><i class="fa fa-upload"></i> Upload</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

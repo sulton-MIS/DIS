@@ -1,0 +1,281 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WPSecurityMaster;
+@{
+    List<WPSecurity> DataWP = (List<WPSecurity>)ViewData["Marquee"];
+}
+
+<style>
+
+    body {
+        background: url('../../Content/Images/blue-pattern.jpg') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    .info-box {
+        display: block;
+        min-height: 90px;
+        background: rgba(0,0,0,0.1);
+        width: 100%;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        border-radius: 2px;
+        color:white;
+        margin-bottom: 15px;
+    }
+
+    .info-box-icon {
+        border-top-left-radius: 2px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 2px;
+        display: block;
+        float: left;
+        padding-top: 0px;
+        height: 90px;
+        width: 90px;
+        text-align: center;
+        font-size: 45px;
+        line-height: 90px;
+        background: rgba(0,0,0,0.2);
+    }
+
+    .info-box-content {
+        padding: 5px 10px;
+        margin-left: 90px;
+    }
+
+    .info-box-text {
+        text-transform: uppercase;
+        text-align: center;
+        display: block;
+        font-weight:bold;
+        border-bottom: solid;
+    }
+
+    .info-box-number {
+        display: block;
+        font-weight: bold;
+        font-size: 18px;
+        text-align:center;
+        padding-top:15px;
+    }
+
+    marquee {
+        color: white;
+        font: bold 30px Helvetica, Arial, Sans-Serif;
+        text-shadow: 1px 1px #fe4902, 2px 2px #fe4902, 3px 3px #fe4902;
+        font-weight: 800;
+        margin: 15px 0 15px 0;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    td {
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        font: bold 12px Helvetica, Arial, Sans-Serif;
+    }
+
+    tr .row{
+        height:10px;
+    }
+
+    table.dataTable tbody tr{
+       background-color: rgba(0,0,0,0);
+    }
+
+    .table-hover > tbody > tr:hover {
+        background-color: rgba(0,0,0,0);
+    }
+
+    .CheckIN {
+        color: white;
+        font: bold 20px Helvetica, Arial, Sans-Serif;
+        text-shadow: 1px 1px #000000, 2px 2px #010101, 3px 3px #1a1ae8;
+    }
+
+</style>
+
+<div class="container-fluid" id="dashboard-container">
+    <div class="row">
+        <div class="col">
+            @{
+                if (DataWP != null)
+                {
+                    <marquee>
+                        @foreach (WPSecurity item in DataWP)
+                        {
+                            @item.STATUS_TEXT
+                        }
+                    </marquee>
+                }
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="info-box">
+                <span class="info-box-icon">
+                    <img src="~/Content/Images/worker.png" style=" margin-top: -10px; height: 65px; width: 65px" />
+                </span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">TOTAL CONTRACTOR (MP)</span>
+                    <span id="total-kontraktor" class="info-box-number">0</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <span class="info-box-icon">
+                    <img src="~/Content/Images/entry.svg" style="margin-top:-10px; height:55px; width:55px" />
+                </span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">CONTRACTOR IN (MP)</span>
+                    <span id="total-in" class="info-box-number">0</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <span class="info-box-icon">
+                    <img src="~/Content/Images/out.png" style="margin-top:-10px; height:55px; width:55px" />
+                </span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">CONTRACTOR OUT (MP)</span>
+                    <span id="total-out" class="info-box-number">0</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="">
+        <div class="col text-center">
+            <b class="CheckIN">DATA CONTRACTOR CHECK IN (MAN POWER)</b>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col">
+            <div class="table-responsive table-responsive-lg table-responsive-xl" style="padding:5px">
+                <table id="dasboardTable" class="table table-bordered table-hover">
+                    <thead class="bg-info">
+                        <tr>
+                            <th style="width:25px">NO</th>
+                            <th style="width:200px">CONTRACTOR NAME (MP)</th>
+                            <th>COMPANY</th>
+                            <th>LOCATION</th>
+                            <th style="width:150px">CHECK IN</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var GET_SITE_URL = (window.location.href).split('/');
+    var SITE_URL = "";
+    var scanQR = "";
+    var data_display = 1;
+    var page = 1;
+    var total_page = 1;
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "Dashboard") {
+            SITE_URL = SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    function getTotalContractor() {
+        $.ajax({
+            url: SITE_URL + "getTotalContractor",
+            method: 'POST',
+            global: false,
+            success: function (e) {
+                if (e.data.length > 0) {
+                    $('#total-kontraktor').text(e.data[0].TOTAL_KONTRAKTOR);
+                    $('#total-in').text(e.data[0].TOTAL_IN);
+                    $('#total-out').text(e.data[0].TOTAL_OUT);
+                }
+            }
+        });
+    }
+    
+    getDataTable();
+    getTotalContractor();
+    setInterval(function (time) {
+        getDataTable();
+        getTotalContractor();
+    }, 5000);
+
+    function getDataTable() {
+        $('#dasboardTable').DataTable().destroy();
+        $('#dasboardTable').DataTable({
+            ajax: {
+                url: SITE_URL + 'getDashboardTable',
+                method: 'POST',
+                global: false,
+                data: {
+                    page: page
+                },
+                async: false,
+                dataSrc: function (e) {
+                    
+                    if (e.data.length > 0) {
+                        if (e.data[0].TOTAL_ROW_NUM > 10) {
+                            total_page = Math.ceil((e.data[0].TOTAL_ROW_NUM) / 10);
+                            if (page < total_page) {
+                                page++;
+                            } else {
+                                page = 1;
+                            }
+                        }
+                    }
+                return e.data;
+                },
+            },
+            fixedColumns:   {
+                heightMatch: 'none'
+            },
+            autoWidth: true,
+            fixedColumns: true,
+            paging:   false,
+            ordering: false,
+                info: false,
+                search: false,
+            searching: false,
+        columns: [
+            { data: 'ROW_NUM', name:'ROW_NUM', className: 'text-center'
+            },
+            {
+                data: 'FULLNAME', name:'FULLNAME'
+            },
+            {
+                data: 'COMPANY', name: 'COMPANY'
+            },
+            {
+                data: 'LOCATION', name: 'LOCATION'
+            },
+            {
+                data: 'CHECK_IN', name:'CHECK_IN', className: 'text-center'
+            }
+        
+        ]
+        });
+    }
+    
+
+</script>

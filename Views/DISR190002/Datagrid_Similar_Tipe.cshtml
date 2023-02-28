@@ -1,0 +1,81 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR190002Master;
+@{
+    List<DISR190002Similar_Type> Similar_Parts = (List<DISR190002Similar_Type>)ViewData["Similar_Parts"];
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <!-----------------------------TABEL SIMILAR MATERIAL------------------->
+    <div class="table-responsive col-xs-4 col-sm-4" style="overflow: hidden; margin-top:30px; margin-bottom:100px;" id="GridTable">
+            <p style="width: 20%; color: blue; text-decoration: underline;">
+                <b>Similar Material</b>
+            </p>
+            <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+                <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+                <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 80%; table-layout: fixed; border:none">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No.</th>
+                                <th style="width: 250px;">CODE</th>
+                            </tr>
+                        </thead>
+                        @{
+                            if (Similar_Parts == null || Similar_Parts.Count == 0)
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="10" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div id="tScrollBody" style="height: 200px;">
+                    <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 80%; table-layout: fixed; border: none">
+                        <tbody id="tableBody">
+                            @{
+                                if (Similar_Parts != null)
+                                {
+                                    if (Similar_Parts.Count > 0)
+                                    {
+                                        var number = 1;
+                                        foreach (DISR190002Similar_Type item in Similar_Parts)
+                                        {
+                                            <tr id="row-@number" class="row-@item.ID">
+                                                <td class="align-center align-middle" style="width: 50px"> @number </td>
+                                                <td class="align-left align-middle" style="width: 250px"> @item.CODE </td>
+                                            </tr>
+                                            number++;
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,18 @@
+﻿@*@{
+    Layout = "~/Views/SharedWPLogin/_Layout.cshtml";
+}*@
+
+@{
+    Layout = "~/Views/Shared_Production_Cost/_Layout.cshtml";
+}
+
+
+<div id="main-data">
+@Html.Partial("ListKonpo/SearchCriteria")
+@Html.Partial("ListKonpo/Datagrid_Data")
+@Html.Partial("ListKonpo/PopupForm")
+@Html.Partial("ListKonpo/ModalForm")
+@Html.Partial("ListKonpo/Javascript")
+</div>
+
+

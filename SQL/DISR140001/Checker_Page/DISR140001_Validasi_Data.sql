@@ -1,0 +1,36 @@
+﻿DECLARE @@CNT INT
+	, @@CHK VARCHAR(20)
+	, @@ERR VARCHAR(MAX);
+DECLARE @@MSG_TEXT VARCHAR(MAX);
+DECLARE @@MSG_TYPE VARCHAR(MAX);
+
+BEGIN TRY
+	SET @@CNT = (SELECT COUNT(1) FROM Z_REX_Data_InOut_FG_New WHERE ID_TRANS = @BUNDLE_CODE);
+		IF(@@CNT > 0)
+		BEGIN
+			UPDATE 
+				Z_REX_Data_InOut_FG_New
+			SET
+				status_checker = 1, --true sebagai tanda sudah diterima oleh Checker.
+				checker = @NIK,
+				checker_date = GETDATE()
+			WHERE
+				ID_TRANS = @BUNDLE_CODE
+
+			SET @@CHK = 'TRUE';
+			SET @@ERR = 'NOTHING';
+
+		END ELSE
+		BEGIN
+			SET @@CHK = 'FALSE';
+			SET @@ERR = 'ERROR VALIDASI DATA, ID_BUNDLE IS NOT AVAILABLE!';
+		END
+	
+END TRY
+BEGIN CATCH
+	SET @@CHK = 'FALSE';
+	SET @@ERR = 'ERROR INSERT BUNDLE:' +@BUNDLE_CODE+
+	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+END CATCH
+
+SELECT @@CHK AS STACK, @@ERR AS LINE_STS,CAST(@@CNT AS VARCHAR(20)) AS BUNDLE_CODE

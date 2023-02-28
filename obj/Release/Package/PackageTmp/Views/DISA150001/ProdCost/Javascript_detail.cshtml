@@ -1,0 +1,76 @@
+﻿<script>
+
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA150001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_search').prop('disabled', true);        
+    });
+
+
+    //function subject_OnChange(kat_material) {
+    //    if (kat_material == "" || kat_material == 0) {
+    //        $('#btn_search').prop('disabled', true);
+    //        //subjectId = 0;
+    //    } else {
+    //        $('#btn_search').prop('disabled', false);
+    //        //subjectId = parseInt(id);
+    //    }
+    //}
+
+    //// tombol search
+    //$("#btn_search").on("click", function () {
+    //    OnSearch_kategori(1);
+    //    this.hide();
+    //    //toastr.success("HELO!");
+    //});
+
+    //function OnSearch_kategori(page) {
+    //    searchKategori(page, $('#paging').val());
+    //    //toastr.success("HELO!");
+    //}
+
+    //function searchKategori(page, size) {
+    //    var KATEGORI_MATERIAL = $('#kat_material').val();
+
+    //    Last_Record_Per_Page = $("#paging").val();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: SITE_URL + 'Search_Data_Kategori',
+    //        async: false,
+    //        data: {
+    //            start: page,
+    //            display: size,
+    //            DATA_ID: $("#data_nm").val(),
+    //            EXECUTION_TIME: $("#exec_time_cd").val(),
+    //            TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+    //            STATUS_ACTIVE: $("#sts_cd").val(),
+    //            KATEGORI_MATERIAL: KATEGORI_MATERIAL
+    //        },
+    //        success: function (data) {
+    //            $("#GridTable_MaterialCost").html(data);
+    //            $("#paging").val(Last_Record_Per_Page);
+    //            if ($('#cntPage').val() == "1") {
+    //                $('#btn_clear').prop('disabled', false);
+    //            } else {
+    //                $('#btn_clear').prop('disabled', false);
+    //            }
+
+    //            //scroll_and_checkbox();
+    //            //cek_perdata();
+    //        }
+    //    });
+    //}
+
+
+
+</script>

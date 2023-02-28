@@ -1,0 +1,32 @@
+﻿<script>
+    
+    function back() {
+        location.href = "/WP03009"
+    }
+
+    function printPDF() {
+        var employeName = $('#employeName').val();
+        var companyName = $('#companyName').val();
+
+        window.open(
+            'WP03009/PrintPDF?employeName=' + employeName + '&companyName=' + companyName + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    function printEXCEL() {
+        var employeName = $('#employeName').val();
+        var companyName = $('#companyName').val();
+
+        window.open(
+            'WP03009/PrintExcel?employeName=' + employeName + '&companyName=' + companyName + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+	}
+
+	function clear_Data() {
+		document.getElementById("employeName").value = "";
+        document.getElementById("companyName").value = "";
+	}
+
+</script>

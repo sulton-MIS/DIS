@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<div id="main-data">
+    @Html.Partial("Request_Asset/SearchCriteria")
+    @Html.Partial("Request_Asset/CheckValidasiUser")
+    @Html.Partial("Request_Asset/Datagrid_Data")
+    @Html.Partial("Request_Asset/PopupForm")
+    @Html.Partial("Request_Asset/ModalForm")
+    @Html.Partial("Request_Asset/InputForm")
+</div>
+@Html.Partial("Request_Asset/Javascript")
+
+

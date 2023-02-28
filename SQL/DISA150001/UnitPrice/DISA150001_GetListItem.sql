@@ -1,0 +1,7 @@
+﻿SELECT
+	CODE as ITEM_CODE,
+	NAME as NAME_ITEM
+FROM
+	XHEAD
+WHERE
+	NAME not like '%(Do%' and   ISNUMERIC(CODE) != 0

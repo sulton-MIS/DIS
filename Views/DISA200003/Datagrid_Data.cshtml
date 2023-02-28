@@ -1,0 +1,152 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA200003Master;
+@{
+    List<DISA200003Master> DataWP = (List<DISA200003Master>)ViewData["DataDISA200003"];
+    List<DISA200003> Status_Cmb = (List<DISA200003>)ViewData["Status_Cmb"];
+    List<DISA200003> Time_Cmb = (List<DISA200003>)ViewData["Time_Cmb"];
+    List<DISA200003> ExecTime_Cmb = (List<DISA200003>)ViewData["Time_Cmb"];
+    List<DISA200003> Model_type = (List<DISA200003>)ViewData["Model_type"];
+
+    //var seletc_data_unit_time = "";
+    //var seletc_data_exec_time = "";
+    //var seletc_data_status = "";
+    //var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+<script>
+    function formatRupiah(angka) {
+        var reverse = angka.toString().split('').reverse().join(''),
+            ribuan = reverse.match(/\d{1,3}/g);
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return ribuan;
+    }
+</script>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            @*<th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>*@
+                            <th style="width: 40px;" rowspan="2">NO</th>
+                            <th style="width: 300px;" rowspan="2">TANGGAL REGISTER</th>
+                            <th style="width: 300px;" rowspan="2">JENIS PENYUSUTAN</th>
+                            <th style="width: 200px;" rowspan="2">JENIS ASSET</th>
+                            <th style="width: 200px;" rowspan="2">TARIF MASA PENYUSUTAN</th>
+                            <th style="width: 200px;" rowspan="2">SATUAN PENYUSUTAN</th>
+                            <th style="width: 200px;" rowspan="2">KODE BARANG</th>
+                            <th style="width: 200px;" rowspan="2">NAMA BARANG</th>
+                            <th style="width: 200px;" rowspan="2">TANGGAL PEROLEHAN</th>
+                            <th style="width: 200px;" rowspan="2">NO. JURNAL</th>
+                            <th style="width: 200px;" rowspan="2">NO. INVOICE</th>
+                            <th style="width: 200px;" rowspan="2">QTY</th>
+                            <th style="width: 200px;" rowspan="2">SATUAN</th>
+                            <th style="width: 200px;" rowspan="2">HARGA SATUAN</th>
+                            <th style="width: 200px;" rowspan="2">HARGA PEROLEHAN</th>
+                            <th style="width: 200px;" rowspan="2">AKUM PENYUSUTAN AWAL TAHUN</th>
+                            <th style="width: 200px;" rowspan="2">NILAI BUKU AWAL TAHUN</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA200003Master item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+
+                                            @*<td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID,@item.ROW_NUM,@item.tgl_register,@item.tahun, @item.jenis_asset, @item.kode_barang, @item.nama_barang, @item.tgl_perolehan, 
+                                                       @item.no_jurnal, @item.no_invoice, @item.qty, @item.satuan, @item.harga_satuan, @item.tarif_masa_penyusutan, @item.satuan_penyusutan, @item.harga_perolehan, @item.akum_penyusutan_awal_tahun, 
+                                                       @item.nilai_buku_awal_tahun, @item.kode_barang, @item.nilai_penyusutan_perbulan, 
+                                                       @item.jan, @item.feb, @item.mar, @item.apr, @item.may, @item.jun, @item.jul, @item.aug, @item.sep, @item.oct, @item.nov, @item.dec,
+                                                       , @item.total, @item.nilai_buku_nbv_tahun_berjalan"
+                                                       type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                            </td>*@
+                                            @*<td style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>*@
+                                            <td style="width: 40px"> @item.ROW_NUM</td>
+                                            <td style="width: 300px"> @item.tgl_register</td>
+                                            <td style="width: 300px"> @item.jenis_penyusutan</td>
+                                            <td style="width: 200px"> @item.jenis_asset</td>
+                                            <td style="width: 200px"> @item.tarif_masa_penyusutan</td>
+                                            <td style="width: 200px"> @item.satuan_penyusutan</td>
+                                            <td style="width: 200px"> @item.kode_barang</td>
+                                            <td style="width: 200px"> @item.nama_barang</td>
+                                            <td style="width: 200px"> @item.tgl_perolehan</td>
+                                            <td style="width: 200px"> @item.no_jurnal</td>
+                                            <td style="width: 200px"> @item.no_invoice</td>
+                                            <td style="width: 200px"> @item.qty</td>
+                                            <td style="width: 200px"> @item.satuan</td>
+                                            <td style="width: 200px"> Rp.@item.harga_satuan</td>
+                                            <td style="width: 200px"> Rp.@item.harga_perolehan</td>
+                                            <td style="width: 200px"> Rp.@item.akum_penyusutan_awal_tahun</td>
+                                            <td style="width: 200px"> Rp.@item.nilai_buku_awal_tahun  </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

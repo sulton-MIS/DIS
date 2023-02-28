@@ -1,0 +1,215 @@
+﻿@{
+    string Orientation = (string)ViewData["Orientation"];
+    string PaperSize = (string)ViewData["PaperSize"];
+    string LogicalTerminal = (string)ViewData["LogicalTerminal"];
+    string Filename = (string)ViewData["Filename"];
+
+}
+<div class="row" style="border:1px solid gray; padding:4px; width:100%;">
+    <div class="row" style="padding:10px;">
+        <div class="col-xs-12" style="padding:5px;">
+            <button class="btn btn-primary btn-xs pull-right" id="btnExport" type="button">Export</button>
+        </div>
+    </div>
+    <div class="hidden">
+        <span id="tempJson"></span>
+        <span id="Orientation">@Orientation</span>
+        <span id="PaperSize">@PaperSize</span>
+        <span id="LogicalTerminal">@LogicalTerminal</span>
+        <span id="Filename">@Filename</span>
+    </div>
+    <div class="row" style="padding:10px;">
+        <div class="col-xs-12" style="padding:5px;">
+            <div id="paper" class="paper paperA3L"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    
+    function saveOperation() {
+        var list = [];
+        var validate = 'true';
+        var plantCode = null;
+        var templateName = null;
+        var bcType = null;
+        var printerId = null;
+        var jsonPages = null;
+        var changedBy = null;
+        var changedDate = null;
+        var updatedBy = null;
+        var updatedDate = null;
+
+        for (var i = 0; i < pages.length; i++) {
+            plantCode = $('#hiddenPlantCode').text();
+            templateName = $('#hiddenTemplateName').text();
+            bcType = $('#hiddenBCTypeKey').text();
+            printerId = $('#hiddenPrinterNameKey').text();
+            jsonPages = getPaperJson(i);
+            changedBy = $('#hiddenChangedBy').text();
+            changedDate = $('#hiddenChangedDate').text();
+
+            list.push({
+                PlantCode: plantCode,
+                TemplateName: templateName,
+                BCTypeKey: bcType,
+                PrinterNameKey: printerId,
+                JsonPages: jsonPages,
+                ChangedBy: changedBy,
+                ChangedDate: changedDate
+            });
+        }
+
+        var listF = list;
+        list = JSON.stringify({ 'list': list });
+        $.ajax({
+            contentType: 'application/JSON; charset=utf-8',
+            type: 'POST',
+            url: '@Html.Toyota().Page.GetActionUrl("SaveDataJson")',
+            data: list,
+            success: function (data) {
+                if (data.ErrorLineStatus == true) {
+                    getMessage(data.Message, data.Param, 'error', false);
+                }
+                else {
+                    getMessage('MPISSTD031I', '', 'info', true);
+                }
+            },
+            error: function (e) {
+                alert("[MPISSTD050E] Error in Update because of concurrency check.");
+            }
+        });
+    }
+
+    var cancelOperation = function () {
+        var headerPage = queryString('currentPage') || 1;
+        window.location.href = 'PIS0101?currentPage=' + encodeURIComponent(headerPage);
+
+    };
+
+    //=======================fromSVG===================
+    //$('#btnExport').click(function () {
+    //        var orientation = $('#Orientation').text();
+    //        var PaperSize = $('#PaperSize').text();
+    //        var LogicalTerminal = $('#LogicalTerminal').text();
+    //    var svg = paper.toSVG();
+    //    var finalSvg = svg.FixForRaphael();
+    //    var svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + finalSvg;
+    //    var canvasId = "myCanvasTest";
+    //    var canvas = document.createElement('canvas');
+    //    canvas.id = canvasId;
+    //    var ctx = canvas.getContext('2d');
+
+    //    var img = new Image();
+    //    img.onload = function () {
+    //        if (orientation == '0') {//Potrait
+    //            canvas.width = 839;//1190
+    //            canvas.height = 1189;//842
+    //        } else {//Landscape
+    //            canvas.width = 1190;
+    //            canvas.height = 842;
+    //        }
+
+    //        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    //        var dataURL = canvas.toDataURL("image/png");
+    //        dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    //        var query = window.location.search.substring(1);
+    //        $.ajax({
+    //            url: window.location.origin + '/Drawing/PrintFromSVGString',
+    //            dataType: 'json',
+    //            data: {
+    //                svgString: dataURL,
+    //                    isPrint: true,
+    //                    orientation: orientation,
+    //                    PaperSize: PaperSize,
+    //                    LogicalTerminal: LogicalTerminal
+    //            },
+    //            type: 'POST',
+    //            success: function (data) {
+    //                //callback(data);
+
+    //                if (!data.Result) {
+    //                    //getMessage('MPISSTD024E', data.Message, 'error', false);
+    //                } else {
+    //                    //getMessage('MPISSTD031I', '', 'info', false);
+    //                }
+    //            }
+    //        });
+    //    };
+    //    img.src = svgDataUrl;
+
+    //});
+    function gup(name, url) {
+        if (!url) url = location.href;
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(url);
+        return results == null ? null : results[1];
+    }
+
+
+
+
+    //==================use inkscape version=================
+    $('#btnExport').click(function () {
+        d3.select('svg').attr('style', '');
+        var orientation = $('#Orientation').text();
+        var PaperSize = $('#PaperSize').text();
+        var LogicalTerminal = $('#LogicalTerminal').text();
+        var Filename = $('#Filename').text();
+        if (PaperSize == "A3") {
+            if (orientation == '0') {
+                d3.select('svg').attr('width', '839px');
+                d3.select('svg').attr('height', '1189px');
+            }
+            else {//Landscape
+                d3.select('svg').attr('width', '1190px');
+                d3.select('svg').attr('height', '842px');
+            }
+        } else {
+            if (orientation == '0') {
+                d3.select('svg').attr('width', '595px');
+                d3.select('svg').attr('height', '842px');
+            }
+            else {//Landscape
+                d3.select('svg').attr('width', '842px');
+                d3.select('svg').attr('height', '595px');
+            }
+        }
+        
+        //d3.select('svg').attr('width', '1190px');
+        //d3.select('svg').attr('height', '842px');
+
+        // fix double xmlns on ie
+        var finalSvg = new XMLSerializer().serializeToString(document.getElementsByTagName('svg')[0]).split(' xmlns="http://www.w3.org/2000/svg"').join('').replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+
+        var svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + finalSvg;
+
+        $.ajax({
+            url: window.location.origin + '/Drawing/SvgToPng',
+            dataType: 'json',
+            data: {
+                svgString: encodeURIComponent(finalSvg),
+                isPrint: true,
+                orientation: orientation,
+                PaperSize: PaperSize,
+                LogicalTerminal: LogicalTerminal,
+                Filename:Filename
+            },
+            type: 'POST',
+            success: function (data) {
+                //alert('File has been sent to the printer');
+                console.log('success');
+            },
+            error: function (xhr, status, error) {
+                //alert('File failed to be printed. Please try again --> ' + xhr.responseText);
+                console.log('failed --> ' + xhr.responseText);
+            }
+
+        });
+
+    });
+        
+</script>

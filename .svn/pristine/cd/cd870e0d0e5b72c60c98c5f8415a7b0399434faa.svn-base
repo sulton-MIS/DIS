@@ -1,0 +1,567 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02002Master;
+@using AI070.Models.WP02002;
+
+@model AI070.Models.WP02002.WP02002InputForm
+
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ReportIMPB</title>
+</head>
+<body style="width:100%">
+
+    <table border="1" width="97%" style="margin-left:30px;">
+        <tbody>
+            <tr>
+                <td style="text-align: center;" width="30%">PT. TOYOTA-MOTOR <br /> MANUFACTURING INDINESIA</td>
+                <td style="text-align: center;" rowspan="2" width="60%"><strong>IZIN MELAKUKAN PEKERJAAN BERBAHAYA</strong> <br /> <span style="font-size: 10px;">(TERMASUK PEKERJAAN MENIMBULKAN PERCIKAN API)</span> <br /> <span style="font-size: 12px;">No. IMPB - SHE001 - 020720 - 0001</span></td>
+                <td rowspan="2" width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="~/Content/Images/K3.png" style="width:100px;height:100px;align-content:center;text-align:center" /></td>
+            </tr>
+            <tr>
+                <td>AREA : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <input title="Head Office" type="checkbox" value="Head Office" /> Head Office &nbsp; &nbsp; &nbsp; <input title="Head Office" checked="checked" type="checkbox" value="Head Office" /> Karawang Plant 1,2 <br /> (Beri tanda &radic;) &nbsp; <input title="Head Office" type="checkbox" value="Head Office" /> Sunter Plant &nbsp; &nbsp; <input title="Head Office" type="checkbox" value="Head Office" /> Karawang Plant 3</td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="97%" style="border: 1px black solid;margin-left:30px;">
+        <tbody>
+            <tr>
+                <td width="100%" height="100px">
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: top; text-align: left;" width="60%">
+                                    A. IDENTITAS PROYEK<br /> <br />
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="25%">1. NAMA PROYEK</td>
+                                                <td width="80%">: @Model.MasterData.WP_PROJECT_NAME</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="20%">2. LOKASI PROYEK</td>
+                                                <td width="85%">: @Model.MasterData.AREA_NAME</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="20%">3. STATUS IZIN KERJA</td>
+                                                <td width="85%">: @Model.MasterData.WORKING_STATUS_DESC</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="20%">4. TGL PELAKSANAAN</td>
+                                                <td width="85%">: @Model.MasterData.IMPLEMENT_DATE_FROM_DISP - @Model.MasterData.IMPLEMENT_DATE_TO_DISP</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="20%">5. DIVISI / DEPARTEMEN</td>
+                                                <td width="85%">: @Model.MasterData.DIV</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%">&nbsp;</td>
+                                                <td width="20%">6. JAM PELAKSANAAN</td>
+                                                <td width="85%">: 08:00 - 13:00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="vertical-align: top; text-align: left;" width="40%">
+                                    B. PELAKSANA PROYEK<br /> <br />
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">&nbsp; &nbsp;<input checked="checked" type="checkbox" /> TMMIN <br /> &nbsp; &nbsp;<input type="checkbox" /> KONTRAKTOR</td>
+                                                <td width="50%">
+                                                    <table style="border: 1px black solid;" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: center;border-bottom:1px solid black" width="100%">Bagian / PT. / CV.</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table style="border: 1px black solid;" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: center;border: 1px black solid;" width="50%">PIMPINAN</td>
+                                                                <td style="text-align: center;border: 1px black solid;" width="50%">PENGAWAS</td>
+                                                            </tr>
+                                                            <tr><td style="border-right: 1px black solid;">&nbsp;</td><td>&nbsp;</td></tr>
+                                                            <tr><td style="border-right: 1px black solid;">&nbsp;</td><td>&nbsp;</td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="97%" style="border: 1px black solid;margin-left:30px;">
+        <tbody>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; text-align: left;" width="100%">C.JENIS PEKERJAAN YANG AKAN DILAKSANAKAN</td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="97%">
+                        <tbody>
+                            <tr>
+
+                                <td width="100%">
+                                    <table border="1" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" width="40%">PEKERJAAN <br /> (Wajib melingkari sesuai dgn jenis pekerjaan)</th>
+                                                <th colspan="3" width="20%" style="text-align:center">Tingkat Bahaya</th>
+                                                <th colspan="7" width="20%" style="text-align:center">Tanggal</th>
+                                                <th colspan="7" width="20%" style="text-align:center">Stop-6 Category</th>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align:center">Tinggi</th>
+                                                <th style="text-align:center">Sedang</th>
+                                                <th style="text-align:center">Rendah</th>
+                                                <th style="text-align:center">1</th>
+                                                <th style="text-align:center">2</th>
+                                                <th style="text-align:center">3</th>
+                                                <th style="text-align:center">4</th>
+                                                <th style="text-align:center">5</th>
+                                                <th style="text-align:center">6</th>
+                                                <th style="text-align:center">7</th>
+                                                <th style="text-align:center">A</th>
+                                                <th style="text-align:center">B</th>
+                                                <th style="text-align:center">C</th>
+                                                <th style="text-align:center">D</th>
+                                                <th style="text-align:center">E</th>
+                                                <th style="text-align:center">F</th>
+                                                <th style="text-align:center">Alfa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.project_list_working.Count() > 0)
+                                            {
+                                                Html.Raw(Model.WorkingStr);
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="97%" style="border: 1px black solid;margin-left:30px;">
+        <tbody>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; text-align: left;" width="100%">D.HASIL IDENTIFIKASI AWAL SEBELUM PEKERJAAN DIMULAI</td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="97%">
+                        <tbody>
+                            <tr>
+                                <td width="98%">
+                                    <table border="1" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="3%" style="text-align:center">No.</th>
+                                                <th width="30%">IDENTIFIKASI POTENSI BAHAYA</th>
+                                                <th width="30%" style="text-align:center">TINDAKAN PENCEGAHAN</th>
+                                                <th width="20%" style="text-align:center">PIC</th>
+                                                <th width="17%" style="text-align:center">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1.</td>
+                                                <td>Api Jatoh</td>
+                                                <td>Pasang Atap</td>
+                                                <td>Jono</td>
+                                                <td rowspan="3">
+                                                    Henkaten Safety <br />
+                                                    <table width="100%" border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width="80%">1.Perubahan Proses</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="80%">2.Mesin Baru</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="80%">3.Modifikasi M/C</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td width="50%">Henkaten No</td>
+                                                                <td width="50%"></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2.</td>
+                                                <td>Kayu Jatoh</td>
+                                                <td>Benerin Atap</td>
+                                                <td>Dono</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3.</td>
+                                                <td>Kepeleset</td>
+                                                <td>Kasih Kain</td>
+                                                <td>Indro</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="97%">
+                        <tbody>
+                            <tr>
+                                <td width="98%">
+                                    <table border="1" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="3%" style="text-align:center">No.</th>
+                                                <th width="30%">IDENTIFIKASI DAMPAK LINGKUNGAN</th>
+                                                <th width="30%" style="text-align:center">TINDAKAN PENCEGAHAN</th>
+                                                <th width="20%" style="text-align:center">PIC</th>
+                                                <th width="17%" style="text-align:center">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1.</td>
+                                                <td>Api Jatoh</td>
+                                                <td>Pasang Atap</td>
+                                                <td>Jono</td>
+                                                <td rowspan="3">
+                                                    Henkaten Safety <br />
+                                                    <table width="100%" border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width="80%">1.Penambahan Proses</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="80%">2.Penambahan Jenis Material / Chemical</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="80%">3.Mesin Baru</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="80%">4.Penambahan Bangunan</td>
+                                                                <td width="20%">&radic;</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td width="50%">Henkaten No</td>
+                                                                <td width="50%"></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2.</td>
+                                                <td>Kayu Jatoh</td>
+                                                <td>Benerin Atap</td>
+                                                <td>Dono</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3.</td>
+                                                <td>Kepeleset</td>
+                                                <td>Kasih Kain</td>
+                                                <td>Indro</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="97%" style="border: 1px black solid;margin-left:30px;">
+        <tbody>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; text-align: left;" width="100%">E. PENGAWASAN OLEH PT. TOYOTA MOTOR MANUFACTURING INDONESIA</td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="97%">
+                        <tbody>
+                            <tr>
+                                <td width="100%">
+                                    <table border="1" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="3%" style="text-align:center">No.</th>
+                                                <th width="30%">USER / Safety Officer Divisi</th>
+                                                <th width="15%" style="text-align:center">NO REG</th>
+                                                <th width="12%" style="text-align:center">NO HANDPHONE</th>
+                                                <th width="15%" style="text-align:center">DEPARTEMEN / SEKSI</th>
+                                                <th width="15%" style="text-align:center">NO Anzen Leader</th>
+                                                <th width="10%" style="text-align:center">PARAF</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1.</td>
+                                                <td style="text-align:left">Aku User</td>
+                                                <td style="text-align:center">0019202901</td>
+                                                <td style="text-align:center">08278281982</td>
+                                                <td style="text-align:center">General Affair</td>
+                                                <td style="text-align:center">8767698696</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; text-align: left;" width="100%">F. DISETUJUI OLEH</td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="97%">
+                        <tbody>
+                            <tr>
+                                <td width="100%">
+                                    <table width="100%" style="border: 1px black solid;">
+                                        <thead style="border: 1px black solid;">
+                                            <tr style="border: 1px black solid;">
+                                                <th rowspan="3" width="20%" style="text-align:center">DIREKTUR / <br /> DIVISI</th>
+                                                <th colspan="3" width="30%" style="border: 1px black solid;">P2K3 Comm & Environment</th>
+                                                <th width="10%" style="text-align:center;border-right:1px solid black">PIC AREA</th>
+                                                <th colspan="4" width="50%" style="text-align:center">USER</th>
+                                            </tr>
+                                            <tr style="border: 1px black solid;">
+                                                <th rowspan="2" width="10%" style="border: 1px black solid;">Manager</th>
+                                                <th colspan="2" width="20%" style="border: 1px black solid;">STAFF</th>
+                                                <th rowspan="2" width="10%" style="border: 1px black solid;">SO/Sec. Head Safety</th>
+                                                <th rowspan="2" width="10%" style="border: 1px black solid;">Manager</th>
+                                                <th colspan="2" width="20%" style="border: 1px black solid;">SO/ Sec. Head Safety & EO</th>
+                                                <th rowspan="2" width="10%" style="border: 1px black solid;">Section Head</th>
+                                            </tr>
+                                            <tr style="border: 1px black solid;">
+                                                <td width="10%" style="border: 1px black solid;text-align:center;">Safety</td>
+                                                <td width="10%" style="border: 1px black solid;text-align:center;">Environment</td>
+                                                <td width="10%" style="border: 1px black solid;text-align:center;">Safety</td>
+                                                <td width="10%" style="border: 1px black solid;text-align:center;">Environment</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="6" style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Tgl
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3"></td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3"></td>
+                                                <td style="border: 1px black solid;height:80px;text-align:left;vertical-align:top;" rowspan="3">
+                                                    Paraf
+                                                </td>
+                                            </tr>
+                                            <tr></tr>
+                                            <tr></tr>
+                                            <tr>
+
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Nama
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                                <td style="border: 1px black solid;"></td>
+                                                <td style="border: 1px black solid;">
+                                                    Hp
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+

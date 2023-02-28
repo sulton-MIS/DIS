@@ -1,0 +1,1012 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA090001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function add_check() {
+        var TARGET_DATE = ($('#addDate').val()).replace('T', ' ');        
+        var TARGET_PRINT = $('#addTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#add_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#add_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#add_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#add_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#add_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#add_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#add_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#add_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#add_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#add_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#add_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#add_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#add_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#add_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#add_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#add_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#add_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#add_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#add_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#add_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#add_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#add_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#add_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#add_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#add_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#add_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#add_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#add_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#add_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#add_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#add_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#add_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#add_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#add_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#add_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#add_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#add_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#add_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#add_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#add_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#add_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#add_T_Jam_Ke_22').val();
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var TARGET_DATE = ($('#editDate').val()).replace('T', ' ');        
+        var TARGET_PRINT = $('#editTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#edit_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#edit_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#edit_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#edit_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#edit_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#edit_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#edit_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#edit_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#edit_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#edit_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#edit_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#edit_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#edit_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#edit_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#edit_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#edit_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#edit_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#edit_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#edit_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#edit_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#edit_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#edit_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#edit_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#edit_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#edit_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#edit_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#edit_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#edit_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#edit_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#edit_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#edit_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#edit_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#edit_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#edit_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#edit_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#edit_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#edit_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#edit_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#edit_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#edit_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#edit_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#edit_T_Jam_Ke_22').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function addNew() {
+        var TARGET_DATE = ($('#addDate').val()).replace('T', ' ');        
+        var TARGET_PRINT = $('#addTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#add_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#add_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#add_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#add_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#add_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#add_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#add_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#add_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#add_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#add_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#add_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#add_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#add_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#add_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#add_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#add_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#add_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#add_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#add_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#add_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#add_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#add_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#add_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#add_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#add_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#add_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#add_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#add_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#add_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#add_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#add_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#add_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#add_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#add_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#add_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#add_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#add_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#add_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#add_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#add_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#add_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#add_T_Jam_Ke_22').val();        
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                TARGET_DATE: TARGET_DATE,                
+                TARGET_PRINT: TARGET_PRINT,
+                TARGET_QTY_JAM_KE_1: TARGET_QTY_JAM_KE_1,
+                TARGET_AMOUNT_JAM_KE_1: TARGET_AMOUNT_JAM_KE_1,
+                TARGET_QTY_JAM_KE_2: TARGET_QTY_JAM_KE_2,
+                TARGET_AMOUNT_JAM_KE_2: TARGET_AMOUNT_JAM_KE_2,
+                TARGET_QTY_JAM_KE_3: TARGET_QTY_JAM_KE_3,
+                TARGET_AMOUNT_JAM_KE_3: TARGET_AMOUNT_JAM_KE_3,
+                TARGET_QTY_JAM_KE_4: TARGET_QTY_JAM_KE_4,
+                TARGET_AMOUNT_JAM_KE_4: TARGET_AMOUNT_JAM_KE_4,
+                TARGET_QTY_JAM_KE_5: TARGET_QTY_JAM_KE_5,
+                TARGET_AMOUNT_JAM_KE_5: TARGET_AMOUNT_JAM_KE_5,
+                TARGET_QTY_JAM_KE_6: TARGET_QTY_JAM_KE_6,
+                TARGET_AMOUNT_JAM_KE_6: TARGET_AMOUNT_JAM_KE_6,
+                TARGET_QTY_JAM_KE_7: TARGET_QTY_JAM_KE_7,
+                TARGET_AMOUNT_JAM_KE_7: TARGET_AMOUNT_JAM_KE_7,
+                TARGET_QTY_JAM_KE_8: TARGET_QTY_JAM_KE_8,
+                TARGET_AMOUNT_JAM_KE_8: TARGET_AMOUNT_JAM_KE_8,
+                TARGET_QTY_JAM_KE_9: TARGET_QTY_JAM_KE_9,
+                TARGET_AMOUNT_JAM_KE_9: TARGET_AMOUNT_JAM_KE_9,
+                TARGET_QTY_JAM_KE_10: TARGET_QTY_JAM_KE_10,
+                TARGET_AMOUNT_JAM_KE_10: TARGET_AMOUNT_JAM_KE_10,
+                TARGET_QTY_JAM_KE_11: TARGET_QTY_JAM_KE_11,
+                TARGET_AMOUNT_JAM_KE_11: TARGET_AMOUNT_JAM_KE_11,
+                TARGET_QTY_JAM_KE_12: TARGET_QTY_JAM_KE_12,
+                TARGET_AMOUNT_JAM_KE_12: TARGET_AMOUNT_JAM_KE_12,
+                TARGET_QTY_JAM_KE_13: TARGET_QTY_JAM_KE_13,
+                TARGET_AMOUNT_JAM_KE_13: TARGET_AMOUNT_JAM_KE_13,
+                TARGET_QTY_JAM_KE_14: TARGET_QTY_JAM_KE_14,
+                TARGET_AMOUNT_JAM_KE_14: TARGET_AMOUNT_JAM_KE_14,
+                TARGET_QTY_JAM_KE_15_16_ISTIRAHAT: TARGET_QTY_JAM_KE_15_16_ISTIRAHAT,
+                TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT: TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT,
+                TARGET_QTY_JAM_KE_17: TARGET_QTY_JAM_KE_17,
+                TARGET_AMOUNT_JAM_KE_17: TARGET_AMOUNT_JAM_KE_17,
+                TARGET_QTY_JAM_KE_18: TARGET_QTY_JAM_KE_18,
+                TARGET_AMOUNT_JAM_KE_18: TARGET_AMOUNT_JAM_KE_18,
+                TARGET_QTY_JAM_KE_19: TARGET_QTY_JAM_KE_19,
+                TARGET_AMOUNT_JAM_KE_19: TARGET_AMOUNT_JAM_KE_19,
+                TARGET_QTY_JAM_KE_20: TARGET_QTY_JAM_KE_20,
+                TARGET_AMOUNT_JAM_KE_20: TARGET_AMOUNT_JAM_KE_20,
+                TARGET_QTY_JAM_KE_21: TARGET_QTY_JAM_KE_21,
+                TARGET_AMOUNT_JAM_KE_21: TARGET_AMOUNT_JAM_KE_21,
+                TARGET_QTY_JAM_KE_22: TARGET_QTY_JAM_KE_22,
+                TARGET_AMOUNT_JAM_KE_22: TARGET_AMOUNT_JAM_KE_22
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    clear_add();
+
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                    $('#btnNo').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var TARGET_DATE = ($('#addDate').val()).replace('T', ' ');        
+        var TARGET_PRINT = $('#addTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#add_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#add_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#add_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#add_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#add_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#add_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#add_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#add_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#add_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#add_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#add_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#add_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#add_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#add_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#add_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#add_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#add_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#add_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#add_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#add_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#add_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#add_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#add_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#add_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#add_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#add_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#add_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#add_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#add_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#add_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#add_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#add_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#add_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#add_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#add_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#add_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#add_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#add_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#add_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#add_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#add_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#add_T_Jam_Ke_22').val();          
+    }
+
+    //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var TARGET_DATE = ($('#editDate').val()).replace('T', ' ');        
+        var TARGET_PRINT = $('#editTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#edit_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#edit_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#edit_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#edit_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#edit_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#edit_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#edit_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#edit_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#edit_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#edit_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#edit_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#edit_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#edit_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#edit_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#edit_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#edit_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#edit_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#edit_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#edit_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#edit_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#edit_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#edit_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#edit_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#edit_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#edit_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#edit_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#edit_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#edit_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#edit_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#edit_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#edit_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#edit_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#edit_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#edit_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#edit_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#edit_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#edit_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#edit_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#edit_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#edit_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#edit_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#edit_T_Jam_Ke_22').val();          
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        TARGET_DATE.val(Send_Var[1]);        
+        TARGET_PRINT.val(Send_Var[2]);
+        TARGET_QTY_JAM_KE_1.val(Send_Var[3]);
+        TARGET_AMOUNT_JAM_KE_1.val(Send_Var[4]);
+        TARGET_QTY_JAM_KE_2.val(Send_Var[5]);
+        TARGET_AMOUNT_JAM_KE_2.val(Send_Var[6]);
+        TARGET_QTY_JAM_KE_3.val(Send_Var[7]);
+        TARGET_AMOUNT_JAM_KE_3.val(Send_Var[8]);
+        TARGET_QTY_JAM_KE_4.val(Send_Var[9]);
+        TARGET_AMOUNT_JAM_KE_4.val(Send_Var[10]);
+        TARGET_QTY_JAM_KE_5.val(Send_Var[11]);
+        TARGET_AMOUNT_JAM_KE_5.val(Send_Var[12]);
+        TARGET_QTY_JAM_KE_6.val(Send_Var[13]);
+        TARGET_AMOUNT_JAM_KE_6.val(Send_Var[14]);
+        TARGET_QTY_JAM_KE_7.val(Send_Var[15]);
+        TARGET_AMOUNT_JAM_KE_7.val(Send_Var[16]);
+        TARGET_QTY_JAM_KE_8.val(Send_Var[17]);
+        TARGET_AMOUNT_JAM_KE_8.val(Send_Var[18]);
+        TARGET_QTY_JAM_KE_9.val(Send_Var[19]);
+        TARGET_AMOUNT_JAM_KE_9.val(Send_Var[20]);
+        TARGET_QTY_JAM_KE_10.val(Send_Var[21]);
+        TARGET_AMOUNT_JAM_KE_10.val(Send_Var[22]);
+        TARGET_QTY_JAM_KE_11.val(Send_Var[23]);
+        TARGET_AMOUNT_JAM_KE_11.val(Send_Var[24]);
+        TARGET_QTY_JAM_KE_12.val(Send_Var[25]);
+        TARGET_AMOUNT_JAM_KE_12.val(Send_Var[26]);
+        TARGET_QTY_JAM_KE_13.val(Send_Var[27]);
+        TARGET_AMOUNT_JAM_KE_13.val(Send_Var[28]);
+        TARGET_QTY_JAM_KE_14.val(Send_Var[29]);
+        TARGET_AMOUNT_JAM_KE_14.val(Send_Var[30]);
+        TARGET_QTY_JAM_KE_15_16_ISTIRAHAT.val(Send_Var[31]);
+        TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT.val(Send_Var[32]);
+        TARGET_QTY_JAM_KE_17.val(Send_Var[33]);
+        TARGET_AMOUNT_JAM_KE_17.val(Send_Var[34]);
+        TARGET_QTY_JAM_KE_18.val(Send_Var[35]);
+        TARGET_AMOUNT_JAM_KE_18.val(Send_Var[36]);
+        TARGET_QTY_JAM_KE_19.val(Send_Var[37]);
+        TARGET_AMOUNT_JAM_KE_19.val(Send_Var[38]);
+        TARGET_QTY_JAM_KE_20.val(Send_Var[39]);
+        TARGET_AMOUNT_JAM_KE_20.val(Send_Var[40]);
+        TARGET_QTY_JAM_KE_21.val(Send_Var[41]);
+        TARGET_AMOUNT_JAM_KE_21.val(Send_Var[42]);
+        TARGET_QTY_JAM_KE_22.val(Send_Var[43]);
+        TARGET_AMOUNT_JAM_KE_22.val(Send_Var[44]);
+
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var TARGET_DATE = ($('#editDate').val()).replace('T', ' ');                
+                var TARGET_PRINT = $('#editTargetPrint').val();
+                var TARGET_QTY_JAM_KE_1 = $('#edit_Y_Jam_Ke_1').val();
+                var TARGET_AMOUNT_JAM_KE_1 = $('#edit_T_Jam_Ke_1').val();
+                var TARGET_QTY_JAM_KE_2 = $('#edit_Y_Jam_Ke_2').val();
+                var TARGET_AMOUNT_JAM_KE_2 = $('#edit_T_Jam_Ke_2').val();
+                var TARGET_QTY_JAM_KE_3 = $('#edit_Y_Jam_Ke_3').val();
+                var TARGET_AMOUNT_JAM_KE_3 = $('#edit_T_Jam_Ke_3').val();
+                var TARGET_QTY_JAM_KE_4 = $('#edit_Y_Jam_Ke_4').val();
+                var TARGET_AMOUNT_JAM_KE_4 = $('#edit_T_Jam_Ke_4').val();
+                var TARGET_QTY_JAM_KE_5 = $('#edit_Y_Jam_Ke_5').val();
+                var TARGET_AMOUNT_JAM_KE_5 = $('#edit_T_Jam_Ke_5').val();
+                var TARGET_QTY_JAM_KE_6 = $('#edit_Y_Jam_Ke_6').val();
+                var TARGET_AMOUNT_JAM_KE_6 = $('#edit_T_Jam_Ke_6').val();
+                var TARGET_QTY_JAM_KE_7 = $('#edit_Y_Jam_Ke_7').val();
+                var TARGET_AMOUNT_JAM_KE_7 = $('#edit_T_Jam_Ke_7').val();
+                var TARGET_QTY_JAM_KE_8 = $('#edit_Y_Jam_Ke_8').val();
+                var TARGET_AMOUNT_JAM_KE_8 = $('#edit_T_Jam_Ke_8').val();
+                var TARGET_QTY_JAM_KE_9 = $('#edit_Y_Jam_Ke_9').val();
+                var TARGET_AMOUNT_JAM_KE_9 = $('#edit_T_Jam_Ke_9').val();
+                var TARGET_QTY_JAM_KE_10 = $('#edit_Y_Jam_Ke_10').val();
+                var TARGET_AMOUNT_JAM_KE_10 = $('#edit_T_Jam_Ke_10').val();
+                var TARGET_QTY_JAM_KE_11 = $('#edit_Y_Jam_Ke_11').val();
+                var TARGET_AMOUNT_JAM_KE_11 = $('#edit_T_Jam_Ke_11').val();
+                var TARGET_QTY_JAM_KE_12 = $('#edit_Y_Jam_Ke_12').val();
+                var TARGET_AMOUNT_JAM_KE_12 = $('#edit_T_Jam_Ke_12').val();
+                var TARGET_QTY_JAM_KE_13 = $('#edit_Y_Jam_Ke_13').val();
+                var TARGET_AMOUNT_JAM_KE_13 = $('#edit_T_Jam_Ke_13').val();
+                var TARGET_QTY_JAM_KE_14 = $('#edit_Y_Jam_Ke_14').val();
+                var TARGET_AMOUNT_JAM_KE_14 = $('#edit_T_Jam_Ke_14').val();
+                var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#edit_Y_Jam_Ke_15_16').val();
+                var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#edit_T_Jam_Ke_15_16').val();
+                var TARGET_QTY_JAM_KE_17 = $('#edit_Y_Jam_Ke_17').val();
+                var TARGET_AMOUNT_JAM_KE_17 = $('#edit_T_Jam_Ke_17').val();
+                var TARGET_QTY_JAM_KE_18 = $('#edit_Y_Jam_Ke_18').val();
+                var TARGET_AMOUNT_JAM_KE_18 = $('#edit_T_Jam_Ke_18').val();
+                var TARGET_QTY_JAM_KE_19 = $('#edit_Y_Jam_Ke_19').val();
+                var TARGET_AMOUNT_JAM_KE_19 = $('#edit_T_Jam_Ke_19').val();
+                var TARGET_QTY_JAM_KE_20 = $('#edit_Y_Jam_Ke_20').val();
+                var TARGET_AMOUNT_JAM_KE_20 = $('#edit_T_Jam_Ke_20').val();
+                var TARGET_QTY_JAM_KE_21 = $('#edit_Y_Jam_Ke_21').val();
+                var TARGET_AMOUNT_JAM_KE_21 = $('#edit_T_Jam_Ke_21').val();
+                var TARGET_QTY_JAM_KE_22 = $('#edit_Y_Jam_Ke_22').val();
+                var TARGET_AMOUNT_JAM_KE_22 = $('#edit_T_Jam_Ke_22').val();                
+                var Send_Var = ID + "," + TARGET_DATE + "," + TARGET_PRINT + "," + TARGET_QTY_JAM_KE_1 + "," + TARGET_AMOUNT_JAM_KE_1 + "," + TARGET_QTY_JAM_KE_2 + "," + TARGET_AMOUNT_JAM_KE_2 + "," + TARGET_QTY_JAM_KE_3 + "," + TARGET_AMOUNT_JAM_KE_3 + "," + TARGET_QTY_JAM_KE_4 + "," + TARGET_AMOUNT_JAM_KE_4 + "," + TARGET_QTY_JAM_KE_5 + "," + TARGET_AMOUNT_JAM_KE_5 + "," + TARGET_QTY_JAM_KE_6 + "," + TARGET_AMOUNT_JAM_KE_6 + "," + TARGET_QTY_JAM_KE_7 + "," + TARGET_AMOUNT_JAM_KE_7 + "," + TARGET_QTY_JAM_KE_8 + "," + TARGET_AMOUNT_JAM_KE_8 + "," + TARGET_QTY_JAM_KE_9 + "," + TARGET_AMOUNT_JAM_KE_9 + "," + TARGET_QTY_JAM_KE_10 + "," + TARGET_AMOUNT_JAM_KE_10 + "," + TARGET_QTY_JAM_KE_11 + "," + TARGET_AMOUNT_JAM_KE_11 + "," + TARGET_QTY_JAM_KE_12 + "," + TARGET_AMOUNT_JAM_KE_12 + "," + TARGET_QTY_JAM_KE_13 + "," + TARGET_AMOUNT_JAM_KE_13 + "," + TARGET_QTY_JAM_KE_14 + "," + TARGET_AMOUNT_JAM_KE_14 + "," + TARGET_QTY_JAM_KE_15_16_ISTIRAHAT + "," + TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT + "," + TARGET_QTY_JAM_KE_17 + "," + TARGET_AMOUNT_JAM_KE_17 + "," + TARGET_QTY_JAM_KE_18 + "," + TARGET_AMOUNT_JAM_KE_18 + "," + TARGET_QTY_JAM_KE_19 + "," + TARGET_AMOUNT_JAM_KE_19 + "," + TARGET_QTY_JAM_KE_20 + "," + TARGET_AMOUNT_JAM_KE_20 + "," + TARGET_QTY_JAM_KE_21 + "," + TARGET_AMOUNT_JAM_KE_21 + "," + TARGET_QTY_JAM_KE_22 + "," + TARGET_AMOUNT_JAM_KE_22 ;
+
+                $.ajax({
+                    type: "POST",
+                    url: 'DISA090001/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            //MoveFoto('#editFoto', NOREG);
+                            //MoveFotoCertificate('#editFotoCertificate', NOREG);
+                            //MoveFotoID('#editFotoID', IDENTITY_NO);
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'DISA090001/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchDate').val('');
+        // $('#searchIdentityNumber').val('');
+        // $('#searchDepartement').val('');
+        // $('#searchDivision').val('');
+        //$('#searchPosition').val('');
+        //$('#searchGroup').val('');
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addDate').val().replace('T', ' ');        
+        $('#addTargetPrint').val();
+        $('#add_Y_Jam_Ke_1').val();
+        $('#add_T_Jam_Ke_1').val();
+        $('#add_Y_Jam_Ke_2').val();
+        $('#add_T_Jam_Ke_2').val();
+        $('#add_Y_Jam_Ke_3').val();
+        $('#add_T_Jam_Ke_3').val();
+        $('#add_Y_Jam_Ke_4').val();
+        $('#add_T_Jam_Ke_4').val();
+        $('#add_Y_Jam_Ke_5').val();
+        $('#add_T_Jam_Ke_5').val();
+        $('#add_Y_Jam_Ke_6').val();
+        $('#add_T_Jam_Ke_6').val();
+        $('#add_Y_Jam_Ke_7').val();
+        $('#add_T_Jam_Ke_7').val();
+        $('#add_Y_Jam_Ke_8').val();
+        $('#add_T_Jam_Ke_8').val();
+        $('#add_Y_Jam_Ke_9').val();
+        $('#add_T_Jam_Ke_9').val();
+        $('#add_Y_Jam_Ke_10').val();
+        $('#add_T_Jam_Ke_10').val();
+        $('#add_Y_Jam_Ke_11').val();
+        $('#add_T_Jam_Ke_11').val();
+        $('#add_Y_Jam_Ke_12').val();
+        $('#add_T_Jam_Ke_12').val();
+        $('#add_Y_Jam_Ke_13').val();
+        $('#add_T_Jam_Ke_13').val();
+        $('#add_Y_Jam_Ke_14').val();
+        $('#add_T_Jam_Ke_14').val();
+        $('#add_Y_Jam_Ke_15_16').val();
+        $('#add_T_Jam_Ke_15_16').val();
+        $('#add_Y_Jam_Ke_17').val();
+        $('#add_T_Jam_Ke_17').val();
+        $('#add_Y_Jam_Ke_18').val();
+        $('#add_T_Jam_Ke_18').val();
+        $('#add_Y_Jam_Ke_19').val();
+        $('#add_T_Jam_Ke_19').val();
+        $('#add_Y_Jam_Ke_20').val();
+        $('#add_T_Jam_Ke_20').val();
+        $('#add_Y_Jam_Ke_21').val();
+        $('#add_T_Jam_Ke_21').val();
+        $('#add_Y_Jam_Ke_22').val();
+        $('#add_T_Jam_Ke_22').val();
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var TARGET_DATE = ($('#searchDate').val()).replace('T', ' ');
+        var TARGET_PRINT = $('#searchTargetPrint').val();
+        var TARGET_QTY_JAM_KE_1 = $('#search_Y_Jam_Ke_1').val();
+        var TARGET_AMOUNT_JAM_KE_1 = $('#search_T_Jam_Ke_1').val();
+        var TARGET_QTY_JAM_KE_2 = $('#search_Y_Jam_Ke_2').val();
+        var TARGET_AMOUNT_JAM_KE_2 = $('#search_T_Jam_Ke_2').val();
+        var TARGET_QTY_JAM_KE_3 = $('#search_Y_Jam_Ke_3').val();
+        var TARGET_AMOUNT_JAM_KE_3 = $('#search_T_Jam_Ke_3').val();
+        var TARGET_QTY_JAM_KE_4 = $('#search_Y_Jam_Ke_4').val();
+        var TARGET_AMOUNT_JAM_KE_4 = $('#search_T_Jam_Ke_4').val();
+        var TARGET_QTY_JAM_KE_5 = $('#search_Y_Jam_Ke_5').val();
+        var TARGET_AMOUNT_JAM_KE_5 = $('#search_T_Jam_Ke_5').val();
+        var TARGET_QTY_JAM_KE_6 = $('#search_Y_Jam_Ke_6').val();
+        var TARGET_AMOUNT_JAM_KE_6 = $('#search_T_Jam_Ke_6').val();
+        var TARGET_QTY_JAM_KE_7 = $('#search_Y_Jam_Ke_7').val();
+        var TARGET_AMOUNT_JAM_KE_7 = $('#search_T_Jam_Ke_7').val();
+        var TARGET_QTY_JAM_KE_8 = $('#search_Y_Jam_Ke_8').val();
+        var TARGET_AMOUNT_JAM_KE_8 = $('#search_T_Jam_Ke_8').val();
+        var TARGET_QTY_JAM_KE_9 = $('#search_Y_Jam_Ke_9').val();
+        var TARGET_AMOUNT_JAM_KE_9 = $('#search_T_Jam_Ke_9').val();
+        var TARGET_QTY_JAM_KE_10 = $('#search_Y_Jam_Ke_10').val();
+        var TARGET_AMOUNT_JAM_KE_10 = $('#search_T_Jam_Ke_10').val();
+        var TARGET_QTY_JAM_KE_11 = $('#search_Y_Jam_Ke_11').val();
+        var TARGET_AMOUNT_JAM_KE_11 = $('#search_T_Jam_Ke_11').val();
+        var TARGET_QTY_JAM_KE_12 = $('#search_Y_Jam_Ke_12').val();
+        var TARGET_AMOUNT_JAM_KE_12 = $('#search_T_Jam_Ke_12').val();
+        var TARGET_QTY_JAM_KE_13 = $('#search_Y_Jam_Ke_13').val();
+        var TARGET_AMOUNT_JAM_KE_13 = $('#search_T_Jam_Ke_13').val();
+        var TARGET_QTY_JAM_KE_14 = $('#search_Y_Jam_Ke_14').val();
+        var TARGET_AMOUNT_JAM_KE_14 = $('#search_T_Jam_Ke_14').val();
+        var TARGET_QTY_JAM_KE_15_16_ISTIRAHAT = $('#search_Y_Jam_Ke_15_16').val();
+        var TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT = $('#search_T_Jam_Ke_15_16').val();
+        var TARGET_QTY_JAM_KE_17 = $('#search_Y_Jam_Ke_17').val();
+        var TARGET_AMOUNT_JAM_KE_17 = $('#search_T_Jam_Ke_17').val();
+        var TARGET_QTY_JAM_KE_18 = $('#search_Y_Jam_Ke_18').val();
+        var TARGET_AMOUNT_JAM_KE_18 = $('#search_T_Jam_Ke_18').val();
+        var TARGET_QTY_JAM_KE_19 = $('#search_Y_Jam_Ke_19').val();
+        var TARGET_AMOUNT_JAM_KE_19 = $('#search_T_Jam_Ke_19').val();
+        var TARGET_QTY_JAM_KE_20 = $('#search_Y_Jam_Ke_20').val();
+        var TARGET_AMOUNT_JAM_KE_20 = $('#search_T_Jam_Ke_20').val();
+        var TARGET_QTY_JAM_KE_21 = $('#search_Y_Jam_Ke_21').val();
+        var TARGET_AMOUNT_JAM_KE_21 = $('#search_T_Jam_Ke_21').val();
+        var TARGET_QTY_JAM_KE_22 = $('#search_Y_Jam_Ke_22').val();
+        var TARGET_AMOUNT_JAM_KE_22 = $('#search_T_Jam_Ke_22').val(); 
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                TARGET_DATE: TARGET_DATE,
+                TARGET_PRINT: TARGET_PRINT,
+                TARGET_QTY_JAM_KE_1: TARGET_QTY_JAM_KE_1,
+                TARGET_AMOUNT_JAM_KE_1: TARGET_AMOUNT_JAM_KE_1,
+                TARGET_QTY_JAM_KE_2: TARGET_QTY_JAM_KE_2,
+                TARGET_AMOUNT_JAM_KE_2: TARGET_AMOUNT_JAM_KE_2,
+                TARGET_QTY_JAM_KE_3: TARGET_QTY_JAM_KE_3,
+                TARGET_AMOUNT_JAM_KE_3: TARGET_AMOUNT_JAM_KE_3,
+                TARGET_QTY_JAM_KE_4: TARGET_QTY_JAM_KE_4,
+                TARGET_AMOUNT_JAM_KE_4: TARGET_AMOUNT_JAM_KE_4,
+                TARGET_QTY_JAM_KE_5: TARGET_QTY_JAM_KE_5,
+                TARGET_AMOUNT_JAM_KE_5: TARGET_AMOUNT_JAM_KE_5,
+                TARGET_QTY_JAM_KE_6: TARGET_QTY_JAM_KE_6,
+                TARGET_AMOUNT_JAM_KE_6: TARGET_AMOUNT_JAM_KE_6,
+                TARGET_QTY_JAM_KE_7: TARGET_QTY_JAM_KE_7,
+                TARGET_AMOUNT_JAM_KE_7: TARGET_AMOUNT_JAM_KE_7,
+                TARGET_QTY_JAM_KE_8: TARGET_QTY_JAM_KE_8,
+                TARGET_AMOUNT_JAM_KE_8: TARGET_AMOUNT_JAM_KE_8,
+                TARGET_QTY_JAM_KE_9: TARGET_QTY_JAM_KE_9,
+                TARGET_AMOUNT_JAM_KE_9: TARGET_AMOUNT_JAM_KE_9,
+                TARGET_QTY_JAM_KE_10: TARGET_QTY_JAM_KE_10,
+                TARGET_AMOUNT_JAM_KE_10: TARGET_AMOUNT_JAM_KE_10,
+                TARGET_QTY_JAM_KE_11: TARGET_QTY_JAM_KE_11,
+                TARGET_AMOUNT_JAM_KE_11: TARGET_AMOUNT_JAM_KE_11,
+                TARGET_QTY_JAM_KE_12: TARGET_QTY_JAM_KE_12,
+                TARGET_AMOUNT_JAM_KE_12: TARGET_AMOUNT_JAM_KE_12,
+                TARGET_QTY_JAM_KE_13: TARGET_QTY_JAM_KE_13,
+                TARGET_AMOUNT_JAM_KE_13: TARGET_AMOUNT_JAM_KE_13,
+                TARGET_QTY_JAM_KE_14: TARGET_QTY_JAM_KE_14,
+                TARGET_AMOUNT_JAM_KE_14: TARGET_AMOUNT_JAM_KE_14,
+                TARGET_QTY_JAM_KE_15_16_ISTIRAHAT: TARGET_QTY_JAM_KE_15_16_ISTIRAHAT,
+                TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT: TARGET_AMOUNT_JAM_KE_15_16_ISTIRAHAT,
+                TARGET_QTY_JAM_KE_17: TARGET_QTY_JAM_KE_17,
+                TARGET_AMOUNT_JAM_KE_17: TARGET_AMOUNT_JAM_KE_17,
+                TARGET_QTY_JAM_KE_18: TARGET_QTY_JAM_KE_18,
+                TARGET_AMOUNT_JAM_KE_18: TARGET_AMOUNT_JAM_KE_18,
+                TARGET_QTY_JAM_KE_19: TARGET_QTY_JAM_KE_19,
+                TARGET_AMOUNT_JAM_KE_19: TARGET_AMOUNT_JAM_KE_19,
+                TARGET_QTY_JAM_KE_20: TARGET_QTY_JAM_KE_20,
+                TARGET_AMOUNT_JAM_KE_20: TARGET_AMOUNT_JAM_KE_20,
+                TARGET_QTY_JAM_KE_21: TARGET_QTY_JAM_KE_21,
+                TARGET_AMOUNT_JAM_KE_21: TARGET_AMOUNT_JAM_KE_21,
+                TARGET_QTY_JAM_KE_22: TARGET_QTY_JAM_KE_22,
+                TARGET_AMOUNT_JAM_KE_22: TARGET_AMOUNT_JAM_KE_22
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    //function getSection(h, data) {
+    //    console.log("data = " + data);
+    //    if (h == "add") {
+    //        if (data == "TMMIN") {
+    //            $.ajax({
+    //                url: SITE_URL + 'GetDataDivison',
+    //                //data: {
+    //                //    SYSTEM_CD: data
+    //                //},
+    //                data: "{}",
+    //                dataType: 'JSON',
+    //                success: function (e) {
+    //                    $('#addSection').html('');
+    //                    for (var i = 0; i < e.message.length; i++) {
+    //                        // $('#addSection').append('<option>' + e.message[i].DIV + '</option>');
+    //                        $('#addSection').append('<option value="' + e.message[i].DIV_ID + '">' + e.message[i].DIV + '</option>');
+    //                    }
+    //                },
+    //                error: function (e) {
+    //                    console.log(e);
+    //                }
+    //            });
+    //        } else {
+    //            $.ajax({
+    //                url: SITE_URL + 'GetDataSection',
+    //                data: {
+    //                    SYSTEM_CD: data
+    //                },
+    //                dataType: 'JSON',
+    //                success: function (e) {
+    //                    $('#addSection').html('');
+    //                    for (var i = 0; i < e.message.length; i++) {
+    //                        $('#addSection').append('<option>' + e.message[i].SECTION_TEXT + '</option>');
+    //                    }
+    //                },
+    //                error: function (e) {
+    //                    console.log(e);
+    //                }
+    //            });
+    //        }
+    //    } else {
+
+
+    //        if (data == "TMMIN") {
+    //            $.ajax({
+    //                url: SITE_URL + 'GetDataDivison',
+    //                //data: {
+    //                //    SYSTEM_CD: data
+    //                //},
+    //                data: "{}",
+    //                dataType: 'JSON',
+    //                success: function (e) {
+    //                    $('#editSection').html('');
+    //                    for (var i = 0; i < e.message.length; i++) {
+    //                        // $('#addSection').append('<option>' + e.message[i].DIV + '</option>');
+    //                        $('#editSection').append('<option value="' + e.message[i].DIV_ID + '">' + e.message[i].DIV + '</option>');
+    //                    }
+    //                },
+    //                error: function (e) {
+    //                    console.log(e);
+    //                }
+    //            });
+    //        } else {
+    //            $.ajax({
+    //                url: SITE_URL + 'GetDataSection',
+    //                data: {
+    //                    SYSTEM_CD: data
+    //                },
+    //                dataType: 'JSON',
+    //                success: function (e) {
+    //                    $('#editSection').html('');
+    //                    for (var i = 0; i < e.message.length; i++) {
+    //                        $('#editSection').append('<option>' + e.message[i].SECTION_TEXT + '</option>');
+    //                    }
+    //                },
+    //                error: function (e) {
+    //                    console.log(e);
+    //                }
+    //            });
+    //        }
+    //    }
+    //}
+
+    //function getPIC(h, data) {
+    //    $('#addPIC').html('');
+    //    if (h == "add") {
+    //        $.ajax({
+    //            url: SITE_URL + 'GetDataPIC',
+    //            data: {
+    //                SYSTEM_CD: data
+    //            },
+    //            dataType: 'JSON',
+    //            success: function (e) {
+    //                for (var i = 0; i < e.message.length; i++) {
+    //                    $('#addPIC').append('<option>' + e.message[i].PIC_TEXT + '</option>');
+    //                }
+    //            },
+    //            error: function (e) {
+    //                console.log(e);
+    //            }
+    //        });
+    //    } else {
+
+    //    }
+    //}
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

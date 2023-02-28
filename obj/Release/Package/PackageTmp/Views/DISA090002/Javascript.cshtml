@@ -1,0 +1,544 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISA090002") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        //$('#btn_Delete').prop('disabled', true);
+        //$('#btn_edit').prop('disabled', true);
+        //$('#btn_clear').prop('disabled', true);
+        $('#btn_distribusi').prop('disabled', false);
+
+        //Auto Show Data
+        OnSearch(1);
+        //jQuery('#btn_search').click();
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            editNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('#denki-all').click(function () {
+            $(".chkboxname").prop('checked', $(this).prop('checked'));
+        });
+
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    //---------------------------------------------- PAGE SETTING DATABASE ------------------------------------
+    function menuSetting(element) {
+        var data = element.dataset.title;
+        //alert(data);
+
+        var getMenu = data;
+        (getMenu == "settingDB") ? PAGE_SETTING_DB() : (getMenu == "historyDistribusi") ? PAGE_HISTORY_DISTRIBUSI() : DATA();
+       
+    }
+
+    function PAGE_SETTING_DB() {
+        var win = window.open(SITE_URL + 'PAGE_SETTING_DB', '_blank');
+        win.focus();
+    }
+
+    function PAGE_HISTORY_DISTRIBUSI() {
+        var win = window.open(SITE_URL + 'PAGE_HISTORY_DISTRIBUSI', '_blank');
+        win.focus();
+    }
+
+    //----------------------------------------------- SEARCH DATA ----------------------------------------------
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var NAMA_MESIN = '';
+        var PAGE_VIEWER = 'DistribusiData';
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                NAMA_MESIN: NAMA_MESIN.trim(),
+                PAGE_VIEWER: PAGE_VIEWER
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    //-------------------------------------------------------- DISTRIBUSI DATA --------------------------------------------
+    function distribusi_check_New() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+
+        var sts = true;
+
+        if (chk == 0) {
+            toastr.warning("Select One Or More To Distribute Data!");
+            sts = false;
+        } else {
+            sts = true;
+        }
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_DistribusiConfirm').modal();
+        }
+
+    }
+
+    function distribusiNew2() {
+        var Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                if (Var != '') {
+                    Send_Var = Send_Var + Var.split(',')[0] + ",";
+                } else {
+                    Send_Var = Send_Var + "," + Var.split(',')[0];
+                }
+
+            }
+        });
+
+        //alert(Send_Var);
+
+        var DATAFILE = "";
+        if ($('#addNamaFile').val() != "") {
+            var NAMA_FILE = ($('#addNamaFile')[0].files[0].name);
+            var EKSTENSI_FILE = ($('#addNamaFile')[0].files[0].name).split('.');
+            DATAFILE = (EKSTENSI_FILE[EKSTENSI_FILE.length - 1]).toUpperCase();
+        }
+
+        //if (DATAFILE != 'JPG') {
+        if (DATAFILE != 'MDB' && DATAFILE != 'LDB') {
+            toastr.error("Ekstensi file harus ldb/mdb!");
+        }
+        else {
+            var reader = new FileReader();
+            var myFormData = new FormData();
+            myFormData.append('ImagePath', $('#addNamaFile')[0].files[0]);
+            myFormData.append('Name', NAMA_FILE);
+            myFormData.append('Var', JSON.stringify(Send_Var));
+            //myFormData.append('Mesin', mesin);
+
+            $.ajax({
+                //url: '../DISA090002/MoveFileNew',
+                url: '../DISA090002/MoveFileNew',
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: myFormData,
+                success: function (data) {
+                    //console.log(e);
+                    if (data.sts == "true") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.error(data.message + " (" + data.nama_mesin_error + ")");
+                    }
+                }
+            });
+
+            clear_btn();
+        }
+
+
+    }
+    function clear_btn() {
+        $('.form-control-file').val('');
+        $("#denki-all").prop("checked", false);
+        $('.chkboxname').attr('checked', false);
+    }
+
+    //function distribusi_check() {
+    //    var denki1 = $('#denki-1').is(":checked");
+    //    var denki2 = $('#denki-2').is(":checked");
+    //    var denki3 = $('#denki-3').is(":checked");
+    //    var denki4 = $('#denki-4').is(":checked");
+    //    var denki5 = $('#denki-5').is(":checked");
+    //    var denki6 = $('#denki-6').is(":checked");
+    //    var denki7 = $('#denki-7').is(":checked");
+    //    var denki8 = $('#denki-8').is(":checked");
+    //    var denki9 = $('#denki-9').is(":checked");
+    //    var denki10 = $('#denki-10').is(":checked");
+    //    var denki11 = $('#denki-11').is(":checked");
+    //    var denki12 = $('#denki-12').is(":checked");
+
+    //    var NAMA_FILE = ($('#addNamaFile')[0].files[0].name);
+    //    var DATAFILE = "";
+
+    //    if ($('#addNamaFile').val() != "") {
+    //        var FILE = ($('#addNamaFile')[0].files[0].name).split('.');
+    //        DATAFILE = (FILE[FILE.length - 1]).toUpperCase();
+    //    }
+          
+    //    var sts = true;
+
+    //    if (sts == false) {
+    //        return;
+    //    } else {
+    //        $('#PopupForm_DistribusiConfirm').modal();
+    //    }
+        
+    //}
+
+    //function distribusiNew() {
+    //    //var check_denki = $(".chkboxname").prop("checked");
+    //    var denki1 = $('#denki-1').is(":checked");
+    //    var denki2 = $('#denki-2').is(":checked");
+    //    var denki3 = $('#denki-3').is(":checked");
+    //    var denki4 = $('#denki-4').is(":checked");
+    //    var denki5 = $('#denki-5').is(":checked");
+    //    var denki6 = $('#denki-6').is(":checked");
+    //    var denki7 = $('#denki-7').is(":checked");
+    //    var denki8 = $('#denki-8').is(":checked");
+    //    var denki9 = $('#denki-9').is(":checked");
+    //    var denki10 = $('#denki-10').is(":checked");
+    //    var denki11 = $('#denki-11').is(":checked");
+    //    var denki12 = $('#denki-12').is(":checked");
+    //    var denki13 = $('#denki-13').is(":checked");
+        
+    //    var DATAFILE = "";
+    //    if ($('#addNamaFile').val() != "") {
+    //        var NAMA_FILE = ($('#addNamaFile')[0].files[0].name);
+    //        var EKSTENSI_FILE = ($('#addNamaFile')[0].files[0].name).split('.');
+    //        DATAFILE = (EKSTENSI_FILE[EKSTENSI_FILE.length - 1]).toUpperCase();
+    //    }
+
+    //    var mesin = "";
+    //    if (denki1 == true || denki2 == true || denki3 == true || denki4 == true || denki5 == true ||
+    //        denki6 == true || denki7 == true || denki8 == true || denki9 == true || denki10 == true ||
+    //        denki11 == true || denki12 == true || denki13 == true
+    //    )
+    //    {
+    //        if (DATAFILE != 'MDB' && DATAFILE != 'LDB') {
+    //            //GenerateMessage(DATAFILE, "MWP011");
+    //            toastr.error("Ekstensi file harus ldb/mdb!");
+    //        }
+    //        else {
+    //            if (denki1 == true) {
+    //                mesin = "denki-1";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 1");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki2 == true) {
+    //                mesin = "denki-2";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 2");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki3 == true) {
+    //                mesin = "denki-3";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 3");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki4 == true) {
+    //                mesin = "denki-4";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 4");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki5 == true) {
+    //                mesin = "denki-5";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 5");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki6 == true) {
+    //                mesin = "denki-6";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 6");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki7 == true) {
+    //                mesin = "denki-7";
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 7");
+    //            }
+    //            if (denki8 == true) {
+    //                mesin = "denki-8";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 8");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki9 == true) {
+    //                mesin = "denki-9";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 9");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki10 == true) {
+    //                mesin = "denki-10";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 10");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki11 == true) {
+    //                mesin = "denki-11";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 11");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki12 == true) {
+    //                mesin = "denki-12";
+    //                toastr.success("Data Has Been Distribute Successfuly to Denki 12");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //            if (denki13 == true) {
+    //                mesin = "denki-13";
+    //                //toastr.success("Data Has Been Distribute Successfuly to Denki 13");
+    //                MoveFile('#addNamaFile', NAMA_FILE, mesin);
+    //            }
+    //        }
+    //    }
+    //    else {
+    //        toastr.error("Silahkan ceklis PC terlebih dahulu!");
+    //    }
+    //}
+
+    //function MoveFile(file, NAMA_FILE, mesin) {
+    //    var reader = new FileReader();
+    //    var myFormData = new FormData();
+    //    myFormData.append('ImagePath', $(file)[0].files[0]);
+    //    myFormData.append('Name', NAMA_FILE);
+    //    myFormData.append('Mesin', mesin);
+    //    $.ajax({
+    //        url: SITE_URL + "MoveFile",
+    //        type: 'POST',
+    //        processData: false,
+    //        contentType: false,
+    //        data: myFormData,
+    //        success: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+    //}
+
+     // tombol Add Confirm
+    function distribusiDataConfirm() {
+        $('#PopupForm_DistribusiConfirm').modal();
+    }
+
+    
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //------------------------------------------------ CHECKED CHECKBOX -------------------------------
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    //Manual Book
+    $("#openBook").click(function () {
+        $("#myModal").modal();
+    });
+    $("#closeBtn").click(function () {
+        $("#myModal").modal('hide');
+    })
+
+    //-----------File References---------
+    //Doc. ROI
+    $("#openFileROI").click(function () {
+        $("#modalFileROI").modal();
+    });
+    $("#closeFileROI").click(function () {
+        $("#modalFileROI").modal('hide');
+    })
+
+    //Doc. URD
+    $("#openFileURD").click(function () {
+        $("#modalFileURD").modal();
+    });
+    $("#closeFileURD").click(function () {
+        $("#modalFileURD").modal('hide');
+    })
+
+    //Doc. FSD
+    $("#openFileFSD").click(function () {
+        $("#modalFileFSD").modal();
+    });
+    $("#closeFileFSD").click(function () {
+        $("#modalFileFSD").modal('hide');
+    })
+
+    //Doc. Test
+    $("#openFileTest").click(function () {
+        $("#modalFileTest").modal();
+    });
+    $("#closeFileTest").click(function () {
+        $("#modalFileTest").modal('hide');
+    })
+
+    //Doc. Training
+    $("#openFileTraining").click(function () {
+        $("#modalFileTraining").modal();
+    });
+    $("#closeFileTraining").click(function () {
+        $("#modalFileTraining").modal('hide');
+    })
+
+    //Doc. Training
+    $("#openFileEvaluasi").click(function () {
+        $("#modalFileEvaluasi").modal();
+    });
+    $("#closeFileEvaluasi").click(function () {
+        $("#modalFileEvaluasi").modal('hide');
+    })
+
+</script>

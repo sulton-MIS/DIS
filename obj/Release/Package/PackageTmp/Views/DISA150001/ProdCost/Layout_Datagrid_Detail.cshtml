@@ -1,0 +1,124 @@
+﻿<style>
+      th {
+          text-align: center;
+      }
+
+    .col-md-12 {
+        width: 100%;
+        padding-top: 30px;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #tblScroll tbody tr:hover {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #tblScroll tr.selected {
+        background: #0e54fb;
+        color: white;
+    }
+
+      #bungkusTable {
+          overflow-y: hidden;
+      }
+
+      #dataGrid {
+          overflow-x: hidden;
+      }
+
+      td {
+          padding: 0px 5px 0px 5px !important;
+      }
+
+      #tbl1 {
+          width: 60%;
+          border: 1px solid;
+      }
+
+      #tbl2 {
+          /*position: relative;*/
+          padding: 0 0 0 0;
+          width: 50%;
+          border: 1px solid;
+          margin-top: 15px;
+          margin-left: 0px;
+      }
+
+      #tbl3 {
+          /*position: relative;*/
+          padding: 0 0 0 0;
+          width: 48%;
+          margin-top: 15px;
+          margin-left: 5px;
+          /*margin-top: -275px;
+          margin-left: 270px;*/
+          border: 1px solid;
+          margin-bottom: 200px;
+      }
+
+          #tbl3 #tdlotsize {
+              text-align: right;
+          }
+
+      /*sales price*/
+      #tbl_sls_price1 {
+          width: 50%;
+      }
+
+          #tbl_sls_price1 table {
+              background-color: aquamarine;
+          }
+
+      #tbl_sls_price2 {
+          position: relative;
+          /*margin-top: -185px;
+          margin-left: 300px;*/
+          width: 50%;
+      }
+
+          #tbl_sls_price2 table {
+              background-color: aquamarine;
+          }
+
+      #tbl_sls_price3 {
+          width: 50%;
+      }
+
+          #tbl_sls_price3 table {
+              background-color: pink;
+          }
+
+      #tbl_sls_price4 {
+          position: relative;
+          /* margin-top: -215px;*/
+          /*margin-left: 50px;*/
+          margin-bottom: 50px;
+          width: 50%;
+      }
+
+          #tbl_sls_price4 table {
+              background-color: lightpink;
+          }
+</style>
+
+<script>
+    //$("tr").click(function () {
+    //    $(this).addClass("selected").siblings().removeClass("selected");
+    //});
+
+    var trs = document.querySelectorAll("tr");
+    for (var i = 0; i < trs.length; i++) {
+        trs[i].addEventListener("click", function () {
+            if (this.className.indexOf("selected") == 0)
+                this.className = "";
+            else
+                this.className = "selected";
+        });
+    }
+
+
+</script>

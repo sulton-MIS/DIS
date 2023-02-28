@@ -1,0 +1,350 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA10001_DISPOSE_ASSET> DataWP = (List<DISA10001_DISPOSE_ASSET>)ViewData["DataDISA100001"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    List<DISA10001_DISPOSE_ASSET> DetailDispose_Asset = (List<DISA10001_DISPOSE_ASSET>)ViewData["DataDispose_Asset_Detail"];
+
+    //List<DISA100001> Status_Cmb = (List<DISA100001>)ViewData["Status_Cmb"];
+    //List<DISA100001> Time_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> ExecTime_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> Model_type = (List<DISA100001>)ViewData["Model_type"];
+    //var flg_status_dispose= @ViewData["FLG_STATUS_DISPOSE"];
+}
+
+<style>
+    table{
+        background-color: white !important;
+    }
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    #tr1 {
+        border: 1px solid black;
+        height: 150px;
+    }
+
+    #tr2 {
+        text-align: center;
+        border: 1px solid black;
+        height: 10px;
+    }
+</style>
+
+<div class="row" id="DataGrid_Data">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            </th>
+                            <th style="width: 75px;" rowspan="3">NO</th>
+                            <th style="width: 100px;" rowspan="3">DETAIL</th>
+                            <th style="width: 120px;" rowspan="3">LAMPIRAN FILE</th>
+                            <th style="width: 200px;" rowspan="3">NO. DISPOSE</th>
+                            <th style="width: 300px;" rowspan="3">STATUS APPROVAL</th>
+                            <th style="width: 150px;" rowspan="3">TANGGAL BUAT</th>
+                            <th style="width: 200px;" rowspan="3">USER</th>
+                            <th style="width: 200px;" rowspan="3">DEPT.HEAD USER</th>
+                            <th style="width: 200px;" rowspan="3">AMS</th>
+                            <th style="width: 200px;" rowspan="3">DEPT.HEAD CMS</th>
+                            <th style="width: 200px;" rowspan="3">GM</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 500px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA10001_DISPOSE_ASSET item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td rowspan="2" style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                @{
+                                                    if ((item.dept_head_user_created_sign != "" && item.dept_head_user_created_sign != null) || (item.STATUS_APPROVAL.Contains("REJECTED")))
+                                                    {
+                                                       <input class="grid-checkbox" value="@item.ID,@item.id_tb_m_dispose,@item.NO_DISPOSE,@item.NO_ASSET,@item.KETERANGAN_DISPOSE,@item.STATUS_APPROVAL,@item.NAMA_FOTO_LAPORAN,@item.STATUS_KONDISI,@item.CREATED_BY,@item.UPDATED_BY,@item.dept_head_user_created,@item.ams_created,@item.dept_head_ams_created,@item.acknowledge_created,@item.DEPT_USER"
+                                                               type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="grid-checkbox" value="@item.ID,@item.id_tb_m_dispose,@item.NO_DISPOSE,@item.NO_ASSET,@item.KETERANGAN_DISPOSE,@item.STATUS_APPROVAL,@item.NAMA_FOTO_LAPORAN,@item.STATUS_KONDISI,@item.CREATED_BY,@item.UPDATED_BY,@item.dept_head_user_created,@item.ams_created,@item.dept_head_ams_created,@item.acknowledge_created,@item.DEPT_USER"
+                                                               type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    }
+                                                }
+
+                                            </td>
+                                            @*<td rowspan="2" style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID,@item.id_tb_m_dispose,@item.NO_DISPOSE,@item.NO_ASSET,@item.KETERANGAN_DISPOSE,@item.STATUS_APPROVAL,@item.NAMA_FOTO_LAPORAN,@item.STATUS_KONDISI,@item.CREATED_BY,@item.UPDATED_BY,@item.dept_head_user_created,@item.ams_created,@item.dept_head_ams_created,@item.acknowledge_created,@item.DEPT_USER"
+                                                       type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                            </td>*@
+                                            <td rowspan="2">
+                                                <input type="hidden" id="rowData-@item.id_tb_m_dispose" value="@Json.Encode(item)" /> @* Pass data to Json for retrieve to Javascript*@
+                                            </td>
+                                            <td rowspan="2" style="width: 75px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td rowspan="2" style="width: 100px; text-align: center"> 
+                                                <button type="button" data-title="@item.id_tb_m_dispose" onclick="showDetail(this)" class="btn btn-success btn-xs" id="btn_show" style="width: 75px; ">
+                                                    <i class="fa fa-eye"></i> Show 
+                                                </button>
+                                            </td>
+                                            <td rowspan="2" style="width: 120px; text-align: center">
+                                                @if (item.NAMA_FOTO_LAPORAN != "" && item.NAMA_FOTO_LAPORAN != null)
+                                                {
+                                                    <button type="button" data-title="@item.id_tb_m_dispose" onclick="downloadLampiran(this)" class="btn btn-info btn-xs" id="btn_show" style="width: 90px; ">
+                                                        <i class="fa fa-download"></i> Download
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <label style="color: red"> Tidak ada lampiran </label>
+                                                }
+                                            </td>
+                                            <td rowspan="2" style="width: 200px"> @item.NO_DISPOSE</td>
+                                            <td rowspan="2" style="width: 300px; text-align: center">
+                                                @if (item.acknowledge_created_sign != "" && item.acknowledge_created_sign != null)
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+                                                else if (item.dept_head_ams_created_sign != "" && item.dept_head_ams_created_sign != null)
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+                                                else if (item.ams_created_sign != "" && item.ams_created_sign != null)
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+                                                else if (item.dept_head_user_created_sign != "" && item.ams_created_sign != null)
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+                                                else if (item.UPDATED_BY_SIGN != "" && item.UPDATED_BY_SIGN != null)
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>@item.STATUS_APPROVAL</label>
+                                                }
+
+                                            </td>
+
+                                            <td rowspan="2" style="width: 150px; text-align: center"> @item.CREATED_DATE</td>
+
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.UPDATED_BY_SIGN != "" && item.UPDATED_BY_SIGN != null)
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.UPDATED_BY_SIGN" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.CREATED_BY_SIGN" style="width:100px; height:75px; text-align: center" /> 
+                                                }
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.dept_head_user_created != null && item.dept_head_user_created != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.dept_head_user_created_sign" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.ams_created_sign != null)
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.ams_created_sign" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.dept_head_ams_created_sign != null)
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.dept_head_ams_created_sign" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.acknowledge_created_sign != null && item.acknowledge_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.acknowledge_created_sign" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        //---------------Baris 3 (TOMBOL APPROVE)---------- 
+                                        <tr>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.UPDATED_BY != "" && item.UPDATED_BY_SIGN != null)
+                                                {
+                                                    <label>@item.UPDATED_BY</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>@item.CREATED_BY</label>
+                                                }
+                                            </td>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.dept_head_user_created_sign != null && item.dept_head_user_created_sign != "")
+                                                {
+                                                    <label>@item.dept_head_user_created</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.ams_created_sign != null)
+                                                {
+                                                    <label>@item.ams_created</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else if (item.dept_head_user_created_sign != "" && item.dept_head_user_created_sign != null)
+                                                {
+                                                    <button type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+                                                else
+                                                {
+                                                    <button disabled type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.dept_head_ams_created_sign != null)
+                                                {
+                                                    <label>@item.ams_created</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else if (item.ams_created_sign != "" && item.ams_created_sign != null)
+                                                {
+                                                    <button type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+                                                else
+                                                {
+                                                    <button disabled type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.acknowledge_created_sign != null && item.acknowledge_created_sign != "")
+                                                {
+                                                    <label>@item.acknowledge_created</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else if (item.dept_head_ams_created_sign != "" && item.dept_head_ams_created_sign != null)
+                                                {
+                                                    <button type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+                                                else
+                                                {
+                                                    <button disabled type="button" data-title="@item.id_tb_m_dispose" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Dispose_Asset/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@using Toyota.Common.Credential
+@using Toyota.Common
+@using AI070.Models;
+@{
+    Layout = null;
+    User user = Html.Toyota().Page.User;
+    UserInfo userInfo = (UserInfo)ViewData["UserInfo"];
+    if (userInfo == null)
+    {
+        UserInfo UserinfoTemp = new UserInfo();
+        UserinfoTemp.Username = "NA";
+        UserinfoTemp.PlantName = "NA";
+        userInfo = UserinfoTemp;
+    }
+    if (user == null)
+    {
+        User UserTemp = new User();
+        UserTemp.FirstName = "NA";
+        UserTemp.LastName = "NA";
+        user = UserTemp;
+    }
+
+}
+<!-- #section:basics/navbar.layout -->
+<div id="navbar" class="navbar navbar-default">
+    <script type="text/javascript">
+        try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+    </script>
+    <style>
+        .navbar-link {
+            margin: 15px;
+        }
+    </style>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand" style="line-height: 1.2">
+                    <span>
+                        <img src="@Url.Content("~/Content/Bootstrap/img/app-logo.png")" class="logo-title" alt="WorkPermit Logo" />
+                        <span class="app-title">@Html.Toyota().Application.Name</span>
+                    </span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                @*<ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Page 1-1</a></li>
+                                <li><a href="#">Page 1-2</a></li>
+                                <li><a href="#">Page 1-3</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Page 2</a></li>
+                        <li><a href="#">Page 3</a></li>
+                    </ul>*@
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="   " style="text-decoration:none">
+                            <span id="clock"></span>
+                        </a>
+                    </li>
+                    <li class="blue">
+                        <a title="Welcome, @ViewData["NAMA_USER"]" id="greetings" style="padding-top: -10px">
+                            <span class="user-info">
+                                @ViewData["NAMA_USER"]
+                            </span>
+                        </a>
+
+                        @*<script>
+                            $('#btn_edit').on('click', function () {
+                                alert("HALO!");
+                            }
+                        </script>*@
+
+                    </li>
+
+                    <li><a href="../Login/Logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>

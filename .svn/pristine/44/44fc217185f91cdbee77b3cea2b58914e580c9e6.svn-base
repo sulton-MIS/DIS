@@ -1,0 +1,467 @@
+﻿
+<script>
+    var SITE_URL = window.location.href+"/";
+    var menuParent = "";
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('.select2').select2({ width: '100%' });
+    });
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Add New
+    function addNew() {
+        var AUTHORIZATION_NAME = $('#addAuthorizationName').val();
+        var AUTHORIZATION_DESC = $('#addAuthorizationDescription').val();
+        var getMenu = $('#addMenu').val();
+        var MENUS = "";
+        var MENU_PARENT = "";
+        for (var i = 0; i < getMenu.length; i++) {
+            if (i == (getMenu.length - 1)) {
+                MENUS = MENUS + getMenu[i];
+            } else {
+                MENUS = MENUS + getMenu[i] + ",";
+            }
+        }
+        var temp_menu = "";
+        var GET_MENU_PARENTS = $('#addMenu option:selected');
+        for (var i = 0; i < GET_MENU_PARENTS.length; i++) {
+            var get_parent = $(GET_MENU_PARENTS[i]).attr('parent');
+
+            if (temp_menu != get_parent) {
+                if (i == (GET_MENU_PARENTS.length - 1)) {
+                     MENU_PARENT = MENU_PARENT + get_parent;
+                } else {
+                    MENU_PARENT = MENU_PARENT + get_parent +",";
+                }
+            }
+            
+                temp_menu = get_parent;
+        }
+        
+        var sts = true;
+
+        if (AUTHORIZATION_NAME == null || AUTHORIZATION_NAME == "") {
+            toastr.warning('Authorization Name Cannot Be Empty');
+            sts = false;
+        }
+
+        if (AUTHORIZATION_DESC == null || AUTHORIZATION_DESC == "") {
+            toastr.warning('Authorization Desc Cannot Be Empty');
+            sts = false;
+        }
+
+        if (MENUS == null) {
+            toastr.warning('Menu Cannot Be Empty');
+            sts = false;
+        }
+
+        if (sts == false) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                AUTHORIZATION_NAME: AUTHORIZATION_NAME,
+                AUTHORIZATION_DESC: AUTHORIZATION_DESC,
+                MENUS: MENUS,
+                MENU_PARENT: MENU_PARENT
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function view_data(number) {
+        var DATAS = $('#check-' + number).attr("value");
+        var getData = DATAS.split(';');
+        var ID = getData[0];
+        var AUTHORIZATION_NAME = getData[1];
+        var AUTHORIZATION_DESC = getData[2];
+        var Menus = getData[3].split(',');
+        console.log(Menus);
+        $('#viewAuthorizationName').val(AUTHORIZATION_NAME);
+        $('#viewAuthorizationDescription').val(AUTHORIZATION_DESC);
+        $('#viewMenu').val(Menus).select2({width: '100%'});
+        $('#modalViewForm').modal();
+        
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var AUTHORIZATION_NAME = $('#editAuthorizationName');
+        var AUTHORIZATION_DESC = $('#editAuthorizationDescription');
+        var MENUS = $('#editMenu');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(';');
+            }
+        });
+        ID.val(Send_Var[0]);
+        AUTHORIZATION_NAME.val(Send_Var[1]);
+        AUTHORIZATION_DESC.val(Send_Var[2]);
+        MENUS.val(Send_Var[3].split(',')).select2({ width: "100%" });
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var AUTHORIZATION_NAME = $('#editAuthorizationName').val();
+                var AUTHORIZATION_DESC = $('#editAuthorizationDescription').val();
+                var getMenu = $('#editMenu').val();
+                var MENUS = "";
+                var MENU_PARENT = "";
+
+                for (var i = 0; i < getMenu.length; i++) {
+                    if (i == (getMenu.length - 1)) {
+                        MENUS = MENUS + getMenu[i];
+                    } else {
+                        MENUS = MENUS + getMenu[i] + ",";
+                    }
+                }
+
+                var temp_menu = [];
+                var GET_MENU_PARENTS = $('#editMenu option:selected');
+                for (var i = 0; i < GET_MENU_PARENTS.length; i++) {
+                    var get_parent = $(GET_MENU_PARENTS[i]).attr('parent');
+
+                    if ($.inArray(get_parent, temp_menu) == -1) {
+                        if (i == (GET_MENU_PARENTS.length - 1)) {
+                             MENU_PARENT = MENU_PARENT + get_parent;
+                        } else {
+                            MENU_PARENT = MENU_PARENT + get_parent +",";
+                        }
+                        temp_menu.push(get_parent);
+                    }
+                }
+
+
+                var Send_Var = ID+";"+AUTHORIZATION_NAME+";"+AUTHORIZATION_DESC+";"+MENUS+";"+MENU_PARENT;
+
+                var sts = true;
+
+                if (AUTHORIZATION_NAME == null || AUTHORIZATION_NAME == "") {
+                    toastr.warning('Authorization Name Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (AUTHORIZATION_DESC == null || AUTHORIZATION_DESC == "") {
+                    toastr.warning('Authorization Desc Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (MENUS == null || MENUS == "") {
+                    toastr.warning('Menus Cannot Be Empty');
+                    sts = false;
+                }
+
+                if (sts == false) {
+                    return;
+                }
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP04001/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                         console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+                    
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(';')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(';')[0] ;
+                    }
+                    
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP04001/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+                    
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchAuthorizationName').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                AUTHORIZATION_NAME: "xxxxxX",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        $('#addAuthorizationName').val('');
+        $('#addAuthorizationStatus').val('');
+        $('#addAuthorizationDescription').val('');
+        $('#modalForm').modal();
+
+    });
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {   
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var AUTHORIZATION_NAME = $('#searchAuthorizationName').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                AUTHORIZATION_NAME: AUTHORIZATION_NAME
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+                
+                
+                //// time unit
+                //var time_unit_val = Var.split(',')[6].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_unit_val).prop('disabled', true);
+                
+                //// time value 
+                //var time_value_val = Var.split(',')[7].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_value_val).prop('disabled', true);
+                //$('#' + time_value_val).attr('placeholder', Var.split(',')[2].replace(/^\s+|\s+$/g, ''));
+
+                //// exec time
+                //var exec_time_val = Var.split(',')[8].replace(/^\s+|\s+$/g, '');
+                //$('#' + exec_time_val).prop('disabled', true);
+
+                //// status
+                //var status_val = Var.split(',')[9].replace(/^\s+|\s+$/g, '');
+                //$('#' + status_val).prop('disabled', true);
+                                
+
+                // tombol save edit
+                //var save_edit = Var.split(',')[11].replace(/^\s+|\s+$/g, '');
+
+                //// tombol cancel edit
+                //var cancel_edit = Var.split(',')[12].replace(/^\s+|\s+$/g, '');
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

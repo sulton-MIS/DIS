@@ -1,0 +1,372 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR070004Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+}
+@*<script>
+    window.addEventListener('load', () => {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('addTimeKoshin').value = now.toISOString().slice(0, -1);
+    });
+    </script>*@
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD MESIN</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">ID Mesin</label>
+                        <input id="addIdKikai" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Nama Mesin</label>
+                        <input id="addNameKikai" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Kategori Proses</label>
+                        <select class="form-control" id="addIdKoteishubetsu" name="dropdown">
+                            @*<option id="addIdKoteishubetsu" value="0" selected="selected">  </option>*@
+                            <option id="addIdKoteishubetsu" value="1" selected="selected"> Work Table </option>
+                            <option id="addIdKoteishubetsu" value="2" selected="selected"> Pet Cut Machine </option>
+                            <option id="addIdKoteishubetsu" value="3" selected="selected"> Printing Machine </option>
+                            <option id="addIdKoteishubetsu" value="4" selected="selected"> Oven </option>
+                            <option id="addIdKoteishubetsu" value="5" selected="selected"> Etching Machine </option>
+                            <option id="addIdKoteishubetsu" value="6" selected="selected"> Scribe Machine </option>
+                            <option id="addIdKoteishubetsu" value="7" selected="selected"> Punching Machine </option>
+                            <option id="addIdKoteishubetsu" value="8" selected="selected"> Press Machine </option>
+                            <option id="addIdKoteishubetsu" value="9" selected="selected"> Denki Kensa Matrix </option>
+                            <option id="addIdKoteishubetsu" value="10" selected="selected"> Black Box </option>
+                            <option id="addIdKoteishubetsu" value="11" selected="selected"> Clean Bench Pittarikun Auto Assembly </option>
+                            <option id="addIdKoteishubetsu" value="16" selected="selected"> Heat Seal Machine </option>
+                            <option id="addIdKoteishubetsu" value="17" selected="selected"> Denki Kensa Analog·Denki Kensa 5-Wire </option>
+                            <option id="addIdKoteishubetsu" value="18" selected="selected"> utidadaisuke </option>
+                            <option id="addIdKoteishubetsu" value="19" selected="selected"> Continous Line </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">IP Address</label>
+                        <input id="addIPaddress" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Line</label>
+                        <select class="form-control" id="addLine" name="dropdown">
+                            <option id="addLine" value="0" selected="selected"> 0 </option>
+                            <option id="addLine" value="1" selected="selected"> 1 </option>
+                            <option id="addLine" value="2" selected="selected"> 2 </option>
+                            <option id="addLine" value="3" selected="selected"> 3 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Cluster</label>
+                        <select class="form-control" id="addCluster" name="dropdown">
+                            <option id="addCluster" value="" selected="selected">  </option>
+                            <option id="addCluster" value="1 HA" selected="selected"> 1 HA </option>
+                            <option id="addCluster" value="2 HA" selected="selected"> 2 HA </option>
+                            <option id="addCluster" value="3 HA" selected="selected"> 3 HA </option>
+                            <option id="addCluster" value="4 HA" selected="selected"> 4 HA </option>
+                            <option id="addCluster" value="AREA 1" selected="selected"> AREA 1 </option>
+                            <option id="addCluster" value="AREA 2" selected="selected"> AREA 2 </option>
+                            <option id="addCluster" value="AREA HOGO" selected="selected"> AREA HOGO </option>
+                            <option id="addCluster" value="AREA KOMPO" selected="selected"> AREA KOMPO </option>
+                            <option id="addCluster" value="AREA PROCAP" selected="selected"> AREA PROCAP </option>
+                            <option id="addCluster" value="AREA WASHING" selected="selected"> AREA WASHING </option>
+                            <option id="addCluster" value="PITARIKUN" selected="selected"> PITARIKUN </option>
+                            <option id="addCluster" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="addCluster" value="AUTO ASSY" selected="selected"> AUTO ASSY </option>
+                            <option id="addCluster" value="CL 01" selected="selected"> CL 01 </option>
+                            <option id="addCluster" value="CL 02" selected="selected"> CL 02 </option>
+                            <option id="addCluster" value="CL 03" selected="selected"> CL 03 </option>
+                            <option id="addCluster" value="CL 04" selected="selected"> CL 04 </option>
+                            <option id="addCluster" value="CL 05" selected="selected"> CL 05 </option>
+                            <option id="addCluster" value="CL 06" selected="selected"> CL 06 </option>
+                            <option id="addCluster" value="CL 07" selected="selected"> CL 07 </option>
+                            <option id="addCluster" value="CL 08" selected="selected"> CL 08 </option>
+                            <option id="addCluster" value="CL 09" selected="selected"> CL 09 </option>
+                            <option id="addCluster" value="GAIKAN TAIL" selected="selected"> GAIKAN TAIL </option>
+                            <option id="addCluster" value="HALTEC" selected="selected"> HALTEC </option>
+                            <option id="addCluster" value="LAMINATING" selected="selected"> LAMINATING </option>
+                            <option id="addCluster" value="LAMINATING HOT" selected="selected"> LAMINATING HOT </option>
+                            <option id="addCluster" value="NO CLUSTER" selected="selected"> NO CLUSTER </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Factory</label>
+                        <select class="form-control" id="addFactory" name="dropdown">
+                            <option id="addFactory" value="1" selected="selected"> 1 </option>
+                            <option id="addFactory" value="2" selected="selected"> 2 </option>
+                            <option id="addFactory" value="3" selected="selected"> 3 </option>
+                            <option id="addFactory" value="4" selected="selected"> 4 </option>
+                            <option id="addFactory" value="99" selected="selected"> 99 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Comment</label>
+                        <select class="form-control" id="addComment" name="dropdown">
+                            <option id="addComment" value="AKTIF" selected="selected"> AKTIF </option>
+                            <option id="addComment" value="AKTIF_TANPA RTJN" selected="selected"> AKTIF_TANPA RTJN </option>
+                            <option id="addComment" value="NON AKTIF" selected="selected"> NON AKTIF </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Group Mesin</label>
+                        <select class="form-control" id="addGroupKikai" name="dropdown">
+                            <option id="addGroupKikai" value="" selected="selected">  </option>
+                            <option id="addGroupKikai" value="CALKING" selected="selected"> CALKING </option>
+                            <option id="addGroupKikai" value="CRIMPER" selected="selected"> CRIMPER </option>
+                            <option id="addGroupKikai" value="DENKI" selected="selected"> DENKI </option>
+                            <option id="addGroupKikai" value="GAIKAN" selected="selected"> GAIKAN </option>
+                            <option id="addGroupKikai" value="HA-AUTO" selected="selected"> HA-AUTO </option>
+                            <option id="addGroupKikai" value="HA-CLNBN" selected="selected"> HA-CLNBN </option>
+                            <option id="addGroupKikai" value="HA-HALTEC" selected="selected"> HA-HALTEC </option>
+                            <option id="addGroupKikai" value="HA-LAM" selected="selected"> HA-LAM </option>
+                            <option id="addGroupKikai" value="HA-PITARIKUN" selected="selected"> HA-PITARIKUN </option>
+                            <option id="addGroupKikai" value="HOKYO" selected="selected"> HOKYO </option>
+                            <option id="addGroupKikai" value="HTSL" selected="selected"> HTSL </option>
+                            <option id="addGroupKikai" value="PRESS" selected="selected"> PRESS </option>
+                            <option id="addGroupKikai" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="addGroupKikai" value="SCRIBE" selected="selected"> SCRIBE </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Urutan Group Mesin</label>
+                        <select class="form-control" id="addGroupKikaiSort" name="dropdown">
+                            <option id="addGroupKikaiSort" value="" selected="selected">  </option>
+                            <option id="addGroupKikaiSort" value="0" selected="selected"> 0 </option>
+                            <option id="addGroupKikaiSort" value="1" selected="selected"> 1 </option>
+                            <option id="addGroupKikaiSort" value="5" selected="selected"> 5 </option>
+                            <option id="addGroupKikaiSort" value="10" selected="selected"> 10 </option>
+                            <option id="addGroupKikaiSort" value="15" selected="selected"> 15 </option>
+                            <option id="addGroupKikaiSort" value="20" selected="selected"> 20 </option>
+                            <option id="addGroupKikaiSort" value="25" selected="selected"> 25 </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    @*<div class="col-md-6">
+                        <label class="required">Flag Visible Oven</label>
+                        <select class="form-control" id="addFlgVisible" name="dropdown">
+                            <option id="addFlgVisible" value="" selected="selected">  </option>
+                            <option id="addFlgVisible" value="0" selected="selected"> 0 </option>
+                            <option id="addFlgVisible" value="1" selected="selected"> 1 </option>
+                        </select>
+                    </div>*@
+                    <div class="col-md-6">
+                        <label class="required">Machine Name</label>
+                        <input id="addMachineName" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Initial Mesin</label>
+                        <input id="addInitialKikai" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT MESIN</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ID Mesin</label>
+                        <input id="editIdKikai" required type="text" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Nama Mesin</label>
+                        <input id="editNameKikai" required type="text" class="form-control" />
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Kategori Proses </label>
+                        <select class="form-control" id="editIdKoteishubetsu" name="dropdown">
+                            <option id="editIdKoteishubetsu" value="1" selected="selected"> Work Table </option>
+                            <option id="editIdKoteishubetsu" value="2" selected="selected"> Pet Cut Machine </option>
+                            <option id="editIdKoteishubetsu" value="3" selected="selected"> Printing Machine </option>
+                            <option id="editIdKoteishubetsu" value="4" selected="selected"> Oven </option>
+                            <option id="editIdKoteishubetsu" value="5" selected="selected"> Etching Machine </option>
+                            <option id="editIdKoteishubetsu" value="6" selected="selected"> Scribe Machine </option>
+                            <option id="editIdKoteishubetsu" value="7" selected="selected"> Punching Machine </option>
+                            <option id="editIdKoteishubetsu" value="8" selected="selected"> Press Machine </option>
+                            <option id="editIdKoteishubetsu" value="9" selected="selected"> Denki Kensa Matrix </option>
+                            <option id="editIdKoteishubetsu" value="10" selected="selected"> Black Box </option>
+                            <option id="editIdKoteishubetsu" value="11" selected="selected"> Clean Bench Pittarikun Auto Assembly </option>
+                            <option id="editIdKoteishubetsu" value="16" selected="selected"> Heat Seal Machine </option>
+                            <option id="editIdKoteishubetsu" value="17" selected="selected"> Denki Kensa Analog·Denki Kensa 5-Wire </option>
+                            <option id="editIdKoteishubetsu" value="18" selected="selected"> utidadaisuke </option>
+                            <option id="editIdKoteishubetsu" value="19" selected="selected"> Continous Line </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">IP Address</label>
+                        <input id="editIPaddress" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Line</label>
+                        @*<input id="editLine" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editLine" name="dropdown">
+                            <option id="editLine" value="0" selected="selected"> 0 </option>
+                            <option id="editLine" value="1" selected="selected"> 1 </option>
+                            <option id="editLine" value="2" selected="selected"> 2 </option>
+                            <option id="editLine" value="3" selected="selected"> 3 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Cluster</label>
+                        @*<input id="editCluster" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editCluster" name="dropdown">
+                            <option id="editCluster" value="" selected="selected">  </option>
+                            <option id="editCluster" value="1 HA" selected="selected"> 1 HA </option>
+                            <option id="editCluster" value="2 HA" selected="selected"> 2 HA </option>
+                            <option id="editCluster" value="3 HA" selected="selected"> 3 HA </option>
+                            <option id="editCluster" value="4 HA" selected="selected"> 4 HA </option>
+                            <option id="editCluster" value="AREA 1" selected="selected"> AREA 1 </option>
+                            <option id="editCluster" value="AREA 2" selected="selected"> AREA 2 </option>
+                            <option id="editCluster" value="AREA HOGO" selected="selected"> AREA HOGO </option>
+                            <option id="editCluster" value="AREA KOMPO" selected="selected"> AREA KOMPO </option>
+                            <option id="editCluster" value="AREA PROCAP" selected="selected"> AREA PROCAP </option>
+                            <option id="editCluster" value="AREA WASHING" selected="selected"> AREA WASHING </option>
+                            <option id="editCluster" value="PITARIKUN" selected="selected"> PITARIKUN </option>
+                            <option id="editCluster" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="editCluster" value="AUTO ASSY" selected="selected"> AUTO ASSY </option>
+                            <option id="editCluster" value="CL 01" selected="selected"> CL 01 </option>
+                            <option id="editCluster" value="CL 02" selected="selected"> CL 02 </option>
+                            <option id="editCluster" value="CL 03" selected="selected"> CL 03 </option>
+                            <option id="editCluster" value="CL 04" selected="selected"> CL 04 </option>
+                            <option id="editCluster" value="CL 05" selected="selected"> CL 05 </option>
+                            <option id="editCluster" value="CL 06" selected="selected"> CL 06 </option>
+                            <option id="editCluster" value="CL 07" selected="selected"> CL 07 </option>
+                            <option id="editCluster" value="CL 08" selected="selected"> CL 08 </option>
+                            <option id="editCluster" value="CL 09" selected="selected"> CL 09 </option>
+                            <option id="editCluster" value="GAIKAN TAIL" selected="selected"> GAIKAN TAIL </option>
+                            <option id="editCluster" value="HALTEC" selected="selected"> HALTEC </option>
+                            <option id="editCluster" value="LAMINATING" selected="selected"> LAMINATING </option>
+                            <option id="editCluster" value="LAMINATING HOT" selected="selected"> LAMINATING HOT </option>
+                            <option id="editCluster" value="NO CLUSTER" selected="selected"> NO CLUSTER </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Factory</label>
+                        @*<input id="editFactory" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editFactory" name="dropdown">
+                            <option id="editFactory" value="1" selected="selected"> 1 </option>
+                            <option id="editFactory" value="2" selected="selected"> 2 </option>
+                            <option id="editFactory" value="3" selected="selected"> 3 </option>
+                            <option id="editFactory" value="4" selected="selected"> 4 </option>
+                            <option id="editFactory" value="99" selected="selected"> 99 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Comment</label>
+                        @*<input id="editComment" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editComment" name="dropdown">
+                            <option id="editComment" value="AKTIF" selected="selected"> AKTIF </option>
+                            <option id="editComment" value="AKTIF_TANPA RTJN" selected="selected"> AKTIF_TANPA RTJN </option>
+                            <option id="editComment" value="NON AKTIF" selected="selected"> NON AKTIF </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Group Mesin</label>
+                        @*<input id="editGroupKikai" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editGroupKikai" name="dropdown">
+                            <option id="editGroupKikai" value="" selected="selected">  </option>
+                            <option id="editGroupKikai" value="CALKING" selected="selected"> CALKING </option>
+                            <option id="editGroupKikai" value="CRIMPER" selected="selected"> CRIMPER </option>
+                            <option id="editGroupKikai" value="DENKI" selected="selected"> DENKI </option>
+                            <option id="editGroupKikai" value="GAIKAN" selected="selected"> GAIKAN </option>
+                            <option id="editGroupKikai" value="HA-AUTO" selected="selected"> HA-AUTO </option>
+                            <option id="editGroupKikai" value="HA-CLNBN" selected="selected"> HA-CLNBN </option>
+                            <option id="editGroupKikai" value="HA-HALTEC" selected="selected"> HA-HALTEC </option>
+                            <option id="editGroupKikai" value="HA-LAM" selected="selected"> HA-LAM </option>
+                            <option id="editGroupKikai" value="HA-PITARIKUN" selected="selected"> HA-PITARIKUN </option>
+                            <option id="editGroupKikai" value="HOKYO" selected="selected"> HOKYO </option>
+                            <option id="editGroupKikai" value="HTSL" selected="selected"> HTSL </option>
+                            <option id="editGroupKikai" value="PRESS" selected="selected"> PRESS </option>
+                            <option id="editGroupKikai" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="editGroupKikai" value="SCRIBE" selected="selected"> SCRIBE </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Urutan Group Mesin</label>
+                        @*<input id="editGroupKikaiSort" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editGroupKikaiSort" name="dropdown">
+                            <option id="editGroupKikaiSort" value="" selected="selected">  </option>
+                            <option id="editGroupKikaiSort" value="0" selected="selected"> 0 </option>
+                            <option id="editGroupKikaiSort" value="1" selected="selected"> 1 </option>
+                            <option id="editGroupKikaiSort" value="5" selected="selected"> 5 </option>
+                            <option id="editGroupKikaiSort" value="10" selected="selected"> 10 </option>
+                            <option id="editGroupKikaiSort" value="15" selected="selected"> 15 </option>
+                            <option id="editGroupKikaiSort" value="20" selected="selected"> 20 </option>
+                            <option id="editGroupKikaiSort" value="25" selected="selected"> 25 </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--<div class="col-md-6">
+                        <label class="required">Flag Visible Oven</label>-->
+                        @*<input id="editFlgVisible" required type="text" class="form-control" />*@
+                        <!--<select class="form-control" id="editFlgVisible" name="dropdown">
+                            <option id="editFlgVisible" value="0" selected="selected"> False </option>
+                            <option id="editFlgVisible" value="1" selected="selected"> True </option>
+                        </select>
+                    </div>-->
+                    <div class="col-md-6">
+                        <label class="required">Machine Name</label>
+                        <input id="editMachineName" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Initial Mesin</label>
+                        <input id="editInitialKikai" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

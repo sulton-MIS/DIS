@@ -1,0 +1,927 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR070003Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+}
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD MASTER PROSES</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Kode Proses</label>
+                        <input id="addIdKotei" required type="number" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Nama Proses</label>
+                        <input id="addNameKotei" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Halte</label>
+                        @*<input id="addNameKotei" required type="text" class="form-control" />*@
+                        <select class="form-control" id="addHalte" name="dropdown">
+                            <option id="addHalte" value="1" selected="selected"> 1 </option>
+                            <option id="addHalte" value="2" selected="selected"> 2 </option>
+                            <option id="addHalte" value="3" selected="selected"> 3 </option>
+                            <option id="addHalte" value="4" selected="selected"> 4 </option>
+                            <option id="addHalte" value="5" selected="selected"> 5 </option>
+                            <option id="addHalte" value="6" selected="selected"> 6 </option>
+                            <option id="addHalte" value="7" selected="selected"> 7 </option>
+                            <option id="addHalte" value="8" selected="selected"> 8 </option>
+                            <option id="addHalte" value="9" selected="selected"> 9 </option>
+                            <option id="addHalte" value="10" selected="selected"> 10</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Kategori Proses</label>
+                        <select id="addIdKoteishubetsu" name="dropdown">
+                            <option id="addIdKoteishubetsu" value="0" selected="selected">  </option>
+                            <option id="addIdKoteishubetsu" value="1" selected="selected"> Work Table </option>
+                            <option id="addIdKoteishubetsu" value="2" selected="selected"> Pet Cut Machine </option>
+                            <option id="addIdKoteishubetsu" value="3" selected="selected"> Printing Machine </option>
+                            <option id="addIdKoteishubetsu" value="4" selected="selected"> Oven </option>
+                            <option id="addIdKoteishubetsu" value="5" selected="selected"> Etching Machine </option>
+                            <option id="addIdKoteishubetsu" value="6" selected="selected"> Scribe Machine </option>
+                            <option id="addIdKoteishubetsu" value="7" selected="selected"> Punching Machine </option>
+                            <option id="addIdKoteishubetsu" value="8" selected="selected"> Press Machine </option>
+                            <option id="addIdKoteishubetsu" value="9" selected="selected"> Denki Kensa Matrix </option>
+                            <option id="addIdKoteishubetsu" value="10" selected="selected"> Black Box </option>
+                            <option id="addIdKoteishubetsu" value="11" selected="selected"> Clean Bench Pittarikun Auto Assembly </option>
+                            <option id="addIdKoteishubetsu" value="16" selected="selected"> Heat Seal Machine </option>
+                            <option id="addIdKoteishubetsu" value="17" selected="selected"> Denki Kensa Analog·Denki Kensa 5-Wire </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Inc. By Cavity </label>
+                        <select class="form-control" id="addFlgIncCav" name="dropdown">
+                            <option id="addFlgIncCav" value="1" selected="selected"> True </option>
+                            <option id="addFlgIncCav" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">ID Gamenshubetsu</label>
+                        <select class="form-control" id="addIdGamenshubetsu" name="dropdown">
+                            <option id="addIdGamenshubetsu" value="1" selected="selected"> True </option>
+                            <option id="addIdGamenshubetsu" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Non-RTJN </label>
+                        <select class="form-control" id="addFlgRTJNon" name="dropdown">
+                            <option id="addFlgRTJNon" value="1" selected="selected"> True </option>
+                            <option id="addFlgRTJNon" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Comment</label>
+                        <input id="addComment" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Rimen </label>
+                        <select class="form-control" id="addFlgRimen" name="dropdown">
+                            <option id="addFlgRimen" value="1" selected="selected"> True </option>
+                            <option id="addFlgRimen" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Flag Need Tool</label>
+                        <select class="form-control" id="addFlgNeedTool" name="dropdown">
+                            <option id="addFlgNeedTool" value="1" selected="selected"> True </option>
+                            <option id="addFlgNeedTool" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Logical</label>
+                        <select class="form-control" id="addFlagLogical" name="dropdown">
+                            <option id="addFlagLogical" value="1" selected="selected"> True </option>
+                            <option id="addFlagLogical" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Initial Process</label>
+                        <input id="addInitialProcess" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Check Schedule</label>
+                        <select class="form-control" id="addFlgCheckSchedule" name="dropdown">
+                            <option id="addFlgCheckSchedule" value="1" selected="selected"> True </option>
+                            <option id="addFlgCheckSchedule" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Flag Display Material</label>
+                        <select class="form-control" id="addFlgDispMaterial" name="dropdown">
+                            <option id="addFlgDispMaterial" value="1" selected="selected"> True </option>
+                            <option id="addFlgDispMaterial" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Flag Warning Material</label>
+                        <select class="form-control" id="addFlgWarningMaterial" name="dropdown">
+                            <option id="addFlgWarningMaterial" value="1" selected="selected"> True </option>
+                            <option id="addFlgWarningMaterial" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Flag Oven</label>
+                        <select class="form-control" id="addFlgOven" name="dropdown">
+                            <option id="addFlgOven" value="1" selected="selected"> True </option>
+                            <option id="addFlgOven" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Group Proccess</label>
+                        <select class="form-control" id="addGroupProcess" name="dropdown">
+                            <option id="addGroupProcess" value="NULL" selected="selected"> NULL </option>
+                            <option id="addGroupProcess" value="ANNEALING" selected="selected"> ANNEALING </option>
+                            <option id="addGroupProcess" value="CUTTING" selected="selected"> CUTTING </option>
+                            <option id="addGroupProcess" value="ETCHING" selected="selected"> ETCHING </option>
+                            <option id="addGroupProcess" value="GKN_T" selected="selected"> GKN_T </option>
+                            <option id="addGroupProcess" value="Gray 1-1" selected="selected"> Gray 1-1 </option>
+                            <option id="addGroupProcess" value="Gray 1-2" selected="selected"> Gray 1-2 </option>
+                            <option id="addGroupProcess" value="Gray 1-3" selected="selected"> Gray 1-3 </option>
+                            <option id="addGroupProcess" value="GRAY CONDUCTIVE" selected="selected"> GRAY CONDUCTIVE </option>
+                            <option id="addGroupProcess" value="HOGO" selected="selected"> HOGO </option>
+                            <option id="addGroupProcess" value="HOKYO" selected="selected"> HOKYO </option>
+                            <option id="addGroupProcess" value="HOKYOUBAN" selected="selected"> HOKYOUBAN </option>
+                            <option id="addGroupProcess" value="HOT AIR" selected="selected"> HOT AIR </option>
+                            <option id="addGroupProcess" value="KERTAS YUPO" selected="selected"> KERTAS YUPO </option>
+                            <option id="addGroupProcess" value="LAMINATING" selected="selected"> LAMINATING </option>
+                            <option id="addGroupProcess" value="LAMINATING_AKHIR" selected="selected"> LAMINATING_AKHIR </option>
+                            <option id="addGroupProcess" value="OVEN AG" selected="selected"> OVEN AG </option>
+                            <option id="addGroupProcess" value="OVEN BLACK" selected="selected"> OVEN BLACK </option>
+                            <option id="addGroupProcess" value="OVEN BLACK URAUCHI" selected="selected"> OVEN BLACK URAUCHI </option>
+                            <option id="addGroupProcess" value="OVEN BLUE" selected="selected"> OVEN BLUE </option>
+                            <option id="addGroupProcess" value="OVEN BROWN" selected="selected"> OVEN BROWN </option>
+                            <option id="addGroupProcess" value="OVEN CARBON" selected="selected"> OVEN CARBON </option>
+                            <option id="addGroupProcess" value="OVEN GOLD" selected="selected"> OVEN GOLD </option>
+                            <option id="addGroupProcess" value="OVEN GRAY" selected="selected"> OVEN GRAY </option>
+                            <option id="addGroupProcess" value="OVEN GRAY 1-1" selected="selected"> OVEN GRAY 1-1 </option>
+                            <option id="addGroupProcess" value="OVEN GRAY 1-2" selected="selected"> OVEN GRAY 1-2 </option>
+                            <option id="addGroupProcess" value="OVEN GRAY 1-3" selected="selected"> OVEN GRAY 1-3 </option>
+                            <option id="addGroupProcess" value="OVEN GRAY CONDUCTIVE" selected="selected"> OVEN GRAY CONDUCTIVE </option>
+                            <option id="addGroupProcess" value="OVEN HOT MELT" selected="selected"> OVEN HOT MELT </option>
+                            <option id="addGroupProcess" value="OVEN IHOUSE" selected="selected"> OVEN IHOUSE </option>
+                            <option id="addGroupProcess" value="OVEN IHOUSEI" selected="selected"> OVEN IHOUSEI </option>
+                            <option id="addGroupProcess" value="OVEN LIGHT BLUE" selected="selected"> OVEN LIGHT BLUE </option>
+                            <option id="addGroupProcess" value="OVEN LIGHT GRAY" selected="selected"> OVEN LIGHT GRAY </option>
+                            <option id="addGroupProcess" value="OVEN MASKING" selected="selected"> OVEN MASKING </option>
+                            <option id="addGroupProcess" value="OVEN METALIC" selected="selected"> OVEN METALIC </option>
+                            <option id="addGroupProcess" value="OVEN NORI" selected="selected"> OVEN NORI </option>
+                            <option id="addGroupProcess" value="OVEN ORANGE" selected="selected"> OVEN ORANGE </option>
+                            <option id="addGroupProcess" value="OVEN PINK" selected="selected"> OVEN PINK </option>
+                            <option id="addGroupProcess" value="OVEN R" selected="selected"> OVEN R </option>
+                            <option id="addGroupProcess" value="OVEN RED" selected="selected"> OVEN RED </option>
+                            <option id="addGroupProcess" value="OVEN SILVER" selected="selected"> OVEN SILVER </option>
+                            <option id="addGroupProcess" value="OVEN SILVER URAUCHI" selected="selected"> OVEN SILVER URAUCHI </option>
+                            <option id="addGroupProcess" value="OVEN SLATE GRAY" selected="selected"> OVEN SLATE GRAY </option>
+                            <option id="addGroupProcess" value="OVEN TRANSPARAN" selected="selected"> OVEN TRANSPARAN </option>
+                            <option id="addGroupProcess" value="OVEN URAUCHI" selected="selected"> OVEN URAUCHI </option>
+                            <option id="addGroupProcess" value="OVEN UV" selected="selected"> OVEN UV </option>
+                            <option id="addGroupProcess" value="OVEN WARNA" selected="selected"> OVEN WARNA </option>
+                            <option id="addGroupProcess" value="OVEN WHITE" selected="selected"> OVEN WHITE </option>
+                            <option id="addGroupProcess" value="OVEN WHITE 1-1" selected="selected"> OVEN WHITE 1-1</option>
+                            <option id="addGroupProcess" value="OVEN WHITE 1-2" selected="selected"> OVEN WHITE 1-2</option>
+                            <option id="addGroupProcess" value="OVEN WHITE 1-3" selected="selected"> OVEN WHITE 1-3</option>
+                            <option id="addGroupProcess" value="OVEN WHITE CONDUCTIVE" selected="selected"> OVEN WHITE CONDUCTIVE</option>
+                            <option id="addGroupProcess" value="OVEN ZET R" selected="selected"> OVEN ZET R </option>
+                            <option id="addGroupProcess" value="PRINT" selected="selected"> PRINT </option>
+                            <option id="addGroupProcess" value="PRINT AG" selected="selected"> PRINT AG </option>
+                            <option id="addGroupProcess" value="PRINT BLACK" selected="selected"> PRINT BLACK </option>
+                            <option id="addGroupProcess" value="PRINT BLUE" selected="selected"> PRINT BLUE </option>
+                            <option id="addGroupProcess" value="PRINT BROWN" selected="selected"> PRINT BROWN </option>
+                            <option id="addGroupProcess" value="PRINT CARBON" selected="selected"> PRINT CARBON </option>
+                            <option id="addGroupProcess" value="PRINT COOL GRAY" selected="selected"> PRINT COOL GRAY </option>
+                            <option id="addGroupProcess" value="PRINT DARK GRAY" selected="selected"> PRINT DARK GRAY </option>
+                            <option id="addGroupProcess" value="PRINT DOT" selected="selected"> PRINT DOT </option>
+                            <option id="addGroupProcess" value="PRINT ER" selected="selected"> PRINT ER </option>
+                            <option id="addGroupProcess" value="PRINT FRAME " selected="selected"> PRINT FRAME </option>
+                            <option id="addGroupProcess" value="PRINT GOLD" selected="selected"> PRINT GOLD </option>
+                            <option id="addGroupProcess" value="PRINT GRAY" selected="selected"> PRINT GRAY </option>
+                            <option id="addGroupProcess" value="Print Green" selected="selected"> Print Green </option>
+                            <option id="addGroupProcess" value="PRINT HOT MELT" selected="selected"> PRINT HOT MELT </option>
+                            <option id="addGroupProcess" value="PRINT IHOUSE" selected="selected"> PRINT IHOUSE</option>
+                            <option id="addGroupProcess" value="PRINT LIGHT BLUE" selected="selected"> PRINT LIGHT BLUE</option>
+                            <option id="addGroupProcess" value="PRINT LIGHT GRAY" selected="selected"> PRINT LIGHT GRAY</option>
+                            <option id="addGroupProcess" value="PRINT MASKING" selected="selected"> PRINT MASKING</option>
+                            <option id="addGroupProcess" value="PRINT METALIC" selected="selected"> PRINT METALIC</option>
+                            <option id="addGroupProcess" value="PRINT NORI" selected="selected"> PRINT NORI</option>
+                            <option id="addGroupProcess" value="PRINT ORANGE" selected="selected"> PRINT ORANGE</option>
+                            <option id="addGroupProcess" value="PRINT PINK" selected="selected"> PRINT PINK</option>
+                            <option id="addGroupProcess" value="PRINT PURPLE" selected="selected"> PRINT PURPLE</option>
+                            <option id="addGroupProcess" value="PRINT R" selected="selected"> PRINT R</option>
+                            <option id="addGroupProcess" value="PRINT RED" selected="selected"> PRINT RED</option>
+                            <option id="addGroupProcess" value="PRINT SILVER" selected="selected"> PRINT SILVER</option>
+                            <option id="addGroupProcess" value="PRINT SLATE GRAY" selected="selected"> PRINT SLATE GRAY</option>
+                            <option id="addGroupProcess" value="PRINT URAUCHI" selected="selected"> PRINT URAUCHI</option>
+                            <option id="addGroupProcess" value="PRINT UV" selected="selected"> PRINT UV</option>
+                            <option id="addGroupProcess" value="PRINT WARNA" selected="selected"> PRINT WARNA</option>
+                            <option id="addGroupProcess" value="PRINT WHITE" selected="selected"> PRINT WHITE</option>
+                            <option id="addGroupProcess" value="PRINT WHITE 1-1" selected="selected"> PRINT WHITE 1-1</option>
+                            <option id="addGroupProcess" value="PRINT WHITE 1-2" selected="selected"> PRINT WHITE 1-2</option>
+                            <option id="addGroupProcess" value="PRINT WHITE 1-3" selected="selected"> PRINT WHITE 1-3</option>
+                            <option id="addGroupProcess" value="PRINT ZET" selected="selected"> PRINT ZET</option>
+                            <option id="addGroupProcess" value="PRINTING" selected="selected"> PRINTING</option>
+                            <option id="addGroupProcess" value="PRINT TRANSPARAN" selected="selected"> PRINT TRANSPARAN</option>
+                            <option id="addGroupProcess" value="PRITN ZET" selected="selected"> PRITN ZET</option>
+                            <option id="addGroupProcess" value="PUNCHING" selected="selected"> PUNCHING</option>
+                            <option id="addGroupProcess" value="ROLL GLASS" selected="selected"> ROLL GLASS</option>
+                            <option id="addGroupProcess" value="ROLL PRESS" selected="selected"> ROLL PRESS</option>
+                            <option id="addGroupProcess" value="TROUGH HOLE" selected="selected"> TROUGH HOLE</option>
+                            <option id="addGroupProcess" value="WASHING" selected="selected"> WASHING</option>
+                            <option id="addGroupProcess" value="WHASHING" selected="selected"> WHASHING</option>
+                            <option id="addGroupProcess" value="WHITE CONDUCTIVE" selected="selected"> WHITE CONDUCTIVE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Category</label>
+                        <select class="form-control" id="addCategory" name="dropdown">
+                            <option id="addCategory" value="NULL" selected="selected">  </option>
+                            <option id="addCategory" value="CEK_KLKPN" selected="selected"> CEK_KLKPN </option>
+                            <option id="addCategory" value="CHUKAN_FILM" selected="selected"> CHUKAN_FILM </option>
+                            <option id="addCategory" value="CHUKAN_GLASS" selected="selected"> CHUKAN_GLASS </option>
+                            <option id="addCategory" value="DENKI" selected="selected"> DENKI </option>
+                            <option id="addCategory" value="DENKI_PART_FILM" selected="selected"> DENKI_PART_FILM </option>
+                            <option id="addCategory" value="DENKI_PART_GLASS" selected="selected"> DENKI_PART_GLASS </option>
+                            <option id="addCategory" value="DENKI_PART_JOBU" selected="selected"> DENKI_PART_JOBU </option>
+                            <option id="addCategory" value="DENKI_PART_KABU" selected="selected"> DENKI_PART_KABU </option>
+                            <option id="addCategory" value="DENKI_ST" selected="selected"> DENKI_ST </option>
+                            <option id="addCategory" value="GAIKAN" selected="selected"> GAIKAN </option>
+                            <option id="addCategory" value="GAIKAN_ST" selected="selected"> GAIKAN_ST </option>
+                            <option id="addCategory" value="HARIAWASE" selected="selected"> HARIAWASE </option>
+                            <option id="addCategory" value="OVEN" selected="selected"> OVEN </option>
+                            <option id="addCategory" value="PRINT" selected="selected"> PRINT </option>
+                            <option id="addCategory" value="TAIL" selected="selected"> TAIL </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Sort No</label>
+                        <select class="form-control" id="addSortNo" name="dropdown">
+                            <option id="addSortNo" value="" selected="selected">  </option>
+                            <option id="addSortNo" value="1" selected="selected"> 1 </option>
+                            <option id="addSortNo" value="2" selected="selected"> 2 </option>
+                            <option id="addSortNo" value="3" selected="selected"> 3 </option>
+                            <option id="addSortNo" value="4" selected="selected"> 4 </option>
+                            <option id="addSortNo" value="5" selected="selected"> 5 </option>
+                            <option id="addSortNo" value="6" selected="selected"> 6 </option>
+                            <option id="addSortNo" value="7" selected="selected"> 7 </option>
+                            <option id="addSortNo" value="8" selected="selected"> 8 </option>
+                            <option id="addSortNo" value="9" selected="selected"> 9 </option>
+                            <option id="addSortNo" value="10" selected="selected"> 10 </option>
+                            <option id="addSortNo" value="11" selected="selected"> 11 </option>
+                            <option id="addSortNo" value="12" selected="selected"> 12 </option>
+                            <option id="addSortNo" value="13" selected="selected"> 13 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Flag Chokoritsu</label>
+                        <select class="form-control" id="addFlgChokoritsu" name="dropdown">
+                            <option id="addFlgChokoritsu" value="1" selected="selected"> True </option>
+                            <option id="addFlgChokoritsu" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">BgColor</label>
+                        <select class="form-control" id="addbgcolor" name="dropdown">
+                            <option id="addbgcolor" value="NULL" selected="selected">  </option>
+                            <option id="addbgcolor" value="#1E90FF" selected="selected"> Biru </option>
+                            <option id="addbgcolor" value="#7FFF00" selected="selected"> Hijau </option>
+                            <option id="addbgcolor" value="#8FBC8B" selected="selected"> Hijau Army </option>
+                            <option id="addbgcolor" value="#9932CC" selected="selected"> Ungu </option>
+                            <option id="addbgcolor" value="#A9A9A9" selected="selected"> Abu-abu </option>
+                            <option id="addbgcolor" value="#F0E68C" selected="selected"> Cream </option>
+                            <option id="addbgcolor" value="#FFA500" selected="selected"> Orange </option>
+                            <option id="addbgcolor" value="#FFFF00" selected="selected"> Kuning </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Group Process Cost</label>
+                        <select id="addGroupProcessCost" name="dropdown">
+                            <option id="addGroupProcessCost" value="-" selected="selected"> - </option>
+                            <option id="addGroupProcessCost" value="BUFFER" selected="selected"> Buffer </option>
+                            <option id="addGroupProcessCost" value="CEK_DIMENSI" selected="selected"> Cek Dimensi </option>
+                            <option id="addGroupProcessCost" value="CHUKAN" selected="selected"> Chukan </option>
+                            <option id="addGroupProcessCost" value="CRIMPER" selected="selected"> Crimper </option>
+                            <option id="addGroupProcessCost" value="CUTTING" selected="selected"> Cutting </option>
+                            <option id="addGroupProcessCost" value="DOUBLE_SHEET" selected="selected"> Double Sheet </option>
+                            <option id="addGroupProcessCost" value="FUKURE" selected="selected"> Fukure </option>
+                            <option id="addGroupProcessCost" value="HARIAWASE" selected="selected"> Hariawase </option>
+                            <option id="addGroupProcessCost" value="HEATSEAL" selected="selected"> Heatseal </option>
+                            <option id="addGroupProcessCost" value="HOGOSIRU" selected="selected"> Hogosiru </option>
+                            <option id="addGroupProcessCost" value="LAMINATING_AKHIR" selected="selected"> Laminating Akhir </option>
+                            <option id="addGroupProcessCost" value="MASKING" selected="selected"> Masking </option>
+                            <option id="addGroupProcessCost" value="PRINT" selected="selected"> Print </option>
+                            <option id="addGroupProcessCost" value="PRINTING" selected="selected"> Printing </option>
+                            <option id="addGroupProcessCost" value="PROTECTION" selected="selected"> Protection </option>
+                            <option id="addGroupProcessCost" value="PUNCHING" selected="selected"> Punching </option>
+                            <option id="addGroupProcessCost" value="SCRIBE" selected="selected"> Scribe </option>
+                            <option id="addGroupProcessCost" value="SUDAH_CEK_KELENGKAPAN" selected="selected"> Sudah Cek Kelengkapan </option>
+                            <option id="addGroupProcessCost" value="SUDAH_CHUKAN" selected="selected"> Sudah Chukan </option>
+                            <option id="addGroupProcessCost" value="SUDAH_DENKI" selected="selected"> Sudah Denki </option>
+                            <option id="addGroupProcessCost" value="SUDAH_DOUBLETAPE" selected="selected"> Sudah Double Tape </option>
+                            <option id="addGroupProcessCost" value="SUDAH_GAIKAN" selected="selected"> Sudah Gaikan </option>
+                            <option id="addGroupProcessCost" value="SUDAH_HARIAWASE" selected="selected"> Sudah Hariawase </option>
+                            <option id="addGroupProcessCost" value="SUDAH_HEATSEAL" selected="selected"> Sudah Heatseal </option>
+                            <option id="addGroupProcessCost" value="SUDAH_KAPTON_TAPE" selected="selected"> Sudah Kapton Tape </option>
+                            <option id="addGroupProcessCost" value="SUDAH_PRESS" selected="selected"> Sudah Press </option>
+                            <option id="addGroupProcessCost" value="TAIL_SASHI" selected="selected"> Tail Sashi </option>
+                            <option id="addGroupProcessCost" value="TAPE" selected="selected"> Tape </option>
+                            <option id="addGroupProcessCost" value="WASHING" selected="selected"> Washing </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Sort No</label>
+                        <select class="form-control" id="addTypeProcess" name="dropdown">
+                            <option id="addTypeProcess" value="AUTO_CLV" selected="selected"> Auto Clv </option>
+                            <option id="addTypeProcess" value="CALKING" selected="selected"> Calking </option>
+                            <option id="addTypeProcess" value="CHAMBER" selected="selected"> Chamber </option>
+                            <option id="addTypeProcess" value="COMMON" selected="selected"> Common </option>
+                            <option id="addTypeProcess" value="CRIMPER" selected="selected"> Crimper </option>
+                            <option id="addTypeProcess" value="CUTTING" selected="selected"> Cutting </option>
+                            <option id="addTypeProcess" value="DENKI" selected="selected"> Denki </option>
+                            <option id="addTypeProcess" value="DOUBLE" selected="selected"> Double </option>
+                            <option id="addTypeProcess" value="FUKURE" selected="selected"> Fukure </option>
+                            <option id="addTypeProcess" value="FURE" selected="selected"> Fure </option>
+                            <option id="addTypeProcess" value="FUSHI " selected="selected"> Fushi </option>
+                            <option id="addTypeProcess" value="GKN_T" selected="selected"> Gaikan Tail </option>
+                            <option id="addTypeProcess" value="GKN1X" selected="selected"> Gaikan 1x </option>
+                            <option id="addTypeProcess" value="GKN2X" selected="selected"> Gaikan 2x </option>
+                            <option id="addTypeProcess" value="GKN3X" selected="selected"> Gaikan 3x </option>
+                            <option id="addTypeProcess" value="HA" selected="selected"> Hariawase </option>
+                            <option id="addTypeProcess" value="HEAT" selected="selected"> Heat </option>
+                            <option id="addTypeProcess" value="HOGO" selected="selected"> Hogo </option>
+                            <option id="addTypeProcess" value="OTHER" selected="selected"> Other </option>
+                            <option id="addTypeProcess" value="OV_ASSY" selected="selected"> Ov Assy </option>
+                            <option id="addTypeProcess" value="OVEN" selected="selected"> Oven </option>
+                            <option id="addTypeProcess" value="OVEN" selected="selected"> Oven </option>
+                            <option id="addTypeProcess" value="OVN" selected="selected"> Ovn </option>
+                            <option id="addTypeProcess" value="PRESS" selected="selected"> Press </option>
+                            <option id="addTypeProcess" value="PRINT" selected="selected"> Print </option>
+                            <option id="addTypeProcess" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="addTypeProcess" value="ROLL_SISI" selected="selected"> Roll Sisi </option>
+                            <option id="addTypeProcess" value="SCRIBE" selected="selected"> Scribe </option>
+                            <option id="addTypeProcess" value="TAIL_SASHI_M" selected="selected"> Tail Sashi M </option>
+                            <option id="addTypeProcess" value="WASH_AFT" selected="selected"> Washing After </option>
+                            <option id="addTypeProcess" value="WASH_BFR" selected="selected"> Washing Before </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Category Process</label>
+                        <select class="form-control" id="addCategoryProcess" name="dropdown">
+                            <option id="addCategoryProcess" value="" selected="selected">   </option>
+                            <option id="addCategoryProcess" value="Ag" selected="selected"> Ag  </option>
+                            <option id="addCategoryProcess" value="Ag MTR" selected="selected"> Ag MTR  </option>
+                            <option id="addCategoryProcess" value="Aneal" selected="selected"> Aneal </option>
+                            <option id="addCategoryProcess" value="C 1/2" selected="selected"> C 1/2 </option>
+                            <option id="addCategoryProcess" value="Carbon" selected="selected"> Carbon </option>
+                            <option id="addCategoryProcess" value="Color" selected="selected"> Color </option>
+                            <option id="addCategoryProcess" value="Dot" selected="selected"> Dot </option>
+                            <option id="addCategoryProcess" value="ER" selected="selected"> ER </option>
+                            <option id="addCategoryProcess" value="Fly_probe" selected="selected"> Fly Probe </option>
+                            <option id="addCategoryProcess" value="Gkn_t" selected="selected"> Gaikan Tail </option>
+                            <option id="addCategoryProcess" value="HA" selected="selected"> Hariawase </option>
+                            <option id="addCategoryProcess" value="Ihouse" selected="selected"> Ihouse </option>
+                            <option id="addCategoryProcess" value="Masking" selected="selected"> Masking </option>
+                            <option id="addCategoryProcess" value="Nori" selected="selected"> Nori </option>
+                            <option id="addCategoryProcess" value="Press" selected="selected"> Press </option>
+                            <option id="addCategoryProcess" value="PRINT" selected="selected"> Print </option>
+                            <option id="addCategoryProcess" value="Punch" selected="selected"> Punch </option>
+                            <option id="addCategoryProcess" value="Rest" selected="selected"> Rest </option>
+                            <option id="addCategoryProcess" value="Scribe" selected="selected"> Scribe </option>
+                            <option id="addCategoryProcess" value="Tail_denki" selected="selected"> Tail Denki </option>
+                            <option id="addCategoryProcess" value="UV Ink" selected="selected"> UV Ink </option>
+                            <option id="addCategoryProcess" value="UV_convr" selected="selected"> UV Convr </option>
+                            <option id="addCategoryProcess" value="Zet R" selected="selected"> Zet R </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Prod. Cost Level</label>
+                        <select class="form-control" id="addProdCostLevel" name="dropdown">
+                            <option id="addProdCostLevel" value="0" selected="selected">  </option>
+                            <option id="addProdCostLevel" value="1" selected="selected"> 1 </option>
+                            <option id="addProdCostLevel" value="2" selected="selected"> 2 </option>
+                            <option id="addProdCostLevel" value="3" selected="selected"> 3 </option>
+                            <option id="addProdCostLevel" value="4" selected="selected"> 4 </option>
+                            <option id="addProdCostLevel" value="5" selected="selected"> 5 </option>
+                            <option id="addProdCostLevel" value="8" selected="selected"> 8 </option>
+                            <option id="addProdCostLevel" value="9" selected="selected"> 9 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Flag Use Cleanbean</label>
+                        <select class="form-control" id="addFlgUseCl" name="dropdown">
+                            <option id="addFlgUseCl" value="1" selected="selected"> True </option>
+                            <option id="addFlgUseCl" value="0" selected="selected"> False </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT MASTER PROSES</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Kode Proses</label>
+                        <input id="editIdKotei" required type="text" class="form-control" readonly />
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label class="required">Nama Proses</label>
+                        <input id="editNameKotei" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Halte</label>
+                        <input id="editHalte" required type="text" class="form-control" />
+                    </div>
+                <div class="col-md-6">
+                    <label class="required">Kategori Proses</label>
+                    @*<input id="editIdKoteishubetsu" required type="text" class="form-control" />*@
+                        <select id="editIdKoteishubetsu" name="dropdown">
+                            <option id="editIdKoteishubetsu" value="0" selected="selected">  </option>
+                            <option id="editIdKoteishubetsu" value="1" selected="selected"> Work Table </option>
+                            <option id="editIdKoteishubetsu" value="2" selected="selected"> Pet Cut Machine </option>
+                            <option id="editIdKoteishubetsu" value="3" selected="selected"> Printing Machine </option>
+                            <option id="editIdKoteishubetsu" value="4" selected="selected"> Oven </option>
+                            <option id="editIdKoteishubetsu" value="5" selected="selected"> Etching Machine </option>
+                            <option id="editIdKoteishubetsu" value="6" selected="selected"> Scribe Machine </option>
+                            <option id="editIdKoteishubetsu" value="7" selected="selected"> Punching Machine </option>
+                            <option id="editIdKoteishubetsu" value="8" selected="selected"> Press Machine </option>
+                            <option id="editIdKoteishubetsu" value="9" selected="selected"> Denki Kensa Matrix </option>
+                            <option id="editIdKoteishubetsu" value="10" selected="selected"> Black Box </option>
+                            <option id="editIdKoteishubetsu" value="11" selected="selected"> Clean Bench Pittarikun Auto Assembly </option>
+                            <option id="editIdKoteishubetsu" value="16" selected="selected"> Heat Seal Machine </option>
+                            <option id="editIdKoteishubetsu" value="17" selected="selected"> Denki Kensa Analog·Denki Kensa 5-Wire </option>
+                        </select>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Inc. By Cavity </label>
+                    <input id="editFlgIncCav" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgIncCav" name="dropdown">
+                        <option id="editFlgIncCav" value="1" selected="selected"> True </option>
+                        <option id="editFlgIncCav" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">ID Gamenshubetsu</label>
+                    <input id="editIdGamenshubetsu" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editIdGamenshubetsu" name="dropdown">
+                        <option id="editIdGamenshubetsu" value="1" selected="selected"> True </option>
+                        <option id="editIdGamenshubetsu" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Non-RTJN </label>
+                    <input id="editFlgRTJNon" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgRTJNon" name="dropdown">
+                        <option id="editFlgRTJNon" value="1" selected="selected"> True </option>
+                        <option id="editFlgRTJNon" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Comment</label>
+                    <input id="editComment" required type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Rimen </label>
+                    <input id="editFlgRimen" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgRimen" name="dropdown">
+                        <option id="editFlgRimen" value="1" selected="selected"> True </option>
+                        <option id="editFlgRimen" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Flag Need Tool</label>
+                    <input id="editFlgNeedTool" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgNeedTool" name="dropdown">
+                        <option id="editFlgNeedTool" value="1" selected="selected"> True </option>
+                        <option id="editFlgNeedTool" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Logical</label>
+                    <input id="editFlagLogical" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlagLogical" name="dropdown">
+                        <option id="editFlagLogical" value="1" selected="selected"> True </option>
+                        <option id="editFlagLogical" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Initial Process</label>
+                    <input id="editInitialProcess" required type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Check Schedule</label>
+                    <input id="editFlgCheckSchedule" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgCheckSchedule" name="dropdown">
+                        <option id="editFlgCheckSchedule" value="1" selected="selected"> True </option>
+                        <option id="editFlgCheckSchedule" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Flag Display Material</label>
+                    <input id="editFlgDispMaterial" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgDispMaterial" name="dropdown">
+                        <option id="editFlgDispMaterial" value="1" selected="selected"> True </option>
+                        <option id="editFlgDispMaterial" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Flag Warning Material</label>
+                    <input id="editFlgWarningMaterial" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgWarningMaterial" name="dropdown">
+                        <option id="editFlgWarningMaterial" value="1" selected="selected"> True </option>
+                        <option id="editFlgWarningMaterial" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Flag Oven</label>
+                    <input id="editFlgOven" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgOven" name="dropdown">
+                        <option id="editFlgOven" value="1" selected="selected"> True </option>
+                        <option id="editFlgOven" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Group Proccess</label>
+                    <input id="editGroupProcess" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editGroupProcess" name="dropdown">
+                        <option id="editGroupProcess" value="NULL" selected="selected"> NULL </option>
+                        <option id="editGroupProcess" value="ANNEALING" selected="selected"> ANNEALING </option>
+                        <option id="editGroupProcess" value="CUTTING" selected="selected"> CUTTING </option>
+                        <option id="editGroupProcess" value="ETCHING" selected="selected"> ETCHING </option>
+                        <option id="editGroupProcess" value="GKN_T" selected="selected"> GKN_T </option>
+                        <option id="editGroupProcess" value="Gray 1-1" selected="selected"> Gray 1-1 </option>
+                        <option id="editGroupProcess" value="Gray 1-2" selected="selected"> Gray 1-2 </option>
+                        <option id="editGroupProcess" value="Gray 1-3" selected="selected"> Gray 1-3 </option>
+                        <option id="editGroupProcess" value="GRAY CONDUCTIVE" selected="selected"> GRAY CONDUCTIVE </option>
+                        <option id="editGroupProcess" value="HOGO" selected="selected"> HOGO </option>
+                        <option id="editGroupProcess" value="HOKYO" selected="selected"> HOKYO </option>
+                        <option id="editGroupProcess" value="HOKYOUBAN" selected="selected"> HOKYOUBAN </option>
+                        <option id="editGroupProcess" value="HOT AIR" selected="selected"> HOT AIR </option>
+                        <option id="editGroupProcess" value="KERTAS YUPO" selected="selected"> KERTAS YUPO </option>
+                        <option id="editGroupProcess" value="LAMINATING" selected="selected"> LAMINATING </option>
+                        <option id="editGroupProcess" value="LAMINATING_AKHIR" selected="selected"> LAMINATING_AKHIR </option>
+                        <option id="editGroupProcess" value="OVEN AG" selected="selected"> OVEN AG </option>
+                        <option id="editGroupProcess" value="OVEN BLACK" selected="selected"> OVEN BLACK </option>
+                        <option id="editGroupProcess" value="OVEN BLACK URAUCHI" selected="selected"> OVEN BLACK URAUCHI </option>
+                        <option id="editGroupProcess" value="OVEN BLUE" selected="selected"> OVEN BLUE </option>
+                        <option id="editGroupProcess" value="OVEN BROWN" selected="selected"> OVEN BROWN </option>
+                        <option id="editGroupProcess" value="OVEN CARBON" selected="selected"> OVEN CARBON </option>
+                        <option id="editGroupProcess" value="OVEN GOLD" selected="selected"> OVEN GOLD </option>
+                        <option id="editGroupProcess" value="OVEN GRAY" selected="selected"> OVEN GRAY </option>
+                        <option id="editGroupProcess" value="OVEN GRAY 1-1" selected="selected"> OVEN GRAY 1-1 </option>
+                        <option id="editGroupProcess" value="OVEN GRAY 1-2" selected="selected"> OVEN GRAY 1-2 </option>
+                        <option id="editGroupProcess" value="OVEN GRAY 1-3" selected="selected"> OVEN GRAY 1-3 </option>
+                        <option id="editGroupProcess" value="OVEN GRAY CONDUCTIVE" selected="selected"> OVEN GRAY CONDUCTIVE </option>
+                        <option id="editGroupProcess" value="OVEN HOT MELT" selected="selected"> OVEN HOT MELT </option>
+                        <option id="editGroupProcess" value="OVEN IHOUSE" selected="selected"> OVEN IHOUSE </option>
+                        <option id="editGroupProcess" value="OVEN IHOUSEI" selected="selected"> OVEN IHOUSEI </option>
+                        <option id="editGroupProcess" value="OVEN LIGHT BLUE" selected="selected"> OVEN LIGHT BLUE </option>
+                        <option id="editGroupProcess" value="OVEN LIGHT GRAY" selected="selected"> OVEN LIGHT GRAY </option>
+                        <option id="editGroupProcess" value="OVEN MASKING" selected="selected"> OVEN MASKING </option>
+                        <option id="editGroupProcess" value="OVEN METALIC" selected="selected"> OVEN METALIC </option>
+                        <option id="editGroupProcess" value="OVEN NORI" selected="selected"> OVEN NORI </option>
+                        <option id="editGroupProcess" value="OVEN ORANGE" selected="selected"> OVEN ORANGE </option>
+                        <option id="editGroupProcess" value="OVEN PINK" selected="selected"> OVEN PINK </option>
+                        <option id="editGroupProcess" value="OVEN R" selected="selected"> OVEN R </option>
+                        <option id="editGroupProcess" value="OVEN RED" selected="selected"> OVEN RED </option>
+                        <option id="editGroupProcess" value="OVEN SILVER" selected="selected"> OVEN SILVER </option>
+                        <option id="editGroupProcess" value="OVEN SILVER URAUCHI" selected="selected"> OVEN SILVER URAUCHI </option>
+                        <option id="editGroupProcess" value="OVEN SLATE GRAY" selected="selected"> OVEN SLATE GRAY </option>
+                        <option id="editGroupProcess" value="OVEN TRANSPARAN" selected="selected"> OVEN TRANSPARAN </option>
+                        <option id="editGroupProcess" value="OVEN URAUCHI" selected="selected"> OVEN URAUCHI </option>
+                        <option id="editGroupProcess" value="OVEN UV" selected="selected"> OVEN UV </option>
+                        <option id="editGroupProcess" value="OVEN WARNA" selected="selected"> OVEN WARNA </option>
+                        <option id="editGroupProcess" value="OVEN WHITE" selected="selected"> OVEN WHITE </option>
+                        <option id="editGroupProcess" value="OVEN WHITE 1-1" selected="selected"> OVEN WHITE 1-1</option>
+                        <option id="editGroupProcess" value="OVEN WHITE 1-2" selected="selected"> OVEN WHITE 1-2</option>
+                        <option id="editGroupProcess" value="OVEN WHITE 1-3" selected="selected"> OVEN WHITE 1-3</option>
+                        <option id="editGroupProcess" value="OVEN WHITE CONDUCTIVE" selected="selected"> OVEN WHITE CONDUCTIVE</option>
+                        <option id="editGroupProcess" value="OVEN ZET R" selected="selected"> OVEN ZET R </option>
+                        <option id="editGroupProcess" value="PRINT" selected="selected"> PRINT </option>
+                        <option id="editGroupProcess" value="PRINT AG" selected="selected"> PRINT AG </option>
+                        <option id="editGroupProcess" value="PRINT BLACK" selected="selected"> PRINT BLACK </option>
+                        <option id="editGroupProcess" value="PRINT BLUE" selected="selected"> PRINT BLUE </option>
+                        <option id="editGroupProcess" value="PRINT BROWN" selected="selected"> PRINT BROWN </option>
+                        <option id="editGroupProcess" value="PRINT CARBON" selected="selected"> PRINT CARBON </option>
+                        <option id="editGroupProcess" value="PRINT COOL GRAY" selected="selected"> PRINT COOL GRAY </option>
+                        <option id="editGroupProcess" value="PRINT DARK GRAY" selected="selected"> PRINT DARK GRAY </option>
+                        <option id="editGroupProcess" value="PRINT DOT" selected="selected"> PRINT DOT </option>
+                        <option id="editGroupProcess" value="PRINT ER" selected="selected"> PRINT ER </option>
+                        <option id="editGroupProcess" value="PRINT FRAME " selected="selected"> PRINT FRAME </option>
+                        <option id="editGroupProcess" value="PRINT GOLD" selected="selected"> PRINT GOLD </option>
+                        <option id="editGroupProcess" value="PRINT GRAY" selected="selected"> PRINT GRAY </option>
+                        <option id="editGroupProcess" value="Print Green" selected="selected"> Print Green </option>
+                        <option id="editGroupProcess" value="PRINT HOT MELT" selected="selected"> PRINT HOT MELT </option>
+                        <option id="editGroupProcess" value="PRINT IHOUSE" selected="selected"> PRINT IHOUSE</option>
+                        <option id="editGroupProcess" value="PRINT LIGHT BLUE" selected="selected"> PRINT LIGHT BLUE</option>
+                        <option id="editGroupProcess" value="PRINT LIGHT GRAY" selected="selected"> PRINT LIGHT GRAY</option>
+                        <option id="editGroupProcess" value="PRINT MASKING" selected="selected"> PRINT MASKING</option>
+                        <option id="editGroupProcess" value="PRINT METALIC" selected="selected"> PRINT METALIC</option>
+                        <option id="editGroupProcess" value="PRINT NORI" selected="selected"> PRINT NORI</option>
+                        <option id="editGroupProcess" value="PRINT ORANGE" selected="selected"> PRINT ORANGE</option>
+                        <option id="editGroupProcess" value="PRINT PINK" selected="selected"> PRINT PINK</option>
+                        <option id="editGroupProcess" value="PRINT PURPLE" selected="selected"> PRINT PURPLE</option>
+                        <option id="editGroupProcess" value="PRINT R" selected="selected"> PRINT R</option>
+                        <option id="editGroupProcess" value="PRINT RED" selected="selected"> PRINT RED</option>
+                        <option id="editGroupProcess" value="PRINT SILVER" selected="selected"> PRINT SILVER</option>
+                        <option id="editGroupProcess" value="PRINT SLATE GRAY" selected="selected"> PRINT SLATE GRAY</option>
+                        <option id="editGroupProcess" value="PRINT URAUCHI" selected="selected"> PRINT URAUCHI</option>
+                        <option id="editGroupProcess" value="PRINT UV" selected="selected"> PRINT UV</option>
+                        <option id="editGroupProcess" value="PRINT WARNA" selected="selected"> PRINT WARNA</option>
+                        <option id="editGroupProcess" value="PRINT WHITE" selected="selected"> PRINT WHITE</option>
+                        <option id="editGroupProcess" value="PRINT WHITE 1-1" selected="selected"> PRINT WHITE 1-1</option>
+                        <option id="editGroupProcess" value="PRINT WHITE 1-2" selected="selected"> PRINT WHITE 1-2</option>
+                        <option id="editGroupProcess" value="PRINT WHITE 1-3" selected="selected"> PRINT WHITE 1-3</option>
+                        <option id="editGroupProcess" value="PRINT ZET" selected="selected"> PRINT ZET</option>
+                        <option id="editGroupProcess" value="PRINTING" selected="selected"> PRINTING</option>
+                        <option id="editGroupProcess" value="PRINT TRANSPARAN" selected="selected"> PRINT TRANSPARAN</option>
+                        <option id="editGroupProcess" value="PRITN ZET" selected="selected"> PRITN ZET</option>
+                        <option id="editGroupProcess" value="PUNCHING" selected="selected"> PUNCHING</option>
+                        <option id="editGroupProcess" value="ROLL GLASS" selected="selected"> ROLL GLASS</option>
+                        <option id="editGroupProcess" value="ROLL PRESS" selected="selected"> ROLL PRESS</option>
+                        <option id="editGroupProcess" value="TROUGH HOLE" selected="selected"> TROUGH HOLE</option>
+                        <option id="editGroupProcess" value="WASHING" selected="selected"> WASHING</option>
+                        <option id="editGroupProcess" value="WHASHING" selected="selected"> WHASHING</option>
+                        <option id="editGroupProcess" value="WHITE CONDUCTIVE" selected="selected"> WHITE CONDUCTIVE</option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Category</label>
+                    <input id="editCategory" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editCategory" name="dropdown">
+                        <option id="editCategory" value="NULL" selected="selected">  </option>
+                        <option id="editCategory" value="CEK_KLKPN" selected="selected"> CEK_KLKPN </option>
+                        <option id="editCategory" value="CHUKAN_FILM" selected="selected"> CHUKAN_FILM </option>
+                        <option id="editCategory" value="CHUKAN_GLASS" selected="selected"> CHUKAN_GLASS </option>
+                        <option id="editCategory" value="DENKI" selected="selected"> DENKI </option>
+                        <option id="editCategory" value="DENKI_PART_FILM" selected="selected"> DENKI_PART_FILM </option>
+                        <option id="editCategory" value="DENKI_PART_GLASS" selected="selected"> DENKI_PART_GLASS </option>
+                        <option id="editCategory" value="DENKI_PART_JOBU" selected="selected"> DENKI_PART_JOBU </option>
+                        <option id="editCategory" value="DENKI_PART_KABU" selected="selected"> DENKI_PART_KABU </option>
+                        <option id="editCategory" value="DENKI_ST" selected="selected"> DENKI_ST </option>
+                        <option id="editCategory" value="GAIKAN" selected="selected"> GAIKAN </option>
+                        <option id="editCategory" value="GAIKAN_ST" selected="selected"> GAIKAN_ST </option>
+                        <option id="editCategory" value="HARIAWASE" selected="selected"> HARIAWASE </option>
+                        <option id="editCategory" value="OVEN" selected="selected"> OVEN </option>
+                        <option id="editCategory" value="PRINT" selected="selected"> PRINT </option>
+                        <option id="editCategory" value="TAIL" selected="selected"> TAIL </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Sort No</label>
+                    <input id="editSortNo" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editSortNo" name="dropdown">
+                        <option id="editSortNo" value="" selected="selected">  </option>
+                        <option id="editSortNo" value="1" selected="selected"> 1 </option>
+                        <option id="editSortNo" value="2" selected="selected"> 2 </option>
+                        <option id="editSortNo" value="3" selected="selected"> 3 </option>
+                        <option id="editSortNo" value="4" selected="selected"> 4 </option>
+                        <option id="editSortNo" value="5" selected="selected"> 5 </option>
+                        <option id="editSortNo" value="6" selected="selected"> 6 </option>
+                        <option id="editSortNo" value="7" selected="selected"> 7 </option>
+                        <option id="editSortNo" value="8" selected="selected"> 8 </option>
+                        <option id="editSortNo" value="9" selected="selected"> 9 </option>
+                        <option id="editSortNo" value="10" selected="selected"> 10 </option>
+                        <option id="editSortNo" value="11" selected="selected"> 11 </option>
+                        <option id="editSortNo" value="12" selected="selected"> 12 </option>
+                        <option id="editSortNo" value="13" selected="selected"> 13 </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Flag Chokoritsu</label>
+                    <input id="editFlgChokoritsu" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgChokoritsu" name="dropdown">
+                        <option id="editFlgChokoritsu" value="1" selected="selected"> True </option>
+                        <option id="editFlgChokoritsu" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">BgColor</label>
+                     <input id="editbgcolor" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editbgcolor" name="dropdown">
+                        <option id="editbgcolor" value="NULL" selected="selected">  </option>
+                        <option id="editbgcolor" value="#1E90FF" selected="selected"> Biru </option>
+                        <option id="editbgcolor" value="#7FFF00" selected="selected"> Hijau </option>
+                        <option id="editbgcolor" value="#8FBC8B" selected="selected"> Hijau Army </option>
+                        <option id="editbgcolor" value="#9932CC" selected="selected"> Ungu </option>
+                        <option id="editbgcolor" value="#A9A9A9" selected="selected"> Abu-abu </option>
+                        <option id="editbgcolor" value="#F0E68C" selected="selected"> Cream </option>
+                        <option id="editbgcolor" value="#FFA500" selected="selected"> Orange </option>
+                        <option id="editbgcolor" value="#FFFF00" selected="selected"> Kuning </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Group Process Cost</label>
+                    <input id="editGroupProcessCost" required type="text" class="form-control" />
+                    @*<select id="editGroupProcessCost" name="dropdown">
+                        <option id="editGroupProcessCost" value="-" selected="selected"> - </option>
+                        <option id="editGroupProcessCost" value="BUFFER" selected="selected"> Buffer </option>
+                        <option id="editGroupProcessCost" value="CEK_DIMENSI" selected="selected"> Cek Dimensi </option>
+                        <option id="editGroupProcessCost" value="CHUKAN" selected="selected"> Chukan </option>
+                        <option id="editGroupProcessCost" value="CRIMPER" selected="selected"> Crimper </option>
+                        <option id="editGroupProcessCost" value="CUTTING" selected="selected"> Cutting </option>
+                        <option id="editGroupProcessCost" value="DOUBLE_SHEET" selected="selected"> Double Sheet </option>
+                        <option id="editGroupProcessCost" value="FUKURE" selected="selected"> Fukure </option>
+                        <option id="editGroupProcessCost" value="HARIAWASE" selected="selected"> Hariawase </option>
+                        <option id="editGroupProcessCost" value="HEATSEAL" selected="selected"> Heatseal </option>
+                        <option id="editGroupProcessCost" value="HOGOSIRU" selected="selected"> Hogosiru </option>
+                        <option id="editGroupProcessCost" value="LAMINATING_AKHIR" selected="selected"> Laminating Akhir </option>
+                        <option id="editGroupProcessCost" value="MASKING" selected="selected"> Masking </option>
+                        <option id="editGroupProcessCost" value="PRINT" selected="selected"> Print </option>
+                        <option id="editGroupProcessCost" value="PRINTING" selected="selected"> Printing </option>
+                        <option id="editGroupProcessCost" value="PROTECTION" selected="selected"> Protection </option>
+                        <option id="editGroupProcessCost" value="PUNCHING" selected="selected"> Punching </option>
+                        <option id="editGroupProcessCost" value="SCRIBE" selected="selected"> Scribe </option>
+                        <option id="editGroupProcessCost" value="SUDAH_CEK_KELENGKAPAN" selected="selected"> Sudah Cek Kelengkapan </option>
+                        <option id="editGroupProcessCost" value="SUDAH_CHUKAN" selected="selected"> Sudah Chukan </option>
+                        <option id="editGroupProcessCost" value="SUDAH_DENKI" selected="selected"> Sudah Denki </option>
+                        <option id="editGroupProcessCost" value="SUDAH_DOUBLETAPE" selected="selected"> Sudah Double Tape </option>
+                        <option id="editGroupProcessCost" value="SUDAH_GAIKAN" selected="selected"> Sudah Gaikan </option>
+                        <option id="editGroupProcessCost" value="SUDAH_HARIAWASE" selected="selected"> Sudah Hariawase </option>
+                        <option id="editGroupProcessCost" value="SUDAH_HEATSEAL" selected="selected"> Sudah Heatseal </option>
+                        <option id="editGroupProcessCost" value="SUDAH_KAPTON_TAPE" selected="selected"> Sudah Kapton Tape </option>
+                        <option id="editGroupProcessCost" value="SUDAH_PRESS" selected="selected"> Sudah Press </option>
+                        <option id="editGroupProcessCost" value="TAIL_SASHI" selected="selected"> Tail Sashi </option>
+                        <option id="editGroupProcessCost" value="TAPE" selected="selected"> Tape </option>
+                        <option id="editGroupProcessCost" value="WASHING" selected="selected"> Washing </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Sort No</label>
+                    <input id="editTypeProcess" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editTypeProcess" name="dropdown">
+                        <option id="editTypeProcess" value="AUTO_CLV" selected="selected"> Auto Clv </option>
+                        <option id="editTypeProcess" value="CALKING" selected="selected"> Calking </option>
+                        <option id="editTypeProcess" value="CHAMBER" selected="selected"> Chamber </option>
+                        <option id="editTypeProcess" value="COMMON" selected="selected"> Common </option>
+                        <option id="editTypeProcess" value="CRIMPER" selected="selected"> Crimper </option>
+                        <option id="editTypeProcess" value="CUTTING" selected="selected"> Cutting </option>
+                        <option id="editTypeProcess" value="DENKI" selected="selected"> Denki </option>
+                        <option id="editTypeProcess" value="DOUBLE" selected="selected"> Double </option>
+                        <option id="editTypeProcess" value="FUKURE" selected="selected"> Fukure </option>
+                        <option id="editTypeProcess" value="FURE" selected="selected"> Fure </option>
+                        <option id="editTypeProcess" value="FUSHI " selected="selected"> Fushi </option>
+                        <option id="editTypeProcess" value="GKN_T" selected="selected"> Gaikan Tail </option>
+                        <option id="editTypeProcess" value="GKN1X" selected="selected"> Gaikan 1x </option>
+                        <option id="editTypeProcess" value="GKN2X" selected="selected"> Gaikan 2x </option>
+                        <option id="editTypeProcess" value="GKN3X" selected="selected"> Gaikan 3x </option>
+                        <option id="editTypeProcess" value="HA" selected="selected"> Hariawase </option>
+                        <option id="editTypeProcess" value="HEAT" selected="selected"> Heat </option>
+                        <option id="editTypeProcess" value="HOGO" selected="selected"> Hogo </option>
+                        <option id="editTypeProcess" value="OTHER" selected="selected"> Other </option>
+                        <option id="editTypeProcess" value="OV_ASSY" selected="selected"> Ov Assy </option>
+                        <option id="editTypeProcess" value="OVEN" selected="selected"> Oven </option>
+                        <option id="editTypeProcess" value="OVEN" selected="selected"> Oven </option>
+                        <option id="editTypeProcess" value="OVN" selected="selected"> Ovn </option>
+                        <option id="editTypeProcess" value="PRESS" selected="selected"> Press </option>
+                        <option id="editTypeProcess" value="PRINT" selected="selected"> Print </option>
+                        <option id="editTypeProcess" value="PRINTING" selected="selected"> PRINTING </option>
+                        <option id="editTypeProcess" value="ROLL_SISI" selected="selected"> Roll Sisi </option>
+                        <option id="editTypeProcess" value="SCRIBE" selected="selected"> Scribe </option>
+                        <option id="editTypeProcess" value="TAIL_SASHI_M" selected="selected"> Tail Sashi M </option>
+                        <option id="editTypeProcess" value="WASH_AFT" selected="selected"> Washing After </option>
+                        <option id="editTypeProcess" value="WASH_BFR" selected="selected"> Washing Before </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Category Process</label>
+                    <input id="editCategoryProcess" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editCategoryProcess" name="dropdown">
+                        <option id="editCategoryProcess" value="" selected="selected">   </option>
+                        <option id="editCategoryProcess" value="Ag" selected="selected"> Ag  </option>
+                        <option id="editCategoryProcess" value="Ag MTR" selected="selected"> Ag MTR  </option>
+                        <option id="editCategoryProcess" value="Aneal" selected="selected"> Aneal </option>
+                        <option id="editCategoryProcess" value="C 1/2" selected="selected"> C 1/2 </option>
+                        <option id="editCategoryProcess" value="Carbon" selected="selected"> Carbon </option>
+                        <option id="editCategoryProcess" value="Color" selected="selected"> Color </option>
+                        <option id="editCategoryProcess" value="Dot" selected="selected"> Dot </option>
+                        <option id="editCategoryProcess" value="ER" selected="selected"> ER </option>
+                        <option id="editCategoryProcess" value="Fly_probe" selected="selected"> Fly Probe </option>
+                        <option id="editCategoryProcess" value="Gkn_t" selected="selected"> Gaikan Tail </option>
+                        <option id="editCategoryProcess" value="HA" selected="selected"> Hariawase </option>
+                        <option id="editCategoryProcess" value="Ihouse" selected="selected"> Ihouse </option>
+                        <option id="editCategoryProcess" value="Masking" selected="selected"> Masking </option>
+                        <option id="editCategoryProcess" value="Nori" selected="selected"> Nori </option>
+                        <option id="editCategoryProcess" value="Press" selected="selected"> Press </option>
+                        <option id="editCategoryProcess" value="PRINT" selected="selected"> Print </option>
+                        <option id="editCategoryProcess" value="Punch" selected="selected"> Punch </option>
+                        <option id="editCategoryProcess" value="Rest" selected="selected"> Rest </option>
+                        <option id="editCategoryProcess" value="Scribe" selected="selected"> Scribe </option>
+                        <option id="editCategoryProcess" value="Tail_denki" selected="selected"> Tail Denki </option>
+                        <option id="editCategoryProcess" value="UV Ink" selected="selected"> UV Ink </option>
+                        <option id="editCategoryProcess" value="UV_convr" selected="selected"> UV Convr </option>
+                        <option id="editCategoryProcess" value="Zet R" selected="selected"> Zet R </option>
+                    </select>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="required">Prod. Cost Level</label>
+                    <input id="editProdCostLevel" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editProdCostLevel" name="dropdown">
+                        <option id="editProdCostLevel" value="0" selected="selected">  </option>
+                        <option id="editProdCostLevel" value="1" selected="selected"> 1 </option>
+                        <option id="editProdCostLevel" value="2" selected="selected"> 2 </option>
+                        <option id="editProdCostLevel" value="3" selected="selected"> 3 </option>
+                        <option id="editProdCostLevel" value="4" selected="selected"> 4 </option>
+                        <option id="editProdCostLevel" value="5" selected="selected"> 5 </option>
+                        <option id="editProdCostLevel" value="8" selected="selected"> 8 </option>
+                        <option id="editProdCostLevel" value="9" selected="selected"> 9 </option>
+                    </select>*@
+                </div>
+                <div class="col-md-6">
+                    <label class="required">Flag Use Cleanbean</label>
+                    <input id="editFlgUseCl" required type="text" class="form-control" />
+                    @*<select class="form-control" id="editFlgUseCl" name="dropdown">
+                        <option id="editFlgUseCl" value="1" selected="selected"> True </option>
+                        <option id="editFlgUseCl" value="0" selected="selected"> False </option>
+                    </select>*@
+                </div>
+            </div>
+            </div> @*Penutup Class Body*@
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

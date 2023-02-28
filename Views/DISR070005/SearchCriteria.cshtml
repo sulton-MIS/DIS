@@ -1,0 +1,87 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA070001Master;
+@{
+//List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+//List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+//List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td>Id Tool :</td>
+                                    <td>
+                                        <input id="searchIdTool" type="text" class="form-control" />
+                                    </td>
+                                    <td>Nama Tool :</td>
+                                    <td>                                                                          
+                                        <input id="searchNameTool" type="text" class="form-control" />
+                                    </td>
+                                    <td>Factory : </td>
+                                    <td>
+                                        <select class="form-control" id="searchFactory" name="dropdown">
+                                            <option id="searchFactory" value="1" selected="selected"> 1 </option>
+                                            <option id="searchFactory" value="2" selected="selected"> 2 </option>
+                                            <option id="searchFactory" value="3" selected="selected"> 3 </option>                                            
+                                            <option id="searchFactory" value="" selected="selected"> </option>
+                                        </select>
+                                    </td>                                                                  
+                                                                      
+                                    <td style="text-align:right;padding:0!important">
+                                        <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                                        <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                                        <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>
+                            @*<input type="hidden" id="rowData-@item.ID" value="@Json.Encode(item)" />*@
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                            <button type="button" class="btn btn-yellow btn-xs dropdown-toggle" id="btn_Print" style="width: 80px;" onclick=""><i class="fa fa-print"></i> Print </button>
+                            @*<div class="dropdown" style="float:right; padding-left: 4px">
+                                <button class="btn btn-yellow btn-xs dropdown-toggle" style="width: 80px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                                <div class="dropdown-content " style="text-align:left;">
+                                    <a class="dropdown-item" href="#" onclick="printPDF()">PRINTOUT PDF</a>
+                                    <a class="dropdown-item" href="#" onclick="printEXCEL()">PRINTOUT EXCEL</a>
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

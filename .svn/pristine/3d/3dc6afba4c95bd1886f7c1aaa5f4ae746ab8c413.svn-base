@@ -1,0 +1,6 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ 
+<div class=""style="margin-top:-10px; padding-top:10px; color:white; margin-bottom:10px;"> @Html.Partial("_Search")</div>
+<div id="divgrid">@Html.Partial("_Grid")</div>

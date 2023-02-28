@@ -1,0 +1,288 @@
+﻿@using AI070.Models;
+@using AI070.Models.WP03003Master;
+@{
+    List<ExamSubjectModel> examSubjects = (List<ExamSubjectModel>)ViewData["ExamSubject"];
+    List<QuestionBankModel> questionBanks = (List<QuestionBankModel>)ViewData["QuestionBank"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add New Exam Subject</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ID_TB_R_LEARN_EXAM_SUBJECT</label>
+                        <select id="addID_TB_R_LEARN_EXAM_SUBJECT" required class="form-control" onchange="getDetailExamSubject('add',this.value)">
+                            <option value=""></option>
+                            @{
+                                if (examSubjects != null)
+                                {
+                                    if (examSubjects.Count() > 0)
+                                    {
+                                        foreach (ExamSubjectModel item in examSubjects)
+                                        {
+                                            <option value="@item.ID">@item.TITLE</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ID_TB_R_LEARN_EXAM_QUESTION</label>
+                        <select id="addID_TB_M_LEARN_QUESTION" required class="form-control" onchange="getDetailQuestionBank('add',this.value)">
+                            <option value=""></option>
+                            @{
+                                if (questionBanks != null)
+                                {
+                                    if (questionBanks.Count() > 0)
+                                    {
+                                        foreach (QuestionBankModel item in questionBanks)
+                                        {
+                                            <option value="@item.ID">@item.ANSWER_KEY</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TITLE</label>
+                        <input type="text" maxlength="20" id="addTITLE" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>QUESTION</label>
+                        <input type="text" maxlength="20" id="addQUESTION" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>PASSING_SCORE_REQUIREMENT</label>
+                        <input type="text" maxlength="20" id="addPASSING_SCORE_REQUIREMENT" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE A</label>
+                        <input type="text" maxlength="20" id="addANSWER_CHOICE_A" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>EXAM_DURATION</label>
+                        <input type="text" maxlength="20" id="addEXAM_DURATION" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE B</label>
+                        <input type="text" maxlength="20" id="addANSWER_CHOICE_B" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>DATE_EXAM_PERIOD_START</label>
+                        <input type="text" maxlength="20" id="addDATE_EXAM_PERIOD_START" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE C</label>
+                        <input type="text" maxlength="20" id="addANSWER_CHOICE_C" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>DATE_EXAM_PERIOD_END</label>
+                        <input type="text" maxlength="20" id="addDATE_EXAM_PERIOD_END" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE D</label>
+                        <input type="text" maxlength="20" id="addANSWER_CHOICE_D" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>REMEDIAL</label>
+                        <input type="text" maxlength="20" id="addREMEDIAL" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE E</label>
+                        <input type="text" maxlength="20" id="addANSWER_CHOICE_E" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>EXAM_TYPE</label>
+                        <input type="text" maxlength="20" id="addEXAM_TYPE" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER KEY</label>
+                        <input type="text" maxlength="20" id="addANSWER_KEY" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TOTAL_PUBLISHED</label>
+                        <input type="text" maxlength="20" id="addTOTAL_PUBLISHED" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>IS_PUBLISHED</label>
+                        <input type="text" maxlength="20" id="addIS_PUBLISHED" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="addNew()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-wpforms"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit Question</h4>
+            </div>
+
+            <div class="modal-body">
+                <!--ID Value Hide-->
+                <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ID_TB_R_LEARN_EXAM_SUBJECT</label>
+                        <select id="EditID_TB_R_LEARN_EXAM_SUBJECT" required class="form-control" onchange="getDetailExamSubject('add',this.value)">
+                            <option value=""></option>
+                            @{
+                                if (examSubjects != null)
+                                {
+                                    if (examSubjects.Count() > 0)
+                                    {
+                                        foreach (ExamSubjectModel item in examSubjects)
+                                        {
+                                            <option value="@item.ID">@item.TITLE</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ID_TB_R_LEARN_EXAM_QUESTION</label>
+                        <select id="EditID_TB_M_LEARN_QUESTION" required class="form-control" onchange="getDetailQuestionBank('add',this.value)">
+                            <option value=""></option>
+                            @{
+                                if (questionBanks != null)
+                                {
+                                    if (questionBanks.Count() > 0)
+                                    {
+                                        foreach (QuestionBankModel item in questionBanks)
+                                        {
+                                            <option value="@item.ID">@item.ANSWER_KEY</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TITLE</label>
+                        <input type="text" maxlength="20" id="EditTITLE" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>QUESTION</label>
+                        <input type="text" maxlength="20" id="EditQUESTION" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>PASSING_SCORE_REQUIREMENT</label>
+                        <input type="text" maxlength="20" id="EditPASSING_SCORE_REQUIREMENT" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE A</label>
+                        <input type="text" maxlength="20" id="EditANSWER_CHOICE_A" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>EXAM_DURATION</label>
+                        <input type="text" maxlength="20" id="EditEXAM_DURATION" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE B</label>
+                        <input type="text" maxlength="20" id="EditANSWER_CHOICE_B" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>DATE_EXAM_PERIOD_START</label>
+                        <input type="text" maxlength="20" id="EditDATE_EXAM_PERIOD_START" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE C</label>
+                        <input type="text" maxlength="20" id="EditANSWER_CHOICE_C" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>DATE_EXAM_PERIOD_END</label>
+                        <input type="text" maxlength="20" id="EditDATE_EXAM_PERIOD_END" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE D</label>
+                        <input type="text" maxlength="20" id="EditANSWER_CHOICE_D" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>REMEDIAL</label>
+                        <input type="text" maxlength="20" id="EditREMEDIAL" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER CHOICE E</label>
+                        <input type="text" maxlength="20" id="EditANSWER_CHOICE_E" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>EXAM_TYPE</label>
+                        <input type="text" maxlength="20" id="EditEXAM_TYPE" class="form-control" placeholder="" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANSWER KEY</label>
+                        <input type="text" maxlength="20" id="EditANSWER_KEY" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TOTAL_PUBLISHED</label>
+                        <input type="text" maxlength="20" id="EditTOTAL_PUBLISHED" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>IS_PUBLISHED</label>
+                        <input type="text" maxlength="20" id="EditIS_PUBLISHED" class="form-control" placeholder="" disabled>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="updateData()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;" data-dismiss="modal"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>

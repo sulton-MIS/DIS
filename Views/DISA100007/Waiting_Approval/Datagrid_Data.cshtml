@@ -1,0 +1,284 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100007Master;
+@using System.Globalization;
+
+@{
+    List<DISA100007Master> DataWP = (List<DISA100007Master>)ViewData["DataDISA100007"];
+}
+
+<style>
+    table {
+        background-color: white !important;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    #tr1 {
+        border: 1px solid black;
+        height: 150px;
+    }
+
+    #tr2 {
+        text-align: center;
+        border: 1px solid black;
+        height: 10px;
+    }
+</style>
+
+<div class="row" id="DataGrid_Data">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            </th>
+                            @*<th style="width: 100px;" rowspan="3">DETAIL</th>*@
+                            <th style="width: 75px;" rowspan="3">NO</th>
+                            <th style="width: 200px;" rowspan="3">DEPT. HEAD USER</th>
+                            <th style="width: 200px;" rowspan="3">ADMIN DOKUMEN</th>
+                            <th style="width: 200px;" rowspan="3">JENIS TRANSAKSI</th>
+                            <th style="width: 100px;" rowspan="3">NO DOKUMEN</th>
+                            <th style="width: 120px;" rowspan="3">DEPARTMENT</th>
+                            <th style="width: 150px;" rowspan="3">BAGIAN</th>
+                            <th style="width: 100px;" rowspan="3">RAK</th>
+                            <th style="width: 100px;" rowspan="3">LABEL RAK</th>
+                            <th style="width: 300px;" rowspan="3">NAMA DOKUMEN</th>
+                            <th style="width: 100px;" rowspan="3">QTY BUNDLE</th>
+                            <th style="width: 150px;" rowspan="3">TGL REGISTER</th>
+                            <th style="width: 150px;" rowspan="3">MASA SIMPAN</th>
+                            <th style="width: 150px;" rowspan="3">ESTIMASI DISPOSE</th>
+                            <th style="width: 200px;" rowspan="3">KETERANGAN</th>
+                            <th style="width: 200px;" rowspan="3">STATUS APPROVAL</th>
+                            <th style="width: 200px;" rowspan="3">CREATED BY</th>
+                            <th style="width: 200px;" rowspan="3">CREATED DATE</th>
+
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 500px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA100007Master item in DataWP)
+                                    {
+                                        DateTime tglSekarang = DateTime.Today;
+                                        DateTime tglRegister = DateTime.ParseExact(item.TGL_REGISTER, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                                        DateTime tglEstimasi = DateTime.ParseExact(item.ESTIMASI_DISPOSE, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                                        //int SelisihHari = Convert.ToInt32(((tglEstimasi.AddYears(1) - tglRegister.AddYears(1).Date).TotalDays));
+                                        int SelisihHari = Convert.ToInt32((tglEstimasi.AddYears(1) - DateTime.Now.AddYears(1).Date).TotalDays) * -1;
+
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td rowspan="2" style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                @{
+                                                    if (item.DEPT_HEAD_CREATED_SIGN == null)
+                                                    {
+                                                        @*<label>@item.DEPT_HEAD_CREATED_SIGN</label>*@
+                                                        <input class="grid-checkbox" value="@item.ID,@item.NO_DOCUMENT,@item.NAMA_DOCUMENT,@item.QTY_BUNDLE,@item.DEPARTMENT,@item.BAGIAN,@item.RAK,@item.LABEL_RAK,@item.MASA_SIMPAN,@item.KETERANGAN,@item.TGL_REGISTER"
+                                                               type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="grid-checkbox" type="checkbox" disabled>
+                                                    }
+                                                }
+
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="hidden" id="rowData-@item.NO_DOCUMENT" value="@Json.Encode(item)" /> @* Pass data to Json for retrieve to Javascript*@
+                                            </td>
+                                            @*<td rowspan="2" style="width: 100px; text-align: center">
+                                                    <button type="button" data-title="@item.NO_DOCUMENT" onclick="showDetail(this)" class="btn btn-info" id="btn_register_data">
+                                                        Show
+                                                    </button>
+                                                </td>*@
+                                            <td rowspan="2" style="width: 75px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.DEPT_HEAD_CREATED_SIGN != null)
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.DEPT_HEAD_CREATED_SIGN" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+                                            <td style="width: 200px; text-align: center">
+                                                @if (item.ADM_CREATED_SIGN != null && item.ADM_CREATED_SIGN != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/@item.ADM_CREATED_SIGN" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <img src="~/Content/Upload/Foto/Sign/REJECTED.jpg" style="width:100px; height:75px; text-align: center" />
+                                                }
+                                                else
+                                                {
+                                                    <label>Belum approve</label>
+                                                }
+                                            </td>
+
+                                            <td rowspan="2" style="width: 200px; text-align: center">
+                                                @if (item.JENIS_TRANSAKSI == "taruh")
+                                                {
+                                                    <label>Taruh Dokumen</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>Pinjam Dokumen</label>
+                                                }
+                                            </td>
+
+                                            <td rowspan="2" style="width: 100px; text-align: center">
+                                                @item.NO_DOCUMENT
+                                            </td>
+
+                                            <td rowspan="2" style="width: 120px; text-align: center">
+                                                @item.DEPARTMENT
+                                            </td>
+                                            <td rowspan="2" style="width: 150px; text-align: center"> @item.BAGIAN</td>
+                                            <td rowspan="2" style="width: 100px; text-align: center"> @item.RAK</td>
+                                            <td rowspan="2" style="width: 100px; text-align: center"> @item.RAK-@item.LABEL_RAK </td>
+                                            <td rowspan="2" style="width: 300px;"> @item.NAMA_DOCUMENT </td>
+                                            <td class="align-center align-middle" rowspan="2" style="width: 100px;"> @item.QTY_BUNDLE </td>
+
+                                            <td class="align-center align-middle" style="width: 150px" rowspan="2"> @item.TGL_REGISTER</td>
+                                            <td class="align-center align-middle" style="width: 150px" rowspan="2"> @item.MASA_SIMPAN Tahun</td>
+                                            <td class="align-center align-middle" style="width: 150px;" rowspan="2"> @item.ESTIMASI_DISPOSE </td>
+
+                                            <td class="align-center align-middle" rowspan="2" style="width: 200px;"> @item.KETERANGAN</td>
+
+                                            <td rowspan="2" style="width: 200px; text-align: center">
+                                                @if (item.FLG_APPROVE == "True")
+                                                {
+                                                    <label>APPROVED</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>WAITING APPROVAL</label>
+                                                }
+                                            </td>
+                                            <td rowspan="2" style="width: 200px; text-align: center">
+                                                @item.CREATED_BY
+                                            </td>
+                                            <td rowspan="2" style="width: 200px; text-align: center">
+                                                @item.CREATED_DATE
+                                            </td>
+
+                                        </tr>
+
+                                        //---------------Baris 3 (TOMBOL APPROVE)----------
+                                        <tr>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.DEPT_HEAD_CREATED_SIGN != null)
+                                                {
+                                                    <label>@item.DEPT_HEAD_CREATED_BY</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else if (item.DEPT_HEAD_CREATED_SIGN != "" || item.DEPT_HEAD_CREATED_SIGN != null)
+                                                {
+                                                    @*<button type="button" data-title="@item.NO_DOCUMENT" onclick="showDetail(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>*@
+                                                    <button type="button" data-title="@item.NO_DOCUMENT" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+                                                else
+                                                {
+                                                    @*<button disabled type="button" data-title="@item.NO_DOCUMENT" onclick="showDetail(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>*@
+                                                    <button disabled type="button" data-title="@item.NO_DOCUMENT" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                            <td style="width: 100px; text-align: center">
+                                                @if (item.ADM_CREATED_SIGN != null && item.ADM_CREATED_SIGN != "")
+                                                {
+                                                    <label>@item.ADM_CREATED_BY</label>
+                                                }
+                                                else if (item.reject_created_sign != null && item.reject_created_sign != "")
+                                                {
+                                                    <label>REJECTED</label>
+                                                }
+                                                else if (item.DEPT_HEAD_CREATED_SIGN != "" && item.DEPT_HEAD_CREATED_SIGN != null)
+                                                {
+                                                    @*<button type="button" data-title="@item.NO_DOCUMENT" onclick="showDetail(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>*@
+                                                    <button type="button" data-title="@item.NO_DOCUMENT" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+                                                else
+                                                {
+                                                    @*<button disabled type="button" data-title="@item.NO_DOCUMENT" onclick="showDetail(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>*@
+                                                    <button disabled type="button" data-title="@item.NO_DOCUMENT" onclick="approveData(this)" class="btn btn-primary btn-xs" id="btn_register_data" name="btn_register" style="width: 75px; margin-left:10px;"><i class="fa fa-check"></i> Approve </button>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Waiting_Approval/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,222 @@
+﻿@using AD021.Models;
+@using System.Dynamic;
+@{
+    List<AD021070500W> list = (List<AD021070500W>)ViewData["DataShower"];
+    string shift = (string)ViewData["Shift"];
+    int row = 1;
+    int totalInnova = 0;
+    int totalFortuner = 0;
+    decimal totalAct = 0;
+    decimal totalCum = 0;
+    decimal balanceAct = 0;
+    decimal balanceCum = 0;
+    int totalMinute = 0;
+    int totalPlan = 0;
+    int totalSumCum = 0;
+    int totalokindom = 0;
+    int totalrejindom = 0;
+    int totalokinexp = 0;
+    int totalrejinexp = 0;
+    int totalInnovaSum = 0;
+    int totalokfodom = 0;
+    int totalrejfodom = 0;
+    int totalokfoexp = 0;
+    int totalrejfoexp = 0;
+    int totalFortunerSum = 0;
+    decimal grandtotalCum = 0;
+    decimal grandtotalAct = 0;
+    decimal grandbalCum = 0;
+    decimal grandbalAct = 0;
+} 
+<!-- Role level -->
+<style>
+    .customheader {
+        background-color: #4699ff !important;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    table {
+  border-collapse: collapse;
+}
+    .rotate {
+      /* FF3.5+ */
+      -moz-transform: rotate(-90.0deg);
+      /* Opera 10.5 */
+      -o-transform: rotate(-90.0deg);
+      /* Saf3.1+, Chrome */
+      -webkit-transform: rotate(-90.0deg);
+      /* IE6,IE7 */
+      filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
+      /* IE8 */
+      -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
+      /* Standard */
+      transform: rotate(-90.0deg);
+    }
+</style>
+<div class="table-responsive" id="divroles">
+    <table class="table table-bordered  " style="border-bottom:solid #dddddd"> 
+        <thead>
+            <tr>  
+                <td class="customheader" rowspan="3"></td>
+                <td class="customheader" colspan="2" rowspan="3" style="vertical-align:middle">Time</td> 
+                <td class="customheader" rowspan="3" style="vertical-align:middle">Minute</td>  
+                <td class="customheader" rowspan="3" style="vertical-align:middle">Plan</td> 
+                <td class="customheader" rowspan="3" style="vertical-align:middle">Cum</td> 
+                <td class="customheader" colspan="4" style="vertical-align:middle">Innova</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Total Unit</td> 
+                <td class="customheader" colspan="4" style="vertical-align:middle">Fortuner</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Total Unit</td> 
+                <td class="customheader" colspan="2"style="vertical-align:middle" >Total</td> 
+                <td class="customheader" colspan="2" style="vertical-align:middle">Balance</td> 
+            </tr> 
+            <tr>
+                <td class="customheader" colspan="2" style="vertical-align:middle">Dom</td> 
+                <td class="customheader" colspan="2" style="vertical-align:middle">Exp</td> 
+                <td class="customheader" colspan="2" style="vertical-align:middle">Dom</td> 
+                <td class="customheader" colspan="2" style="vertical-align:middle">Exp</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Act</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Cum</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Act</td> 
+                <td class="customheader" rowspan="2" style="vertical-align:middle">Cum</td> 
+            </tr>
+            <tr>
+                <td class="customheader" rowspan="">OK</td> 
+                <td class="customheader" rowspan="">Reject</td> 
+                <td class="customheader" rowspan="">OK</td> 
+                <td class="customheader" rowspan="">Reject</td> 
+                <td class="customheader" rowspan="">OK+Reject</td> 
+                <td class="customheader" rowspan="">OK</td> 
+                <td class="customheader" rowspan="">Reject</td> 
+                <td class="customheader" rowspan="">OK</td> 
+                <td class="customheader" rowspan="">Reject</td> 
+                <td class="customheader" rowspan="">OK+Reject</td> 
+            </tr>
+        </thead> 
+        <tbody>
+            @*<tr>
+                <td rowspan="2" style="-moz-transform: rotate(-90deg);">Day / Night</td>
+                <td style="-moz-transform: rotate(-90deg);">Normal</td> 
+            </tr>
+            
+            <tr> 
+                <td style="-moz-transform: rotate(-90deg);">Lembur</td>
+            </tr>*@
+            @if ((list != null) && (list.Count > 0))
+            {
+                for (int i = 0; i < 13; i++)
+                {
+                    @*@(i == 0 ? "style=background-color:orange" : "style=background-color:white")*@
+                    <tr>
+                     @if (i == 0)
+                        {
+                            <td  rowspan="14" style="-moz-transform: rotate(-90deg);vertical-align:middle" class="rotate"><strong>@(shift == "D" ? "DAY" : "NIGHT")</strong></td>
+                            <td rowspan="9" style="-moz-transform: rotate(-90deg);vertical-align:middle" class="rotate">JAM NORMAL</td>
+                        }
+
+                        @if (i == 9)
+                        {
+                            <td rowspan="4" style="-moz-transform: rotate(-90deg);vertical-align:middle" class="rotate">JAM LEMBUR</td>
+                        }
+                        @if (i > 10 && shift == "N")
+                        {
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else
+                        {
+                            totalInnova = @list[i].OK_INNOVA_DOM + @list[i].REJECT_INNOVA_DOM + @list[i].OK_INNOVA_EXP + @list[i].REJECT_INNOVA_EXP;
+                            totalFortuner = @list[i].OK_FORTUNER_DOM + @list[i].REJECT_FORTUNER_DOM + @list[i].OK_FORTUNER_EXP + @list[i].REJECT_FORTUNER_EXP;
+                            totalAct = totalInnova + totalFortuner;
+                            totalCum = totalCum + totalAct;
+                            balanceAct = totalAct - @list[i].PLANNING;
+                            balanceCum = balanceCum + balanceAct;
+                            totalMinute = totalMinute + @list[i].MINUTE;
+                            totalPlan = totalPlan + @list[i].PLANNING;
+                            totalSumCum  = totalSumCum + @list[i].CUM;
+                            totalokindom = totalokindom + @list[i].OK_INNOVA_DOM;
+                            totalrejindom = totalrejindom + @list[i].REJECT_INNOVA_DOM;
+                            totalokinexp = totalokinexp + @list[i].OK_INNOVA_EXP;
+                            totalrejinexp = totalrejinexp + @list[i].REJECT_INNOVA_EXP;
+                            totalInnovaSum = totalInnovaSum + totalInnova;
+                            totalokfodom = totalokfodom + @list[i].OK_FORTUNER_DOM;
+                            totalrejfodom = totalrejfodom + @list[i].REJECT_FORTUNER_DOM;
+                            totalokfoexp = totalokfoexp + @list[i].OK_FORTUNER_EXP;
+                            totalrejfoexp = totalrejfoexp + @list[i].REJECT_FORTUNER_EXP;
+                            totalFortunerSum = totalFortunerSum + totalFortuner;
+                            grandtotalAct = grandtotalAct + totalAct;
+                            grandtotalCum = grandtotalCum + totalCum;
+                            grandbalAct = grandbalAct + balanceAct;
+                            grandbalCum = grandbalCum + balanceCum;
+                            <td class="text-center">@list[i].TIMEFROM.ToShortTimeString() - @list[i].TIMETO.ToShortTimeString()</td>
+                            <td class="text-center">@list[i].MINUTE</td>
+                            <td class="text-center">@list[i].PLANNING</td>
+                            <td class="text-center">@list[i].CUM</td>
+                            <td class="text-center">@(list[i].OK_INNOVA_DOM == 0 ? "-" : list[i].OK_INNOVA_DOM.ToString())</td>
+                            <td class="text-center">@(list[i].REJECT_INNOVA_DOM == 0 ? "-" : list[i].REJECT_INNOVA_DOM.ToString())</td>
+                            <td class="text-center">@(list[i].OK_INNOVA_EXP == 0 ? "-" : list[i].OK_INNOVA_EXP.ToString())</td>
+                            <td class="text-center">@(list[i].REJECT_INNOVA_EXP == 0 ? "-" : list[i].REJECT_INNOVA_EXP.ToString())</td>
+                            <td class="text-center">@(totalInnova == 0 ? "-" : totalInnova.ToString())</td>
+                            <td class="text-center">@(list[i].OK_FORTUNER_DOM == 0 ? "-" : list[i].OK_FORTUNER_DOM.ToString())</td>
+                            <td class="text-center">@(list[i].REJECT_FORTUNER_DOM == 0 ? "-" : list[i].REJECT_FORTUNER_DOM.ToString())</td>
+                            <td class="text-center">@(list[i].OK_FORTUNER_EXP == 0 ? "-" : list[i].OK_FORTUNER_EXP.ToString())</td>
+                            <td class="text-center">@(list[i].REJECT_FORTUNER_EXP == 0 ? "-" : list[i].REJECT_FORTUNER_EXP.ToString())</td>
+                            <td class="text-center">@(totalFortuner == 0 ? "-" : totalFortuner.ToString())</td>
+                            <td class="text-center">@(totalAct == 0 ? "-" : totalAct.ToString())</td>
+                            <td class="text-center">@(totalCum == 0 ? "-" : totalCum.ToString())</td>
+                            <td class="text-center">@(balanceAct == 0 ? "-" : balanceAct.ToString())</td>
+                            <td class="text-center">@(balanceCum == 0 ? "-" : balanceCum.ToString())</td>
+                        }
+
+                        
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="text-center">TOTAL</td>
+                    <td class="text-center">@totalMinute</td>
+                    <td class="text-center">@totalPlan</td>
+                    <td class="text-center"></td>@*<td>@totalSumCum</td>*@
+                    <td class="text-center">@totalokindom</td>
+                    <td class="text-center">@totalrejindom</td>
+                    <td class="text-center">@totalokinexp</td>
+                    <td class="text-center">@totalrejinexp</td>
+                    <td class="text-center">@totalInnovaSum</td>
+                    <td class="text-center">@totalokfodom</td>
+                    <td class="text-center">@totalrejfodom</td>
+                    <td class="text-center">@totalokfoexp</td>
+                    <td class="text-center">@totalrejfoexp</td>
+                    <td class="text-center">@totalFortunerSum</td>
+                    <td class="text-center">@grandtotalAct</td>
+                    <td></td>
+                    @*<td class="text-center">@grandtotalCum</td>*@
+                    <td class="text-center">@grandbalAct</td>
+                    <td></td>
+                    @*<td class="text-center">@grandbalCum</td>*@
+                </tr>
+            } 
+        </tbody>
+    </table>
+
+
+    <div class="table-responsive" style="padding-top:10px; min-height:35px; overflow:hidden"> 
+        @Html.Partial("_UIPaging")
+    </div>
+</div>
+ 

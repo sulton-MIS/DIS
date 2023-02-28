@@ -1,0 +1,9 @@
+﻿--SELECT 
+--	CAST(XPRTS.SIYOUW as int) AS CAVITY 
+--FROM XPRTS 	
+--WHERE KCODE = @MATERIAL_KODE 
+
+SELECT 
+	CAST(cavity as int) AS CAVITY 
+FROM Z_CAVITY 	
+WHERE dmc_code = @MATERIAL_KODE and part LIKE '%' + RTRIM(@PART) + '%'

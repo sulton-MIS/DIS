@@ -1,0 +1,72 @@
+﻿@using AI070.Models.WP03006;
+@{
+    Layout = null;
+}
+
+@{ 
+	Employee employee = (Employee)ViewData["employee"];
+    byte[] qrCode = (byte[])ViewData["qrCode"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NameCard</title>
+    
+    <style>
+        .card {
+            background-color: lightgrey;
+            border-radius: 10px;
+            width: 103%;
+            height: 146px;
+            border: 5px solid #8b2b65;
+            padding: 0px;
+            margin-top: 0px;
+            margin-left: -8px;
+            margin-bottom: -13px;
+            font-size: 16px;
+            font-family: Calibri;
+        }
+
+        img {
+            position: fixed;
+            padding: 10px;
+        }
+
+        table {
+            top: 5px;
+            position: relative;
+            left: 28%;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <div class="card" style="display: inline-block">
+            <div>
+                <div class="align-center align-middle">
+                    <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(qrCode))" style="width: 60px; height: 60px;" />
+                </div>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <td>@employee.Name</td>
+                    </tr>
+                    <tr>
+                        <td>@employee.Address</td>
+                    </tr>
+                    <tr>
+                        <td>@employee.Company</td>
+                    </tr>
+                    <tr>
+                        <td>@employee.IdentityNo</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

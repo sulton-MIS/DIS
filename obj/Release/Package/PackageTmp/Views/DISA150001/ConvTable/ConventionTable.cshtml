@@ -1,0 +1,17 @@
+﻿@*@{
+        Layout = "~/Views/SharedWPLogin/_Layout.cshtml";
+    }*@
+
+@{
+    Layout = "~/Views/Shared_Production_Cost/_Layout.cshtml";
+}
+
+
+<div id="main-data">
+    @Html.Partial("ConvTable/SearchCriteria")
+    @Html.Partial("ConvTable/Datagrid_Data")
+    @Html.Partial("ConvTable/PopupForm")
+    @Html.Partial("ConvTable/ModalForm")
+    @Html.Partial("ConvTable/Javascript")
+</div>
+

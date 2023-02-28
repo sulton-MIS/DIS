@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<div id="main-data">
+    @Html.Partial("Pinjam_Document/CheckValidasiUser")
+    @Html.Partial("Pinjam_Document/SearchCriteria")
+    @Html.Partial("Pinjam_Document/Datagrid_Data")
+    @Html.Partial("Pinjam_Document/PopupForm")
+    @Html.Partial("Pinjam_Document/ModalForm")
+</div>
+@Html.Partial("Pinjam_Document/Javascript")

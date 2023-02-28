@@ -1,0 +1,29 @@
+﻿@using Toyota.Common.Utilities
+@{
+    MenuList menuList = Html.Toyota().Page.Menu;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>@Html.Toyota().Application.Name - @Html.Toyota().Page.Title</title>
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+
+
+    @Html.Partial("../SharedWPLogin/_Header")
+    <body class="no-skin" ng-app="app">
+        <!-- toastr scripts -->
+        <script src="/Content/Bootstrap/js/toastr.js"></script>
+        <!-- toastr css -->
+        <link rel="stylesheet" href="/Content/Bootstrap/css/toastr.css" />
+
+        @Html.Partial("../SharedWPLogin/_Navbar")
+        @RenderBody()
+
+        @Html.Partial("../SharedWPLogin/_Script")
+    </body>
+</html>

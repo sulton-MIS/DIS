@@ -1,0 +1,135 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100007Master;
+@{
+
+}
+
+<style>
+    
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted">
+            <h2>
+                <button onclick="backPage()" class="btn btn-danger" style="height: 40px; !important"><i class="fa fa-close" style="color:white"></i></button>
+                @ViewData["Title1"]
+            </h2>
+        </label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                NO. DOKUMEN:
+                                <input id="searchNoDokumen" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                            <div class="col-md-3">
+                                NAMA DOKUMEN:
+                                <input id="searchNamaDokumen" type="text" class="form-control" autocomplete="off" />
+                            </div>
+                            <div class="col-md-3">
+                                STATUS DISPOSE:
+                                <select required class="form-control" id="searchStatusDispose" name="dropdown">
+                                    <option value="" selected="selected"> --Pilih-- </option>
+                                    <option value="0" selected>NON-DISPOSE</option>
+                                    <option value="1">DISPOSE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                DEPARTMENT:
+                                <select required class="form-control" id="searchDeptUser" name="dropdown">
+                                    @if (ViewData["RegNo"].ToString() == "PIC")
+                                    {
+                                        <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="" selected="selected"> --Pilih-- </option>
+                                        <option value="ACCOUNTING">ACCOUNTING</option>
+                                        <option value="BP">BP</option>
+                                        <option value="CMS">CMS</option>
+                                        <option value="GO">GO</option>
+                                        <option value="ME">ME</option>
+                                        <option value="MNF">MNF</option>
+                                        <option value="RND">RND</option>
+                                        <option value="QA/QC">QA/QC</option>
+                                        <option value="WH">WAREHOUSE</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top: 10px">
+                            <div class="col-md-3">
+                                <label class="required">NO RAK :</label>
+                                <input autocomplete="off" id="searchNomorRak" required type="number" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="required">LABEL RAK :</label>
+                                <select required class="form-control" id="searchLabelRak" name="dropdown">
+                                    <option value="" selected="selected"> --Pilih-- </option>
+                                    @{
+                                        string strAlpha = "";
+                                        //Loop through the ASCII characters 65 to 90
+                                        for (int i = 65; i <= 90; i++)
+
+                                        {
+                                            // Convert the int to a char to get the actual character behind the ASCII code
+                                            strAlpha = ((char)i).ToString();
+
+                                            <option value="@strAlpha">@strAlpha</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="required">TANGGAL REGISTER :</label>
+                                <input autocomplete="off" id="searchTglRegister" type="month" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="required">JENIS TRANSAKSI :</label>
+                                <select required class="form-control" id="searchJenisTransaksi" name="dropdown">
+                                    <option value="" selected="selected"> --Pilih-- </option>
+                                    <option value="taruh"> Taruh Dokumen </option>
+                                    <option value="pinjam"> Pinjam Dokumen </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row" style="margin-top: 20px;">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            @*<button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>*@
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                            <button type="button" class="bn btn-success btn-xs" id="btn_download" style="width: 100px;" onclick=""><i class="fa fa-print"></i> Download </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

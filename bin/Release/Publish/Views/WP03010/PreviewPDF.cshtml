@@ -1,0 +1,96 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03006;
+
+@{
+    List<WP03006Master> summaryScore = (List<WP03006Master>)ViewData["SummaryData"];
+}
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+        table thead tr {
+            background-color: #eee;
+        }
+</style>
+
+
+<div style="padding: 15px">
+
+    <font size="2" face="Arial">
+        <h2>@ViewData["Header"]</h2>
+        <table>
+            <thead>
+                <tr>
+                    <td class="align-center align-middle" style="width: 30px;"> No. </td>
+                    <td class="align-center align-middle" style="width: 150px"> Registration Number </td>
+                    <td class="align-center align-middle" style="width: 150px"> Participan Name </td>
+                    <td class="align-center align-middle" style="width: 150px"> Exam Subject </td>
+                    <td class="align-center align-middle" style="width: 80px"> Correct </td>
+                    <td class="align-center align-middle" style="width: 80px"> Wrong </td>
+                    <td class="align-center align-middle" style="width: 80px"> Not Answer </td>
+                    <td class="align-center align-middle" style="width: 100px"> Remedial </td>
+                    <td class="align-center align-middle" style="width: 80px"> Score </td>
+                    <td class="align-center align-middle" style="width: 80px"> Pass </td>
+                    <td class="align-center align-middle" style="width: 100px"> Duration </td>
+                    <td class="align-center align-middle" style="width: 150px"> Submit Date </td>
+                    <td class="align-center align-middle" style="width: 100px"> Status </td>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!----><!----><!---->
+                @{
+                    if (summaryScore != null)
+                    {
+                        if (summaryScore.Count > 0)
+                        {
+                            var number = 1;
+                            foreach (WP03006Master item in summaryScore)
+                            {
+                                <tr id="row-@number">
+                                    <td class="align-center align-middle" style="width: 30px;"> @item.RowNum </td>
+                                    <td class="align-left align-middle" style="width: 150px"> @item.REG_NO </td>
+                                    <td class="align-left align-middle" style="width: 150px"> @item.NAME </td>
+                                    <td class="align-left align-middle" style="width: 150px"> @item.TITLE </td>
+                                    <td class="align-center align-middle" style="width: 80px"> @item.CORRECT_AMOUNT </td>
+                                    <td class="align-center align-middle" style="width: 80px"> @item.WRONG_AMOUNT </td>
+                                    <td class="align-center align-middle" style="width: 80px"> @item.NOT_ANSWERED_AMOUNT </td>
+                                    <td class="align-center align-middle" style="width: 100px"> Remedial ke-@item.REMEDIAL </td>
+                                    <td class="align-center align-middle" style="width: 80px"> @item.SCORE </td>
+                                    <td class="align-center align-middle" style="width: 80px"> @item.PASS_GRADUATED </td>
+                                    <td class="align-center align-middle" style="width: 100px"> @item.TIMER menit </td>
+                                    <td class="align-center align-middle" style="width: 150px"> @item.SUBMIT_DATE </td>
+                                    <td class="align-center align-middle" style="width: 100px">
+                                        @{
+                                            if (Convert.ToInt32(item.PASS_GRADUATED) == 1)
+                                            { <span>PASS</span> }
+                                            else
+                                            { <span>NOT PASS</span> }
+                                        }
+                                    </td>
+                                </tr>
+                                number++;
+                            }
+                        }
+                        else
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="8" width="90%" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr id="NoDataFound">
+                            <td colspan="8" width="90%" class="text-center">No data found</td>
+                        </tr>
+                    }
+                }
+                <!----><!----><!---->
+            </tbody>
+        </table>
+    </font>
+</div>

@@ -1,0 +1,83 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<style>
+    .plus-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 80px;
+        color: #4ce43173 !important;
+        /* bring your own prefixes */
+        transform: translate(-50%, -50%);
+    }
+
+    .plus-image:hover {
+        color: #4ce431 !important;
+        cursor:pointer;
+    }
+
+    .plus-image-edit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 80px;
+        color: #4ce43173 !important;
+        /* bring your own prefixes */
+        transform: translate(-50%, -50%);
+    }
+
+        .plus-image-edit:hover {
+            color: #4ce431 !important;
+            cursor: pointer;
+        }
+</style>
+
+<!--form add new data-->
+<div id="modalDashboardArea" class="modal fade" style="z-index:1">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add Area Location</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">AREA CD</label>
+                        <input type="text" maxlength="50" id="addAreaCode" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">AREA NAME</label>
+                        <input type="text" maxlength="20" id="addAreaName" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>AREA STATUS</label>
+                        <select class="form-control" id="addAreaStatus">
+                            <option value="1">Active</option>
+                            <option value="2">Non Active</option>
+                        </select>
+                    </div>
+                </div>
+                <div classs="row">
+                    <div class="col">
+                        <label class="required">IMAGE AREA</label>
+                        <input src="~/Content/Upload/Area/HEHEHE1111.PNG" id="addFoto" onchange="change_image('add',this)" type="file" />
+                        <img onerror="this.style.display='none'" id="addImageBox" style="width: 100%; height:250px" />
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

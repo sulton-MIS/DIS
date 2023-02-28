@@ -1,0 +1,205 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA070001Master;
+
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD Trouble Production </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">HALTE : </label>
+                        <select class="form-control" id="addHalte" name="dropdown">
+                            <option id="addHalte" value="" selected="selected">  </option>
+                            <option id="addHalte" value="1" selected="selected"> 1 </option>
+                            <option id="addHalte" value="2" selected="selected"> 2 </option>
+                            <option id="addHalte" value="3" selected="selected"> 3 </option>
+                            <option id="addHalte" value="4" selected="selected"> 4 </option>
+                            <option id="addHalte" value="5" selected="selected"> 5 </option>
+                            <option id="addHalte" value="6" selected="selected"> 6 </option>
+                            <option id="addHalte" value="7" selected="selected"> 7 </option>
+                            <option id="addHalte" value="8" selected="selected"> 8 </option>
+                            <option id="addHalte" value="9" selected="selected"> 9 </option>
+                            <option id="addHalte" value="10" selected="selected"> 10 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">DATE : </label>
+                        <input id="addDate" type="text" class="form-control datepicker" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">TIME : </label>
+                        <select class="form-control" id="addTime" name="dropdown">
+                            <option id="addTime" value="07:30-08:30" selected="selected"> 07:30-08:30 </option>
+                            <option id="addTime" value="08:30-09:30" selected="selected"> 08:30-09:30 </option>
+                            <option id="addTime" value="09:30-10:40" selected="selected"> 09:30-10:40 </option>
+                            <option id="addTime" value="10:40-12:30" selected="selected"> 10:40-12:30 </option>
+                            <option id="addTime" value="12:30-13:30" selected="selected"> 12:30-13:30 </option>
+                            <option id="addTime" value="13:30-14:30" selected="selected"> 13:30-14:30 </option>
+                            <option id="addTime" value="14:30-16:00" selected="selected"> 14:30-16:00 </option>
+                            <option id="addTime" value="16:00-17:00" selected="selected"> 16:00-17:00 </option>
+                            <option id="addTime" value="17:00-18:30" selected="selected"> 17:00-18:30 </option>
+                            <option id="addTime" value="18:30-19:30" selected="selected"> 18:30-19:30 </option>
+                            <option id="addTime" value="19:30-20:30" selected="selected"> 19:30-20:30 </option>
+                            <option id="addTime" value="20:30-21:30" selected="selected"> 20:30-21:30 </option>
+                            <option id="addTime" value="21:30-22:30" selected="selected"> 21:30-22:30 </option>
+                            <option id="addTime" value="22:30-23:30" selected="selected"> 22:30-23:30 </option>
+                            <option id="addTime" value="23:30-00:30" selected="selected"> 23:30-00:30 </option>
+                            <option id="addTime" value="00:30-01:30" selected="selected"> 00:30-01:30 </option>
+                            <option id="addTime" value="01:30-02:30" selected="selected"> 01:30-02:30 </option>
+                            <option id="addTime" value="02:30-03:30" selected="selected"> 02:30-03:30 </option>
+                            <option id="addTime" value="03:30-05:30" selected="selected"> 03:30-05:30 </option>
+                            <option id="addTime" value="05:30-06:30" selected="selected"> 05:30-06:30 </option>
+                            <option id="addTime" value="06:30-07:30" selected="selected"> 06:30-07:30 </option>
+                            <option id="addTime" value="" selected="selected">  </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>OPMJ : </label>
+                        <input id="addOpmj" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>MASALAH : </label>
+                        <input id="addMasalah" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>ACTION : </label>
+                        <input id="addAction" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT Trouble Production </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">HALTE : </label>
+                        <select class="form-control" id="editHalte" name="dropdown">
+                            <option id="editHalte" value="1" selected="selected"> 1 </option>
+                            <option id="editHalte" value="2" selected="selected"> 2 </option>
+                            <option id="editHalte" value="3" selected="selected"> 3 </option>
+                            <option id="editHalte" value="4" selected="selected"> 4 </option>
+                            <option id="editHalte" value="5" selected="selected"> 5 </option>
+                            <option id="editHalte" value="6" selected="selected"> 6 </option>
+                            <option id="editHalte" value="7" selected="selected"> 7 </option>
+                            <option id="editHalte" value="8" selected="selected"> 8 </option>
+                            <option id="editHalte" value="9" selected="selected"> 9 </option>
+                            <option id="editHalte" value="10" selected="selected"> 10 </option>
+                            <option id="editHalte" value="" selected="selected">  </option>
+                        </select>
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label class="required">DATE : </label>
+                        <input id="editDate" type="text" class="form-control datepicker" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">TIME : </label>
+                        <select class="form-control" id="editTime" name="dropdown">
+                            <option id="editTime" value="07:30-08:30" selected="selected"> 07:30-08:30 </option>
+                            <option id="editTime" value="08:30-09:30" selected="selected"> 08:30-09:30 </option>
+                            <option id="editTime" value="09:30-10:40" selected="selected"> 09:30-10:40 </option>
+                            <option id="editTime" value="10:40-12:30" selected="selected"> 10:40-12:30 </option>
+                            <option id="editTime" value="12:30-13:30" selected="selected"> 12:30-13:30 </option>
+                            <option id="editTime" value="13:30-14:30" selected="selected"> 13:30-14:30 </option>
+                            <option id="editTime" value="14:30-16:00" selected="selected"> 14:30-16:00 </option>
+                            <option id="editTime" value="16:00-17:00" selected="selected"> 16:00-17:00 </option>
+                            <option id="editTime" value="17:00-18:30" selected="selected"> 17:00-18:30 </option>
+                            <option id="editTime" value="18:30-19:30" selected="selected"> 18:30-19:30 </option>
+                            <option id="editTime" value="19:30-20:30" selected="selected"> 19:30-20:30 </option>
+                            <option id="editTime" value="20:30-21:30" selected="selected"> 20:30-21:30 </option>
+                            <option id="editTime" value="21:30-22:30" selected="selected"> 21:30-22:30 </option>
+                            <option id="editTime" value="22:30-23:30" selected="selected"> 22:30-23:30 </option>
+                            <option id="editTime" value="23:30-00:30" selected="selected"> 23:30-00:30 </option>
+                            <option id="editTime" value="00:30-01:30" selected="selected"> 00:30-01:30 </option>
+                            <option id="editTime" value="01:30-02:30" selected="selected"> 01:30-02:30 </option>
+                            <option id="editTime" value="02:30-03:30" selected="selected"> 02:30-03:30 </option>
+                            <option id="editTime" value="03:30-05:30" selected="selected"> 03:30-05:30 </option>
+                            <option id="editTime" value="05:30-06:30" selected="selected"> 05:30-06:30 </option>
+                            <option id="editTime" value="06:30-07:30" selected="selected"> 06:30-07:30 </option>
+                            <option id="editTime" value="" selected="selected">  </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>OPMJ : </label>
+                        <input id="editOpmj" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>MASALAH : </label>
+                        <input id="editMasalah" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>ACTION : </label>
+                        <input id="editAction" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form upload new data-->
+
+<div id="modalUpload" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM Upload Data </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Excel : </label>
+                        <input style="width: 100%" type="file" id="FileUpload" name="FileUpload" class="" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="upload_data()" id="" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> IMPORT</button>                
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,432 @@
+﻿@using AI070.Models.DTIDashboardListRepository;
+@{
+    List<ad_dis_rtjn_master_dashboard_chart_parameter> bind_parameter = (List<ad_dis_rtjn_master_dashboard_chart_parameter>)ViewData["bind_parameter"];
+    List<ad_dis_rtjn_master_dashboard_target> bind_target = (List<ad_dis_rtjn_master_dashboard_target>)ViewData["bind_target"];
+    List<Master_Dashboard_Chart_Output_Aktual> bind_aktual1 = (List<Master_Dashboard_Chart_Output_Aktual>)ViewData["bind_aktual1"];
+    List<Master_Dashboard_Chart_Output_Aktual> bind_aktual2 = (List<Master_Dashboard_Chart_Output_Aktual>)ViewData["bind_aktual2"];
+    List<Master_Dashboard_Chart_Output_Akumulasi_Aktual> bind_akumulasi_aktual = (List<Master_Dashboard_Chart_Output_Akumulasi_Aktual>)ViewData["bind_akumulasi_aktual"];
+    List<Master_Dashboard_Chart_Output_Akumulasi_Target> bind_akumulasi_target = (List<Master_Dashboard_Chart_Output_Akumulasi_Target>)ViewData["bind_akumulasi_target"];
+    List<Master_Dashboard_Man_Power> bind_Master_Dashboard_Man_Power = (List<Master_Dashboard_Man_Power>)ViewData["bind_Master_Dashboard_Man_Power"];
+
+    var Proses_List = @ViewBag.Proses_List;
+}
+
+<td>
+    <div class="chart-container" style="position: relative; height:30vh; width:74vw">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+</td>
+<td>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+
+    <!--<div class="chart-container" style="position: relative; height:40vh; width:20vw">-->
+    <div>
+        <canvas id="myChart_Sum"></canvas>
+    </div>
+</td>
+
+<script>
+        window.setTimeout(function () {
+            window.location.reload();
+        }, 30000); //auto refresh -> for update data rtjn
+
+        //CREATE ARRAY LABEL PER JAM
+        var Label_bar_per_jam_ToConvert = JSON.parse('@Html.Raw(Json.Encode(@bind_parameter))');
+        var Label_bar_per_jam = [];
+        var Bar_aktual_backgroundColor = [];
+        var Bar_aktual_borderColor = [];
+        var Bar_akumulasi_act_backgroundColor = [];
+        var Bar_akumulasi_act_borderColor = [];
+        var Bar_akumulasi_tgt_backgroundColor = [];
+        var Bar_akumulasi_tgt_borderColor = [];
+
+        for (var i = 0; i < Label_bar_per_jam_ToConvert.length; i++) {
+            Label_bar_per_jam = Label_bar_per_jam.concat(Label_bar_per_jam_ToConvert[i]["parameter1"]);
+            Bar_aktual_backgroundColor = Bar_aktual_backgroundColor.concat('rgba(75, 192, 192, 0.5)'); //Warna Hijau
+            Bar_aktual_borderColor = Bar_aktual_borderColor.concat('rgba(75, 192, 192, 1)'); //Garis Hijau
+            Bar_akumulasi_tgt_backgroundColor = Bar_akumulasi_tgt_backgroundColor.concat('rgba(255, 159, 64, 0.5)'); //Orange
+            Bar_akumulasi_tgt_borderColor = Bar_akumulasi_tgt_borderColor.concat('rgba(255, 159, 64, 1)'); //Orange
+            Bar_akumulasi_act_backgroundColor = Bar_akumulasi_act_backgroundColor.concat('rgb(220,220,220)'); //gray
+            Bar_akumulasi_act_borderColor = Bar_akumulasi_act_borderColor.concat('rgba(75, 192, 192, 1)'); //green
+        }
+
+        //CHART DETAIL
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+
+            type: 'bar',
+            data: {
+
+        labels: ['shift 1', 'shift 2'], //label jam
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Y_MP',
+                        yAxisID: 'Y_MP',
+                        label: 'Man Power',
+                        fill: false,
+                        backgroundColor: ['blue'],
+                        borderColor: ['blue'],
+                        borderWidth: 2,
+                        data: [
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0730_sd_0830 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0830_sd_0930 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0930_sd_1040 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1040_sd_1230 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1230_sd_1330 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1330_sd_1430 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1430_sd_1600 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1600_sd_1700 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1700_sd_1830 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1830_sd_1930 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_1930_sd_2030 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_2030_sd_2130 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_2130_sd_2230 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_2230_sd_2330 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_2330_sd_0030 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0030_sd_0130 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0130_sd_0230 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0230_sd_0330 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0330_sd_0530 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0530_sd_0630 }',
+                            '@{ @bind_Master_Dashboard_Man_Power[0].jam_0630_sd_0730 }'
+                                @*'@{ @bind_Master_Dashboard_Man_Power[0].jam_0600_sd_0700 }'*@
+                        ]
+                    },
+                    {
+                        type: 'line',
+                        label: 'Y_PCS',
+                        yAxisID: 'Y_PCS',
+                        label: 'Target',
+                        fill: false,
+                        backgroundColor: ['orange'],
+                        borderColor: ['orange'],
+                        borderWidth: 2,
+                        data: [
+                             '@{ @bind_target[0].target_qty_jam_ke_1 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_2 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_3 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_4 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_5 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_6 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_7 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_8 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_9 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_10 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_11 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_12 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_13 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_14 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_15_16_istirahat }',
+                            '@{ @bind_target[0].target_qty_jam_ke_17 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_18 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_19 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_20 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_21 }',
+                            '@{ @bind_target[0].target_qty_jam_ke_22 }'
+                                @*'@{ @bind_target[0].target_hourly }'*@
+
+                        ]
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Y_PCS',
+                        yAxisID: 'Y_PCS',
+                        label: 'Press',
+                        backgroundColor: Bar_aktual_backgroundColor,
+                        borderColor: Bar_aktual_borderColor,
+                        borderWidth: 1,
+                        data: [
+                            '@{ @bind_aktual1[0].jam_0730_sd_0830 }',
+                            '@{ @bind_aktual1[0].jam_0830_sd_0930 }',
+                            '@{ @bind_aktual1[0].jam_0930_sd_1040 }',
+                            '@{ @bind_aktual1[0].jam_1040_sd_1230 }',
+                            '@{ @bind_aktual1[0].jam_1230_sd_1330 }',
+                            '@{ @bind_aktual1[0].jam_1330_sd_1430 }',
+                            '@{ @bind_aktual1[0].jam_1430_sd_1600 }',
+                            '@{ @bind_aktual1[0].jam_1600_sd_1700 }',
+                            '@{ @bind_aktual1[0].jam_1700_sd_1830 }',
+                            '@{ @bind_aktual1[0].jam_1830_sd_1930 }',
+                            '@{ @bind_aktual1[0].jam_1930_sd_2030 }',
+                            '@{ @bind_aktual1[0].jam_2030_sd_2130 }',
+                            '@{ @bind_aktual1[0].jam_2130_sd_2230 }',
+                            '@{ @bind_aktual1[0].jam_2230_sd_2330 }',
+                            '@{ @bind_aktual1[0].jam_2330_sd_0030 }',
+                            '@{ @bind_aktual1[0].jam_0030_sd_0130 }',
+                            '@{ @bind_aktual1[0].jam_0130_sd_0230 }',
+                            '@{ @bind_aktual1[0].jam_0230_sd_0330 }',
+                            '@{ @bind_aktual1[0].jam_0330_sd_0530 }',
+                            '@{ @bind_aktual1[0].jam_0530_sd_0630 }',
+                            '@{ @bind_aktual1[0].jam_0630_sd_0730 }'
+                        ]
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Y_PCS',
+                        yAxisID: 'Y_PCS',
+                        label: 'Press Parts',
+                        backgroundColor: Bar_aktual_backgroundColor,
+                        borderColor: Bar_aktual_borderColor,
+                        borderWidth: 1,
+                        data: [
+                               '@{ @bind_aktual2[0].jam_0730_sd_0830 }',
+                               '@{ @bind_aktual2[0].jam_0830_sd_0930 }',
+                               '@{ @bind_aktual2[0].jam_0930_sd_1040 }',
+                               '@{ @bind_aktual2[0].jam_1040_sd_1230 }',
+                               '@{ @bind_aktual2[0].jam_1230_sd_1330 }',
+                               '@{ @bind_aktual2[0].jam_1330_sd_1430 }',
+                               '@{ @bind_aktual2[0].jam_1430_sd_1600 }',
+                               '@{ @bind_aktual2[0].jam_1600_sd_1700 }',
+                               '@{ @bind_aktual2[0].jam_1700_sd_1830 }',
+                               '@{ @bind_aktual2[0].jam_1830_sd_1930 }',
+                               '@{ @bind_aktual2[0].jam_1930_sd_2030 }',
+                               '@{ @bind_aktual2[0].jam_2030_sd_2130 }',
+                               '@{ @bind_aktual2[0].jam_2130_sd_2230 }',
+                               '@{ @bind_aktual2[0].jam_2230_sd_2330 }',
+                               '@{ @bind_aktual2[0].jam_2330_sd_0030 }',
+                               '@{ @bind_aktual2[0].jam_0030_sd_0130 }',
+                               '@{ @bind_aktual2[0].jam_0130_sd_0230 }',
+                               '@{ @bind_aktual2[0].jam_0230_sd_0330 }',
+                               '@{ @bind_aktual2[0].jam_0330_sd_0530 }',
+                               '@{ @bind_aktual2[0].jam_0530_sd_0630 }',
+                               '@{ @bind_aktual2[0].jam_0630_sd_0730 }'
+                            ]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '@{ @Proses_List }'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                    //backgroundColor: 'rgba(72, 241, 12, 1)',
+                    //titleFontColor: 'black'
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'Y_PCS',
+                            type: 'linear',
+                            position: 'left',
+                            gridLines: {
+                                //drawBorder: false,
+                                //color: ['white', 'white', 'white', 'white', 'white'],
+                                //color: "rgba(0, 0, 0, 0)"
+                            },
+                            ticks: {
+                                //min: 0,
+                                //max: 350,
+                                //stepSize: 50
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'PCS'
+                            }
+                        },
+                        {
+                            id: 'Y_MP',
+                            type: 'linear',
+                            position: 'right',
+                            gridLines: {
+                                //drawBorder: false,
+                                //color: ['white', 'white', 'white', 'white', 'white'],
+                                color: "rgba(0, 0, 0, 0)" //hide grid line
+                            },
+                            ticks: {
+                                min: 0,
+                                max: 20,
+                                stepSize: 2
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Jumlah Man Power'
+                            }
+                        }
+                    ],
+                    xAxes: [
+                        {
+                            labels: Label_bar_per_jam //label jam
+                        },
+                        {
+                            id: 'X_JAM',
+                            type: 'category',
+                            offset: true,
+                            gridLines: {
+                                offsetGridLines: true,
+                                color: 'red'
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+     //CHART SUMMARY
+        var ctx_sum = document.getElementById("myChart_Sum").getContext('2d');
+        var myChart_sum = new Chart(ctx_sum, {
+
+            type: 'bar',
+            data: {
+
+                labels: [],
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Ak. Target',
+                        backgroundColor: ['rgba(255, 159, 64, 0.5)'],
+                        borderColor: ['rgba(255, 159, 64, 1)'],
+                        borderWidth: 1,
+                        data: ['@{ @bind_akumulasi_target[0].akumulasi_target }']
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Ak. Aktual',
+                        backgroundColor: Bar_akumulasi_act_backgroundColor,
+                        borderColor: Bar_akumulasi_act_borderColor,
+                        borderWidth: 1,
+                        data: ['@{ @bind_akumulasi_aktual[0].akumulasi_aktual }']
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Monitoring Akumulasi Output'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            drawBorder: false,
+                            color: ['white', 'white']
+                        },
+                        ticks: {
+                            //min: 500,
+                            //max: 5800,
+                            //stepSize: 500
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'PCS'
+                        }
+                    }]
+                }
+            }
+        });
+
+
+        //CHART DETAIL LABEL LOOPING
+        Chart.plugins.register({
+            afterDatasetsDraw: function (chart) {
+
+                var ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    var meta = chart.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        meta.data.forEach(function (element, index) {
+                            //alert(dataset.label != "Man Power");
+                            if (dataset.label == "Man Power" || dataset.label == "Press" || dataset.label == "Press Parts") {
+                                    // Draw the text in black, with the specified font
+                                    ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                                    var fontSize = 12;
+                                    var fontStyle = 'normal';
+                                    var fontFamily = 'Helvetica Neue';
+                                    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                    // Just naively convert to string for now
+                                    var dataString = dataset.data[index].toString();
+
+                                    // Make sure alignment settings are correct
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+
+                                    var padding = 5;
+                                    var position = element.tooltipPosition();
+                                    ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+
+
+        //CHART SUMMARY LABEL LOOPING
+        Chart.plugins.register({
+            afterDatasetsDraw: function (chart_sum) {
+
+                //CHART SUMMARY LABEL LOOPING
+                var ctx = chart_sum.ctx_sum;
+                chart_sum.data.datasets.forEach(function (dataset, i) {
+                    var meta = chart_sum.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        meta.data.forEach(function (element, index) {
+
+                            if (dataset.label == "Ak. Target" || dataset.label == "Ak. Aktual") {
+                                    // Draw the text in black, with the specified font
+                                ctx_sum.fillStyle = 'rgb(0, 0, 0)';
+
+                                var fontSize = 12;
+                                var fontStyle = 'normal';
+                                var fontFamily = 'Helvetica Neue';
+                                ctx_sum.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                // Just naively convert to string for now
+                                var dataString = dataset.data[index].toString();
+
+                                // Make sure alignment settings are correct
+                                ctx_sum.textAlign = 'center';
+                                ctx_sum.textBaseline = 'middle';
+
+                                var padding = 5;
+                                var position = element.tooltipPosition();
+                                ctx_sum.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                            }
+
+                        });
+                    }
+                });
+
+            }
+        });
+
+</script>

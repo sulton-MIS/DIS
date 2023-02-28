@@ -1,0 +1,170 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA200002Master;
+@{
+    List<DISA200002Master> DataWP = (List<DISA200002Master>)ViewData["DataDISA200002"];
+    //List<DISA200002> Status_Cmb = (List<DISA200002>)ViewData["Status_Cmb"];
+    //List<DISA200002> Time_Cmb = (List<DISA200002>)ViewData["Time_Cmb"];
+    //List<DISA200002> ExecTime_Cmb = (List<DISA200002>)ViewData["Time_Cmb"];
+    //List<DISA200002> Model_type = (List<DISA200002>)ViewData["Model_type"];
+    List<MainBumoModel> Lokasi = (List<MainBumoModel>)ViewData["MAINBUMO"];
+
+    //var seletc_data_unit_time = "";
+    //var seletc_data_exec_time = "";
+    //var seletc_data_status = "";
+    //var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #tblScroll tbody tr:hover {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #tblScroll tr.selected {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    /* #tr:hover {
+        background: #f1f1f1;
+    }*/
+
+</style>
+
+<script>
+    //$("tr").click(function () {
+    //    $(this).addClass("selected").siblings().removeClass("selected");
+    //});
+
+    var trs = document.querySelectorAll("tr");
+    for (var i = 0; i < trs.length; i++) {
+        trs[i].addEventListener("click", function () {
+            if (this.className.indexOf("selected") == 0)
+                this.className = "";
+            else
+                this.className = "selected";
+        });
+    }
+
+
+</script>
+
+@*Get Data Table*@
+
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; margin-top:20px; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border:none">
+                    <thead>
+                        <tr>
+                            <!--<th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">-->
+                            @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            <!--</th>-->
+                            <th style="width: 40px;" rowspan="2">NO</th>
+                            <th style="width: 200px;" rowspan="2">CODE</th>
+                            <th style="width: 300px;" rowspan="2">NAMA MATERIAL (NAME)</th>
+                            <th style="width: 300px;" rowspan="2">ITEM SPESIFICATION</th>
+                            <th style="width: 100px;" rowspan="2">SATUAN (UOM)</th>
+                            <th style="width: 150px;" rowspan="2">MAIN WORK CENTER (MAINBUMO)</th>
+                            <th style="width: 120px;" rowspan="2">STORAGE WORK CENTER (HOKAN)</th>
+                            <th style="width: 150px;" rowspan="2">STOK (ZAIK)</th>
+                            <th style="width: 230px;" rowspan="2">JENIS</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <div id="tScrollBody" style="height: 500px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA200002Master item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            @*<td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                    <input class="grid-checkbox" value="@item.ID,@item.CODE,@item.NAME,@item.MAINBUMO,@item.UOM,@item.ZAIK"
+                                                           type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                </td>*@
+                                            <td style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 200px"> @item.CODE</td>
+                                            <td style="width: 300px"> @item.NAME</td>
+                                            <td style="width: 300px"> @item.NOTE</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.UOM</td>
+                                            <td class="align-center align-middle" style="width: 150px"> @item.MAINBUMO</td>
+                                            <td class="align-center align-middle" style="width: 120px"> @item.HOKAN</td>
+                                            <td class="align-right align-middle" style="width: 150px"> @item.ZAIK</td>
+                                            <td style="width: 230px"> @item.BIKOU</td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+</div>
+
+<script>
+    //Loading
+    $(document).ajaxStart(function () {
+        $('.loader').show();
+    }).ajaxStop(function () {
+        $(".loader").delay(500).fadeOut("slow");
+    });
+
+</script>

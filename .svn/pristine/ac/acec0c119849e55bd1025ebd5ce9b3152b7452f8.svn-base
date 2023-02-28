@@ -1,0 +1,30 @@
+﻿@*@using AI070.Models.WP03013Master;*@
+@model IEnumerable<AI070.Models.WP03013.TrainingModul>
+
+    @{
+        Layout = "~/Views/WP03013/_Layout.cshtml";
+    }
+
+    <div class="container pl-0 pr-0">
+        <h2 class="font-weight-bold mt-5 mb-4" style="font-size: 18px">Choose what Training you want.</h2>
+
+        <div class="row row-cols-1" style="width: 80%">
+            @foreach (var item in Model)
+            {
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.TITLE</h5>
+
+                            <p class="card-text">@item.DESCRIPTION</p>
+                            @Html.ActionLink("Start Training", "OpenModule", "WP03013", new {  id = item.ID_TB_M_LEARN_MOD_TRAINING, userId = @ViewBag.UserId }, new { @class = "btn btn-primary" })
+                          @*  @Html.ActionLink("Open Module", "Index", new { id = item.ID_TB_M_LEARN_MOD_TRAINING }, new { @class = "btn btn-success" })*@
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        </div>
+
+    </div>

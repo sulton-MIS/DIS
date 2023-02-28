@@ -1,0 +1,40 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50) = @START;
+DECLARE @@DISPLAY VARCHAR(50) = @DISPLAY;
+
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY time_koshin DESC) ROW_NUM,
+	id_tool as ID, 
+	*
+	FROM [Z_RT_master_tool]		
+	WHERE 1=1 
+';
+
+IF(@ID_TOOL <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND id_tool LIKE ''%'+RTRIM(@ID_TOOL)+'%'' ';
+	END
+
+IF(@NAME_TOOL <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND name_tool LIKE ''%'+RTRIM(@NAME_TOOL)+'%'' ';
+	END
+
+IF(@FACTORY <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND factory LIKE ''%'+RTRIM(@FACTORY)+'%'' ';
+	END
+
+
+SET @@QUERY = @@QUERY +') as TB';
+
+IF(@@START > 0 AND @@DISPLAY > 0)
+BEGIN	
+	SET @@QUERY = @@QUERY +' WHERE ROW_NUM BETWEEN '+@@START+' AND '''+@@DISPLAY+''' ';
+END
+
+EXEC(@@QUERY)

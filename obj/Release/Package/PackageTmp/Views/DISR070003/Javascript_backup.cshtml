@@ -1,0 +1,696 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISR070003") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function add_check() {
+        var id_kotei = $('#addIdKotei').val();
+        var name_kotei = $('#addNameKotei').val();
+        var halte = $('#addHalte').val();
+        var id_koteishubetsu = $('#addIdKoteishubetsu').val();
+        var flg_increByCavity = $('#addFlgIncCav').val();
+        var id_gamenshubetsu = $('#addIdGamenshubetsu').val();
+        var flg_RTJNon = $('#addFlgRTJNon').val();
+        var comment = $('#addComment').val();
+        var flg_rimen = $('#addFlgRimen').val();
+        var flg_need_tool = $('#addFlgNeedTool').val();
+        var flag_logical = $('#addFlagLogical').val();
+        var initial_process = $('#addInitialProcess').val();
+        var flg_check_schedule = $('#addFlgCheckSchedule').val();
+        var flg_disp_material = $('#addFlgDispMaterial').val();
+        var flg_warning_material = $('#addFlgWarningMaterial').val();
+        var flg_oven = $('#addFlgOven').val();
+        var group_process = $('#addGroupProcess').val();
+        var category = $('#addCategory').val();
+        var sort_no = $('#addSortNo').val();
+        var flg_chokoritsu = $('#addFlgChokoritsu').val();
+        var bgcolor = $('#addbgcolor').val();
+        var group_process_cost = $('#addGroupProcessCost').val();
+        var type_process = $('#addTypeProcess').val();
+        var category_process = $('#addCategoryProcess').val();
+        var prod_cost_level = $('#addProdCostLevel').val();
+        var flg_use_cl = $('#addFlgUseCl').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        //var id_kotei = $('#editIdKotei').val();
+        //var name_kotei = $('#editNameKotei').val();
+        //var halte = $('#editHalte').val();
+        //var id_koteishubetsu = $('#editIdKoteishubetsu').val();
+        //var flg_increByCavity = $('#editFlgIncCav').val();
+        //var id_gamenshubetsu = $('#editIdGamenshubetsu').val();
+        //var flg_RTJNon = $('#editFlgRTJNon').val();
+        //var comment = $('#editComment').val();
+        //var flg_rimen = $('#editFlgRimen').val();
+        //var flg_need_tool = $('#editFlgNeedTool').val();
+        //var flag_logical = $('#editFlagLogical').val();
+        //var initial_process = $('#editInitialProcess').val();
+        //var flg_check_schedule = $('#editFlgCheckSchedule').val();
+        //var flg_disp_material = $('#editFlgDispMaterial').val();
+        //var flg_warning_material = $('#editFlgWarningMaterial').val();
+        //var flg_oven = $('#editFlgOven').val();
+        //var group_process = $('#editGroupProcess').val();
+        //var category = $('#editCategory').val();
+        //var sort_no = $('#editSortNo').val();
+        //var flg_chokoritsu = $('#editFlgChokoritsu').val();
+        //var bgcolor = $('#editbgcolor').val();
+        //var group_process_cost = $('#editGroupProcessCost').val();
+        //var type_process = $('#editTypeProcess').val();
+        //var category_process = $('#editCategoryProcess').val();
+        //var prod_cost_level = $('#editProdCostLevel').val();
+        //var flg_use_cl = $('#editFlgUseCl').val();
+
+        //DISR070002
+        var ID_NG = $('#editidng').val();
+        var NAME_NG = $('#editnameng').val();
+        var NGSTATUS = $('#editStatusNG').val();
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Add New
+    function addNew() {
+        var id_kotei = $('#addIdKotei').val();
+        var name_kotei = $('#addNameKotei').val();
+        var halte = $('#addHalte').val();
+        var id_koteishubetsu = $('#addIdKoteishubetsu').val();
+        var flg_increByCavity = $('#addFlgIncCav').val();       
+        var id_gamenshubetsu = $('#addIdGamenshubetsu').val();
+        var flg_RTJNon = $('#addFlgRTJNon').val();
+        var comment = $('#addComment').val();
+        var flg_rimen = $('#addFlgRimen').val();
+        var flg_need_tool = $('#addFlgNeedTool').val();
+        var flag_logical = $('#addFlagLogical').val();
+        var initial_process = $('#addInitialProcess').val();
+        var flg_check_schedule = $('#addFlgCheckSchedule').val();
+        var flg_disp_material = $('#addFlgDispMaterial').val();
+        var flg_warning_material = $('#addFlgWarningMaterial').val();
+        var flg_oven = $('#addFlgOven').val();
+        var group_process = $('#addGroupProcess').val();
+        var category = $('#addCategory').val();
+        var sort_no = $('#addSortNo').val();
+        var flg_chokoritsu = $('#addFlgChokoritsu').val();
+        var bgcolor = $('#addbgcolor').val();
+        var group_process_cost = $('#addGroupProcessCost').val();
+        var type_process = $('#addTypeProcess').val();
+        var category_process = $('#addCategoryProcess').val();
+        var prod_cost_level = $('#addProdCostLevel').val();
+        var flg_use_cl = $('#addFlgUseCl').val();
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                id_kotei: id_kotei,
+                name_kotei: name_kotei,
+                halte: halte,
+                id_koteishubetsu: id_koteishubetsu,
+                flg_increByCavity: flg_increByCavity,
+                id_gamenshubetsu: id_gamenshubetsu,
+                flg_RTJNon: flg_RTJNon,
+                comment: comment,
+                flg_rimen: flg_rimen,
+                flg_need_tool: flg_need_tool,
+                flag_logical: flag_logical,
+                initial_process: initial_process,
+                flg_check_schedule: flg_check_schedule,
+                flg_disp_material: flg_disp_material,
+                flg_warning_material: flg_warning_material,
+                flg_oven: flg_oven,
+                group_process: group_process,
+                category: category,
+                sort_no: sort_no,
+                flg_chokoritsu: flg_chokoritsu,
+                bgcolor: bgcolor,
+                group_process_cost: group_process_cost,
+                type_process: type_process,
+                category_process: category_process,
+                prod_cost_level: prod_cost_level,
+                flg_use_cl: flg_use_cl
+
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    clear_add();
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                    $('#btnNo').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var id_kotei = $('#addIdKotei').val();
+        var name_kotei = $('#addNameKotei').val();
+        var halte = $('#addHalte').val();
+        var id_koteishubetsu = $('#addIdKoteishubetsu').val();
+        var flg_increByCavity = $('#addFlgIncCav').val();
+        //var rate_handankaishi = $('#addRateHandankashi').val();
+        //var rate_ALRTchien = $('#addRateALTR').val();
+        //rate_chinritsu,
+        //rate_warikomikyoyouritsu,
+        var id_gamenshubetsu = $('#addIdGamenshubetsu').val();
+        var flg_RTJNon = $('#addFlgRTJNon').val();
+        var comment = $('#addComment').val();
+        var flg_rimen = $('#addFlgRimen').val();
+        var flg_need_tool = $('#addFlgNeedTool').val();
+        //time_koshin,
+        var flag_logical = $('#addFlagLogical').val();
+        var initial_process = $('#addInitialProcess').val();
+        var flg_check_schedule = $('#addFlgCheckSchedule').val();
+        var flg_disp_material = $('#addFlgDispMaterial').val();
+        var flg_warning_material = $('#addFlgWarningMaterial').val();
+        //var flg_daily_loss = $('#addFlgDailyLoss').val();
+        var flg_oven = $('#addFlgOven').val();
+        var group_process = $('#addGroupProcess').val();
+        var category = $('#addCategory').val();
+        var sort_no = $('#addSortNo').val();
+        var flg_chokoritsu = $('#addFlgChokoritsu').val();
+        var bgcolor = $('#addbgcolor').val();
+        var group_process_cost = $('#addGroupProcessCost').val();
+        var type_process = $('#addTypeProcess').val();
+        var category_process = $('#addCategoryProcess').val();
+        //flg_protect_skill,
+        var prod_cost_level = $('#addProdCostLevel').val();
+        var flg_use_cl = $('#addFlgUseCl').val();
+        //var ID_NG = $('#addIdNG').val();
+        //var NAME_NG = $('#addNameNG').val();
+        //var TIME_KOSHIN = ($('#addTimeKoshin').val()).replace('T', ' ');
+        //var NGSTATUS = $('#addNGStatus').val();
+        //var FLG_COUNT = $('#addFlgCount').val();
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var id_kotei = $('#editIdKotei');
+        var name_kotei = $('#editNameKotei');
+        //var halte = $('#editHalte');
+        //var id_koteishubetsu = $('#editIdKoteishubetsu');
+        //var flg_increByCavity = $('#editFlgIncCav');
+        //var id_gamenshubetsu = $('#editIdGamenshubetsu');
+        //var flg_RTJNon = $('#editFlgRTJNon');
+        //var comment = $('#editComment');
+        //var flg_rimen = $('#editFlgRimen');
+        //var flg_need_tool = $('#editFlgNeedTool');
+        //var flag_logical = $('#editFlagLogical');
+        //var initial_process = $('#editInitialProcess');
+        //var flg_check_schedule = $('#editFlgCheckSchedule');
+        //var flg_disp_material = $('#editFlgDispMaterial');
+        //var flg_warning_material = $('#editFlgWarningMaterial');
+        //var flg_oven = $('#editFlgOven');
+        //var group_process = $('#editGroupProcess');
+        //var category = $('#editCategory');
+        //var sort_no = $('#editSortNo');
+        //var flg_chokoritsu = $('#editFlgChokoritsu');
+        //var bgcolor = $('#editbgcolor');
+        //var group_process_cost = $('#editGroupProcessCost');
+        //var type_process = $('#editTypeProcess');
+        //var category_process = $('#editCategoryProcess');
+        //var prod_cost_level = $('#editProdCostLevel');
+        //var flg_use_cl = $('#editFlgUseCl');
+
+        //var name_ng = $('#editnameng');
+        //var id_ng = $('#editidng');
+        //var NgStatus = $('#editNgStatus');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        //name_ng.val(Send_Var[1]);
+        //id_ng.val(Send_Var[2]);
+        //NgStatus.val(Send_Var[4]);
+
+        id_kotei.val(Send_Var[1]);
+        name_kotei.val(Send_Var[2]);
+        //halte.val(Send_Var[3]);
+        //id_koteishubetsu.val(Send_Var[4]);
+        //flg_increByCavity.val(Send_Var[5]);
+        //id_gamenshubetsu.val(Send_Var[6]);
+        //flg_RTJNon.val(Send_Var[7]);
+        //comment.val(Send_Var[8]);
+        //flg_rimen.val(Send_Var[9]);
+        //flg_need_tool.val(Send_Var[10]);
+        //flag_logical.val(Send_Var[11]);
+        //initial_process.val(Send_Var[12]);
+        //flg_check_schedule.val(Send_Var[13]);
+        //flg_disp_material.val(Send_Var[14]);
+        //flg_warning_material.val(Send_Var[15]);
+        //flg_oven.val(Send_Var[16]);
+        //group_process.val(Send_Var[17]);
+        //category.val(Send_Var[18]);
+        //sort_no.val(Send_Var[19]);
+        //flg_chokoritsu.val(Send_Var[20]);
+        //bgcolor.val(Send_Var[21]);
+        //group_process_cost.val(Send_Var[22]);
+        //type_process.val(Send_Var[23]);
+        //category_process.val(Send_Var[24]);
+        //prod_cost_level.val(Send_Var[25]);
+        //flg_use_cl.val(Send_Var[26]);
+
+        $('#modalEditForm').modal();
+    });
+
+    function cancel_edit() {
+        var ID = $('#editid').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#editid').val();
+                var id_kotei = $('#editIdKotei').val();
+                var name_kotei = $('#editNameKotei').val();
+                var halte = $('#editHalte').val();
+                //var id_koteishubetsu = $('#editIdKoteishubetsu').val();
+                //var flg_increByCavity = $('#editFlgIncCav').val();
+                //var id_gamenshubetsu = $('#editIdGamenshubetsu').val();
+                //var flg_RTJNon = $('#editFlgRTJNon').val();
+                //var comment = $('#editComment').val();
+                //var flg_rimen = $('#editFlgRimen').val();
+                //var flg_need_tool = $('#editFlgNeedTool').val();
+                //var flag_logical = $('#editFlagLogical').val();
+                //var initial_process = $('#editInitialProcess').val();
+                //var flg_check_schedule = $('#editFlgCheckSchedule').val();
+                //var flg_disp_material = $('#editFlgDispMaterial').val();
+                //var flg_warning_material = $('#editFlgWarningMaterial').val();
+                //var flg_oven = $('#editFlgOven').val();
+                //var group_process = $('#editGroupProcess').val();
+                //var category = $('#editCategory').val();
+                //var sort_no = $('#editSortNo').val();
+                //var flg_chokoritsu = $('#editFlgChokoritsu').val();
+                //var bgcolor = $('#editbgcolor').val();
+                //var group_process_cost = $('#editGroupProcessCost').val();
+                //var type_process = $('#editTypeProcess').val();
+                //var category_process = $('#editCategoryProcess').val();
+                //var prod_cost_level = $('#editProdCostLevel').val();
+                //var flg_use_cl = $('#editFlgUseCl').val();
+                
+                //var Send_Var = ID + "," + id_kotei + "," + name_kotei + "," + halte + "," + id_koteishubetsu + "," + flg_increByCavity + "," + id_gamenshubetsu + "," + flg_RTJNon + "," + comment
+                //    + "," + flg_rimen + "," + flg_need_tool + "," + flag_logical + "," + initial_process + "," + flg_check_schedule + "," + flg_disp_material + "," + flg_warning_material + "," + flg_oven
+                //    + "," + group_process + "," + category + "," + sort_no + "," + flg_chokoritsu + "," + bgcolor + "," + group_process_cost + "," + type_process + "," + category_process
+                //    + "," + prod_cost_level + "," + flg_use_cl;
+
+                var Send_Var = ID + "," + id_kotei + "," + name_kotei + "," + halte;
+
+                //var name_ng = $('#editnameng').val();
+                //var id_ng = $('#editidng').val();
+                //var NgStatus = $('#editNgStatus').val();
+                //var TIME_KOSHIN = ($('#editTimeKoshin').val()).replace('T', ' ');
+                //var Send_Var = ID + "," + id_kotei + "," + name_kotei;
+
+                $.ajax({
+                    type: "POST",
+                    url: 'DISR070003/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'DISR070003/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchIdKotei').val('');
+        $('#searchNameKotei').val('');
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addIdKotei').val();
+        $('#addNameKotei').val();
+        $('#addHalte').val();
+        $('#addIdKoteishubetsu').val();
+        $('#addFlgIncCav').val();
+        $('#addIdGamenshubetsu').val();
+        $('#addFlgRTJNon').val();
+        $('#addComment').val();
+        $('#addFlgRimen').val();
+        $('#addFlgNeedTool').val();
+        $('#addFlagLogical').val();
+        $('#addInitialProcess').val();
+        $('#addFlgCheckSchedule').val();
+        $('#addFlgDispMaterial').val();
+        $('#addFlgWarningMaterial').val();
+        $('#addFlgOven').val();
+        $('#addGroupProcess').val();
+        $('#addCategory').val();
+        $('#addSortNo').val();
+        $('#addFlgChokoritsu').val();
+        $('#addbgcolor').val();
+        $('#addGroupProcessCost').val();
+        $('#addTypeProcess').val();
+        $('#addCategoryProcess').val();
+        $('#addProdCostLevel').val();
+        $('#addFlgUseCl').val();
+        //$('#addNameNG').val('');
+        //$('#addIdNG').val('');
+        //$('#addTimeKoshin').val('');
+        //$('#addNGStatus').val('');
+        //$('#addFlgCount').val('');
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var id_kotei = $('#searchIdKotei').val();
+        var name_kotei = $('#searchNameKotei').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                id_kotei: id_kotei,
+                name_kotei: name_kotei
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

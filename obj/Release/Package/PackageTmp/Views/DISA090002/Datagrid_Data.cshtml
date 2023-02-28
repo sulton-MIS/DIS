@@ -1,0 +1,197 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA090002Master;
+@{
+    List<DISA090002Master> DataWP = (List<DISA090002Master>)ViewData["DataDISA090002"];
+
+}
+
+<style>
+    .paragraf {
+        position: relative;
+        margin-top: 10px;
+        margin-left: 10px;
+        font-size: 30px;
+        font-family: Perpetua;
+        color: darkslategray;
+    }
+    .chkbx{
+        height: 20px;
+        width: 20px;
+    }
+
+    /* Hide default checkbox */
+    input[type=checkbox] {
+        /*visibility: hidden;*/
+        margin-top: 5px;
+        height: 20px;
+        width: 20px;
+        border: 1px solid;
+        cursor: pointer;
+    }
+    .check-all {
+        margin-left: 5px;
+        font-size: 35px;
+    }
+    .label-check-all {
+        margin-left: 5px;
+        font-size: 30px;
+        font-family: Perpetua;
+        color: darkslategray;
+    }
+    .first_row {
+        margin-left: 20px;
+        font-size: 30px;
+        font-family: Perpetua;
+        color: darkslategray;
+    }
+    .next_row {
+        margin-left: 30px;
+        font-size: 30px;
+        font-family: Perpetua;
+        color: darkslategray;
+    }
+    .last_row{
+        margin-left: 35px;
+    }
+
+    #hr {
+        background-color: #C80000;
+        color: #C80000;
+        -webkit-transform: rotate(90deg);
+        position: absolute;
+        width: 100px;
+        height: 2px;
+        left: 130px;
+        border: 2px;
+    }
+
+    /*----------------TABEL------------*/
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #tblScroll tbody tr:hover {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #tblScroll tr.selected {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary btn-xs" data-title="settingDB" onclick="menuSetting(this)" id="btn_SettingDB"><i class="fa fa-gear"></i> Setting Database</button>
+            <button type="button" class="btn btn-light btn-xs" data-title="historyDistribusi" onclick="menuSetting(this)" id="btn_SettingDB"><i class="fa fa-history"></i> History Distribusi</button>
+        </div>
+        <div class="col-md-6">
+        </div>
+
+        <div class="col-md-12" style="border: 1pt solid #ccc; overflow:scroll; position: relative; margin-top: 20px">
+            <div id="gutterGrid" style="position: absolute; margin-top:20px; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+
+            <div style="width:30%; margin-left:20px; ">
+                <input type="checkbox" id="denki-all"><label class="label-check-all" for="denki-all">Check All</label>
+            </div>
+
+            @{
+                if (DataWP != null)
+                {
+                    if (DataWP.Count > 0)
+                    {
+                        var number = 1;
+                        var firstRow = 1;
+                        foreach (DISA090002Master item in DataWP)
+                        {
+                            if (number == firstRow)
+                            {
+                                <br />
+                                <span class="first_row">
+                                    <input class="chkboxname" value="@item.NAMA_MESIN" type="checkbox" name="checkdata[]" id="check-@number" /> @item.NAMA_MESIN
+                                </span>
+
+                                firstRow = number + 4;
+                            }
+                            else
+                            {
+                                if (number > 10)
+                                {
+                                    <span class="next_row" style="margin-left: 16px !important">
+                                        <input class="chkboxname" value="@item.NAMA_MESIN" type="checkbox" name="checkdata[]" id="check-@number" /> @item.NAMA_MESIN
+                                    </span>
+                                }
+                                else { 
+                                    <span class="next_row">
+                                        <input class="chkboxname" value="@item.NAMA_MESIN" type="checkbox" name="checkdata[]" id="check-@number" /> @item.NAMA_MESIN
+                                    </span>
+                                }
+                                
+                            }
+
+
+                            number++;
+                        }
+                    }
+                }
+            }
+            <select class="input-xs" style="height: 25px; visibility:hidden" id="paging" onchange="OnSearch()">
+                <option value="100" selected="selected">100</option>
+            </select>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+@*<div class="row">
+    <div style="width:30%; margin-left:20px; ">
+        <input type="checkbox" id="denki-all"><label class="label-check-all" for="denki-all">Check All</label>
+    </div>
+    <div class="container-sm" style="height:250px; width: 98%; margin-left:15px">
+        <p class="paragraf">
+            <span class="first_row" for="denki-1"><input type="checkbox" class="chkboxname" id="denki-1"> Denki USCO 1 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-5"><input type="checkbox" class="chkboxname" id="denki-5"> Denki USCO 5 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-9"><input type="checkbox" class="chkboxname" id="denki-9"> Denki USCO 9 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-13"><input type="checkbox" class="chkboxname" id="denki-13"> Denki USCO 13 <span class="checkmark"></span></span>
+        </p>
+        <p class="paragraf">
+            <span class="first_row" for="denki-2"><input type="checkbox" class="chkboxname" id="denki-2"> Denki USCO 2 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-6"><input type="checkbox" class="chkboxname" id="denki-6"> Denki USCO 6 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-10"><input type="checkbox" class="chkboxname" id="denki-10"> Denki USCO 10 <span class="checkmark"></span></span>
+        </p>
+        <p class="paragraf">
+            <span class="first_row" for="denki-3"><input type="checkbox" class="chkboxname" id="denki-3"> Denki USCO 3 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-7"><input type="checkbox" class="chkboxname" id="denki-7"> Denki USCO 7 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-11"><input type="checkbox" class="chkboxname" id="denki-11"> Denki USCO 11 <span class="checkmark"></span></span>
+        </p>
+        <p class="paragraf">
+            <span class="first_row" for="denki-4"><input type="checkbox" class="chkboxname" id="denki-4"> Denki USCO 4 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-8"><input type="checkbox" class="chkboxname" id="denki-8"> Denki USCO 8 <span class="checkmark"></span></span>
+            <span class="next_row" for="denki-12"><input type="checkbox" class="chkboxname" id="denki-12"> Denki USCO 12 <span class="checkmark"></span></span>
+        </p>
+    </div>
+</div>*@

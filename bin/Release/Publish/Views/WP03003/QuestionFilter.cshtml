@@ -1,0 +1,41 @@
+﻿    @{
+        string questionId = "question-" + @ViewBag.identifyId;
+        string categoryId = "selectCategory-" + @ViewBag.identifyId;
+    }
+    @using AI070.Models.WP03003Master;
+    @{
+        List<CategoryModel> Category = (List<CategoryModel>)ViewData["CATEGORY"];
+    }
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table id="tableSearch" class="width-100">
+                <tr>
+                    <td>Question</td>
+                    <td>
+                        @Html.Editor(questionId, new { htmlAttributes = new { @class = "form-control" } })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Kategori</td>
+                    <td>
+                        <select id="@categoryId" required class="form-control">
+                            <option value="">--Select Category--</option>
+                            @{
+                                if (Category != null)
+                                {
+                                    if (Category.Count() > 0)
+                                    {
+                                        foreach (CategoryModel item in Category)
+                                        {
+                                            <option value="@item.ID">@item.CATEGORY</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>

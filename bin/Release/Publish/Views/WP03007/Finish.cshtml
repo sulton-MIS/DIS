@@ -1,0 +1,78 @@
+﻿@using AI070.Models.WP03007;
+@model MasterExamScore
+
+@{
+    ViewBag.Title = "Congratulation";
+
+    int UserId = (int)ViewData["UserId"];
+    Layout = "~/Views/WP03007/_Layout.cshtml";
+}
+
+<div class="container pl-0 pr-0">
+    <div style="margin-top: 80px; margin-bottom: 60px">
+        <div class="row">
+            <div class="col-md-6 pr-5">
+
+                @if (Model.Status == "PASS")
+                {
+                    <h2>Congratulations!! </h2>
+                    <p class="mt-3">
+                        congratulations!! You have successfully passed this test.
+                    </p>
+                }
+                else
+                {
+                    <h2>Sorry</h2>
+                    <p class="mt-3">
+                        Sorry, You failed this test, please try again later
+                    </p>
+                }
+                <table>
+                    <tr>
+                        <td class="p-1 border-bottom">Total Question</td>
+                        @{ int total = (Model.CorrectAmount + Model.WrongAmount + Model.NotAnswerAmount); }
+                        <td class="pl-4 border-left border-bottom">@total</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 border-bottom">Correct Amount</td>
+                        <td class="pl-4 border-left border-bottom">@Model.CorrectAmount</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 border-bottom">Wrong Amount</td>
+                        <td class="pl-4 border-left border-bottom">@Model.WrongAmount</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 pr-4 border-bottom">Not Answer Amount</td>
+                        <td class="pl-4 border-left border-bottom">@Model.NotAnswerAmount</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 border-bottom">Pass Graduate</td>
+                        <td class="pl-4 border-left border-bottom">@Model.PassGraduate</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 border-bottom">Final Score</td>
+                        <td class="pl-4 border-left border-bottom">@Model.Score</td>
+                    </tr>
+                    <tr>
+                        <td class="p-1 border-bottom">Status</td>
+                        <td class="pl-4 border-left border-bottom">@Model.Status</td>
+                    </tr>
+                </table>
+                <div class="pt-3">
+                    @Html.ActionLink("Finish", "ExamPortal", "WP03007", new { id = UserId }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                @if (Model.Status != "NOT PASS")
+                {
+                    <img src="~/Content/Images/failed.png" class="shadow-none border-0 pl-1" style="width: 120%; height: 90%" alt="">
+                }
+                else
+                {
+                    <img src="~/Content/Images/Success.png" class="shadow-none border-0 pl-1" style="width: 120%; height: 90%" alt="">
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

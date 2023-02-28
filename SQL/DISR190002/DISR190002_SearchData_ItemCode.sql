@@ -1,0 +1,7 @@
+﻿SELECT 
+	CODE as ID,
+	*
+FROM 
+	dbo.XPRTS
+WHERE
+	KCODE LIKE '' + RTRIM(@DMC_CODE) + '%'

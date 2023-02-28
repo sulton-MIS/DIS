@@ -1,0 +1,89 @@
+﻿<script>
+	var IdSubject = 0
+	var IdCompany = 0
+
+	$(document).ready(function () {
+        //reloadSummary()
+        
+    });
+	function back() {
+		location.href = "/WP03011"
+	}
+
+	//function reloadSummary() {
+
+ //   }
+
+	function printNameCardByIdEmployee() {
+
+        var regNumber = $('#regNumber').val();
+
+        var status = true;
+        if (regNumber == null || regNumber == "") {
+            toastr.warning("REG. NUMBER  CANNOT BE EMPTY");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        }
+        $('.modal-body').html('');
+
+        $.ajax({
+            url: 'WP03011/NameCardByScore',
+            data: {
+                regNumber : regNumber
+            },
+            success: function (e) {
+                $('#modal-print').modal();
+                $('.modal-body').html(e);
+            },
+            error: function (e) {
+                toastr.warning('Data Reg Number : '+regNumber+' Not Found');
+            }
+        });
+
+  
+    }
+
+    function printID(type) {
+        var regNumber = $('#regNumber').val();
+        //if (type == 'pdf') {
+        //    window.open(
+        //        'WP03011/NameCardByScore?regNumber=' + regNumber+'&type=pdf',
+        //        '_blank' // <- This is what makes it open in a new window.
+        //    );
+        //} else {
+            var data = $('.modal-body').html();
+            printWindow = window.open('');
+            printWindow.document.write(data);
+            printWindow.print();
+        //}
+       
+    }
+
+	function printCertifiedIdEmployee() {
+        var regNumber = $('#regNumber').val();
+
+        var status = true;
+        if (regNumber == null || regNumber == "") {
+            toastr.warning("REG. NUMBER  CANNOT BE EMPTY");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        }
+
+        window.open(
+			'WP03011/CertifiedByScore?regNumber=' + regNumber,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+
+    }
+
+    function clear_search() {
+        $('#regNumber').val("");
+    };
+
+</script>

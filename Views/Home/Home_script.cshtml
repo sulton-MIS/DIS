@@ -1,0 +1,345 @@
+﻿<script>
+    var SITE_URL = (window.location.href).split('?')[0] + "/";
+    console.log((SITE_URL).split('/'));
+    if ($.inArray('Home', (SITE_URL).split('/')) == -1) {
+        SITE_URL = SITE_URL + 'Home/';
+    }
+    var WINDOW_URL = window.location.href;
+    var url = new URL(WINDOW_URL);
+    var getParameter = url.searchParams.get("Areacd");
+    var zIndex = 1000;
+    var menu = false;
+    var statusHide = false;
+    var idSquare = 0;
+    var Message = [];
+
+    $.ajax({
+        url: "Message/GenerateMessage",
+        success: function (e) {
+            Message = e.res;
+
+            for (var i = 0; i < Message.length; i++) {
+                var MSG_ID = Message[i].MSG_ID;
+                if (MSG_ID == "MWP005") {
+                    $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                } else if (MSG_ID == "MWP006") {
+                    $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                } else if (MSG_ID == "MWP007") {
+                    $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                }
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        hideMenuNav();
+
+        if (getParameter != null) {
+        $('.selectArea').val($(".selectArea [areacd=" + getParameter + "]").val());
+            $.get($('.selectArea option:selected').attr('image'))
+                .done(function () {
+                if ($('.selectArea option:selected').attr('image') == undefined) {
+                    GenerateMessage('', 'MWP022');
+                    $('.imagebox').attr('src', '');
+                } else {
+                    $('.imagebox').attr('src', $('.selectArea option:selected').attr('image'));
+                }
+            }).fail(function () {
+                GenerateMessage('', 'MWP022');
+                $('.imagebox').attr('src', '');
+            });
+        }
+        var default_area = @UserInfo.Area;
+        if (getParameter != null) {
+            getIMPBDetail($('.selectArea').val());
+        } else if (default_area != null) {
+            $('.selectArea').val(default_area);
+            $('.imagebox').attr('src', $('.selectArea option:selected').attr('image'));
+            getIMPBDetail(default_area);
+        }
+
+        setInterval(function (e) {
+            getIMPBDetail($('.selectArea').val(),'noloading');
+        }, 10000)
+
+        setTimeout(function () {
+            $( "#loading" ).fadeOut( "slow", function() {
+              });
+        }, 2000);
+
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+
+        setInterval(function () {
+            var d = new Date();
+            $('.dateNow').text(d.getDate()+"-"+monthNames[d.getMonth()]+"-"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds());
+        }, 1000);
+
+        $('.selectArea').change(function () {
+            $.get($('.selectArea option:selected').attr('image'))
+                .done(function () {
+                if ($('.selectArea option:selected').attr('image') == undefined) {
+                    GenerateMessage('', 'MWP022');
+                    $('.imagebox').attr('src', '');
+                } else {
+                    $('.imagebox').attr('src', $('.selectArea option:selected').attr('image'));
+                }
+            }).fail(function () {
+                GenerateMessage('', 'MWP022');
+                $('.imagebox').attr('src', '');
+            });
+            $('.square-widget').remove();
+            $('.popover').hide();
+            idSquare = 0;
+            getIMPBDetail(this.value);
+
+        });
+
+    });
+
+    function requestFullScreen(element) {
+        var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+        if (requestMethod) { // Native full screen.
+            requestMethod.call(element);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+    }
+
+    var elem = document.body; // Make the body go full screen.
+    requestFullScreen(elem);
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            var MSG_TYPE = Message[i].MSG_TYPE;
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (MSG_TYPE == "Info") {
+                    toastr.success(NEW_TXT);
+                } else if (MSG_TYPE == "Warning") {
+                    toastr.warning(NEW_TXT);
+                } else {
+                    toastr.error(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    $('.hideBox').click(function () {
+        if (statusHide == false) {
+            $(".BoxControlContractor").animate({ "left": "+=50vw" }, "slow");
+            $(".selectArea").animate({ "left": "-=400px" }, "slow");
+            $("#btn-show").animate({ "right": "-=400px" }, "slow");
+            $('.hideBoxIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+            statusHide = true;
+        } else {
+            $(".BoxControlContractor").animate({ "left": "-=50vw" }, "slow");
+            $(".selectArea").animate({ "left": "+=400px" }, "slow");
+            $("#btn-show").animate({ "right": "+=400px" }, "slow");
+            $('.hideBoxIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+            statusHide = false;
+        }
+    })
+
+    function getIMPBDetail(AREA, noloading) {
+        $.ajax({
+            url: SITE_URL + "getIMPBDetail",
+            data: {
+                AREA : AREA
+            },
+            beforeSend: function () {
+                if (noloading != undefined) {
+
+                } else {
+                    $("#loading").fadeIn("slow", function () {
+                    });
+                }
+
+            },
+            success: function (e) {
+                var datas = e.data;
+                idSquare = 0;
+                if (e.data.length > 0) {
+                    $('.square-widget').remove();
+                    $('.popover').remove();
+                    for (var i = 0; i < e.data.length; i++) {
+                        createSquare(datas[i]);
+                    }
+                }
+
+                if (e.data.length > 1) {
+                    for (var b = 0; b < e.data.length; b++) {
+                        for (var c = 0; c < e.data.length; c++) {
+                            if (b != c) {
+                                var colision = overlaps($('#square-' + b), $('#square-' + c));
+                                if (colision == true) {
+                                    if ($('#square-' + c).hasClass('pad-green')) {
+                                        $('#square-'+c).addClass('colision-green');
+                                    } else if ($('#square-' + c).hasClass('pad-yellow')) {
+                                        $('#square-'+c).addClass('colision-yellow');
+                                    } else {
+                                        $('#square-'+c).addClass('colision-red');
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                $('[data-toggle="popover"]').popover();
+                $("#loading").fadeOut("slow", function () {
+              });
+            }
+        });
+    }
+
+    function createSquare(datas) {
+        var TOP = (datas.TOP_POSITION / datas.WINDOW_HEIGHT) * 100 + '%';
+        var LEFT = (datas.LEFT_POSITION / datas.WINDOW_WIDTH) * 100 + '%';
+        var WIDTH = ((datas.WIDTH / datas.WINDOW_WIDTH * 100)) + '%';
+        var HEIGHT = ((datas.HEIGHT / datas.WINDOW_HEIGHT * 100)) + '%';
+        var ROTATION = datas.ROTATION + 'Rad';
+        var PING = datas.PING;
+        var PING_IMAGE = "";
+        var CHECK_HENKANTEN = false;
+        var WORK_ICON = '<span class="work-icon">';
+        var HENKANTEN = '';
+        if (PING == 1) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m1.png" class="ping-green" />';
+        } else if (PING == 2) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m2.png" class="ping-yellow" />';
+        } else if (PING == 3) {
+            PING_IMAGE = '<img src="/Content/Images/Dashboard/m3.png" class="ping-red" />';
+        }
+        var placement = 'top';
+        if ((datas.TOP_POSITION / datas.WINDOW_HEIGHT) * 100 < 35) {
+            placement = 'bottom';
+        }
+
+        $.ajax({
+            url: SITE_URL + 'getWorkingType',
+            data: {
+                IMPB: datas.IMPB
+            },
+            success: function (e) {
+                var icon_temp = [];
+                for (var i = 0; i < e.Data.length; i++) {
+                    var data_icon = e.Data[i].ICON;
+                    if (icon_temp.indexOf(data_icon) < 0) {
+                        icon_temp.push(data_icon);
+                        WORK_ICON = WORK_ICON + '<img class="icon-danger edit-icon" data-type="edit" data-icon="" src="/Content/Images/Icon/'+data_icon+'.png" />';
+                    }
+                }
+            },
+            async: false
+        });
+
+        $.ajax({
+            url: SITE_URL + 'getIMPBHenkanten',
+            data: {
+                IMPB: datas.IMPB
+            },
+            success: function (e) {
+
+                if (e != null) {
+                    if (e.Data.length > 0) {
+                        if (e.Data[0].HENKANTEN_ENV == 'true' || e.Data[0].HENKANTEN_SAFETY == 'true') {
+                            CHECK_HENKANTEN = true;
+                        }
+                    }
+                }
+            },
+            async: false
+        });
+
+        if (CHECK_HENKANTEN == true) {
+            HENKANTEN = '<span class="henkanten-icon real-center"><i class="fa fa-h-square"></i></span>';
+        }
+
+        WORK_ICON = WORK_ICON + "</span>";
+        $('#widget-content').append('<div id="square-'+(idSquare++)+'" data-toggle="popover" data-html="true" data-placement="'+placement+'" title="<b style=text-transform:uppercase;>' + datas.PROJECT_NAME + '<b>" data-content="Project Job : '+datas.PROJECT_JOBS+'<br> IMPB : ' + datas.IMPB + ' <br> Leader : ' + datas.LEADER + ' <br> Supervisor : ' +
+                datas.SUPERVISOR + ' <br> Executor : ' + datas.EXECUTOR + ' <br> Section / Bagian / Company : ' + datas.SECTION + ' <br> Employee : ' + datas.EMPLOYEE + '/ ' + datas.TOTAL_EMPLOYEE + ' <br> Danger : ' + datas.DANGER + ' <br> Violation : ' + datas.VIOLATION + ' <br> Note : ' + datas.NOTE + '" class="square-widget pad y n pad-' + datas.BORDER_COLOR + '" style="top:' + TOP + ';left:' + LEFT + ';width:' + WIDTH + ';height:' + HEIGHT + ';z-index:'+(zIndex--)+';transform:rotate(' + ROTATION + ')">' +
+            HENKANTEN+'<span class="real-center">'+PING_IMAGE+'</span>'+WORK_ICON+'</div>');
+
+    }
+
+    var overlaps = (function () {
+        function getPositions( elem ) {
+            var pos, width, height, x, y;
+            x = $(elem)[0].getBoundingClientRect().x;
+            y = $(elem)[0].getBoundingClientRect().y;
+            width = $(elem)[0].getBoundingClientRect().width;
+            height = $(elem)[0].getBoundingClientRect().height;
+
+            return [ [ x, x + width ], [ y, y + height ] ];
+        }
+
+        function comparePositions( p1, p2 ) {
+            var r1, r2;
+            r1 = p1[0] < p2[0] ? p1 : p2;
+            r2 = p1[0] < p2[0] ? p2 : p1;
+            return r1[1] > r2[0] || r1[0] === r2[0];
+        }
+
+        return function ( a, b ) {
+            var pos1 = getPositions( a ),
+                pos2 = getPositions(b);
+
+            return comparePositions( pos1[0], pos2[0] ) && comparePositions( pos1[1], pos2[1] );
+        };
+    })();
+
+    function showMenuNav() {
+        if (menu == false) {
+            $('#navbar').animate({ "top": "+=200px" }, "slow").css('z-index', '100');
+            $('#breadcrumbs').animate({ "top": "+=200px" }, "slow").css('z-index', '99');
+            $('#sidebar').animate({ "left": "+=200px" }, "slow");
+            $('#section-pageheader').animate({ "left": "+=200px" }, "slow").css('z-index', '99');
+            $('.control-label.text-muted').animate({ "left": "+=200px" }, "slow").css('z-index', '99');
+            menu = true;
+            var windowHeights = window.innerHeight;
+            if (parseInt(windowHeights) < 300) {
+                $('#btn-show').animate({ "top": "+=15vh" }, "slow").text('Hide Menu');
+                $(".selectArea").animate({ "top": "+=31.5%" }, "slow");
+            }
+            else if (parseInt(windowHeights) < 600) {
+                $('#btn-show').animate({ "top": "+=15vh" }, "slow").text('Hide Menu');
+                $(".selectArea").animate({ "top": "+=25%" }, "slow");
+            } else {
+                $('#btn-show').animate({ "top": "+=15vh" }, "slow").text('Hide Menu');
+                $(".selectArea").animate({ "left": "+=3%","top": "+=15%" }, "slow");
+            }
+        } else {
+            hideMenuNav();
+            menu = false;
+            $('#btn-show').animate({ "top": "-=15vh" }, "slow").text('Show Menu');
+            $(".selectArea").animate({ "left": "0","top": "0" }, "slow");
+        }
+    }
+
+    function hideMenuNav() {
+        $('#navbar').animate({ "top": "-=200px" }, "slow");
+        $('#breadcrumbs').animate({ "top": "-200px" }, "slow");
+        $('#sidebar').animate({ "left": "-=200px" }, "slow");
+        $('#section-pageheader').animate({ "top": "-=200px" }, "slow").css('z-index', '99');
+        $('.control-label.text-muted').animate({ "left": "-=200px" }, "slow").css('z-index', '99');
+    }
+
+</script>

@@ -1,0 +1,40 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+
+@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+}
+
+<style>
+    .toyota-image{
+        width: 25vw;
+        height: auto;
+    }
+</style>
+
+    <div id="widget-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col text-center">
+                    @*<h1>Welcome To Work Permit System Management</h1> <br />*@
+                    <h1>
+                            <span class="login-app red">
+                                Welcome To <br />
+                            </span>
+                            @*<img src="@Url.Content("~/Content/Bootstrap/img/app-logo.png")" class="logo-title" alt="ISTD Logo" />*@
+                            <span class="login-app red">@Html.Toyota().Application.Name</span>
+                    </h1><br />
+                    <img class="toyota-image" src="~/Content/Images/touch.jpg" />
+                </div>
+            </div>
+        </div>
+        @*<div class="marquee-text">
+            <marquee>The Work Permit allows semi-skilled foreign workers from approved sources to work in certain sectors. Find out Contractor requirements, foreign workers levy and quota, and how to apply.</marquee>
+        </div>*@
+    </div>
+
+@*<div id="loading">
+    <div class="real-center">
+        @Html.Partial("Loading")<br />
+        <img style="margin-left:-20%" src="~/Content/Images/loading.svg" />
+    </div>
+</div>*@

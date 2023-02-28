@@ -1,0 +1,1588 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var CounterIMPB = 0;
+    var DataIMPB = [];
+    var IMPBSelected = {};
+    var ListData = [];
+    var ListDataJob = [];
+    var ListDataIdentification = [];
+    var ListDataImpact = [];
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "REQ_ASSET") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        //checkLogin();
+
+        $('#btn_Cancel').prop('disabled', true);
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_Dispose').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        jQuery('#btn_search').click();
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $.ajax({
+            url: "../../Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+        //search by Press Enter Key
+        enterKey_Press();
+
+        //Get Year
+        $(".datepicker").datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true
+        });
+
+        //CheckUser Register
+        $('#chkDetail').change(function () {
+            if (!this.checked == true) {
+                $('#display_detail_gambar').hide();
+                $('#display_detail_user').hide();
+                $('#display_detail_lokasi').hide();
+            } else {
+                $('#display_detail_gambar').show();
+                $('#display_detail_user').show();
+                $('#display_detail_lokasi').show();
+            }
+        });
+        $('#chkDetail').prop('checked', false);
+        $('#chkDetail').trigger('change');
+    });
+
+    function checkLogin() {
+        if ($('#view').val() != "True" && $('#view').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            sts = false;
+        }
+
+        if (sts = false) {
+            return;
+        }
+    }
+
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            if ($('#searchDMCPart').val() == "") {
+                toastr.warning("Please fill column DMC-Type! ");
+            } else {
+                OnSearch(1);
+            }
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+
+    }
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function back() {
+        location.href = "/DISA100001/REQ_ASSET";
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    //---------------------------- IMAGE ---------------------------
+    function MoveFoto(foto, FOTO_NAME) {
+        var reader = new FileReader();
+        var NAMA_FITUR = "PENGADAAN";
+
+        var myFormData = new FormData();
+        myFormData.append('ImagePath', $(foto)[0].files[0]);
+        myFormData.append('Name', FOTO_NAME);
+        myFormData.append('Fitur', NAMA_FITUR);
+        $.ajax({
+            url: SITE_URL + "../MoveFileFoto",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: myFormData,
+            success: function (e) {
+                console.log(e);
+            }
+        });
+    }
+    //function MoveFoto(foto, FOTO_NAME) {
+    //    var reader = new FileReader();
+    //    var myFormData = new FormData();
+    //    myFormData.append('ImagePath', $(foto)[0].files[0]);
+    //    myFormData.append('Name', FOTO_NAME);
+    //    $.ajax({
+    //        url: SITE_URL + "../MoveFile",
+    //        type: 'POST',
+    //        processData: false,
+    //        contentType: false,
+    //        data: myFormData,
+    //        success: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+    //}
+
+    function getExt(filename) {
+        var ext = filename.split('.').pop();
+        if (ext == filename) return "";
+        return ext;
+    }
+
+    function change_image(type, input) {
+        if (type == 'add') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        } else if (type == 'addId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else if (type == 'editId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    }
+
+    //-------------------------- SINGLE INPUT DATA ---------------------------
+    //$("#btn_new").on("click", function () {
+    //    $('#addNamaAsset').val('');
+    //    $('#addQty').val('');
+    //    $('#addPicReq').val('');
+    //    $('#addDepartment').val('');
+    //    $('#addTglReq').val('');
+
+    //    $('#modalAddForm').modal();
+
+    //    $("#btncloselookup").on("click", function () {
+    //        $('#modalAddForm').hide();
+    //    });
+    //});
+
+    //function addDataConfirm() {
+    //    $('#PopupForm_AddNewConfirm').modal();
+    //}
+
+    //function add_check() {
+    //    var NAMA_ASSET = $('#addNamaAsset').val();
+    //    var QTY = $('#addQty').val();
+    //    var DEPARTMENT = $('#addDepartment').val();
+    //    var TGL_REQUEST = $('#addTglReq').val();
+
+    //    var sts = true;
+
+    //    if (sts == false) {
+    //        return;
+    //    } else {
+    //        $('#PopupForm_AddNewConfirm').modal();
+    //    }
+    //}
+
+    ////tombol Add New
+    //function addNew() {
+    //    var NAMA_ASSET = $('#addNamaAsset').val();
+    //    var QTY = $('#addQty').val();
+    //    var PIC_REQUEST = $('#addPicReq').val();
+    //    var DEPARTMENT = $('#addDepartment').val();
+    //    //var TGL_REQUEST = $('#addTglReq').val();
+    //    var TGL_REQUEST = ($('#addTglReq').val()).replace('T', ' ');
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: SITE_URL + '../ADD_NEW_REQUEST_ASSET',
+    //        async: false,
+    //        data: {
+    //            //NO_URUT: NO_URUT,
+    //            NAMA_ASSET: NAMA_ASSET,
+    //            QTY: QTY,
+    //            PIC_REQUEST: PIC_REQUEST,
+    //            DEPARTMENT: DEPARTMENT,
+    //            TGL_REQUEST: TGL_REQUEST
+    //        },
+    //        success: function (res) {
+    //            if (res.sts == "TRUE") {
+    //                toastr.success("Data Has Been Save Successfuly");
+    //                searchData();
+    //                clear_add();
+    //                MoveFoto('#registerNamaFoto', NAMA_ASSET);
+    //                $('#modalAddForm').modal('hide');
+    //                $('#btncloselookup').click();
+    //                $('#btnNo').click();
+    //            } else {
+    //                toastr.warning(res.message);
+    //            }
+    //        },
+    //        error: function (res) {
+    //            toastr.error(res.Message);
+    //        }
+    //    });
+    //}
+
+    //function clear_add() {
+    //    var NO_ASSET = $('#addNoAsset').val();
+    //    var NAMA_ASSET = $('#addNamaAsset').val();
+    //    var MEREK = $('#addMerek').val();
+    //    var SUPPLIER = $('#addSupplier').val();
+    //}
+
+
+    //----------------------------------- REGISTER ASSET -------------------------------
+    function registerAsset(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        //Show Data to registerModal
+        $('#RegisterID').val(Obj.ID).trigger("change");
+        $('#registerNoRequestAsset').val(Obj.NO_REQUEST_ASSET).trigger("change");
+        $('#registerIdPR').val(Obj.ID_PR).trigger("change");
+        $('#registerNamaAsset').val(Obj.NAMA_ASSET).trigger("change");
+        $('#registerPicRequest').val(Obj.PIC_REQUEST).trigger("change");
+        $('#registerDeptRequest').val(Obj.DEPT_REQUEST).trigger("change");
+
+        if ($('#Register_Data').val() != "True") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        } else {
+            $('#modalRegisterForm').modal();
+        }
+
+    }
+
+    function register_check() {
+        var sts = "true";
+
+        var ID = $('#RegisterID').val();
+        var NO_REQUEST = $('#registerNoRequestAsset').val();
+        var NAMA_ASSET = $('#registerNamaAsset').val();
+
+        var NAMA_ASSET_INVOICE = $('#registerNamaAssetInvoice').val();
+        if (NAMA_ASSET_INVOICE == "") {
+            toastr.warning = "Please fill column NAMA_ASSET_INVOICE!";
+            sts = "false";
+        }
+
+        var ITEM_CODE = $('#registerItemCode').val();
+        if (ITEM_CODE == "") {
+            toastr.warning = "Please fill column ITEM_CODE!";
+            sts = "false";
+        }
+
+        var MEREK = $('#registerMerek').val();
+        if (MEREK == "") {
+            toastr.warning = "Please fill column MEREK!";
+            sts = "false";
+        }
+
+        var TIPE = $('#registerTipe').val();
+        if (TIPE == "") {
+            toastr.warning = "Please fill column TIPE!";
+            sts = "false";
+        }
+
+        var JENIS_DOKUMEN = $('#registerJenisDoc').val();
+        if (JENIS_DOKUMEN == "") {
+            toastr.warning = "Please fill column JENIS_DOKUMEN!";
+            sts = "false";
+        }
+
+        var NO_AJU = $('#registerNoAJU').val();
+        if (NO_AJU == "") {
+            toastr.warning = "Please fill column NO_AJU!";
+            sts = "false";
+        }
+
+        var TGL_DOKUMEN = $('#registerTglDok').val();
+        if (TGL_DOKUMEN == "") {
+            toastr.warning = "Please fill column TGL_DOKUMEN!";
+            sts = "false";
+        }
+
+        var TGL_REGISTER = $('#registerTglRegister').val();
+        if (TGL_REGISTER == "") {
+            toastr.warning = "Please fill column TGL_REGISTER!";
+            sts = "false";
+        }
+
+        var TAHUN = $('#registerTahun').val();
+        if (TAHUN == "") {
+            toastr.warning = "Please fill column TAHUN!";
+            sts = "false";
+        }
+
+        var SUPPLIER = $('#registerSupplier').val();
+        if (SUPPLIER == "") {
+            toastr.warning = "Please fill column SUPPLIER!";
+            sts = "false";
+        }
+
+        var HARGA_SATUAN = $('#registerHargaSatuan').val();
+        if (HARGA_SATUAN == "") {
+            toastr.warning = "Please fill column HARGA_SATUAN!";
+            sts = "false";
+        }
+
+        var JENIS_ASSET = $('#registerJenisAsset').val();
+        if (JENIS_ASSET == "") {
+            toastr.warning = "Please fill column JENIS_ASSET!";
+            sts = "false";
+        }
+
+        var KATEGORI_ASSET = $('#registerKategoriAsset').val();
+        if (KATEGORI_ASSET == "") {
+            toastr.warning = "Please fill column KATEGORI_ASSET!";
+            sts = "false";
+        }
+        if (JENIS_ASSET == "") {
+            toastr.warning = "Please fill column JENIS_ASSET!";
+            sts = "false";
+        }
+
+        var UMUR = $('#registerUmur').val();
+        if (UMUR == "") {
+            toastr.warning = "Please fill column Umur Asset!";
+            sts = "false";
+        }
+
+        var KETERANGAN = $('#registerKet').val();
+        if (KETERANGAN == "") {
+            toastr.warning = "Please fill column Keterangan Asset!";
+            sts = "false";
+        }
+
+        var SPESIFIKASI = $('#registerSpesifikasi').val();
+        if (SPESIFIKASI == "") {
+            toastr.warning = "Please fill column Spesifikasi!";
+            sts = "false";
+        }
+
+        var PIC_REQUEST = $('#registerPicRequest').val();
+        var DEPT_REQUEST = $('#registerDeptRequest').val();
+
+        var FOTO_NAME = $('#RegisterID').val();
+        var FORMAT_FOTO = "";
+        var NAMA_USER = $('#registerNamaUser').val();
+        var DEPT_USER = $('#registerDeptUser').val();
+        var STATUS_KONDISI = $('#registerStatusKondisi').val();
+        var KD_LOKASI = $('#registerKdLokasi').val();
+        var HALTE = $('#registerHalte').val();
+
+        var STATUS_PENGADAAN = 'ASSET IN';
+
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_RegisterAssetConfirm').modal();
+        }
+    }
+
+    function registerNew() {
+        var ID = $('#RegisterID').val();
+        var NO_REQUEST = $('#registerNoRequestAsset').val();
+        var ID_PR = $('#registerIdPR').val();
+        var NAMA_ASSET = $('#registerNamaAsset').val();
+
+        var NAMA_ASSET_INVOICE = $('#registerNamaAssetInvoice').val();
+        if (NAMA_ASSET_INVOICE == "") {
+            toastr.warning = "Please fill column NAMA_ASSET_INVOICE!";
+            sts = "false";
+        }
+        var ITEM_CODE = $('#registerItemCode').val();
+        if (ITEM_CODE == "") {
+            toastr.warning = "Please fill column ITEM_CODE!";
+            sts = "false";
+        }
+        var MEREK = $('#registerMerek').val();
+        if (MEREK == "") {
+            toastr.warning = "Please fill column MEREK!";
+            sts = "false";
+        }
+        var TIPE = $('#registerTipe').val();
+        if (TIPE == "") {
+            toastr.warning = "Please fill column TIPE!";
+            sts = "false";
+        }
+        var JENIS_DOKUMEN = $('#registerJenisDoc').val();
+        if (JENIS_DOKUMEN == "") {
+            toastr.warning = "Please fill column JENIS_DOKUMEN!";
+            sts = "false";
+        }
+        var NO_AJU = $('#registerNoAJU').val();
+        if (NO_AJU == "") {
+            toastr.warning = "Please fill column NO_AJU!";
+            sts = "false";
+        }
+        var TGL_DOKUMEN = $('#registerTglDok').val();
+        if (TGL_DOKUMEN == "") {
+            toastr.warning = "Please fill column TGL_DOKUMEN!";
+            sts = "false";
+        }
+        var TGL_REGISTER = $('#registerTglRegister').val();
+        if (TGL_REGISTER == "") {
+            toastr.warning = "Please fill column TGL_REGISTER!";
+            sts = "false";
+        }
+        var TAHUN = $('#registerTahun').val();
+        if (TAHUN == "") {
+            toastr.warning = "Please fill column TAHUN!";
+            sts = "false";
+        }
+        var UMUR = $('#registerUmur').val();
+        if (UMUR == "") {
+            toastr.warning = "Please fill column UMUR_ASSET!";
+            sts = "false";
+        }
+
+        var KETERANGAN = $('#registerKet').val();
+        if (KETERANGAN == "") {
+            toastr.warning = "Please fill column Keterangan Asset!";
+            sts = "false";
+        }
+
+        var SPESIFIKASI = $('#registerSpesifikasi').val();
+        if (SPESIFIKASI == "") {
+            toastr.warning = "Please fill column Spesifikasi!";
+            sts = "false";
+        }
+
+        var SUPPLIER = $('#registerSupplier').val();
+        if (SUPPLIER == "") {
+            toastr.warning = "Please fill column SUPPLIER!";
+            sts = "false";
+        }
+        var HARGA_SATUAN = $('#registerHargaSatuan').val();
+        if (HARGA_SATUAN == "") {
+            toastr.warning = "Please fill column HARGA_SATUAN!";
+            sts = "false";
+        }
+        var JENIS_ASSET = $('#registerJenisAsset').val();
+        if (JENIS_ASSET == "") {
+            toastr.warning = "Please fill column JENIS_ASSET!";
+            sts = "false";
+        }
+        var KATEGORI_ASSET = $('#registerKategoriAsset').val();
+        if (KATEGORI_ASSET == "") {
+            toastr.warning = "Please fill column KATEGORI_ASSET!";
+            sts = "false";
+        }
+        var PIC_REQUEST = $('#registerPicRequest').val();
+        var DEPT_REQUEST = $('#registerDeptRequest').val();
+
+        //Declare For Move To Folder & Database
+        var FOTO_NAME = "";
+        var NAMA_FOTO = "";
+
+        if ($('#registerNamaFoto').val() != "") {
+            FOTO_NAME = $('#RegisterID').val() + "." + getExt(($('#registerNamaFoto')[0].files[0].name));
+            NAMA_FOTO = $('#RegisterID').val();
+        }
+        var NAMA_USER = $('#registerNamaUser').val();
+        var DEPT_USER = $('#registerDeptUser').val();
+        //var STATUS_KONDISI = $('#registerStatusKondisi').val();
+        var STATUS_KONDISI = 'OK';
+        var KD_LOKASI = $('#registerKdLokasi').val();
+        var HALTE = $('#registerHalte').val();
+
+        var STATUS = 'ASSET IN';
+
+        //Check Format Foto
+        var FORMAT_FOTO = "";
+        if ($('#registerNamaFoto').val() != "") {
+            var NAMA_FOTO = ($('#registerNamaFoto')[0].files[0].name).split('.');
+            FORMAT_FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        }
+
+        //if (FORMAT_FOTO.trim() == "")
+        //{
+        //    toastr.error('Please insert a picture!');
+        //}
+
+
+
+        if (NAMA_ASSET_INVOICE != "" && ITEM_CODE != "" && MEREK != "" && TIPE != "" && JENIS_DOKUMEN != "" && NO_AJU != "" &&
+            TGL_DOKUMEN != "" && TGL_REGISTER != "" && TAHUN != "" && SUPPLIER != "" && HARGA_SATUAN != "" && JENIS_ASSET != "" &&
+            KATEGORI_ASSET != "" && STATUS_KONDISI != "" && UMUR != "" && KETERANGAN != "" && SPESIFIKASI != ""/*&& NAMA_USER != "" && DEPT_USER != ""  && KD_LOKASI != "" && HALTE != ""*/) {
+            if (FOTO_NAME != "") {
+                if (FORMAT_FOTO != 'PNG' && (FORMAT_FOTO != 'JPG' && FORMAT_FOTO != 'JPEG')) {
+                    toastr.error("Extension wrong, please use '.PNG' / '.JPG' file!");
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: SITE_URL + '../ADD_NEW_ASSET',
+                        async: false,
+                        data: {
+                            ID: ID,
+                            NO_REQUEST: NO_REQUEST,
+                            ID_PR: ID_PR,
+                            NAMA_ASSET: NAMA_ASSET,
+                            NAMA_ASSET_INVOICE: NAMA_ASSET_INVOICE,
+                            ITEM_CODE: ITEM_CODE,
+                            MEREK: MEREK,
+                            TIPE: TIPE,
+                            JENIS_DOKUMEN: JENIS_DOKUMEN,
+                            NO_AJU: NO_AJU,
+                            TGL_DOKUMEN: TGL_DOKUMEN,
+                            TGL_REGISTER: TGL_REGISTER,
+                            TAHUN: TAHUN,
+                            UMUR: UMUR,
+                            SUPPLIER: SUPPLIER,
+                            KETERANGAN: KETERANGAN,
+                            SPESIFIKASI: SPESIFIKASI,
+                            HARGA_SATUAN: HARGA_SATUAN,
+                            JENIS_ASSET: JENIS_ASSET,
+                            KATEGORI_ASSET: KATEGORI_ASSET,
+                            PIC_REQUEST: PIC_REQUEST,
+                            DEPT_REQUEST: DEPT_REQUEST,
+                            FOTO_NAME: FOTO_NAME,
+                            NAMA_USER: NAMA_USER,
+                            DEPT_USER: DEPT_USER,
+                            STATUS_KONDISI: STATUS_KONDISI,
+                            KD_LOKASI: KD_LOKASI,
+                            HALTE: HALTE,
+                            STATUS: STATUS
+                        },
+                        success: function (res) {
+                            if (res.sts == "TRUE") {
+                                //Send Image To Folder
+                                if (FOTO_NAME != "") {
+                                    MoveFoto('#registerNamaFoto', FOTO_NAME);
+                                }
+                                toastr.success("Data Has Been Save Successfuly");
+                                $('#modalRegisterForm').modal('hide');
+                                clear_register();
+                                jQuery('#btn_search').click();
+                            } else {
+                                toastr.warning(res.message);
+                            }
+                        },
+                        error: function (res) {
+                            toastr.error(res.Message);
+                        }
+                    });
+                }
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../ADD_NEW_ASSET',
+                    async: false,
+                    data: {
+                        ID: ID,
+                        NO_REQUEST: NO_REQUEST,
+                        ID_PR: ID_PR,
+                        NAMA_ASSET: NAMA_ASSET,
+                        NAMA_ASSET_INVOICE: NAMA_ASSET_INVOICE,
+                        ITEM_CODE: ITEM_CODE,
+                        MEREK: MEREK,
+                        TIPE: TIPE,
+                        JENIS_DOKUMEN: JENIS_DOKUMEN,
+                        NO_AJU: NO_AJU,
+                        TGL_DOKUMEN: TGL_DOKUMEN,
+                        TGL_REGISTER: TGL_REGISTER,
+                        TAHUN: TAHUN,
+                        UMUR: UMUR,
+                        SUPPLIER: SUPPLIER,
+                        KETERANGAN: KETERANGAN,
+                        SPESIFIKASI: SPESIFIKASI,
+                        HARGA_SATUAN: HARGA_SATUAN,
+                        JENIS_ASSET: JENIS_ASSET,
+                        KATEGORI_ASSET: KATEGORI_ASSET,
+                        PIC_REQUEST: PIC_REQUEST,
+                        DEPT_REQUEST: DEPT_REQUEST,
+                        FOTO_NAME: FOTO_NAME,
+                        NAMA_USER: NAMA_USER,
+                        DEPT_USER: DEPT_USER,
+                        STATUS_KONDISI: STATUS_KONDISI,
+                        KD_LOKASI: KD_LOKASI,
+                        HALTE: HALTE,
+                        STATUS: STATUS
+                    },
+                    success: function (res) {
+                        if (res.sts == "TRUE") {
+                            toastr.success("Data Has Been Save Successfuly");
+                            $('#modalRegisterForm').modal('hide');
+                            clear_register();
+                            jQuery('#btn_search').click();
+                        } else {
+                            toastr.warning(res.message);
+                        }
+                    },
+                    error: function (res) {
+                        toastr.error(res.Message);
+                    }
+                });
+            }
+
+        }
+        else {
+            toastr.error('Please insert required column before save it!');
+        }
+    }
+
+    function clear_register() {
+        //var ID = $('#RegisterID').val();
+        //$('.form-control').find('input:text').val('');
+        $('input[type="text"]').val('');
+        $('.form-control').val('');
+        $('#registerNamaFoto').val('');
+        $('#addImageBox').val('');
+        $('#modalRegisterForm').modal('hide');
+    }
+
+    //------------------------------ EDIT DATA REQUEST --------------------------
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var NO_REQUEST_ASSET = $('#editNoRequestAsset');
+        var TGL_REQUEST = $('#editTglRequest');
+        var NAMA_ASSET = $('#editNamaAsset');
+        //var QTY_ASSET = $('#editQtyAsset');
+        var PIC_REQUEST = $('#editPicRequest');
+        var DEPT_REQUEST = $('#editDeptRequest');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        ID.val(Send_Var[0]);
+        NO_REQUEST_ASSET.val(Send_Var[1]);
+        TGL_REQUEST.val(Send_Var[2]);
+        NAMA_ASSET.val(Send_Var[3]);
+        //QTY_ASSET.val(Send_Var[4]);
+        PIC_REQUEST.val(Send_Var[4]);
+        DEPT_REQUEST.val(Send_Var[5]);
+
+        if ($('#Edit_Data').val() != "True" && $('#Edit_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+        else {
+            $('#modalEditForm').modal();
+        }
+
+        //if ($('#Save_Data').val() != "True" && $('#Save_Data').val() != "") {
+        //    if ($('#Edit_Data').val() != "True" && $('#Edit_Data').val() != "") {
+        //        toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+        //        return;
+        //    }
+        //    else {
+        //        ID.val(Send_Var[0]);
+        //        NO_REQUEST_ASSET.val(Send_Var[1]);
+        //        TGL_REQUEST.val(Send_Var[2]);
+        //        NAMA_ASSET.val(Send_Var[3]);
+        //        //QTY_ASSET.val(Send_Var[4]);
+        //        PIC_REQUEST.val(Send_Var[4]);
+        //        DEPT_REQUEST.val(Send_Var[5]);
+
+        //        $('#modalEditForm').modal();
+        //    }
+        //}
+        //else {
+        //    ID.val(Send_Var[0]);
+        //    NO_REQUEST_ASSET.val(Send_Var[1]);
+        //    TGL_REQUEST.val(Send_Var[2]);
+        //    NAMA_ASSET.val(Send_Var[3]);
+        //    //QTY_ASSET.val(Send_Var[4]);
+        //    PIC_REQUEST.val(Send_Var[4]);
+        //    DEPT_REQUEST.val(Send_Var[5]);
+
+        //    $('#modalEditForm').modal();
+        //}
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#editid').val();
+        //$('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    function edit_check() {
+        var NO_REQUEST_ASSET = $('#editNoRequestAsset').val();
+        var TGL_REQUEST = $('#editTglRequest').val();
+        var NAMA_ASSET = $('#editNamaAsset').val();
+        var QTY_ASSET = $('#editQtyAsset').val();
+        var PIC_REQUEST = $('#editPicRequest').val();
+        var DEPT_REQUEST = $('#editDeptRequest').val();
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var NO_REQUEST_ASSET = $('#editNoRequestAsset').val();
+                var TGL_REQUEST = $('#editTglRequest').val();
+                var NAMA_ASSET = $('#editNamaAsset').val().trim();
+                //var QTY_ASSET = $('#editQtyAsset').val();
+                var PIC_REQUEST = $('#editPicRequest').val().trim();
+                var DEPT_REQUEST = $('#editDeptRequest').val().trim();
+
+                var Send_Var = ID + "," + NO_REQUEST_ASSET + "," + TGL_REQUEST + "," + NAMA_ASSET + "," + PIC_REQUEST + "," + DEPT_REQUEST;
+                //var Send_Var = ID + "," + NO_REQUEST_ASSET + "," + TGL_REQUEST + "," + NAMA_ASSET + "," + QTY_ASSET + "," + PIC_REQUEST + "," + DEPT_REQUEST;
+
+                var sts = true;
+
+                if (sts == false) {
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '../DISA100001/Update_Data_Request_Asset',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            //MoveFoto('#editNamaFoto', NAMA_ASSET);
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    //---------------------------------------------- DOWNLOAD DATA REQUEST ASSET --------------------------------------
+    $("#btn_download").on("click", function () {
+        if ($('#Download_Data').val() != "True" && $('#Download_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+        else {
+            $('#Confirmation_Download_Popup').modal();
+        }
+
+    });
+
+    function download_data() {
+        var NO_REQUEST_ASSET = $('#searchNoReq').val();
+        var NAMA_ASSET = $('#searchNamaAsset').val();
+        var PIC_REQUEST = $('#searchPicRequest').val();
+        var DEPT_REQUEST = $('#searchDeptRequest').val();
+        var ID_PR = $('#searchIdPR').val();
+        window.open(
+            '../DISA100001/DownloadExcel_Request_Asset?NO_REQUEST_ASSET=' + NO_REQUEST_ASSET + '&NAMA_ASSET=' + NAMA_ASSET + '&PIC_REQUEST=' + PIC_REQUEST + '&DEPT_REQUEST=' + DEPT_REQUEST + '&ID_PR=' + ID_PR + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+
+    //--------------------------------------------------- CANCEL DATA REQUEST -------------------------
+    $("#btn_Cancel").on("click", function () {
+        $('#Confirmation_Cancel_Popup').modal();
+    });
+    //Delete funtion
+    function cancel_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            //GenerateMessage("", "MWP012");
+            toastr.warning("Please Select One or More Data!");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '../DISA100001/Cancel_Data_Request_Asset',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        //toastr.success(data.message);
+                        toastr.success("Data has been Canceled!");
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Cancel_Popup").modal('hide');
+
+                    OnSearch(1);
+                }
+            });
+        }
+        $('#btn_Cancel').prop('disabled', true);
+    }
+
+    //------------------------ DELETE DATA REQUEST -------------------------
+    $("#btn_Delete").on("click", function () {
+        if ($('#Delete_Data').val() != "True" && $('#Delete_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    //Delete funtion
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            //GenerateMessage("", "MWP012");
+            toastr.warning("Please Select One or More Data!");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '../DISA100001/Delete_Data_Request_Asset',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                }
+            });
+        }
+        $('#btn_Delete').prop('disabled', true);
+    }
+
+    //------------------------ TOMBOL CLEAR DATA --------------------------
+    function clear_search() {
+        $('.form-control').val('');
+
+        var NAMA_ASSET = '';
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Request_Asset',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                NAMA_ASSET: NAMA_ASSET,
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Cancel').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Cancel').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    //<!------------------------------------ INSERT MULTIPLE DATA ------------------------------------->
+    function showAdd() {
+        if ($('#Add_Data').val() != "True" && $('#Add_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+        else {
+            $('#GridTable').hide();
+            $('#inputForm').show();
+            $('#formSearch').hide();
+            $('#ADD_TBL_LIST_DETAIL_ASSET').html(''); //Clear Detail List Tabel
+
+            $('#TBL_ADD_REQUEST_ASSET').hide();
+            $('#TBL_EDIT_REQUEST_ASSET').hide();
+        }
+    }
+
+    $("#AddDataDetail").on("click", function () {
+        var ValidationState = true;
+        var ValidationMessage = "";
+
+        var ProyekData = {
+            PIC_REQUEST: $('#addPicRequest').val(),
+            DEPT_REQUEST: $('#addDeptRequest').val(),
+            KETERANGAN: $('#addKeterangan').val(),
+            TGL_REQUEST: $("#addTglRequest").val()
+        }
+
+        if (ProyekData.PIC_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert PIC Request!"
+        }
+        else if (ProyekData.DEPT_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert Dept.Request!"
+        }
+        else if (ProyekData.KETERANGAN == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert Keterangan!"
+        }
+        else if (ProyekData.TGL_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Select Tanggal Request!"
+        }
+
+        if (ValidationState != true) {
+            toastr.error(ValidationMessage);
+            return;
+        }
+
+        $('#NoDataFound').closest('tr').remove();
+
+        $('#ADD_NAMA_ASSET').val('');
+        $('#ADD_QTY').val('');
+        //$('#ADD_PIC_REQUEST').val('');
+        //$('#ADD_DEPT_REQUEST').val('');
+
+        document.getElementById("TBL_ADD_REQUEST_ASSET").style.display = "";
+
+        $("#deleteDataDetail").on("click", function () {
+            $('#TBL_ADD_REQUEST_ASSET').hide();
+        });
+    });
+
+    function saveDataTemp() {
+        //$('#add_ID').val('jobproyek');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmSaveDataTemp();
+    }
+
+    function confirmSaveDataTemp() {
+
+        CounterIMPB = CounterIMPB + 1;
+
+        var NAMA_ASSET = $('#ADD_NAMA_ASSET').val();
+        var QTY = $('#ADD_QTY').val();
+        //var PIC_REQUEST = $('#ADD_PIC_REQUEST').val();
+        //var DEPT_REQUEST = $('#ADD_DEPT_REQUEST').val();
+
+        var state_data = false;
+
+        if (NAMA_ASSET == null || NAMA_ASSET == '') {
+            toastr.error("Isi Nama Asset");
+            state_data = true;
+        }
+        if (QTY == null || QTY == '') {
+            toastr.error("Isi Qty");
+            state_data = true;
+        }
+
+        //if (PIC_REQUEST == null || PIC_REQUEST == '') {
+        //    toastr.error("Isi PIC Request");
+        //    state_data = true;
+        //}
+
+        //if (DEPT_REQUEST == null || DEPT_REQUEST == '') {
+        //    oastr.error("Isi Dept. Request");
+        //    state_data = true;
+        //}
+
+        if (state_data == false) {
+            tableBuilderDetailData(0, NAMA_ASSET, QTY);
+            //tableBuilderDetailData(0, NAMA_ASSET, PIC_REQUEST, DEPT_REQUEST);
+            ListDataJob.push(NAMA_ASSET);
+        }
+    }
+
+    function tableBuilderDetailData(DataID, NAMA_ASSET, QTY, PIC_REQUEST, DEPT_REQUEST) {
+        var statusDetailList = "";
+
+        var html = '<tr>';
+
+        html += '<td style="width: 20%; padding:1!important" class="row-projectName" data-title="' + DataID + '" >' + NAMA_ASSET + '</td>';
+        html += '<td style="width: 5%; padding:1!important" class="row-projectName" data-title="' + DataID + '" >' + QTY + '</td>';
+
+        //html += '<td style="width: 20%; padding:1!important" autocomplete="off">' + PIC_REQUEST + '</td>';
+        //html += '<td style="width: 20%; padding:1!important" autocomplete="off">' + DEPT_REQUEST + '</td>';
+        html += '<td style="width: 10%">';
+        html += '<button type="button" class="btn btn-primary btn-xs" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:10px;" onclick="actionEditDetail(this)" ' + statusDetailList + '><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataDetail(this)" ' + statusDetailList + '><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#ADD_TBL_LIST_DETAIL_ASSET').append(html);
+        $('#TBL_ADD_REQUEST_ASSET').hide();
+    }
+
+    //Edit List Detail
+    function actionEditDetail(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for Nama Asset
+                $('#EDIT_NAMA_ASSET').val($(value).text());
+            }
+            else if (index == 1) { //set value for Qty
+                $('#EDIT_QTY').val($(value).text());
+            }
+            //else if (index == 1) { //set value for PIC Request
+            //    $('#EDIT_PIC_REQUEST').val($(value).text());
+            //}
+            //else if (index == 2) { //set value for Dept Request
+            //    $('#EDIT_DEPT_REQUEST').val($(value).text());
+            //}
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#AddDataDetail').attr('disabled', 'disabled');
+
+        $('#TBL_EDIT_REQUEST_ASSET').show();
+        $("#TBL_EDIT_REQUEST_ASSET_CLOSE").on("click", function () {
+            $(row).show();
+            $('#TBL_EDIT_REQUEST_ASSET').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#AddDataDetail').removeAttr('disabled');
+        });
+
+        $('#BTN_EDIT_DETAIL_REQUEST').on("click", function () {
+            confirmEditDetailData();
+        })
+    }
+
+    function confirmEditDetailData() {
+
+        $(_row).find('td:nth-child(1)').text($('#EDIT_NAMA_ASSET').val());
+        $(_row).find('td:nth-child(2)').text($('#EDIT_QTY').val());
+
+        //$(_row).find('td:nth-child(2)').text($('#EDIT_PIC_REQUEST').val());
+        //$(_row).find('td:nth-child(3)').text($('#EDIT_DEPT_REQUEST').val());
+
+        $(_row).show();
+        $('#TBL_EDIT_REQUEST_ASSET').hide();
+        $('button[name="btn_edit_row"').removeAttr('disabled');
+        $('button[name="btn_delete_row"').removeAttr('disabled');
+        $('#AddDataDetail').removeAttr('disabled');
+    }
+
+    //-----DELETE LIST DETAIL-------
+    function deleteDataDetail(obj) {
+        _row = $(obj).closest("tr")[0];
+        $('#delete_ID').val('detail_list_table');
+        $('#PopupForm_Delete_Detail_Confirm').modal();
+    }
+
+    function confirmDelete() {
+        var value_id = $('#delete_ID').val();
+
+        switch (value_id) {
+            case 'detail_list_table':
+                confirmDeleteListTable();
+                break;
+        }
+    }
+
+    function confirmDeleteListTable() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteDetail",
+                type: "GET",
+                data: { ID: Id },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+                    var name = $(_row).find('td:nth-child(1)').text() + ',' + $(_row).find('td:nth-child(2)').text();
+                    _row.remove();
+                }
+            })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    toastr.error(errorThrown);
+                });
+        }
+        else {
+            var name = $(_row).find('td:nth-child(1)').text() + ',' + $(_row).find('td:nth-child(2)').text();
+            _row.remove();
+        }
+
+    }
+
+    // ---- CANCEL LIST DETAIL ------
+    function cancelAdd() {
+        $('#formSearch').show();
+        $('#inputForm').hide();
+        $('#GridTable').show();
+        $('#addPicRequest').val('');
+        $('#addDeptRequest').val('');
+        $('#addKeterangan').val('');
+        $('#addTglRequest').val('');
+        $('.form-control').find('input:text').val('');
+        $('.form-control').find('input:date').val('');
+        $('.form-control').find('select').val('');
+    }
+
+
+    //-----------SUBMIT DATA-------------
+    function Submit_Data() {
+        $('#submit_ID').val('submit');
+        check_data_list();
+    }
+
+    function check_data_list(type) {
+        var ValidationState = true;
+        var ValidationMessage = "";
+
+        var ProyekData = {
+            KETERANGAN: $('#addKeterangan').val(),
+            TGL_REQUEST: $("#addTglRequest").val()
+        }
+
+        if (ProyekData.PIC_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert PIC Request!"
+        }
+        else if (ProyekData.DEPT_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert Dept.Request!"
+        }
+        else if (ProyekData.KETERANGAN == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Insert Keterangan!"
+        }
+        else if (ProyekData.TGL_REQUEST == "") {
+            ValidationState = false;
+            ValidationMessage = "Please Select Tanggal Request!"
+        }
+
+        var total_project_name = $('.row-projectName').length;
+
+        if (total_project_name < 1) {
+            ValidationState = false;
+            toastr.error("Please Insert Detail Data!");
+        }
+
+        if (ValidationState == false) {
+            return;
+        }
+        else {
+            $('#PopupForm_Submit_Detail_Confirm').modal();
+        }
+    }
+
+    function confirmSubmit() {
+        var value_id = $('#submit_ID').val();
+
+        switch (value_id) {
+            case 'submit':
+                SubmitDataDetailList();
+                break;
+        }
+    }
+
+    function SubmitDataDetailList() {
+        var _data = JSON.stringify({
+            PIC_REQUEST: $('#addPicRequest').val(),
+            DEPT_REQUEST: $('#addDeptRequest').val(),
+            KETERANGAN: $('#addKeterangan').val(),
+            TGL_REQUEST: $("#addTglRequest").val(),
+            list_detail_create: getListDetail()
+        })
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Insert_Data_Detail_Request',
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+                console.log(res);
+                if (res.sts == "TRUE") {
+                    cancelAdd();
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    toastr.success("Data Has Been Save Successfuly");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error("GAGAL INPUT!");
+            }
+        });
+    }
+
+    //<--------- Collecting Data to Datatable ------->
+
+    function getListDetail() {
+        var _list = [];
+
+        $('#ADD_TBL_LIST_DETAIL_ASSET > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            _data["NAMA_ASSET"] = $(value).find('td:first-child').text();
+            _data["QTY"] = $(value).find('td:nth-child(2)').text();
+            //_data["PIC_REQUEST"] = $(value).find('td:nth-child(2)').text();
+            //_data["DEPT_REQUEST"] = $(value).find('td:nth-child(3)').text();
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    //<!------------------------------------------ PENCARIAN DATA --------------------------------------------->
+
+    // tombol search Request Asset
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var NO_REQUEST_ASSET = $('#searchNoReq').val();
+        var NAMA_ASSET = $('#searchNamaAsset').val();
+        var PIC_REQUEST = $('#searchPicRequest').val();
+        var DEPT_REQUEST = $('#searchDeptRequest').val();
+        var STATUS_REQUEST = $('#searchStatusRequest').val();
+        //var TGL_REQUEST = $('#searchTglReq').val();
+        //var TGL_REQUEST = ($('#searchTglReq').val()).replace('T', ' ');
+        var ID_PR = $('#searchIdPR').val();
+        //var TGL_PR = ($('#searchTglPR').val()).replace('T', ' ');
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Request_Asset',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val()
+                , NO_REQUEST_ASSET: NO_REQUEST_ASSET.trim()
+                , NAMA_ASSET: NAMA_ASSET.trim()
+                , PIC_REQUEST: PIC_REQUEST.trim()
+                , DEPT_REQUEST: DEPT_REQUEST.trim()
+                , ID_PR: ID_PR.trim()
+                , STATUS_REQUEST: STATUS_REQUEST.trim()
+                //,TGL_REQUEST: TGL_REQUEST
+                //,ID_PR: ID_PR
+                //TGL_PR: TGL_PR
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ------------------------------------------- CEKLIS PER DATA ---------------------------------
+    function cek_perdata() {
+        var Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                //alert($(this))
+
+                Var = "";
+                Var = Var + $(this).val();
+                if (Var != '') {
+                    Send_Var = Send_Var + Var.split(',')[6];
+                }
+                //else {
+                //    Send_Var = Send_Var + "," + Var.split(',')[6];
+                //}
+                $('#btn_Cancel').show();
+                $('#btn_Cancel').prop('disabled', false);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_Dispose').prop('disabled', false);
+                //$('#btn_edit').prop('disabled', true);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    if (Send_Var.includes("ACKNOWLEDGE")) {
+                        $('#btn_edit').prop('disabled', true);
+                        $('#btn_Delete').prop('disabled', true);
+                        $('#btn_Delete').hide();
+                    } else if (Send_Var.includes("APPROVE")) {
+                        $('#btn_edit').prop('disabled', false);
+                        $('#btn_Delete').prop('disabled', true);
+                        $('#btn_Delete').hide();
+                        $('#btn_Cancel').show();
+                    }
+                    else if (Send_Var.includes("ON PROGRESS")) {
+                        $('#btn_edit').prop('disabled', false);
+                        $('#btn_Cancel').prop('disabled', false);
+                        $('#btn_Cancel').hide();
+                        $('#btn_Delete').show();
+                    }
+                    else {
+                        $('#btn_edit').prop('disabled', false);
+                    }
+                }
+                else {
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Cancel').hide();
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+                Send_Var = "";
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Cancel').hide();
+                    $('#btn_Cancel').prop('disabled', true);
+                    $('#btn_Delete').show();
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                }
+                else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Cancel').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                    $('#btn_Dispose').prop('disabled', false);
+                }
+
+
+                //$("input[name='time_unit_data[]']").prop('disabled', true);
+                //$("input[name='time_value_data[]']").prop('disabled', true);
+                //$("input[name='exec_time_data[]']").prop('disabled', true);
+                //$("input[name='status_data[]']").prop('disabled', true);
+
+                //$("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                //$("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ------------------------------------------ ceklist all data dan scroll ----------------------------
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_Cancel').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_Cancel').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    //<!----------------------------------------- MENAMPILKAN DETAIL DATA ---------------------------------------->
+    //Show Detail
+    function reloadDetail(MyID, NO_REQUEST, KD_PR) {
+        //const ID = MyID.id.valueOf();
+        //var ID_HINMOKU = document.getElementById("showCode").value;
+
+        const ID = MyID;
+        const NO_REQUEST_ASSET = NO_REQUEST;
+        const ID_PR = KD_PR;
+
+        $.ajax({
+            type: "GET",
+            url: 'Detail_Request_Asset?ID=' + ID + '&NO_REQUEST_ASSET=' + NO_REQUEST_ASSET + '&ID_PR=' + ID_PR,
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    }
+
+</script>

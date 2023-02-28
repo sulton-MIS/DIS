@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+@if (ViewData["fitur"] == "Fitur_List_Summary")
+{
+    <div id="main-data">
+        @Html.Partial("Adm_Page/SearchCriteria_Summary")
+        @Html.Partial("Adm_Page/CheckValidasiUser")
+        @Html.Partial("Adm_Page/Datagrid_Data_Summary")
+        @Html.Partial("Adm_Page/InputForm")
+        @Html.Partial("Adm_Page/PopupForm")
+        @Html.Partial("Adm_Page/PrintPreview")
+    </div>
+
+    @Html.Partial("Adm_Page/Javascript_Summary")
+
+}
+else if (ViewData["fitur"] == "Fitur_List_Detail")
+{
+    <div id="main-data">
+        @Html.Partial("Adm_Page/SearchCriteria_Detail")
+        @Html.Partial("Adm_Page/CheckValidasiUser")
+        @Html.Partial("Adm_Page/Datagrid_Data_Summary")
+        @Html.Partial("Adm_Page/InputForm")
+        @Html.Partial("Adm_Page/PopupForm")
+        @Html.Partial("Adm_Page/PrintPreview")
+    </div>
+
+    @Html.Partial("Adm_Page/Javascript_Detail")
+}
+

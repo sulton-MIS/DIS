@@ -1,0 +1,303 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100007Master;
+@using System.Globalization;
+@{
+    List<DISA100007Master> DataWP = (List<DISA100007Master>)ViewData["DataDISA100007"];
+    //List<DISA100007_History_Distribusi> DataWP = (List<DISA100007_History_Distribusi>)ViewData["DataDISA100007"];
+}
+
+<style>
+    table {
+        background-color: white !important;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    #tr1 {
+        border: 1px solid black;
+        height: 150px;
+    }
+
+    #tr2 {
+        text-align: center;
+        border: 1px solid black;
+        height: 10px;
+    }
+
+    /*---- TABEL UNTUK QTY & AMOUNT ----*/
+    .tbDataCount td {
+        border: 1px solid #ddd;
+        text-align: right;
+    }
+
+    .tbDataCount_thead {
+        border: 1px solid #ddd;
+        font-weight: bold;
+        font-size: 14px;
+        background-color: #54607d;
+        text-align: center;
+        color: white;
+    }
+
+        .tbDataCount_thead th {
+            border: 1px solid #ddd;
+        }
+
+    /* Tombol Dispose */
+    .cstm_btn_dispose {
+        display: inline-block;
+        background-color: crimson;
+        height: 30px;
+        width: 100%;
+        color: white;
+        border: 1px solid #df4759;
+        border-radius: 3px 3px 3px 3px;
+    }
+
+        .cstm_btn_dispose:hover {
+            display: inline-block;
+            background-color: #df4759;
+            height: 30px;
+            width: 100%;
+            color: white;
+            border: 1px solid red;
+            border-radius: 3px 3px 3px 3px;
+        }
+
+    .cstm_btn_dispose_after {
+        display: inline-block;
+        background-color: #a7a5a5;
+        height: 30px;
+        width: 100%;
+        color: ghostwhite;
+        border: 1px solid white;
+        border-radius: 3px 3px 3px 3px;
+    }
+
+    /* Tombol Show History */
+    .cstm_btn_show_history {
+        display: inline-block;
+        background-color: mediumseagreen;
+        height: 30px;
+        width: 100%;
+        color: white;
+        border: 1px solid mediumseagreen;
+        border-radius: 3px 3px 3px 3px;
+    }
+
+        .cstm_btn_show_history:hover {
+            display: inline-block;
+            background-color: white;
+            height: 30px;
+            width: 100%;
+            color: mediumseagreen;
+            border: 1px solid mediumseagreen;
+            border-radius: 3px 3px 3px 3px;
+        }
+</style>
+
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; margin-top:10px">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            </th>
+                            <th style="width: 150px;" rowspan="2">KONTROL</th>
+                            <th style="width: 75px;">HISTORY </th>
+                            <th style="width: 40px;">NO</th>
+                            <th style="width: 100px;">NO DOKUMEN</th>
+                            <th style="width: 100px;">DEPARTMENT</th>
+                            <th style="width: 100px;">BAGIAN</th>
+                            <th style="width: 100px;">RAK</th>
+                            <th style="width: 100px;">LABEL RAK</th>
+                            <th style="width: 300px;">NAMA DOKUMEN</th>
+                            <th style="width: 100px;">QTY BUNDLE</th>
+                            <th style="width: 150px;">TGL REGISTER</th>
+                            <th style="width: 150px;">MASA SIMPAN</th>
+                            <th style="width: 150px;">ESTIMASI DISPOSE</th>
+                            <th style="width: 150px;">SELISIH HARI</th>
+                            <th style="width: 400px;">KETERANGAN</th>
+                            <th style="width: 200px;">STATUS DISPOSE</th>
+                            <th style="width: 200px;">DISPOSE BY</th>
+                            <th style="width: 200px;">DISPOSE DATE</th>
+                            <th style="width: 200px;">CREATED BY</th>
+                            <th style="width: 200px;">CREATED DATE</th>
+                            <th style="width: 200px;">UPDATED BY</th>
+                            <th style="width: 200px;">UPDATED DATE</th>
+
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 350px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA100007Master item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td>
+                                                <input type="hidden" id="rowData-@item.NO_DOCUMENT" value="@Json.Encode(item)" /> @* Pass data to Json for retrieve to Javascript*@
+                                            </td>
+                                            <td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                @{
+                                                    DateTime tglSekarang = DateTime.Today;
+                                                    DateTime tglRegister = DateTime.ParseExact(item.TGL_REGISTER, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                                                    DateTime tglEstimasi = DateTime.ParseExact(item.ESTIMASI_DISPOSE, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                                                    //int SelisihHari = Convert.ToInt32(((tglEstimasi.AddYears(1) - tglRegister.AddYears(1).Date).TotalDays));
+                                                    int SelisihHari = Convert.ToInt32((tglEstimasi.AddYears(1) - DateTime.Now.AddYears(1).Date).TotalDays) * -1;
+
+
+                                                    if (item.FLG_DISPOSE == "True")
+                                                    {
+                                                        <input class="grid-checkbox" type="checkbox" disabled>
+                                                    }
+                                                    else
+                                                    {
+                                                        if ((SelisihHari >= -3 && SelisihHari < 0) || tglSekarang.Date >= tglEstimasi.Date)
+                                                        {
+                                                            <input class="grid-checkbox" type="checkbox" disabled>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="grid-checkbox" value="@item.ID,@item.NO_DOCUMENT,@item.NAMA_DOCUMENT,@item.QTY_BUNDLE,@item.DEPARTMENT,@item.BAGIAN,@item.RAK,@item.LABEL_RAK,@item.MASA_SIMPAN,@item.KETERANGAN,@item.TGL_REGISTER"
+                                                                   type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+
+                                                        }
+                                                    }
+                                                }
+
+                                            </td>
+                                            <td class="align-center align-middle" style="width: 75px">
+                                                @{
+                                                    if (item.FLG_DISPOSE == "True")
+                                                    {
+                                                        <button type="button" class="cstm_btn_dispose_after" disabled>Dispose</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        if ((SelisihHari >= -3 && SelisihHari < 0) || tglSekarang.Date >= tglEstimasi.Date)
+                                                        {
+                                                            <button type="button" data-title="@item.NO_DOCUMENT" onclick="disposeDocument(this)" class="cstm_btn_dispose" id="btn_register_data">Dispose</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="cstm_btn_dispose_after" disabled style="height: 30px; width: 100%;">Dispose</button>
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="align-center align-middle" style="width: 75px">
+                                                <button type="button" data-title="@item.NO_DOCUMENT" onclick="pinjamDocument(this)" class="btn-xs btn-primary">Pinjam</button>
+                                            </td>
+                                            <td class="align-center align-middle" style="width: 75px"> 
+                                                <button type="button" data-title="@item.NO_DOCUMENT" onclick="historyData(this)" class="cstm_btn_show_history" id="btn_register_data">
+                                                    Show
+                                                </button>  
+                                            </td>
+
+                                            <td class="align-center align-middle" style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.NO_DOCUMENT</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.DEPARTMENT</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.BAGIAN</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.RAK</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.RAK-@item.LABEL_RAK</td>
+                                            <td class="align-left align-left" style="width: 300px"> @item.NAMA_DOCUMENT</td>
+                                            <td class="align-center align-middle" style="width: 100px"> @item.QTY_BUNDLE<td>
+                                            <td class="align-center align-middle" style="width: 150px"> @item.TGL_REGISTER</td>
+                                            <td class="align-center align-middle" style="width: 150px"> @item.MASA_SIMPAN Tahun</td>
+                                            @{
+                                                if ((SelisihHari >= -3 && SelisihHari < 0) || tglSekarang.Date >= tglEstimasi.Date)
+                                                {
+                                                    <td class="align-center align-middle" style="width: 150px; background-color: red !important; color: white"> @item.ESTIMASI_DISPOSE </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="align-center align-middle" style="width: 150px;"> @item.ESTIMASI_DISPOSE </td>
+
+                                                }
+
+                                            }
+                                            <td class="align-center align-middle" style="width: 150px"> @SelisihHari hari </td>
+                                            <td class="align-left align-left" style="width: 400px"> @item.KETERANGAN</td>
+                                            @if (item.FLG_DISPOSE == "True")
+                                            {
+                                                <td class="align-center align-middle" style="width: 200px"> DISPOSE </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="align-center align-middle" style="width: 200px"> NON-DISPOSE </td>
+                                            }
+                                            <td class="align-center align-middle" style="width: 200px"> @item.DISPOSE_BY</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.DISPOSE_DATE</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.CREATED_BY</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.CREATED_DATE</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.UPDATED_BY</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.UPDATED_DATE</td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Master_Document/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

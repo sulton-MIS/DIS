@@ -1,0 +1,182 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA140001Master;
+@{
+    List<ListNik> ListNik = (List<ListNik>)ViewData["id_sagyosha"];
+
+}
+<style>
+    input[type=text], textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+</style>
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD LABEL GAIKAN </h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Id Produksi : </label>
+                        <input id="addIdProduksi" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Tipe : </label>
+                        <input id="addTipe" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">ID Proses : </label>
+                        <input id="addIdProses" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Nama Proses : </label>
+                        <input id="addNamaProses" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">NIK : </label>
+                        @*<input id="addNik" type="text" class="form-control" />*@
+                        <select class="form-control select2" id="addNik" required>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- Pilih Nik --- </option>
+                            @{
+                                if (ListNik != null)
+                                {
+                                    if (ListNik.Count() > 0)
+                                    {
+                                        foreach (ListNik item in ListNik)
+                                        {
+                                            <option value="@item.id_sagyosha">@item.id_sagyosha</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Nama : </label>
+                        <input id="addNama" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">QTY : </label>
+                        <input id="addQty" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Total Berat : </label>
+                        <input id="addTotalBerat" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Lotto : </label>
+                        <input id="addLotto" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Serial No : </label>
+                        <input id="addSerialNo" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">                    
+                    <div class="col-md-12">
+                        <label class="required">Keterangan : </label>
+                        <textarea id="addKeterangan" name="keteranganStyle" placeholder="Write something.." style="height:100px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT LABEL GAIKAN </h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Id Produksi : </label>
+                        <input id="editIdProduksi" type="text" class="form-control" />
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label>Tipe : </label>
+                        <input id="editTipe" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Id Proses : </label>
+                        <input id="editIdProses" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Nama Proses : </label>
+                        <input id="editNamaProses" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">NIK : </label>
+                        <input id="editNik" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Nama : </label>
+                        <input id="editNama" type="text" class="form-control" disabled=""/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">QTY : </label>
+                        <input id="editQty" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Total Berat : </label>
+                        <input id="editTotalBerat" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Lotto : </label>
+                        <input id="editLotto" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Serial No : </label>
+                        <input id="editSerialNo" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Keterangan : </label>                        
+                        <textarea id="editKeterangan" name="keteranganStyle" placeholder="Write something.." style="height:100px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

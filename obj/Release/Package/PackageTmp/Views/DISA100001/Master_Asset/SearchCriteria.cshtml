@@ -1,0 +1,130 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA100001Master> DataWP = (List<DISA100001Master>)ViewData["DataDISA100001"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <h2>@ViewData["Title1"]</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+
+                        <input id="regLogin" style="display: none" type="text" value="@ViewData["RegNo"]" />
+
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td>NO. ASSET: </td>
+                                    <td>
+                                        <input id="searchNoAsset" type="text" class="form-control" />
+                                    </td>
+                                    <td>NAMA ASSET: </td>
+                                    <td>
+                                        <input id="searchNamaAsset" type="text" class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MEREK: </td>
+                                    <td>
+                                        <input id="searchMerek" type="text" class="form-control" />
+                                    </td>
+                                    <td>SUPPLIER: </td>
+                                    <td>
+                                        <input id="searchSupplier" type="text" class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>STATUS ASSET: </td>
+                                    <td>
+                                        @*<input id="searchStatusAsset" type="text" class="form-control" />*@
+                                        <select id="searchStatusAsset" name="dropdown" class="form-control">
+                                            <option id="searchStatusAsset" value="" selected="selected"> Non-Dispose </option>
+                                            <option id="searchStatusAsset" value="1"> Dispose </option>
+                                        </select>
+                                    </td>
+                                    <td> DEPARTMENT: </td>
+                                    <td>
+                                        <select required class="form-control" id="searchDeptUser" name="dropdown">
+                                            @if (ViewData["RegNo"].ToString() == "PIC_ASSET")
+                                            {
+                                                <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="" selected="selected"> --Pilih-- </option>
+                                                <option value="ACCOUNTING">ACCOUNTING</option>
+                                                <option value="BP">BP</option>
+                                                <option value="CMS">CMS</option>
+                                                <option value="GO">GO</option>
+                                                <option value="ME">ME</option>
+                                                <option value="MNF">MNF</option>
+                                                <option value="RND">RND</option>
+                                                <option value="QA/QC">QA/QC</option>
+                                                <option value="WAREHOUSE">WAREHOUSE</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ITEM CODE</td>
+                                    <td>
+                                        <input id="searchItemCode" type="text" class="form-control" />
+                                    </td>
+                                    <td> STATUS KONDISI: </td>
+                                    <td>
+                                        <select required class="form-control" id="searchStatusKondisi" name="dropdown">
+                                            <option value="" selected="selected"> --Pilih-- </option>
+                                            <option value="OK"> OK </option>
+                                            <option value="NG"> NG </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="bn btn-success btn-xs" id="btn_download" style="width: 100px;" onclick=""><i class="fa fa-print"></i> Download </button>
+                            @*<button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>*@
+                            @*<button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>*@
+                            @*<button type="button" class="btn btn-danger btn-xs" id="btn_Dispose" style="width: 80px;" onclick=""><i class="fa fa-eraser"></i> Dispose</button>*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

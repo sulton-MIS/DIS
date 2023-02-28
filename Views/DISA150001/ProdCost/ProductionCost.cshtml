@@ -1,0 +1,13 @@
+﻿@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+@{
+    Layout = "~/Views/SharedPC/_Layout.cshtml";
+}
+
+<div id="main-data">
+    @Html.Partial("ProdCost/SearchCriteria")
+    @Html.Partial("ProdCost/Datagrid_Data")
+    @Html.Partial("ProdCost/PopupForm")
+</div>
+@Html.Partial("ProdCost/Javascript_prodCost")

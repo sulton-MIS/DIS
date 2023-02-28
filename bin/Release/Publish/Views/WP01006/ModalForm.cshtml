@@ -1,0 +1,150 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP01005Master;
+@{
+    List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">ADD COMPANY</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Company Code</label>
+                        <input id="addCompanyCode" maxlength="10" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">COMPANY NAME</label>
+                        <input id="addCompanyName" type="text" maxlength="100" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">COMPANY INITIAL</label>
+                        <input type="text" class="form-control" maxlength="10" id="addCompanyInitial" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">CONTACT PERSON</label>
+                        <input id="addContactPerson" type="text" maxlength="50" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EMAIL</label>
+                        <input class="form-control" maxlength="50" id="addEmail" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHONE</label>
+                        <input style="-webkit-appearance: none;"  class="form-control" type="number" id="addPhone" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ADDRESS</label>
+                        <textarea style="resize:none" type="text" class="form-control" maxlength="100" id="addAddress"> </textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">FLAG</label>
+                        <select id="addFlag" class="form-control">
+                            <option value="KONTRAKTOR">KONTRAKTOR</option>
+                            <option value="TMMIN">TMMIN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>STATUS</label>
+                        <select id="addStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">EDIT WORKER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Company Code</label>
+                        <input id="editCompanyCode" maxlength="10" type="text" class="form-control" />
+                        <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">COMPANY NAME</label>
+                        <input id="editCompanyName" type="text" maxlength="100" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">COMPANY INITIAL</label>
+                        <input type="text" class="form-control" maxlength="10" id="editCompanyInitial" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">CONTACT PERSON</label>
+                        <input id="editContactPerson" type="text" maxlength="50" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EMAIL</label>
+                        <input class="form-control" maxlength="50" id="editEmail" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHONE</label>
+                        <input style="-webkit-appearance: none;" class="form-control" type="number" id="editPhone" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ADDRESS</label>
+                        <textarea style="resize:none" type="text" class="form-control" maxlength="100" id="editAddress"> </textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">FLAG</label>
+                        <select id="editFlag" class="form-control">
+                            <option value="KONTRAKTOR">KONTRAKTOR</option>
+                            <option value="TMMIN">TMMIN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    @*<div class="col-md-6">
+                        <label>STATUS</label>
+                        <select id="editStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

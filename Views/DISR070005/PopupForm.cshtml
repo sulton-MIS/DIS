@@ -1,0 +1,341 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<!--form confirm delete data-->
+<div id="Confirmation_Delete_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+
+                <div id="modal-delete-tittle"> Are you sure want to Delete this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" onclick="delete_data()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm delete detail data-->
+<div id="PopupForm_Delete_Detail_Confirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+                <div class="modal-delete-tittle"> Are you sure want to Delete this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm_Delete_List" onclick="confirmDelete()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm add data-->
+<div id="PopupForm_AddNewConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <div id="modal-save-tittle"> Are you sure want to Save this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Add_New" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Add_New" onclick="addNew()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm submit -->
+<div id="PopupForm_Submit_Detail_Confirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="submit_ID" />
+                <div class="modal-submit-tittle"> Are you sure want to Submit this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_Confirm_Submit_Pekerjaan" onclick="confirmSubmit()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm update data-->
+<div id="PopupForm_EditConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="edit_ID" />
+                <input type="text" style="display:none" id="edit_NO" />
+
+                <div id="modal-update-tittle"> Are you sure want to Update this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Edit_Data" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Edit_Data" onclick="updateData()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm print data-->
+<div id="Confirmation_Print_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+
+            <div class="modal-body">
+                <input type="text" style="display:none" />
+
+                <div id="loadPrinters">
+                    Click to load and select one of the installed printers!
+                    <br />
+                    <input type="button" onclick="javascript:jsWebClientPrint.getPrinters();" value="Load installed printers..." />
+                    <br /><br />
+                </div>
+                <div id="installedPrinters" style="visibility:hidden">
+                    <label for="installedPrinterName">Select an installed Printer:</label>
+                    <select name="installedPrinterName" id="installedPrinterName"></select>
+                </div>
+
+                @*<fieldset>
+                        <label>
+                            <input id="input-local-xls-file" type="file" />
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <label>Printer:</label>
+                        <select id="printerName">
+                        </select>
+                    </fieldset>*@
+                @*<button onclick="doPrinting();"><h2>Print XLS Now...</h2></button>*@
+
+                <label>Kali Print : </label>
+                <input id="kaliPrint" required type="text" class="form-control" />
+
+                <div id="modal-delete-tittle"> Are you sure want to Print this data ?</div>
+
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="print_data()" id="btn_Confirm_Print" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Print</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var wcppGetPrintersTimeout_ms = 60000; //60 sec
+    var wcppGetPrintersTimeoutStep_ms = 500; //0.5 sec
+
+    function wcpGetPrintersOnSuccess() {
+        // Display client installed printers
+        if (arguments[0].length > 0) {
+            var p = arguments[0].split("|");
+            var options = '';
+            for (var i = 0; i < p.length; i++) {
+                options += '<option>' + p[i] + '</option>';
+            }
+            $('#installedPrinters').css('visibility', 'visible');
+            $('#installedPrinterName').html(options);
+            $('#installedPrinterName').focus();
+            $('#loadPrinters').hide();
+        } else {
+            alert("No printers are installed in your system.");
+        }
+    }
+    function wcpGetPrintersOnFailure() {
+        // Do something if printers cannot be got from the client
+        alert("No printers are installed in your system.");
+    }
+</script>
+
+<br />
+
+@section scripts1{
+
+    @*REFERENCE to html2canvas utility https://github.com/niklasvh/html2canvas *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" type="text/javascript"></script>
+
+
+    @* Register the WebClientPrint script code generated by PrintHtmlCardController. *@
+    @Html.Raw(ViewBag.WCPScript);
+
+
+    @*HTML Printing Logic*@
+    <script>
+    required: false
+    $(document).ready(function(){
+        $("#printBtn").click(function () {
+
+            //1. generate an image of HTML content through html2canvas utility
+            html2canvas(document.getElementById('card'), { scale: 5 }).then(function (canvas) {
+
+                var b64Prefix = "data:image/png;base64,";
+                var imgBase64DataUri = canvas.toDataURL("image/png");
+                var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+
+                //2. save image base64 content to server-side Application Cache
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("StoreFile", "StoreImageFile")',
+                    data: { base64ImageContent : imgBase64Content},
+                    success: function (imgFileName) {
+                        //alert("The image file: " + imgFileName + " was created at server side. Continue printing it...");
+
+                        //2. Print the stored image file specifying the created file name
+                        jsWebClientPrint.print('useDefaultPrinter=' + $('#useDefaultPrinter').attr('checked') + '&printerName=' + $('#installedPrinterName').val() + '&imageFileName=' + imgFileName);
+                    }
+                });
+
+
+            });
+
+        });
+    });
+    </script>
+
+}
+
+
+@*<script src="scripts/JSPrintManager.js"></script>
+
+    <script>
+
+        var clientPrinters = null;
+        var _this = this;
+
+        //WebSocket settings
+        JSPM.JSPrintManager.auto_reconnect = true;
+        JSPM.JSPrintManager.start();
+        JSPM.JSPrintManager.WS.onStatusChanged = function () {
+            if (jspmWSStatus()) {
+                //get client installed printers
+                JSPM.JSPrintManager.getPrinters().then(function (printersList) {
+                    clientPrinters = printersList;
+                    var options = '';
+                    for (var i = 0; i < clientPrinters.length; i++) {
+                        options += '<option>' + clientPrinters[i] + '</option>';
+                    }
+                    $('#printerName').html(options);
+                });
+            }
+        };
+
+        //Check JSPM WebSocket status
+        function jspmWSStatus() {
+            if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+                return true;
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+                console.warn('JSPrintManager (JSPM) is not installed or not running! Download JSPM Client App from https://neodynamic.com/downloads/jspm');
+                return false;
+            }
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Blocked) {
+                alert('JSPM has blocked this website!');
+                return false;
+            }
+        }
+
+        //Do printing...
+        function doPrinting() {
+            if (jspmWSStatus()) {
+
+                //create ClientPrintJob
+                var cpj = new JSPM.ClientPrintJob();
+
+                //Set Printer info
+                var myPrinter = new JSPM.InstalledPrinter($('#printerName').val());
+                cpj.clientPrinter = myPrinter;
+
+                //Set XLS file
+                var local_file = $("#input-local-xls-file").prop('files');
+                var my_file = null;
+
+                if (local_file && local_file.length > 0) {
+                    my_file = new JSPM.PrintFileXLS(local_file[0], JSPM.FileSourceType.BLOB, local_file[0].name, 1);
+                } else if ($("#input-file-url").val().length > 0) {
+                    my_file = new JSPM.PrintFileXLS($("#input-file-url").val(), JSPM.FileSourceType.URL, "myFileToPrint.xls", 1);
+                } else {
+                    alert('Must specify a local file or a URL!');
+                    return;
+                }
+
+
+                //set file printing settings...
+                my_file.pageFrom = parseInt($('#pageFrom').val());
+                my_file.pageTo = parseInt($('#pageTo').val());
+
+                //add file to ClientPrintJob
+                cpj.files.push(my_file);
+
+                //Send print job to printer!
+                cpj.sendToClient();
+
+            }
+        }
+
+
+
+    </script>*@

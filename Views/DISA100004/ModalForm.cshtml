@@ -1,0 +1,220 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100003Master;
+@{
+//List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+//List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+//List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+//List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+//List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+//List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD Master Transportation </h4>
+            </div>
+
+            <div class="modal-body">              
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Item Code</label>
+                        <input id="addItemCode" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Lot Size</label>
+                        <input id="addLotSize" required type="text" class="form-control" />
+                    </div>                   
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Master Qty</label>
+                        <input id="addMasterQty" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Box Qty</label>
+                        <input id="addBoxQty" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Weight</label>
+                        <input id="addWeight" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Total Weight</label>
+                        <input id="addTotalWeight" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Jenis Transportation</label>
+                        <select class="form-control" id="addJenisTransportation" name="dropdown">
+                            <option id="addJenisTransportation" value="NULL" selected="selected"> NULL </option>
+                            <option id="addJenisTransportation" value="Trans Cost Air JPN" selected="selected"> Trans Cost Air JPN </option>
+                            <option id="addJenisTransportation" value="Trans Cost Sea Tokyo" selected="selected"> Trans Cost Sea Tokyo </option>
+                            <option id="addJenisTransportation" value="Trans Cost Air Sha" selected="selected"> Trans Cost Air Sha </option>
+                            <option id="addJenisTransportation" value="Trans Cost Sea Sha" selected="selected"> Trans Cost Sea Sha </option>
+                            <option id="addJenisTransportation" value="Trans Cost Air Hkg" selected="selected"> Trans Cost Air Hkg </option>
+                            <option id="addJenisTransportation" value="Trans Cost Sea Hkg" selected="selected"> Trans Cost Sea Hkg </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Transportation Cost</label>
+                        <input id="addTransportationCost" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">AWB Free JPN</label>
+                        <input type="text" class="form-control" id="addAwbFreeJpn">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">EDI Free air Jpn</label>
+                        <input id="addEdiFreeAirJpn" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">AMS Free Jpn</label>
+                        <input type="text" class="form-control" id="addAmsFreeJpn">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Trucking 0-250 Kg Jpn</label>
+                        <input id="addTrucking_0_250_Kg" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Handling Air < 50 Kg Jpn</label>
+                        <input type="text" class="form-control" id="addHandlingAir_Under_50_Kg">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Handling Air > 50 Kg Jpn</label>
+                        <input id="addHandlingAir_Up_50_Kg" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Total Cost</label>
+                        <input type="text" class="form-control" id="addTotalCost">
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT List Konpo </h4>
+            </div>
+           
+                <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Item Code</label>
+                                <input id="editItemCode" required type="text" class="form-control" />
+                            </div>
+                            <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                            <div class="col-md-6">
+                                <label class="required">Lot Size</label>
+                                <input id="editLotSize" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Master Qty</label>
+                                <input id="editMasterQty" required type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">Box Qty</label>
+                                <input id="editBoxQty" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Weight</label>
+                                <input id="editWeight" required type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">Total Weight</label>
+                                <input id="editTotalWeight" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Jenis Transportation</label>
+                                <select class="form-control" id="editJenisTransportation" name="dropdown">
+                                    <option id="editJenisTransportation" value="NULL" selected="selected"> NULL </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Air JPN" selected="selected"> Trans Cost Air JPN </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Sea Tokyo" selected="selected"> Trans Cost Sea Tokyo </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Air Sha" selected="selected"> Trans Cost Air Sha </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Sea Sha" selected="selected"> Trans Cost Sea Sha </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Air Hkg" selected="selected"> Trans Cost Air Hkg </option>
+                                    <option id="editJenisTransportation" value="Trans Cost Sea Hkg" selected="selected"> Trans Cost Sea Hkg </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">Transportation Cost</label>
+                                <input id="editTransportationCost" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">AWB Free JPN</label>
+                                <input type="text" class="form-control" id="editAwbFreeJpn">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">EDI Free air Jpn</label>
+                                <input id="editEdiFreeAirJpn" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">AMS Free Jpn</label>
+                                <input type="text" class="form-control" id="editAmsFreeJpn">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">Trucking 0-250 Kg Jpn</label>
+                                <input id="editTrucking_0_250_Kg" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Handling Air < 50 Kg Jpn</label>
+                                <input type="text" class="form-control" id="editHandlingAir_Under_50_Kg">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="required">Handling Air > 50 Kg Jpn</label>
+                                <input id="editHandlingAir_Up_50_Kg" required type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required">Total Cost</label>
+                                <input type="text" class="form-control" id="editTotalCost">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                        <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+                    </div>
+                </div>
+    </div>
+</div>

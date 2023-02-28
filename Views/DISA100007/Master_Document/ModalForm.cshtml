@@ -1,0 +1,418 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100007Master;
+@{
+    List<DISA100007Master> List_Dokumen = (List<DISA100007Master>)ViewData["nama_dokumen"];
+    List<DepartmentModel> Department = (List<DepartmentModel>)ViewData["nama_department"];
+    List<SectionModel> Section = (List<SectionModel>)ViewData["nama_section"];
+}
+
+<style>
+    #verticalLine {
+        border-right: thin solid #eaeaea;
+    }
+    #style_pinjam{
+        margin-top: 10px;
+    }
+</style>
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Form Add Master Document</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">Nama Dokumen</label>
+                            <input autocomplete="off" id="addNamaDokumen" required type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">Department</label>
+                            <select required class="form-control" id="addDepartment" name="dropdown">
+                                @*<option value="">- select -</option>*@
+                                @{
+                                    if (ViewData["RegNo"].ToString() == "PIC")
+                                    {
+                                        <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                    }
+                                    else
+                                    {
+                                        if (Department != null)
+                                        {
+                                            if (Department.Count() > 0)
+                                            {
+                                                foreach (DepartmentModel item in Department)
+                                                {
+                                                    <option value="@item.kode_dept">@item.nama_dept_alias</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        @*<div class="col-md-6">
+                                <label class="required">Department</label>
+                                <select required class="form-control" id="addDepartment" name="dropdown">
+                                    @if (ViewData["RegNo"].ToString() == "PIC")
+                                    {
+                                        <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="" selected="selected"> --Pilih-- </option>
+                                        <option value="ACCOUNTING">ACCOUNTING</option>
+                                        <option value="BP">BP</option>
+                                        <option value="CMS">CMS</option>
+                                        <option value="GO">GO</option>
+                                        <option value="ME">ME</option>
+                                        <option value="MNF">MNF</option>
+                                        <option value="RND">RND</option>
+                                        <option value="QA/QC">QA/QC</option>
+                                        <option value="WH">WAREHOUSE</option>
+                                    }
+                                </select>
+                            </div>*@
+                        <div class="col-md-6">
+                            <label class="required">Bagian</label>
+                            @*<input autocomplete="off" id="addBagian" required type="text" class="form-control" />*@
+                            <select class="form-control select2" id="addBagian" disabled required>
+                                <option value="">- select -</option>
+                                @{
+                                    if (Section != null)
+                                    {
+                                        if (Section.Count() > 0)
+                                        {
+                                            foreach (SectionModel item in Section)
+                                            {
+                                                <option style="display: none" value="@item.nama_section_alias" area="@item.kode_dept">@item.nama_section_alias (@item.nama_section)</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">No. Rak</label>
+                            <input autocomplete="off" id="addNomorRak" required type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="required">Label Rak</label>
+                            <select required class="form-control" id="addLabelRak" name="dropdown">
+                                <option value="" selected="selected"> --Pilih-- </option>
+                                @{
+                                    string strAlpha = "";
+                                    //Loop through the ASCII characters 65 to 90
+                                    for (int i = 65; i <= 90; i++)
+
+                                    {
+                                        // Convert the int to a char to get the actual character behind the ASCII code
+                                        strAlpha = ((char)i).ToString();
+
+                                        <option value="@strAlpha">@strAlpha</option>
+                                    }
+                                }
+                            </select>
+                            @*<input autocomplete="off" id="addLabelRak" required type="text" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">Masa Simpan</label>
+                            <input autocomplete="off" id="addMasaSimpan" required type="number" class="form-control" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">Keterangan</label>
+                            <textarea id="addKeterangan" class="form-control" style="height: 100px"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Form Edit Master Document</h4>
+            </div>
+
+            <input autocomplete="off" style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+            <input autocomplete="off" style="display: none" type="text" id="Edit_Tgl_Register" class="form-control" />
+
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">No. Dokumen</label>
+                            <input autocomplete="off" id="editNoDokumen" readonly type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">Nama Dokumen</label>
+                            <input autocomplete="off" id="NamaDokumen" readonly style="display: none" class="form-control" />
+                            <input autocomplete="off" id="editNamaDokumen" readonly type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">Qty Bundle</label>
+                            <input autocomplete="off" id="Qty_Bundle" readonly style="display: none" class="form-control" />
+                            <input autocomplete="off" id="editQty_Bundle" readonly type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">Department</label>
+                            <input autocomplete="off" id="Department" readonly style="display: none" class="form-control" />
+                            <select required class="form-control" id="editDepartment" readonly name="dropdown">
+                                <option value="">- select -</option>
+                                @{
+                                    if (ViewData["RegNo"].ToString() == "PIC")
+                                    {
+                                        <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                    }
+                                    else
+                                    {
+                                        if (Department != null)
+                                        {
+                                            if (Department.Count() > 0)
+                                            {
+                                                foreach (DepartmentModel item in Department)
+                                                {
+                                                    <option value="@item.nama_dept_alias">@item.nama_dept_alias</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="required">Bagian</label>
+                            <input autocomplete="off" id="Bagian" readonly style="display: none" class="form-control" />
+                            <select class="form-control select2" id="editBagian" readonly>
+                                <option value="">- select -</option>
+                                @{
+                                    if (Section != null)
+                                    {
+                                        if (Section.Count() > 0)
+                                        {
+                                            foreach (SectionModel item in Section)
+                                            {
+                                                <option style="display: none" value="@item.nama_section_alias" area="@item.kode_dept">@item.nama_section_alias (@item.nama_section)</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                            @*<input autocomplete="off" id="editBagian" required type="text" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">No. Rak</label>
+                            <input autocomplete="off" id="NoRak" readonly style="display: none" class="form-control" />
+                            <input autocomplete="off" id="editNoRak" readonly type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="required">Label Rak</label>
+                            <input autocomplete="off" id="LabelRak" readonly style="display: none" class="form-control" />
+                            <select required class="form-control" id="editLabelRak" name="dropdown" readonly>
+                                <option value="" selected="selected"> --Pilih-- </option>
+                                @{
+                                    //Loop through the ASCII characters 65 to 90
+                                    for (int i = 65; i <= 90; i++)
+
+                                    {
+                                        // Convert the int to a char to get the actual character behind the ASCII code
+                                        strAlpha = ((char)i).ToString();
+
+                                        <option value="@strAlpha">@strAlpha</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="required">Masa Simpan</label>
+                            <input autocomplete="off" id="MasaSimpan" readonly style="display: none" class="form-control" />
+                            <input autocomplete="off" id="editMasaSimpan" required type="number" class="form-control" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label class="required">Keterangan</label>
+                            <input autocomplete="off" id="Keterangan" readonly style="display: none" class="form-control" />
+                            <textarea id="editKeterangan" class="form-control" style="height: 100px"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Form Pinjam Document -->
+<div id="modalPinjamDocument" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:50% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="cancel_edit()" type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM PINJAM DOCUMENT</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="margin-top:0px">
+                    <input style="display:none" type="text" maxlength="50" id="ID" class="form-control" placeholder="" />
+                </div>
+
+                <div class="row" style="margin-top:0px">
+                    <div class="col-md-6" id="verticalLine">
+                        <div class="col-md-12" style="margin-top: -10px; text-align: center">
+                            <label style="font-size: 18px;  text-decoration: underline ">DETAIL DOKUMEN</label>
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">No. Document</label>
+                            <input readonly id="show_NO_DOKUMEN" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Nama Document</label>
+                            <input readonly id="show_NAMA_DOKUMEN" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Department Document</label>
+                            <input readonly id="show_DEPARTMENT" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Bagian Document</label>
+                            <input readonly id="show_BAGIAN" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6" id="style_pinjam">
+                            <label class="required">Rak</label>
+                            <input readonly id="show_RAK" required type="text" class="form-control"  />
+                        </div>
+                        <div class="col-md-6" id="style_pinjam">
+                            <label class="required">Label Rak</label>
+                            <input readonly id="show_LABEL_RAK" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Keterangan Document</label>
+                            <textarea readonly id="show_KETERANGAN" class="form-control" style="height: 100px"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12" style="margin-top: -10px; text-align: center">
+                            <label style="font-size: 18px;  text-decoration: underline ">INPUT PEMINJAMAN DOKUMEN</label>
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Masukkan Nama Peminjam <font color="red">*</font> </label>
+                            <input autocomplete="off" id="addNamaPeminjam" required type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Masukkan Department Peminjam <font color="red">*</font> </label>
+                            <select required class="form-control" id="addDeptPeminjam" name="dropdown">
+                                <option value="">- select -</option>
+                                @{
+                                    if (ViewData["RegNo"].ToString() == "PIC")
+                                    {
+                                        <option value="@ViewData["NAMA_DEPT_ALIAS"]" selected>@ViewData["NAMA_DEPT_ALIAS"]</option>
+                                    }
+                                    else
+                                    {
+                                        if (Department != null)
+                                        {
+                                            if (Department.Count() > 0)
+                                            {
+                                                foreach (DepartmentModel item in Department)
+                                                {
+                                                    <option value="@item.kode_dept">@item.nama_dept_alias</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Masukkan Section Peminjam <font color="red">*</font> </label>
+                            <select class="form-control select2" id="addBagianPeminjam" disabled required>
+                                <option value="">- select -</option>
+                                @{
+                                    if (Section != null)
+                                    {
+                                        if (Section.Count() > 0)
+                                        {
+                                            foreach (SectionModel item in Section)
+                                            {
+                                                <option style="display: none" value="@item.nama_section_alias" area="@item.kode_dept">@item.nama_section_alias (@item.nama_section)</option>
+                                            }
+                                        }
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Masukkan Masa Pinjam (<i>ex: 1 hari</i>) <font color="red">*</font></label>
+                            <input autocomplete="off" id="addMasaPinjam" required type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Masukkan Tanggal Pinjam <font color="red">*</font></label>
+                            <input id="addTglPinjam" required type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-12" id="style_pinjam">
+                            <label class="required">Note Peminjam </label>
+                            <textarea id="addNotePeminjam" class="form-control" style="height: 100px"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-12">
+                        
+                    </div>
+                </div>
+                @*<div class="row" style="margin-top:0px">
+                      <div class="col-md-4">
+                            <label class="required">Tanggal Kembali <font color="red">*</font></label>
+                            <input autocomplete="off" id="addTglKembali" required type="date" class="form-control" />
+                        </div>
+                </div>*@
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="pinjam_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> SAVE</button>
+                <button onclick="cancel_edit()" type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

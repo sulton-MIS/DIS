@@ -1,0 +1,98 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03006;
+
+@{
+    List<WP03006Master> summaryScore = (List<WP03006Master>)ViewData["SummaryData"];
+}
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+        table thead tr {
+            background-color: #eee;
+        }
+</style>
+
+
+<div style="padding: 15px">
+
+    <font size="2" face="Arial">
+        <h2>@ViewData["Header"]</h2>
+        <table>
+            <thead>
+                <tr>
+                    <td class="align-center align-middle" style="width: 30px;"> No. </td>
+                    <td class="align-center align-middle" style="width: 150px"> Subjek Ujian </td>
+                    <td class="align-center align-middle" style="width: 150px"> Nama Peserta </td>
+                    <td class="align-center align-middle" style="width: 100px"> Perusahaan </td>
+                    <td class="align-center align-middle"> Total Yang di Jawab </td>
+                    <td class="align-center align-middle"> Total Jawaban Benar </td>
+                    <td class="align-center align-middle"> Total Jawaban Salah </td>
+                    <td class="align-center align-middle"> Total Tidak Terjawab </td>
+                    <td class="align-center align-middle" style="width: 100px"> Remedial </td>
+                    <td class="align-center align-middle"> Nilai Hasil Ujian </td>
+                    <td class="align-center align-middle"> Nilai Standar Kelulusan </td>
+                    <td class="align-center align-middle"> Waktu Mengerjakan </td>
+                    <td class="align-center align-middle"> Tanggal Mengerjakan </td>
+                    <td class="align-center align-middle"> Hasil Ujian </td>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!----><!----><!---->
+                @{
+                    if (summaryScore != null)
+                    {
+                        if (summaryScore.Count > 0)
+                        {
+                            var number = 1;
+                            foreach (WP03006Master item in summaryScore)
+                            {
+                                <tr id="row-@number">
+                                    <td class="align-center align-middle"> @item.RowNum </td>
+                                    <td class="align-left align-middle"> @item.Subject </td>
+                                    <td class="align-left align-middle"> @item.EmployeeName </td>
+                                    <td class="align-left align-middle"> @item.CompanyName </td>
+                                    <td class="align-center align-middle"> @item.TotalQuestion </td>
+                                    <td class="align-center align-middle"> @item.CorrectAnswere </td>
+                                    <td class="align-center align-middle"> @item.InCorrectAnswere </td>
+                                    <td class="align-center align-middle"> @item.UnassignQuestion </td>
+                                    <td class="align-center align-middle"> Remedial ke-@item.Remedial </td>
+                                    <td class="align-center align-middle"> @item.Score </td>
+                                    <td class="align-center align-middle"> @item.PassGraduateScore </td>
+                                    <td class="align-center align-middle"> @item.TimeSubmit menit </td>
+                                    <td class="align-center align-middle"> @item.SubmitDate </td>
+                                    <td class="align-center align-middle">
+                                        @{
+                                            if (Convert.ToInt32(item.ExamStatus) == 1)
+                                            { <span>PASS</span> }
+                                            else
+                                            { <span>NOT PASS</span> }
+                                        }
+                                    </td>
+                                </tr>
+                                number++;
+                            }
+                        }
+                        else
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="8" width="90%" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr id="NoDataFound">
+                            <td colspan="8" width="90%" class="text-center">No data found</td>
+                        </tr>
+                    }
+                }
+                <!----><!----><!---->
+            </tbody>
+        </table>
+    </font>
+</div>

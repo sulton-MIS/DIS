@@ -1,0 +1,107 @@
+﻿<script>
+	var IdSubject = 0
+	var IdCompany = 0
+
+	$(document).ready(function () {
+        reloadSummary()
+	});
+
+	function back() {
+		location.href = "/WP03012"
+	}
+
+	function refreshFilter() {
+		IdSubject = $('#listExamSubject').val();
+		IdCompany = $('#listCompany').val();
+
+		if (IdSubject == "") {
+			IdSubject = 0
+		}
+
+		if (IdCompany == "") {
+			IdCompany = 0
+		}
+	}
+
+	function reloadSummary() {
+
+		refreshFilter()
+
+        $.ajax({
+            type: "GET",
+            url: 'WP03012/GetSummmaryData',
+			async: false,
+			data: {
+				IDSUBJECT: IdSubject,
+				IDEMPLOYEE: 0,
+				IDCOMPANY: IdCompany,
+				EXAMSTATUS: ''
+			},
+			success: function (data) {
+				$('#main-data').html(data);
+			}
+		});
+    }
+
+	function printPDF() {
+		window.open(
+			'WP03012/PrintPDF?IDSUBJECT=' + IdSubject + '&IDEMPLOYEE=0&IDCOMPANY=' + IdCompany + '&EXAMSTATUS=',
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printEXCEL() {
+
+		window.open(
+			'WP03012/PrintExcel?IDSUBJECT=' + IdSubject + '&IDEMPLOYEE=0&IDCOMPANY=' + IdCompany + '&EXAMSTATUS=',
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printNameCardByIdEmployee(ctl) {
+
+		_row = $(ctl).parents("tr");
+		var cols = _row.children("td");
+		var Id = cols[1].id;
+
+		window.open(
+			'WP03012/NameCard?id='+id,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printCertifiedIdEmployee(ctl) {
+
+		_row = $(ctl).parents("tr");
+		var cols = _row.children("td");
+		var Id = cols[1].id;
+		window.open(
+			'WP03012/Certified?id='+id,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printNameCardByIdScore(ctl) {
+
+		_row = $(ctl).parents("tr");
+		var cols = _row.children("td");
+		var Id = cols[1].id;
+
+		window.open(
+			'WP03012/NameCardByScore?id='+id,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printCertifiedByIdScore(ctl) {
+
+		_row = $(ctl).parents("tr");
+		var cols = _row.children("td");
+		var Id = cols[1].id;
+		window.open(
+			'WP03012/CertifiedByScore?id='+id,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+    }
+
+</script>

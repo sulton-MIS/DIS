@@ -1,0 +1,129 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR140001Master;
+@{
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    //List<LocationModel> Location = (List<LocationModel>)ViewData["Project_Location"];
+    //List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+    List<ItemMaster> ListDmcType = (List<ItemMaster>)ViewData["dmc_code"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+@{ 
+    string today = DateTime.Now.ToString("dd MMM yyyy");
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted">
+            <h2>
+                <button onclick="backPage()" class="btn btn-danger" style="height: 40px; !important"><i class="fa fa-close" style="color:white"></i></button>
+                @ViewData["Title1"]
+            </h2>
+        </label>
+    </div>
+</div>
+
+<div id="formSearch" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                ID BUNDLE
+                                <input id="searchIDBundle" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                ID PRODUKSI
+                                <input id="searchIDProduksi" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                DMC CODE
+                                <input id="searchDmcCode" class="form-control" type="text" />
+
+                                @*<select id="searchDmcCode" class="form-control select2">
+                                    <option value=''>-- ALL --</option>
+                                    @{
+                                        if (ListDmcType != null)
+                                        {
+                                            if (ListDmcType.Count() > 0)
+                                            {
+                                                foreach (ItemMaster item in ListDmcType)
+                                                {
+                                                    <option value="@item.DMC_CODE">@item.DMC_CODE</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </select>*@
+                            </div>
+                            <div class="col-md-3">
+                                FROM
+                                <input id="searchDate" autocomplete="off" class="form-control datepicker" style="text-align:center" type="text" value="@today">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top: 10px;">
+                            <div class="col-md-3">
+                                NIK
+                                <input id="searchNIK" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                OPR GAIKAN
+                                <input id="searchOprGaikan" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                LOT NO.
+                                <input id="searchLotNo" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                TO
+                                <input id="searchDateTo" autocomplete="off" class="form-control datepicker" style="text-align:center" type="text" value="@today">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <br />
+                    <div class="row" style="margin-top: 20px;">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                            <button type="button" class="bn btn-success btn-xs" id="btn_download" style="width: 100px;" onclick=""><i class="fa fa-print"></i> Download </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var date = new Date();
+    //date.setDate(date.getDate() - 1);
+    //$(document).ready(function () {
+    //    $('#searchDate').datepicker({
+    //        startDate: date
+    //    });
+    //    $('#searchDateTo').datepicker({
+    //        startDate: date
+    //    });
+    //});
+
+</script>

@@ -1,0 +1,1407 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "LAPOR_ASSET") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_Dispose').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        //Auto Show Data
+        jQuery('#btn_search').click();
+
+        //Search by Press Enter Key
+        enterKey_Press()
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+
+        //Get Data Asset
+        getDataAsset();
+
+        //Check Kondisi Selected (TAMBAH)
+        changeTambahChecked();
+
+        //Check Status Kondisi (EDIT)
+        EditDefaultChecked();
+
+        //Check Kondisi Selected (EDIT)
+        changeEditChecked();
+
+    });
+
+    //------------- AUTO FILL GET DATA ASSET ------------------
+    function getDataAsset() {
+        $('#addNoAsset').change(function () {
+            //alert(this.value)
+            var NO_ASSET = this.value;
+
+            $.ajax({
+                url: SITE_URL + '../get_Data_Asset',
+                data: {
+                    NO_ASSET: NO_ASSET
+                },
+                success: function (e) {
+                    if (e.data.length > 0) {
+                        $('#addNamaAsset').val(e.data[0].NAMA_ASSET);
+                        $('#addNamaAssetInvoice').val(e.data[0].NAMA_ASSET_INVOICE);
+                        $('#addHarga').val(e.data[0].HARGA_SATUAN);
+                        $('#addNamaUser').val(e.data[0].NAMA_USER);
+                        $('#addDeptUser').val(e.data[0].DEPT_USER);
+                        $('#addLokasiAsset').val(e.data[0].NAMA_LOKASI);
+                        $('#addHalte').val(e.data[0].HALTE);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+    }
+
+
+    //-------------------SHOW CHANGE TAMBAH KOLOM---------------------
+    function changeTambahChecked() {
+        $('#addStatusKondisi').change(function () {
+            var statusKondisi = $('#addStatusKondisi').val();
+            if (statusKondisi == "MODIFIKASI") {
+                $('#display_col_modifikasi').show();
+                $('#display_col_modifikasi2').show();
+                $('#display_col_lokasi').hide();
+                $('#display_col_user').hide();
+            }
+            else if (statusKondisi == "REPAIR") {
+                $('#display_col_modifikasi').hide();
+                $('#display_col_modifikasi2').hide();
+                $('#display_col_lokasi').hide();
+                $('#display_col_user').hide();
+            }
+            else if (statusKondisi == "RUSAK") {
+                $('#display_col_modifikasi').hide();
+                $('#display_col_modifikasi2').hide();
+                $('#display_col_lokasi').hide();
+                $('#display_col_user').hide();
+            }
+            else if (statusKondisi == "PINDAH") {
+                $('#display_col_modifikasi').hide();
+                $('#display_col_modifikasi2').hide();
+                $('#display_col_lokasi').show();
+                $('#display_col_user').show();
+            }
+            else if (statusKondisi == "") {
+                $('#display_col_modifikasi').hide();
+                $('#display_col_modifikasi2').hide();
+                $('#display_col_lokasi').hide();
+                $('#display_col_user').hide();
+            }
+        });
+        $('#addStatusKondisi').prop('selected', true);
+        $('#addStatusKondisi').trigger('change');
+    }
+
+    //-------------------SHOW EDIT DEFAULT KOLOM-----------------------
+    function EditDefaultChecked() {
+        //DEFAULT CHECKED
+        $("input[name='checkdata[]']").on("click", function () {
+            var Var = "";
+            var Send_Var = "";
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                if (Var != '') {
+                    Send_Var = Send_Var + Var.split(',')[4];
+                }
+
+                //var statusKondisi = $('#editStatusKondisi').val();
+                if (Send_Var == "MODIFIKASI") {
+                    $('#edit_display_col_modifikasi').show();
+                    $('#edit_display_col_modifikasi2').show();
+                    $('#edit_display_col_lokasi').hide();
+                    $('#edit_display_col_user').hide();
+                }
+                else if (Send_Var == "REPAIR") {
+                    $('#edit_display_col_modifikasi').hide();
+                    $('#edit_display_col_modifikasi2').hide();
+                    $('#edit_display_col_lokasi').hide();
+                    $('#edit_display_col_user').hide();
+                }
+                else if (Send_Var == "RUSAK") {
+                    $('#edit_display_col_modifikasi').hide();
+                    $('#edit_display_col_modifikasi2').hide();
+                    $('#edit_display_col_lokasi').hide();
+                    $('#edit_display_col_user').hide();
+                }
+                else if (Send_Var == "PINDAH") {
+                    $('#edit_display_col_modifikasi').hide();
+                    $('#edit_display_col_modifikasi2').hide();
+                    $('#edit_display_col_lokasi').show();
+                    $('#edit_display_col_user').show();
+                }
+                else if (Send_Var == "") {
+                    $('#edit_display_col_modifikasi').hide();
+                    $('#edit_display_col_modifikasi2').hide();
+                    $('#edit_display_col_lokasi').hide();
+                    $('#edit_display_col_user').hide();
+                }
+            }
+        });
+    }
+
+    //-------------------SHOW EDIT CHANGE KOLOM-----------------
+    function changeEditChecked() {
+        $('#editStatusKondisi').change(function () {
+            var statusKondisi = $('#editStatusKondisi').val();
+            if (statusKondisi == "MODIFIKASI") {
+                $('#edit_display_col_modifikasi').show();
+                $('#edit_display_col_modifikasi2').show();
+                $('#edit_display_col_lokasi').hide();
+                $('#edit_display_col_user').hide();
+            }
+            else if (statusKondisi == "REPAIR") {
+                $('#edit_display_col_modifikasi').hide();
+                $('#edit_display_col_modifikasi2').hide();
+                $('#edit_display_col_lokasi').hide();
+                $('#edit_display_col_user').hide();
+            }
+            else if (statusKondisi == "RUSAK") {
+                $('#edit_display_col_modifikasi').hide();
+                $('#edit_display_col_modifikasi2').hide();
+                $('#edit_display_col_lokasi').hide();
+                $('#edit_display_col_user').hide();
+            }
+            else if (statusKondisi == "PINDAH") {
+                $('#edit_display_col_modifikasi').hide();
+                $('#edit_display_col_modifikasi2').hide();
+                $('#edit_display_col_lokasi').show();
+                $('#edit_display_col_user').show();
+            }
+            else if (statusKondisi == "") {
+                $('#edit_display_col_modifikasi').hide();
+                $('#edit_display_col_modifikasi2').hide();
+                $('#edit_display_col_lokasi').hide();
+                $('#edit_display_col_user').hide();
+            }
+        });
+        $('#editStatusKondisi').prop('selected', true);
+        $('#editStatusKondisi').trigger('change');
+    }
+
+    $('.select2').select2({ width: '100%' });
+
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            if ($('#searchDMCPart').val() == "") {
+                toastr.warning("Please fill column DMC-Type! ");
+            } else {
+                OnSearch(1);
+            }
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+
+    }
+
+    function clearCache() {
+        //Clear Cache Application
+        $.ajax({
+            url: "",
+            context: document.body,
+            success: function (s, x) {
+                $('html[manifest=saveappoffline.appcache]').attr('content', '');
+                $(this).html(s);
+            }
+        });
+    }
+
+    function refreshPage() {
+        location.reload();
+    }
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function back() {
+        location.href = "/DISA100001/DATA_ASSET";
+    }
+
+    
+    
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //-----------------------------------------MOVE FOTO-----------------------------
+    function MoveFoto(foto, FOTO_NAME) {
+        var reader = new FileReader();
+        var NAMA_FITUR = "LAPOR";
+
+        var myFormData = new FormData();
+        myFormData.append('ImagePath', $(foto)[0].files[0]);
+        myFormData.append('Name', FOTO_NAME);
+        myFormData.append('Fitur', NAMA_FITUR);
+        $.ajax({
+            url: SITE_URL + "../MoveFileFoto",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: myFormData,
+            success: function (e) {
+                console.log(e);
+            }
+        });
+    }
+    //function MoveFoto(foto, FOTO_NAME) {
+    //    var reader = new FileReader();
+    //    var myFormData = new FormData();
+    //    myFormData.append('ImagePath', $(foto)[0].files[0]);
+    //    myFormData.append('Name', FOTO_NAME);
+    //    $.ajax({
+    //        url: SITE_URL + "../MoveFileLaporAsset",
+    //        type: 'POST',
+    //        processData: false,
+    //        contentType: false,
+    //        data: myFormData,
+    //        success: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+    //}
+
+    function getExt(filename) {
+        var ext = filename.split('.').pop();
+        if (ext == filename) return "";
+        return ext;
+    }
+
+    function change_image(type, input) {
+        if (type == 'add') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        } else if (type == 'addId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else if (type == 'editId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+    }
+
+    //----------------------------------------------------SHOW IMAGE LAPOR-----------------------------------------------
+    function showImage(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        //Show Data to imageModal
+        $('#ID').val(Obj.ID).trigger("change");
+        $('#ID_TB_M_LAPOR').val(Obj.ID_TB_M_LAPOR).trigger("change");
+        $('#NO_LAPOR').val(Obj.NO_LAPOR).trigger("change");
+        $('#NO_ASSET').val(Obj.NO_ASSET).trigger("change");
+
+        var Flg_Status = Obj.FLG_APPROVAL;
+        if (Flg_Status == "True") {
+            $('#changeImg').hide();
+            $('#btnchangeImg').hide();
+        } else {
+            $('#changeImg').show();
+            $('#btnchangeImg').show();
+        }
+
+        $("#currentimg").attr('src', '../Content/Upload/Foto/ManajementAsset/Lapor_Asset/' + Obj.NAMA_FOTO_LAPORAN).show();
+
+        $('#modalShowImageForm').modal();
+    }
+
+    function image_check() {
+        var ID = $('#ID').val();
+        var ID_TB_M_LAPOR = $('#ID_TB_M_LAPOR').val();
+        var NO_LAPOR = $('#NO_LAPOR').val();
+        var NO_ASSET = $('#NO_ASSET').val();
+        var FOTO_NAME = NO_ASSET.trim() + "." + getExt(($('#editImg')[0].files[0].name));
+
+        var sts = true;
+
+        //Check Format Foto
+        var FORMAT_FOTO = "";
+        if ($('#editImg').val() != "") {
+            var NAMA_FOTO = ($('#editImg')[0].files[0].name).split('.');
+            FORMAT_FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        }
+
+        if (FORMAT_FOTO != 'PNG' && FORMAT_FOTO != 'JPG') {
+            toastr.error("Extension wrong, please use '.PNG' Or '.JPG' file!");
+            sts = false;
+        }
+
+        if (sts == false) {
+            return;
+        } else {
+            if ($('#Edit_Image').val() != "True") {
+                toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+                return;
+            } else {
+                $('#PopupForm_EditImageConfirm').modal();
+            }
+        }
+    }
+
+    function update_image() {
+        var ID = $('#ID').val();
+        var ID_TB_M_LAPOR = $('#ID_TB_M_LAPOR').val();
+        var NO_ASSET = $('#NO_ASSET').val();
+        var FOTO_NAME = ID.trim() + "." + getExt(($('#editImg')[0].files[0].name));
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../UPDATE_IMAGE_LAPOR_ASSET',
+            async: false,
+            data: {
+                ID: ID,
+                NO_ASSET: NO_ASSET,
+                FOTO_NAME: FOTO_NAME
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    //Send Image To Folder
+                    if (FOTO_NAME != "") {
+                        MoveFoto('#editImg', FOTO_NAME);
+                    }
+                    toastr.success("Data Has Been Save Successfuly");
+                    $('#modalShowImageForm').modal('hide');
+                    cancel_edit();
+                    jQuery('#btn_search').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+        refreshPage();
+    }
+
+    //-------------------------------------------------SHOW LAPORAN ASSET-------------------------------------------------
+    function showLaporan(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        $('#show_NO_LAPOR').val(Obj.NO_LAPOR).trigger("change");
+        $('#show_NO_ASSET').val(Obj.NO_ASSET).trigger("change");
+        $('#show_STATUS_KONDISI').val(Obj.STATUS).trigger("change");
+        $('#show_KETERANGAN').val(Obj.KETERANGAN).trigger("change");
+
+        var status_approval = "";
+        if (Obj.FLG_APPROVAL == "True") {
+            status_approval = "Sudah Approval by " + Obj.APPROVAL_BY;
+        }
+        else if (Obj.FLG_APPROVAL == "False") {
+            status_approval = "Reject Approval by " + Obj.REJECT_BY;
+        }
+        else {
+            status_approval = "Belum Approval";
+        }
+        $('#show_STATUS_APPROVAL').val(status_approval).trigger("change");
+
+        $('#show_NAMA_PELAPOR').val(Obj.PIC_LAPOR).trigger("change");
+        $('#show_TANGGAL_PELAPOR').val(Obj.TGL_LAPOR).trigger("change");
+
+        //Show-Hide Kolom
+        if (Obj.STATUS == "MODIFIKASI") {
+            $('#show_display_col_modifikasi').show();
+            $('#show_display_col_modifikasi2').show();
+            $('#show_display_col_lokasi').hide();
+            $('#show_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "REPAIR") {
+            $('#show_display_col_modifikasi').hide();
+            $('#show_display_col_modifikasi2').hide();
+            $('#show_display_col_lokasi').hide();
+            $('#show_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "RUSAK") {
+            $('#show_display_col_modifikasi').hide();
+            $('#show_display_col_modifikasi2').hide();
+            $('#show_display_col_lokasi').hide();
+            $('#show_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "PINDAH") {
+            $('#show_display_col_modifikasi').hide();
+            $('#show_display_col_modifikasi2').hide();
+            $('#show_display_col_lokasi').show();
+            $('#show_display_col_user').show();
+        }
+        else if (Obj.STATUS == "") {
+            $('#show_display_col_modifikasi').hide();
+            $('#show_display_col_modifikasi2').hide();
+            $('#show_display_col_lokasi').hide();
+            $('#show_display_col_user').hide();
+        }
+
+        //Modifikasi
+        $('#showHargaBaru').val(Obj.HARGA_BARU).trigger("change");
+        $('#showCostUpgradeBaru').val(Obj.COST_UPGRADE_BARU).trigger("change");
+        $('#showSpesifikasiBaru').val(Obj.SPESIFIKASI_BARU).trigger("change");
+
+        //Pindah
+        $('#showKdLokasiBaru').val(Obj.KD_LOKASI_BARU).trigger("change");
+        $('#showSubLokasiBaru').val(Obj.SUB_LOKASI_BARU).trigger("change");
+        $('#showHalteBaru').val(Obj.HALTE_BARU).trigger("change");
+        $('#showNamaUserBaru').val(Obj.NAMA_USER_BARU).trigger("change");
+        $('#showDeptUserBaru').val(Obj.DEPT_USER_BARU).trigger("change");
+
+        $('#modalShowForm').modal();
+
+    }
+
+    function closeShow() {
+        $('#modalShowForm').modal('hide');
+        $('#modalApproveForm').modal('hide');
+    }
+
+    //-------------------------------------------------APPROVAL LAPOR ASSET------------------------------------------------
+    function approveLaporan(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+        //Data Approve
+        $('#data_ID').val(Obj.ID).trigger("change");
+        $('#data_ID_TB_M_LAPOR').val(Obj.ID_TB_M_LAPOR).trigger("change");
+        $('#data_NO_ASSET').val(Obj.NO_ASSET).trigger("change");
+        $('#data_STATUS_KONDISI').val(Obj.STATUS).trigger("change");
+
+        //Data Show Approve
+        $('#approve_NO_LAPOR').val(Obj.NO_LAPOR).trigger("change");
+        $('#approve_NO_ASSET').val(Obj.NO_ASSET).trigger("change");
+        $('#approve_STATUS_KONDISI').val(Obj.STATUS).trigger("change");
+        $('#approve_KETERANGAN').val(Obj.KETERANGAN).trigger("change");
+
+        var status_approval = "";
+        if (Obj.FLG_APPROVAL == "True") {
+            status_approval = "Sudah Approval by " + Obj.APPROVAL_BY;
+        } else {
+            status_approval = "Belum Approval";
+        }
+
+        $('#approve_STATUS_APPROVAL').val(status_approval).trigger("change");
+
+        $('#approve_NAMA_PELAPOR').val(Obj.PIC_LAPOR).trigger("change");
+        $('#approve_TANGGAL_PELAPOR').val(Obj.TGL_LAPOR).trigger("change");
+
+        //Show-Hide Kolom
+        if (Obj.STATUS == "MODIFIKASI") {
+            $('#approve_display_col_modifikasi').show();
+            $('#approve_display_col_modifikasi2').show();
+            $('#approve_display_col_lokasi').hide();
+            $('#approve_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "REPAIR") {
+            $('#approve_display_col_modifikasi').hide();
+            $('#approve_display_col_modifikasi2').hide();
+            $('#approve_display_col_lokasi').hide();
+            $('#approve_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "RUSAK") {
+            $('#approve_display_col_modifikasi').hide();
+            $('#approve_display_col_modifikasi2').hide();
+            $('#approve_display_col_lokasi').hide();
+            $('#approve_display_col_user').hide();
+        }
+        else if (Obj.STATUS == "PINDAH") {
+            $('#approve_display_col_modifikasi').hide();
+            $('#approve_display_col_modifikasi2').hide();
+            $('#approve_display_col_lokasi').show();
+            $('#approve_display_col_user').show();
+        }
+        else if (Obj.STATUS == "") {
+            $('#approve_display_col_modifikasi').hide();
+            $('#approve_display_col_modifikasi2').hide();
+            $('#approve_display_col_lokasi').hide();
+            $('#approve_display_col_user').hide();
+        }
+
+        //Modifikasi
+        $('#approve_HargaBaru').val(Obj.HARGA_BARU).trigger("change");
+        $('#approve_CostUpgradeBaru').val(Obj.COST_UPGRADE_BARU).trigger("change");
+        $('#approve_SpesifikasiBaru').val(Obj.SPESIFIKASI_BARU).trigger("change");
+
+        //Pindah
+        $('#approve_KdLokasiBaru').val(Obj.KD_LOKASI_BARU).trigger("change");
+        $('#approve_SubLokasiBaru').val(Obj.SUB_LOKASI_BARU).trigger("change");
+        $('#approve_HalteBaru').val(Obj.HALTE_BARU).trigger("change");
+        $('#approve_NamaUserBaru').val(Obj.NAMA_USER_BARU).trigger("change");
+        $('#approve_DeptUserBaru').val(Obj.DEPT_USER_BARU).trigger("change");
+
+        //$('#PopupForm_ApproveLaporConfirm').modal();
+        if ($('#Approve_1').val() != "True") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        } else {
+            $('#modalApproveForm').modal();
+        }
+    }
+    function approveCheck() {
+        $('#PopupForm_ApproveLaporConfirm').modal();
+    }
+    function approveSaved() {
+        var ID = $('#data_ID').val();
+        var ID_TB_M_LAPOR = $('#data_ID_TB_M_LAPOR').val();
+        var NO_ASSET = $('#data_NO_ASSET').val();
+        var STATUS_KONDISI = $('#data_STATUS_KONDISI').val();
+        //alert(ID + "," + ID_TB_M_LAPOR + "," + NO_ASSET + "," + STATUS_KONDISI);
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../APPROVE_DATA_LAPOR',
+            async: false,
+            data: {
+                ID: ID,
+                ID_TB_M_LAPOR: ID_TB_M_LAPOR,
+                NO_ASSET: NO_ASSET,
+                STATUS_KONDISI: STATUS_KONDISI
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    $('#modalApproveForm').modal('hide');
+                    jQuery('#btn_search').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+        jQuery('#btn_search').click();
+        clearCache();
+        refreshPage();
+    }
+
+    //-----------------------------------------------------REJECT LAPOR ASSET----------------------------------------
+    function rejectCheck() {
+        $('#PopupForm_RejectLaporConfirm').modal();
+    }
+    function rejectSaved() {
+        var ID = $('#data_ID').val();
+        var ID_TB_M_LAPOR = $('#data_ID_TB_M_LAPOR').val();
+        var NO_ASSET = $('#data_NO_ASSET').val();
+        var STATUS_KONDISI = $('#data_STATUS_KONDISI').val();
+        //alert(ID + "," + ID_TB_M_LAPOR + "," + NO_ASSET + "," + STATUS_KONDISI);
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../REJECT_DATA_LAPOR',
+            async: false,
+            data: {
+                ID: ID,
+                ID_TB_M_LAPOR: ID_TB_M_LAPOR,
+                NO_ASSET: NO_ASSET,
+                STATUS_KONDISI: STATUS_KONDISI
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    $('#modalApproveForm').modal('hide');
+                    jQuery('#btn_search').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+        jQuery('#btn_search').click();
+        clearCache();
+        refreshPage();
+    }
+
+    //-----------------------------------------------------DOWNLOAD DATA LAPORAN--------------------------------------
+    $("#btn_download").on("click", function () {
+        if ($('#Download_Data').val() != "True" && $('#Download_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        } else {
+            $('#Confirmation_Download_Popup').modal();
+        }
+    });
+
+    function download_data() {
+        var NO_LAPOR = $('#searchNoLapor').val();
+        var NO_ASSET = $('#searchNoAsset').val();
+        var KONDISI_ASSET = $('#searchKondisiAsset').val();
+        var NAMA_USER = $('#searchNamaUser').val();
+        var DEPARTMENT_USER = $('#searchDeptUser').val();
+
+        window.open(
+            '../DISA100001/DownloadExcel_LaporAsset?NO_LAPOR=' + NO_LAPOR + '&NO_ASSET=' + NO_ASSET + '&KONDISI_ASSET=' + KONDISI_ASSET + '&NAMA_USER=' + NAMA_USER + '&DEPARTMENT_USER=' + DEPARTMENT_USER + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    //-------------------------------------------------------TAMBAH DATA LAPOR ASSET----------------------------------------------
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addKdLokasi').val('');
+        $('#addNamaLokasi').val('');
+        $('#addArea').val('');
+
+        if ($('#Add_Data').val() != "True" && $('#Add_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+        else {
+            $('#modalForm').modal();
+        }
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    function add_check() {
+        var NO_ASSET = $('#addNoAsset').val();
+        //var FOTO_NAME = $('#addNamaAsset').val() + "_" + ($('#addNamaFoto')[0].files[0].name);
+        var FOTO_NAME = $('#addNoAsset').val();
+        //var TAHUN = ($('#addTahun').val()).replace('T', ' ');
+        var STATUS_KONDISI = $('#addStatusKondisi').val();
+        var HARGA = $('#addHarga').val();
+        var COST_UPGRADE = $('#addCostUpgrade').val();
+        var SPESIFIKASI = $('#addSpesifikasi').val();
+        var LOKASI = $('#addKdLokasi').val();
+        var SUB_LOKASI = $('#addSubLokasi').val();
+        var HALTE = $('#addHalte').val();
+        var NAMA_USER = $('#addNamaUser').val();
+        var DEPT_USER = $('#addDeptUser').val();
+        var KETERANGAN = $('#addKeterangan').val();
+        var TGL_LAPOR = $('#addTglLapor').val();
+        var FOTO = "";
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+    function addNew() {
+        var NO_ASSET = $('#addNoAsset').val();
+        //var FOTO_NAME = $('#addNamaAsset').val() + "_" + ($('#addNamaFoto')[0].files[0].name);
+        //var FOTO_NAME = $('#addNoAsset').val() + "." + getExt(($('#addNamaFoto')[0].files[0].name));
+        var STATUS_KONDISI = $('#addStatusKondisi').val();
+
+        //if (STATUS_KONDISI == "MODIFIKASI") {
+        //    STATUS_KONDISI = "OK";
+        //} else if (STATUS_KONDISI == "PINDAH") {
+        //    STATUS_KONDISI = "OK";
+        //} else if (STATUS_KONDISI == "REPAIR") {
+        //    STATUS_KONDISI = "OK";
+        //} else if (STATUS_KONDISI == "RUSAK") {
+        //    STATUS_KONDISI = "NG";
+        //} 
+
+        var HARGA = $('#addHarga').val();
+        var COST_UPGRADE = $('#addCostUpgrade').val();
+        var SPESIFIKASI = $('#addSpesifikasi').val();
+        var LOKASI = $('#addKdLokasi').val();
+        var SUB_LOKASI = $('#addSubLokasi').val();
+        var HALTE = $('#addHalte').val();
+        var NAMA_USER = $('#addNamaUserBaru').val();
+        var DEPT_USER = $('#addDeptUserBaru').val();
+        var KETERANGAN = $('#addKeterangan').val();
+        var TGL_LAPOR = $('#addTglLapor').val();
+
+        var sts = true;
+
+
+        if (KETERANGAN.includes(",")) {
+            toastr.warning("Please Don't Using Comma (,) On KETERANGAN! ");
+            sts = false;
+        } else if (KETERANGAN.indexOf('\'') >= 0 && KETERANGAN.indexOf('"') >= 0) {
+            toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+            sts = false;
+        }
+
+        if (SPESIFIKASI.includes(",")) {
+            toastr.warning("Please Don't Using Comma (,) On SPESIFIKASI! ");
+            sts = false;
+        } else if (SPESIFIKASI.indexOf('\'') >= 0 && SPESIFIKASI.indexOf('"') >= 0) {
+            toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+            sts = false;
+        }
+
+
+        var FOTO_NAME = "";
+        if ($('#addNamaFoto')[0].files.length === 0) {
+            toastr.warning("PLEASE INSERT AN IMAGE!");
+            sts = false;
+        } else {
+            FOTO_NAME = "." + getExt(($('#addNamaFoto')[0].files[0].name));
+        }
+
+
+        if (sts == false) {
+            return;
+        }
+
+        var FOTO = "";
+        var DATAFILE = "";
+        if (FOTO_NAME != "") {
+            var NAMA_FOTO = FOTO_NAME;
+            var EKSTENSI_FOTO = ($('#addNamaFoto')[0].files[0].name).split('.');
+            FOTO = (EKSTENSI_FOTO[EKSTENSI_FOTO.length - 1]).toUpperCase();
+        }
+
+        if (FOTO != 'PNG' && FOTO != 'JPG') {
+            toastr.warning("Extension wrong, please use '.PNG' file!");
+        }
+        else {
+            if (NO_ASSET != "" && STATUS_KONDISI != "") {
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../TAMBAH_DATA_LAPOR',
+                    async: false,
+                    data: {
+                        NO_ASSET: NO_ASSET,
+                        FOTO_NAME: FOTO_NAME,
+                        STATUS_KONDISI: STATUS_KONDISI,
+                        HARGA: HARGA,
+                        COST_UPGRADE: COST_UPGRADE,
+                        SPESIFIKASI: SPESIFIKASI,
+                        LOKASI: LOKASI,
+                        SUB_LOKASI: SUB_LOKASI,
+                        HALTE: HALTE,
+                        NAMA_USER: NAMA_USER,
+                        DEPT_USER: DEPT_USER,
+                        KETERANGAN: KETERANGAN,
+                        TGL_LAPOR: TGL_LAPOR
+                    },
+                    success: function (res) {
+                        if (res.sts == "TRUE") {
+                            //MoveFoto('#addNamaFoto', FOTO_NAME);
+                            var nama_foto = res.NO_LAPOR + "." + getExt(($('#addNamaFoto')[0].files[0].name));
+                            MoveFoto('#addNamaFoto', nama_foto);
+                            toastr.success("Data Has Been Save Successfuly");
+                            $('#modalForm').modal('hide');
+                        } else {
+                            toastr.warning(res.message);
+                        }
+                    },
+                    error: function (res) {
+                        toastr.error(res.Message);
+                    }
+                });
+            } else {
+                toastr.error("Saving data has been failed! Please check again before you save it!");
+            }
+
+            //clear_add();
+            jQuery('#btn_search').click();
+            clearCache();
+            refreshPage();
+        }
+    }
+
+    function clear_add() {
+        $('input[type="text"]').val('');
+        $('.form-control').val('');
+        $('.form-control select2').val('');
+        $('.select2').val('');
+        //Clear Add
+        $('#display_col_modifikasi').hide();
+        $('#display_col_modifikasi2').hide();
+        $('#display_col_lokasi').hide();
+        $('#display_col_user').hide();
+        $("#addImageBox").attr('src', '../Content/Upload/Foto/ManajementAsset/' + 'nothing').show();
+        $('#modalForm').modal('hide');
+
+        //Clear Edit
+        $("#editImageBox").attr('src', '../Content/Upload/Foto/ManajementAsset/' + 'nothing').show();
+        $('#modalEditForm').modal('hide');
+    }
+
+    //------------------------------------------------------EDIT DATA LAPOR-------------------------------------
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var NO_LAPOR = $('#editNoLapor');
+        var NO_ASSET = $('#editNoAsset');
+        var KETERANGAN = $('#editKeterangan');
+        var STATUS_KONDISI = $('#editStatusKondisi');
+        var PIC_LAPOR = $('#editPicLapor');
+        var KD_LOKASI_BARU = $('#editKdLokasi');
+        var SUB_LOKASI_BARU = $('#editSubLokasiBaru');
+        var NAMA_USER_BARU = $('#editNamaUserBaru');
+        var DEPT_USER_BARU = $('#editDeptUserBaru');
+        var HALTE_BARU = $('#editHalteBaru');
+        var HARGA_BARU = $('#editHargaBaru');
+        var COST_UPGRADE_BARU = $('#editCostUpgradeBaru');
+        var SPESIFIKASI_BARU = $('#editSpesifikasiBaru');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        NO_LAPOR.val(Send_Var[2]);
+        NO_ASSET.val(Send_Var[3]);
+        STATUS_KONDISI.val(Send_Var[4]);
+        KETERANGAN.val(Send_Var[5]);
+        PIC_LAPOR.val(Send_Var[6]);
+        KD_LOKASI_BARU.val(Send_Var[7]);
+        SUB_LOKASI_BARU.val(Send_Var[8]);
+        NAMA_USER_BARU.val(Send_Var[9]);
+        DEPT_USER_BARU.val(Send_Var[10]);
+        HALTE_BARU.val(Send_Var[11]);
+        HARGA_BARU.val(Send_Var[12]);
+        COST_UPGRADE_BARU.val(Send_Var[13]);
+        SPESIFIKASI_BARU.val(Send_Var[14]);
+
+        if ($('#Edit_Data').val() != "True" && $('#Edit_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        }
+        else {
+            $('#modalEditForm').modal();
+        }
+
+    });
+
+    function cancel_edit() {
+        $('input[type="text"]').val('');
+        $('.form-control').val('');
+        $('#editImg').val('');
+        //$('#editImageBox').val('');
+        $("#editImageBox").attr('src', '../Content/Upload/Foto/ManajementAsset/Lapor_Asset/' + 'nothing').show();
+        $('#modalEditForm').modal('hide');
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function edit_check() {
+        var ID = $('#EditID').val();
+        var NO_LAPOR = $('#editNoLapor').val();
+        var NO_ASSET = $('#editNoAsset').val();
+        var KETERANGAN = $('#editKeterangan').val();
+        var STATUS_KONDISI = $('#editStatusKondisi').val();
+        var PIC_LAPOR = $('#editPicLapor').val();
+        var KD_LOKASI_BARU = $('#editKdLokasi').val();
+        var SUB_LOKASI_BARU = $('#editSubLokasiBaru').val();
+        var NAMA_USER_BARU = $('#editNamaUserBaru').val();
+        var DEPT_USER_BARU = $('#editDeptUserBaru').val();
+        var HALTE_BARU = $('#editHalteBaru').val();
+        var HARGA_BARU = $('#editHargaBaru').val();
+        var COST_UPGRADE_BARU = $('#editCostUpgradeBaru').val();
+        var SPESIFIKASI_BARU = $('#editSpesifikasiBaru').val();
+
+        var sts = true;
+
+        //if (KETERANGAN.includes(",")) {
+        //    toastr.warning("Please Don't Using Comma (,) ");
+        //    sts = false;
+        //} else if (KETERANGAN.indexOf('\'') >= 0 && KETERANGAN.indexOf('"') >= 0) {
+        //    toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+        //    sts = false;
+        //}
+
+        //if (SPESIFIKASI_BARU.includes(",")) {
+        //    toastr.warning("Please Don't Using Comma (,) ");
+        //    sts = false;
+        //} else if (SPESIFIKASI_BARU.indexOf('\'') >= 0 && SPESIFIKASI_BARU.indexOf('"') >= 0) {
+        //    toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+        //    sts = false;
+        //}
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var NO_LAPOR = $('#editNoLapor').val();
+                var NO_ASSET = $('#editNoAsset').val();
+                var KETERANGAN = $('#editKeterangan').val();
+
+                var STATUS_KONDISI = $('#editStatusKondisi').val();
+                //if (STATUS_KONDISI == "MODIFIKASI") {
+                //    STATUS_KONDISI = "OK";
+                //} else if (STATUS_KONDISI == "PINDAH") {
+                //    STATUS_KONDISI = "OK";
+                //} else if (STATUS_KONDISI == "REPAIR") {
+                //    STATUS_KONDISI = "OK";
+                //} else if (STATUS_KONDISI == "RUSAK") {
+                //    STATUS_KONDISI = "NG";
+                //}
+
+                var PIC_LAPOR = $('#editPicLapor').val();
+                var KD_LOKASI_BARU = $('#editKdLokasi').val();
+                var SUB_LOKASI_BARU = $('#editSubLokasiBaru').val();
+                var NAMA_USER_BARU = $('#editNamaUserBaru').val();
+                var DEPT_USER_BARU = $('#editDeptUserBaru').val();
+                var HALTE_BARU = $('#editHalteBaru').val();
+                var HARGA_BARU = $('#editHargaBaru').val();
+                var COST_UPGRADE_BARU = $('#editCostUpgradeBaru').val();
+                var SPESIFIKASI_BARU = $('#editSpesifikasiBaru').val();
+
+                var sts = true;
+
+                if (KETERANGAN.includes(",")) {
+                    toastr.warning("Please Don't Using Comma (,) ");
+                    sts = false;
+                } else if (KETERANGAN.indexOf('\'') >= 0 && KETERANGAN.indexOf('"') >= 0) {
+                    toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+                    sts = false;
+                }
+
+                if (SPESIFIKASI_BARU.includes(",")) {
+                    toastr.warning("Please Don't Using Comma (,) ");
+                    sts = false;
+                } else if (SPESIFIKASI_BARU.indexOf('\'') >= 0 && SPESIFIKASI_BARU.indexOf('"') >= 0) {
+                    toastr.warning("Please Don't Using Single-Quote & Double-Quote ");
+                    sts = false;
+                }
+
+                var Send_Var = ID + "," + NO_LAPOR + "," + NO_ASSET + "," + KETERANGAN + "," + STATUS_KONDISI + "," + PIC_LAPOR + "," + KD_LOKASI_BARU + "," + SUB_LOKASI_BARU + "," + NAMA_USER_BARU + "," + DEPT_USER_BARU + "," + HALTE_BARU + "," + HARGA_BARU + "," + COST_UPGRADE_BARU + "," + SPESIFIKASI_BARU;
+
+                if (sts == false) {
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '../DISA100001/Update_Data_Lapor_Asset',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                            toastr.success(data.message);
+                            cancel_edit();
+                            //MoveFoto('#editNamaFoto', NAMA_ASSET);
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        clear_add();
+                        jQuery('#btn_search').click();
+                        clearCache();
+
+                        //OnSearch(1);
+                    }
+                });
+
+            }
+        });
+
+    }
+
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        if ($('#Delete_Data').val() != "True" && $('#Delete_Data').val() != "Nothing") {
+            toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+            return;
+        } else {
+            $('#Confirmation_Delete_Popup').modal();
+        }
+    });
+
+    //Delete funtion
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+
+        if (chk == 0) {
+            GenerateMessage("", "LAPOR_ASSET");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        //Send_Var = Send_Var + Var.split(',')[0] + ","+ Var.split(',')[4] + ",";
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        //Send_Var = Send_Var + "," + Var.split(',')[0]+ "," + Var.split(',')[4];
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+            //alert(Send_Var);
+
+            $.ajax({
+                type: "POST",
+                url: '../DISA100001/Delete_Lapor_Asset',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol Dispose
+    $("#btn_Dispose").on("click", function () {
+        $('#Confirmation_Dispose_Popup').modal();
+    });
+    //Dispose funtion
+    function dispose_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'DISA100001/Dispose_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success("Data Master Asset has been Dispose");
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Dispose_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        refreshPage();
+        //$('#searchNoLapor').val('');
+        //$('#searchNoAsset').val('');
+        //$('#searchKondisiAsset').val('');
+        //$.ajax({
+        //    type: "POST",
+        //    url: SITE_URL + '../Search_Data_Lapor',
+        //    async: false,
+        //    data: {
+        //        start: 1,
+        //        display: 10,
+        //        DATA_ID: $("#data_nm").val(),
+        //        EXECUTION_TIME: $("#exec_time_cd").val(),
+        //        TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+        //        STATUS_ACTIVE: $("#sts_cd").val(),
+        //        EMPLOYEE_NAME: "xxxxx",
+        //    },
+        //    success: function (data) {
+        //        $("#GridTable").html(data);
+        //        $("#paging").val(Last_Record_Per_Page);
+        //        if ($('#cntPage').val() == "1") {
+        //            $('#btn_clear').prop('disabled', false);
+        //            $('#btn_edit').prop('disabled', true);
+        //            $('#btn_Delete').prop('disabled', true);
+        //            $('#btn_Dispose').prop('disabled', true);
+        //        } else {
+        //            $('#btn_clear').prop('disabled', false);
+        //            $('#btn_edit').prop('disabled', true);
+        //            $('#btn_Delete').prop('disabled', true);
+        //            $('#btn_Dispose').prop('disabled', true);
+        //        }
+
+        //        scroll_and_checkbox();
+        //        cek_perdata();
+        //    }
+        //});
+    }
+
+    // tombol search Master Asset
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var NO_LAPOR = $('#searchNoLapor').val();
+        var NO_ASSET = $('#searchNoAsset').val();
+        var KONDISI_ASSET = $('#searchKondisiAsset').val();
+        var NAMA_USER = $('#searchNamaUser').val();
+        var DEPARTMENT_USER = $('#searchDeptUser').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Lapor',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                NO_LAPOR: NO_LAPOR,
+                NO_ASSET: NO_ASSET,
+                KONDISI_ASSET: KONDISI_ASSET,
+                NAMA_USER: NAMA_USER,
+                DEPARTMENT_USER: DEPARTMENT_USER
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_Dispose').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                    $('#btn_Dispose').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    //Show Detail
+    function reloadDetail(MyID) {
+
+        //_row =
+        //var cols = _row.children("td");
+        var ID = MyID.id.valueOf()
+
+        $.ajax({
+            type: "GET",
+            url: 'GetDataDetail?ID=' + ID,
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    }
+   
+</script>

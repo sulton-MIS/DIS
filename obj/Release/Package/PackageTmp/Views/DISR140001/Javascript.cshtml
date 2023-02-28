@@ -1,0 +1,180 @@
+﻿
+<script>
+//const toastr = require("../obj/Release/Package/PackageTmp/Content/Bootstrap/js/toastr");
+
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DISR140001") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    //Get Message From TB_M_MESSAGE 
+    $.ajax({
+        url: "Message/GenerateMessage",
+        success: function (e) {
+            Message = e.res;
+        },
+        error: function (e) {
+            toastr.error('Generate Message Error, Not Instance to the Object');
+        }
+    });
+
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            var userLogin = $('#userLogin').val();
+            var regLogin = $('#regLogin').val();
+
+            //alert(getMenu);
+
+            checkLogin(regLogin, getMenu);
+
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function checkLogin(regLogin, getMenu) {
+        var sts = true;
+        var formMenu = getMenu;
+
+        if (regLogin == "SU" || regLogin == "AMS") {
+            openForm(getMenu);
+            sts = true;
+        }
+        else {
+            $.ajax({
+            type: "POST",
+            url: SITE_URL + 'validasiOpenForm',
+            async: false,
+            data: {
+                formMenu: formMenu
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    openForm(formMenu);
+                } else {
+                    toastr.warning("Your Account Doesn't Have Access! Please Contact Administrator!");
+                    sts = false;
+                    return;
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+                sts = false;
+            }
+        });
+
+        }
+
+        if (sts = false) {
+            return;
+        }
+    }
+
+    function openForm(getMenu) {
+        (getMenu == "Form Input") ? FORM_INPUT() : (getMenu == "List Data Detail") ? LIST_DATA_DETAIL() : (getMenu == "List Data Summary") ? LIST_DATA_SUMMARY() : (getMenu == "Validasi Data Gaikan") ? CHECKER_PAGE() : DATA();
+    }
+
+    function FORM_INPUT() {
+        var win = window.location.replace(SITE_URL + 'FORM_INPUT', '_blank');
+        win.focus();
+    }
+
+    function LIST_DATA_DETAIL() {
+        var win = window.location.replace(SITE_URL + 'LIST_DATA_DETAIL', '_blank');
+        win.focus();
+    }
+
+    function LIST_DATA_SUMMARY() {
+        var win = window.location.replace(SITE_URL + 'LIST_DATA_SUMMARY', '_blank');
+        win.focus();
+    }
+
+    function CHECKER_PAGE() {
+        var win = window.location.replace(SITE_URL + 'CHECKER_PAGE', '_blank');
+        win.focus();
+    }
+
+
+    //Manual Book
+    $("#openBook").click(function () {
+        $("#myModal").modal();
+    });
+    $("#closeBtn").click(function () {
+        $("#myModal").modal('hide');
+    })
+
+    //-----------File References---------
+    //Doc. ROI
+    $("#openFileROI").click(function () {
+        $("#modalFileROI").modal();
+    });
+    $("#closeFileROI").click(function () {
+        $("#modalFileROI").modal('hide');
+    })
+
+    //Doc. URD
+    $("#openFileURD").click(function () {
+        $("#modalFileURD").modal();
+    });
+    $("#closeFileURD").click(function () {
+        $("#modalFileURD").modal('hide');
+    })
+
+    //Doc. FSD
+    $("#openFileFSD").click(function () {
+        $("#modalFileFSD").modal();
+    });
+    $("#closeFileFSD").click(function () {
+        $("#modalFileFSD").modal('hide');
+    })
+
+    //Doc. Test
+    $("#openFileTest").click(function () {
+        $("#modalFileTest").modal();
+    });
+    $("#closeFileTest").click(function () {
+        $("#modalFileTest").modal('hide');
+    })
+
+    //Doc. Training
+    $("#openFileTraining").click(function () {
+        $("#modalFileTraining").modal();
+    });
+    $("#closeFileTraining").click(function () {
+        $("#modalFileTraining").modal('hide');
+    })
+
+    //Doc. Training
+    $("#openFileEvaluasi").click(function () {
+        $("#modalFileEvaluasi").modal();
+    });
+    $("#closeFileEvaluasi").click(function () {
+        $("#modalFileEvaluasi").modal('hide');
+    })
+
+   
+</script>

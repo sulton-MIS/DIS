@@ -1,0 +1,186 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+@{
+    List<DISA150001WipCost> DataWP = (List<DISA150001WipCost>)ViewData["DataTanaoroshiDISA150001"];
+}
+
+
+<style>
+    table {
+        background-color: white !important;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #tblScroll tbody tr:hover {
+        background: #0e54fb;
+        color: white;
+    }
+
+    #tblScroll tr.selected {
+        background: #0e54fb;
+        color: white;
+    }
+    /* #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }*/
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<script>
+    //$("tr").click(function () {
+    //    $(this).addClass("selected").siblings().removeClass("selected");
+    //});
+
+    var trs = document.querySelectorAll("tr");
+    for (var i = 0; i < trs.length; i++) {
+        trs[i].addEventListener("click", function () {
+            if (this.className.indexOf("selected") == 0)
+                this.className = "";
+            else
+                this.className = "selected";
+        });
+    }
+
+
+</script>
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead back>
+                        <tr>
+                            <th style="width: 40px;">NO.</th>
+                            <th style="width: 200px;">DMC TYPE</th>
+                            <th style="width: 120px;">MATERIAL COST</th>
+                            <th style="width: 120px;">FINISH GOODS</th>
+                            <th style="width: 100px;">PRINTING</th>
+                            <th style="width: 100px;">LAMINATING AKHIR</th>
+                            <th style="width: 100px;">WASHING GLASS</th>
+                            <th style="width: 100px;">SCRIBE</th>
+                            <th style="width: 100px;">HOGOSIRU</th>
+                            <th style="width: 100px;">PUNCHING</th>
+                            <th style="width: 100px;">SUDAH PRESS</th>
+                            <th style="width: 100px;">SUDAH KAPTONTAPE</th>
+                            <th style="width: 100px;">SUDAH CHUKAN</th>
+                            <th style="width: 100px;">SUDAH FPC</th>
+                            <th style="width: 100px;">SUDAH HEATSEAL</th>
+                            <th style="width: 100px;">SUDAH HARIAWASE</th>
+                            <th style="width: 100px;">SUDAH OVEN</th>
+                            <th style="width: 100px;">SUDAH AGING</th>
+                            <th style="width: 100px;">SUDAH HOKYOTAPE</th>
+                            <th style="width: 100px;">SUDAH DOUBLE TAPE</th>
+                            <th style="width: 100px;">SUDAH FUREKENSA</th>
+                            <th style="width: 100px;">SUDAH CEK KELENGKAPAN</th>
+                            <th style="width: 100px;">SUDAH DENKI</th>
+                            <th style="width: 100px;">SUDAH GAIKAN</th>
+                            <th style="width: 100px;">LABOR COST</th>
+                            <th style="width: 100px;">ORIGINAL LABOR COST</th>
+                            <th style="width: 100px;">INDIRECT</th>
+                            <th style="width: 100px;">MANUFACTURE COST</th>
+                            <th style="width: 100px;">STATUS</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="24" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 500px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA150001WipCost item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td class="align-right align-middle" style="width: 40px"> @item.ROW_NUM </td>
+                                            <td style="width: 200px"> @item.DMC_CODE_PARTS </td>
+                                            <td class="align-right align-middle" style="width: 120px">  @item.MATERIAL_COST </td>
+                                            <td class="align-right align-middle" style="width: 120px">  @item.FINISH_GOODS </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.PRINTING </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.LAMINATING_AKHIR </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.WASHING_GLASS </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SCRIBE </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.HOGOSIRU </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.PUNCHING </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_PRESS </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_KAPTONTAPE </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_CHUKAN </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_FPC </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_HEATSEAL </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_HARIAWASE </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_AGING </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_OVEN </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_HOKYOTAPE </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_DOUBLETAPE </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_FUREKENSA </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_CEK_KELENGKAPAN </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_DENKI </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.SUDAH_GAIKAN </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.LABOR_COST </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.ORIGINAL_LABOR_COST </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.INDIRECT </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.MANUFACTURING_COST </td>
+                                            <td class="align-right align-middle" style="width: 100px">  @item.FLG_STATUS_PROD </td>
+
+
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("WipCost/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
+        </table>
+    </div>
+
+</div>

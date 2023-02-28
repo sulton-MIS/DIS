@@ -1,0 +1,40 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50) = @START;
+DECLARE @@DISPLAY VARCHAR(50) = @DISPLAY;
+
+
+
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY id_sagyosha ASC) ROW_NUM,
+	id_sagyosha as ID, 
+	*
+	FROM Z_RT_master_sagyosha		
+	WHERE 1=1	
+';
+
+IF(@EMPLOYEE_NAME <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND name_sagyosha LIKE ''%'+RTRIM(@EMPLOYEE_NAME)+'%'' ';
+	END
+
+IF(@IDENTITYNUMBER <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND id_sagyosha LIKE ''%'+RTRIM(@IDENTITYNUMBER)+'%'' ';
+	END
+IF(@STATUS_OPMJ <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND flg_opmj LIKE '''+(@STATUS_OPMJ)+''' ';
+	END
+
+SET @@QUERY = @@QUERY +') as TB';
+
+IF(@@START > 0 AND @@DISPLAY > 0)
+BEGIN	
+	SET @@QUERY = @@QUERY +' WHERE ROW_NUM BETWEEN '+@@START+' AND '''+@@DISPLAY+''' ';
+END
+
+EXEC(@@QUERY)

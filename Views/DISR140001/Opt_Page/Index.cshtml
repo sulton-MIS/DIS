@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+
+    .select2-results__option[aria-disabled=true] {
+        display: none;
+    }
+
+    .zero-important {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+
+<div id="main-data">
+    @Html.Partial("Opt_Page/CheckValidasiUser")
+    @Html.Partial("Opt_Page/SearchCriteria")
+    @Html.Partial("Opt_Page/InputForm")
+    @Html.Partial("Opt_Page/PopupForm")
+    @Html.Partial("Opt_Page/PrintPreview")
+</div>
+
+@Html.Partial("Opt_Page/Javascript")
+
+
