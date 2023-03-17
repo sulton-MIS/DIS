@@ -1,0 +1,64 @@
+﻿<script type="text/javascript">
+    
+    function GetDataChart(appId, dt_from, dt_to) {
+
+        $.getJSON('VisitCounterApp/GetDataChart', { id: appId, DateFrom: dt_from, DateTo: dt_to }, function (res) {
+
+            var dataApp = res.arrApp;
+            var dataHitCount = '[{ "name" : "Hit Count", "data" : ' + JSON.stringify(res.arrTotal) + '}]';
+            var _data = JSON.parse(dataHitCount)
+            
+
+            $('#container').highcharts({
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Hit Count'
+                },
+                xAxis: {
+                    categories: dataApp
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ' ' //
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: _data
+            });
+        });
+    }
+    
+
+
+    
+</script>
+
+
+<div class="modal fade" id="ChartModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:960px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="width:15px">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="container" style="width: 920px; height: 400px; margin: 0 auto"></div>
+                
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

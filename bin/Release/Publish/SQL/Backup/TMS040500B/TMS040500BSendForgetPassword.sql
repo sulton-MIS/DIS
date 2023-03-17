@@ -1,0 +1,1 @@
+﻿EXEC dbo.sp_SendMailNotification @pid, @func, @uid, @result, @param, @aTO, @aCC, @aBCC, @aFOOT, @aSUBJ, @aFULL, @aEMAIL, @aTEXT;

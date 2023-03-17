@@ -1,0 +1,121 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD TYPE CUSTOMER </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DMC TYPE</label>
+                        <input id="addDmcType" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>CUSTOMER</label>
+                        <input id="addCustomer" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TOUCH PANEL SIZE</label>
+                        <input id="addTouchPanelSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>WIS VERSION</label>
+                        <input id="addWisVersion" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>LOT SIZE</label>
+                        <input id="addLotSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>IN DIRECT</label>
+                        <input id="addInDirect" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SGA</label>
+                        <input type="text" class="form-control" id="addSga">
+                    </div>                    
+                </div>               
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT TYPE CUST </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">DMC TYPE</label>
+                        <input id="editDmcType" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>CUSTOMER</label>
+                        <input id="editCustomer" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>TOUCH PANEL SIZE</label>
+                        <input id="editTouchPanelSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>WIS VERSION</label>
+                        <input id="editWisVersion" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>LOT SIZE</label>
+                        <input id="editLotSize" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>IN DIRECT</label>
+                        <input id="editInDirect" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SGA</label>
+                        <input type="text" class="form-control" id="editSga">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

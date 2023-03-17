@@ -1,0 +1,456 @@
+﻿
+<script>
+    var SITE_URL = window.location.href+"/";
+    var Message = [];
+    var addIcon = 0;
+    var editIcon = 0;
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('.icon-danger').click(function () {
+            $('.icon-danger').removeClass('icon-selected');
+            $(this).addClass('icon-selected');
+            var type = $(this).attr('data-type');
+            if (type == "add") {
+                addIcon = $(this).attr('data-icon');
+            } else {
+                editIcon = $(this).attr('data-icon');
+            }
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+                
+            }
+        }
+    }
+
+     function add_check() {
+        var WORKING_NAME = $('#addWorkingName').val();
+         var STATUS = true;
+         var ICON = addIcon;
+        if (WORKING_NAME == null || WORKING_NAME == "") {
+            GenerateMessage("Working Name", "MWP008");
+            STATUS = false;
+         }
+
+         if (ICON == 0) {
+            GenerateMessage("Icon", "MWP019");
+            STATUS = false;
+         }
+
+        if (STATUS == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var WORKING_NAME = $('#editWorkingName').val();
+        var STATUS = true;
+        var ICON = editIcon;
+        if (WORKING_NAME == null || WORKING_NAME == "") {
+            GenerateMessage("Working Name", "MWP008");
+            STATUS = false;
+        }
+
+        if (ICON == 0) {
+            GenerateMessage("Icon", "MWP019");
+            STATUS = false;
+         }
+
+        if (STATUS == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Add New
+    function addNew() {
+        var WORKING_NAME = $('#addWorkingName').val();
+        var STATUS = $('#addStatus').val();
+        var ICON = addIcon;
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                WORKING_NAME: WORKING_NAME,
+                STATUS: STATUS,
+                ICON: ICON
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    $('#addWorkingName').val('');
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var WORKING_NAME = $('#editWorkingName');
+        var STATUS = $('#editStatus');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        editIcon = 0;
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(';');
+            }
+        });
+        ID.val(Send_Var[0]);
+        WORKING_NAME.val(Send_Var[1]);
+        STATUS.val(Send_Var[2]);
+        if (Send_Var[3] != null || Send_Var[3] != 0) {
+            editIcon = Send_Var[3];
+            $('.icon-danger').removeClass('icon-selected');
+            $('[data-icon=' + Send_Var[3] + ']').addClass('icon-selected');
+        }
+        $('#modalEditForm').modal();
+        //$('.row-' + Send_Var[0]).hide();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var WORKING_NAME = $('#editWorkingName').val();
+                var STATUS = $('#editStatus').val();
+                var ICON = editIcon;
+                var Send_Var = ID+";"+WORKING_NAME+";"+STATUS+";"+ICON;
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP01004/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                         console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+                    
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(';')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(';')[0];
+                    }
+                    
+                }
+            });
+            console.log(Send_Var);
+            $.ajax({
+                type: "POST",
+                url: 'WP01004/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+                    
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchWorkingName').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                WORKING_NAME: "xxxxx"
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        //$('#NoDataFound').closest('tr').remove();
+        $('#addWorkingName').val('');
+        $('#addStatus').val(1);
+        addIcon = 0;
+        $('.icon-danger').removeClass('icon-selected');
+        $('#modalForm').modal();
+        //document.getElementById("tambah_data").style.display = "";
+
+        
+    });
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {   
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var WORKING_NAME = $('#searchWorkingName').val();
+        var STATUS = $('#searchStatus').val();
+        
+        if (status == 'Other') {
+            status = $('#otherStatus').val();
+        }
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                WORKING_NAME: WORKING_NAME,
+                STATUS: STATUS
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+                
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                }else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+                
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

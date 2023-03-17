@@ -1,0 +1,47 @@
+﻿
+<script>
+   
+    //MENU CARD
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            (getMenu == "PRODCOST") ? PRODCOST() : (getMenu == "CONV_TABLE") ? CONV_TABLE() : (getMenu == "TYPE_CUST") ? TYPE_CUST() : DATA();
+
+        });
+    });
+
+    //function CONV_TABLE() {
+    //    $('#menu-container').hide();
+    //    $('#convTable-container').show();
+    //}
+
+    function CONV_TABLE() {
+        var win = window.open(SITE_URL + 'ConventionTable', '_blank');
+        win.focus();
+    }
+
+    function TYPE_CUST() {
+        var win = window.open(SITE_URL + 'TypeCustomer', '_blank');
+        win.focus();
+    }
+
+    function PRODCOST() {
+        $('#menu-container').hide();
+        $('#prodCost-container').show();        
+    }
+
+    function back_summary() {
+        location.href = "/DISA150001";                
+        //$('#prodCost-data-detail').hide();
+        //$('#prodCost-container').show();        
+    }
+
+    function back_menu() {
+        //location.href = "/DISA150001";
+        $('#menu-container').show();
+        $('#prodCost-container').hide();
+        $('#convTable-container').hide();
+    }
+
+    
+</script>

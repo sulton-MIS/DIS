@@ -1,0 +1,246 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+@{
+    List<DISA150001_TypeCust_Master> ListDmcType = (List<DISA150001_TypeCust_Master>)ViewData["dmc_type"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD CHOKORITSU </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                    <span class="FlexText">WORKER FORM</span>
+                </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Dmc Type</label>
+                        @*<input id="addDmcType" required type="text" class="form-control" />*@
+                        <select class="form-control select2" id="addDmcType" required>
+                            <option value="" selected="selected" style="font-style: italic; color: gray"> --- PILIH --- </option>
+                            @{
+                                if (ListDmcType != null)
+                                {
+                                    if (ListDmcType.Count() > 0)
+                                    {
+                                        foreach (DISA150001_TypeCust_Master item in ListDmcType)
+                                        {
+                                            <option value="@item.Dmc_Type">@item.Dmc_Type</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Printing Film</label>
+                        <input id="addYieldPrintingFilm" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Printing Glass</label>
+                        <input id="addYieldPrintingGlass" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Printing Tail</label>
+                        <input id="addYieldPrintingTail" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Printing Overlay</label>
+                        <input id="addYieldPrintingOverlay" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Scribe</label>
+                        <input id="addYieldScribe" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Film Inspection</label>
+                        <input id="addYieldFilmInspection" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Film Kabu Inspection</label>
+                        <input id="addYieldFilmKabuInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Glass Inspection</label>
+                        <input type="text" class="form-control" id="addYieldGlassInspection">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Overlay Inspection</label>
+                        <input id="addYieldOverlyInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Tail Electrical</label>
+                        <input type="text" class="form-control" id="addYieldTailElectrical">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Tail Cosmetic</label>
+                        <input id="addYieldTailCosmetic" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Assembly</label>
+                        <input type="text" class="form-control" id="addYieldAssembly">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Final Assembly</label>
+                        <input id="addYieldFinalAssembly" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Electrical Inspection</label>
+                        <input type="text" class="form-control" id="addYieldElectricalInspection">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Final Inspection</label>
+                        <input id="addYieldFinalInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Denki Film</label>
+                        <input type="text" class="form-control" id="addYieldDenkiFilm">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Denki Glass</label>
+                        <input type="text" class="form-control" id="addYieldDenkiGlass">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT CHOKORITSU </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Dmc Type</label>
+                        <input id="editDmcType" required type="text" class="form-control" disabled=""/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Printing Film</label>
+                        <input id="editYieldPrintingFilm" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Printing Glass</label>
+                        <input id="editYieldPrintingGlass" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Printing Tail</label>
+                        <input id="editYieldPrintingTail" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Printing Overlay</label>
+                        <input id="editYieldPrintingOverlay" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Scribe</label>
+                        <input id="editYieldScribe" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Film Inspection</label>
+                        <input id="editYieldFilmInspection" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Film Kabu Inspection</label>
+                        <input id="editYieldFilmKabuInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Glass Inspection</label>
+                        <input type="text" class="form-control" id="editYieldGlassInspection">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Overlay Inspection</label>
+                        <input id="editYieldOverlyInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Tail Electrical</label>
+                        <input type="text" class="form-control" id="editYieldTailElectrical">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Tail Cosmetic</label>
+                        <input id="editYieldTailCosmetic" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Assembly</label>
+                        <input type="text" class="form-control" id="editYieldAssembly">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Final Assembly</label>
+                        <input id="editYieldFinalAssembly" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Electrical Inspection</label>
+                        <input type="text" class="form-control" id="editYieldElectricalInspection">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Final Inspection</label>
+                        <input id="editYieldFinalInspection" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Yield Denki Film</label>
+                        <input type="text" class="form-control" id="editYieldDenkiFilm">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Yield Denki Glass</label>
+                        <input type="text" class="form-control" id="editYieldDenkiGlass">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

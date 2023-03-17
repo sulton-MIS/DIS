@@ -1,0 +1,85 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+@{
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    //List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+}
+
+<style>
+    #tableSearch {
+        /*border-spacing: 5px;*/
+        border-collapse: separate;
+        margin-top: 25px;
+    }
+</style>
+
+<div class="row">
+    <div class="col align-right align-bottom">
+        <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back_menu()"><i class="fa fa-close"></i></button>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td> DMC TYPE </td>
+                                    <td>
+                                        <input id="searchDmcType" type="text" class="form-control" />
+                                    </td>
+                                    <td> CUSTOMER </td>
+                                    <td>
+                                        <input id="searchCustomer" type="text" class="form-control" />
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-primary btn-xs" id="btn_search_proCost" style="width: 80px;"><i class="fa fa-search"></i> Show</button>
+                                        <button type="button" onclick="clear_search_proCost()" class="btn btn-grey btn-xs" id="btn_clear_proCost" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    @*<td> TYPE </td>
+                                        <td>
+                                            <input id="searchType" type="text" class="form-control" />
+                                        </td>*@
+                                    @*<td> GRADE </td>
+                                        <td>
+                                            <input id="searchGrade" type="text" class="form-control" />
+                                        </td>*@
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                            <input type="checkbox" id="checkAllType" style="margin-left:-20px;width: 45px; height: 15px; background: #555; border-radius: 5px;" />
+                            <select id="cmb_type" name="dropdown" style="margin-left:-5px; width:150px">
+                                <option id="cmb_type" value="all-type"> ALL TYPE </option>
+                                <option id="cmb_type" value="per-type"> PER-TYPE </option>
+                            </select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-yellow btn-xs" id="btn_kalkulasi" style="width: 90px;"><i class="fa fa-calculator"></i> Calculate</button>
+                            <button type="button" onclick="" class="btn btn-success btn-xs" id="btn_download" style="width: 90px;"><i class="fa fa-download"></i> Download</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

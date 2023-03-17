@@ -1,0 +1,275 @@
+﻿
+<style>
+    video {
+        width: 200px !important;
+        height: 200px !important;
+    }
+
+    #QRcode {
+    }
+
+    .foto-container {
+        width: 99%;
+        min-height: 200px;
+        border: 2px dashed grey;
+        margin-left: 10px;
+        background-image: url('');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    #QRnotFound {
+        background-image: url('Content/Images/NODATA.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: contain;
+        width:100%;
+        height:200px;
+    }
+</style>
+<div class="row zero-padding">
+    <div class="col">
+        <h3 class="data-header">DATA SCAN QR / SCAN DATA</h3>
+        <hr />
+    </div>
+</div>
+
+<div class="row" style="margin-top:10px">
+    <div class="col-md-2 zero-padding" style="padding-left:5px">
+        <div id="QRcode" style="width: 100%; height: 200px; position: relative;">
+            <div id="QRnotFound">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 zero-padding">
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                <div class="input-group">
+                    <label>QR-SCANNER</label>
+                    <input type="text" id="scanQR" class="form-control">
+                    <span class="input-group-btn">
+                        <button onclick="getDataScan()" class="btn btn-primary btn-xs" style="margin-top:24px" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button id="button-clear" onclick="clear_scan(true);" style="margin-top:24px; margin-left:-20px" class="btn btn-danger btn-xs form-control"><i class="fa fa-eraser"></i></button>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="input-group">
+                    <label>IMPB NO</label>
+                    <input readonly id="inputImpbNo" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="input-group">
+                    <label>PROJECT NAME</label>
+                    <input id="inputNamaProyek" readonly type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="input-group">
+                    <label>AREA</label>
+                    <input id="inputArea" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="input-group">
+                    <label>PROJECT LOCATION</label>
+                    <input id="inputLokasiProyek" readonly type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 zero-padding">
+        <span style="        border-right: solid 1.5px darkgrey;
+        height: 36.5em;
+        position: absolute;"></span>
+        <div class="foto-container">
+
+        </div>
+    </div>
+
+    <div class="col-md-4 zero-padding">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label>REG NO</label>
+                <input id="inputRegNo" readonly type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>ANZEN LEADER</label>
+                <input id="inputAnzenLeader" readonly type="text" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label>ANZEN NO</label>
+                <input id="inputAnzenNo" readonly type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+           <div class="col-md-6">
+                <label>VALID FROM</label>
+                <input id="inputAnzenValidDari" readonly type="text" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+                <label>VALID TO</label>
+                <input id="inputAnzenValidSampai" readonly type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12  zero-padding">
+        <div class="row">
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>WORKING PERMIT STATUS</label>
+                    <input id="inputStatusIjinKerja" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>DIVISON / DEPARTEMENT</label>
+                    <input id="inputDivisi" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>PROJECT IMPLEMENTER</label>
+                    <input id="inputPelaksanaProyek" readonly type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>NO SAFETY INDUCTION</label>
+                    <input id="inputNoSafetyInduction" readonly type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>VALID FROM</label>
+                    <input id="inputValidDari" readonly type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>VALID TO</label>
+                    <input id="inputValidSampai" readonly type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>SECTION / PT / CV</label>
+                    <input id="inputBagian" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>LEADER IMPLEMENTER</label>
+                    <input id="inputPimpinan" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>SUPERVISOR</label>
+                    <input id="inputPengawas" readonly type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>FIRST NAME</label>
+                <input id="inputFirstName" readonly type="text" class="form-control">
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>LAST NAME</label>
+                <input id="inputLastName" readonly type="text" class="form-control">
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>GENDER</label>
+                    <input id="inputGender" readonly type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>START IMPLEMENTATION</label>
+                    <input id="inputMulaiPelaksanaan" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>END IMPLEMENTATION</label>
+                    <input id="inputAkhirPelaksanaan" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>TIME IMPLEMENTATION</label>
+                    <input id="inputJamPelaksanaan" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label>ADDRESS</label>
+                <textarea id="inputAlamat" disabled class="form-control" style="min-height:75px; width:88%; resize:none; position:absolute"></textarea>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <label>SECTION</label>
+                    <input id="inputSection" readonly type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label>EMAIL</label>
+                <input id="inputEmail" readonly type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 zero-padding hidden">
+        <div class="row">
+            <audio controls="controls" id="deniedSound">
+                <source src="~/Content/Sound/denied.mp3" type="audio/mpeg" />
+            </audio>
+            <audio controls="controls" id="grantedSound">
+                <source src="~/Content/Sound/granted.mp3" type="audio/mpeg" />
+            </audio>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6" style="margin-top:-10px">
+        <label>STATUS</label>
+        <input id="user-id" style="display:none" />
+        <input id="project-id" style="display:none" />
+        <button id="button-status" class="btn btn-danger btn-xs form-control" style="height:44px; white-space:inherit">NO DATA</button>
+
+    </div>
+</div>

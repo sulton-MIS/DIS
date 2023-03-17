@@ -1,0 +1,474 @@
+﻿
+<script>
+    var SITE_URL = window.location.href+"/";
+    var Message = [];
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+         $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+         });
+
+
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+                
+            }
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function add_check() {
+        var AREA_CODE = $('#addAreaCode').val();
+        var LOC_CODE = $('#addLocationCode').val();
+        var LOC_NAME = $('#addLocationName').val();
+        var STATUS = $('#addStatus').val();
+
+        var status = true;
+        if (AREA_CODE == null || AREA_CODE == "") {
+            GenerateMessage("AREA CODE", "MWP008");
+            status = false;
+        }
+
+        if (LOC_CODE == null || LOC_CODE == "") {
+            GenerateMessage("LOC CODE", "MWP008");
+            status = false;
+        }
+
+        if (LOC_NAME == null || LOC_NAME == "") {
+            GenerateMessage("LOC NAME", "MWP008");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var AREA_CODE = $('#editAreaCode').val();
+        var LOC_CODE = $('#editLocationCode').val();
+        var LOC_NAME = $('#editLocationName').val();
+        var STATUS = $('#editStatus').val();
+
+        var status = true;
+        if (AREA_CODE == null || AREA_CODE == "") {
+            GenerateMessage("AREA CODE", "MWP008");
+            status = false;
+        }
+
+        if (LOC_CODE == null || LOC_CODE == "") {
+            GenerateMessage("LOC CODE", "MWP008");
+            status = false;
+        }
+
+        if (LOC_NAME == null || LOC_NAME == "") {
+            GenerateMessage("LOC NAME", "MWP008");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    //tombol Add New
+    function addNew() {
+        var AREA_CODE = $('#addAreaCode').val();
+        var LOC_CODE = $('#addLocationCode').val();
+        var LOC_NAME = $('#addLocationName').val();
+        var STATUS = $('#addStatus').val();
+        
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                AREA_CODE: AREA_CODE,
+                LOC_CODE: LOC_CODE,
+                LOC_NAME: LOC_NAME,
+                STATUS: STATUS
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success(res.message);
+                    $('#modalForm').modal('hide');
+                    searchData();
+                    clear_add();
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var LOC_CODE = $('#addLocationCode').val('');
+        var LOC_NAME = $('#addLocationName').val('');
+        var LONG = $('#addLong').val('');
+        var LAT = $('#addLat').val('');
+        var WIDE = $('#addWide').val('');
+        var POINT = $('#addPoint').val('');
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var AREA_CODE = $('#editAreaCode');
+        var LOC_CD = $('#editLocationCode');
+        var LOC_NAME = $('#editLocationName');
+        var STATUS = $('#editStatus');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        AREA_CODE.val(Send_Var[1]);
+        LOC_CD.val(Send_Var[2]);
+        LOC_NAME.val(Send_Var[3]);
+        STATUS.val(Send_Var[4]);
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var AREA_CODE = $('#editAreaCode').val();
+                var LOC_CODE = $('#editLocationCode').val();
+                var LOC_NAME = $('#editLocationName').val();
+                var STATUS = $('#editStatus').val();
+                var Send_Var = ID+","+AREA_CODE+","+LOC_CODE+","+LOC_NAME+","+STATUS;
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP01003/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                         console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+                    
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            var Delete_Name = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                        Delete_Name = Delete_Name + Var.split(',')[2] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                        Delete_Name = Delete_Name + "," + Var.split(',')[2];
+                    }
+                    
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP01003/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    var DELETED_NAME = Delete_Name.split(',');
+                    for (var i = 0; i < data.DELETE_MSG.length; i++) {
+                        var getData = data.DELETE_MSG[i];
+                        if (getData.DELETE_MSG == 'True') {
+                            GenerateMessage(DELETED_NAME[i], "MWP002");
+                        } else {
+                            GenerateMessage(DELETED_NAME[i], "MWP009");
+                        }
+                        
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+                    
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchLocationCode').val("");
+        $('#searchLocationName').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                LOC_CODE: "xxxxx",
+                LOC_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        //$('#NoDataFound').closest('tr').remove();
+        $('#addLocationCode').val('');
+        $('#addLocationName').val('');
+        //document.getElementById("tambah_data").style.display = "";
+        $('#modalForm').modal();
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {   
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var LOC_CD = $('#searchLocationCode').val();
+        var LOC_NAME = $('#searchLocationName').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                LOC_CODE: LOC_CD,
+                LOC_NAME: LOC_NAME
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                }else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+                
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,276 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02002Master;
+@{
+    List<CompanyModel> Company = (List<CompanyModel>)ViewData["Company"];
+    List<AreaModel> Areas = (List<AreaModel>)ViewData["Area"];
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+    List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+
+}
+
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <label class="section-title">
+                <u>A. Header</u>
+            </label>
+            <div class="form-group">
+                <label>No. IMPB </label>
+                <input type="text" maxlength="25" class="form-control space-input input-project" id="WP02002_TXT_ADD_IMPBNO" placeholder="Auto Generate" disabled>
+            </div>
+            <div class="form-group">
+                <label>Job Name <span style="color:red">*</span></label>
+                <input required type="text" maxlength="25" class="form-control space-input input-project" id="WP02002_TXT_ADD_JOBNAME" placeholder="Nama Job">
+            </div>
+            <label class="section-title">
+                <u>B. Project Info</u>
+            </label>
+            <div class="form-group">
+                <label>Project Code </label>
+                <input type="hidden" id="WP_PROJECT_ID" value="0" />
+                <input type="text" maxlength="25" class="form-control space-input input-project" id="WP02002_TXT_ADD_PROJECTCODE" placeholder="Auto Generate" disabled>
+            </div>
+            <div class="form-group">
+                <label>Project Name <span style="color:red">*</span></label>
+                <input required type="text" maxlength="25" class="form-control space-input input-project" id="WP02002_TXT_ADD_PROJECTNAME" placeholder="Nama Proyek">
+            </div>
+            <div class="form-group">
+                <label>Project Area <span style="color:red">*</span></label>
+                <select class="form-control space-input input-project select2" id="WP02002_DDL_ADD_AREA" required>
+                    <option value="">- select -</option>
+                    @{
+                        if (Areas != null)
+                        {
+                            if (Areas.Count() > 0)
+                            {
+                                foreach (AreaModel item in Areas)
+                                {
+                                    <option value="@item.ID_TB_M_AREA">@item.AREA_NAME</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>Project Location <span style="color:red">*</span></label>
+                    <select class="form-control space-input input-project select2" id="WP02002_DDL_ADD_LOC" disabled required>
+                        <option value="">- select -</option>
+                        @{
+                            if (Location != null)
+                            {
+                                if (Location.Count() > 0)
+                                {
+                                    foreach (LocationModel item in Location)
+                                    {
+                                        <option style="display:none" value="@item.ID_TB_M_LOCATION" area="@item.ID_TB_M_AREA">@item.LOC_NAME</option>
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-6">
+                    <label>Division/Departement <span style="color:red">*</span></label>
+                    <select class="form-control space-input input-project select2" id="WP02002_DDL_ADD_DIV" required>
+                        <option value="">- select -</option>
+                        @{
+                            if (Division != null)
+                            {
+                                if (Division.Count() > 0)
+                                {
+                                    foreach (DivisionModel item in Division)
+                                    {
+                                        <option value="@item.DIV_ID">@item.DIV</option>
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>Project Start <span style="color:red">*</span></label>
+                    <input id="WP02002_DT_ADD_PELAKSANAAN" class="form-control input-project datepicker" style="text-align:center" type="text" required>
+                </div>
+                <div class="col-lg-6">
+                    <label>Project End <span style="color:red">*</span></label>
+                    <input id="WP02002_DT_TO_ADD_PELAKSANAAN" class="form-control input-project datepicker" style="text-align:center" type="text" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>Job Start <span style="color:red">*</span></label>
+                    <input id="WP02002_DT_JOB_START" class="form-control input-project datepicker" style="text-align:center" type="text" required>
+                </div>
+                <div class="col-lg-6">
+                    <label>Job End <span style="color:red">*</span></label>
+                    <input id="WP02002_DT_JOB_END" class="form-control input-project datepicker" style="text-align:center" type="text" required>
+                </div>
+            </div>
+
+            <div class="form-check">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label>Working Status <span style="color:red">*</span> :</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input class="form-check-input input-project" type="radio" value="1" name="WorkingStatus" id="WP02002_CHK_ADD_STNEW">
+                        <label class="form-check-label" for="WP02002_CHK_ADD_STNEW">
+                            New
+                        </label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input class="form-check-input input-project" type="radio" value="0" name="WorkingStatus" id="WP02002_CHK_ADD_STEXTEND">
+                        <label class="form-check-label" for="WP02002_CHK_ADD_STEXTEND">
+                            Extend &nbsp;<span class="required"></span> )
+                        </label>
+                    </div>
+                    <div class="col-lg-6">
+                        <textarea type="text" maxlength="25" style="width: 100%; height: 106px;" class="form-control space-input input-project" id="WP02002_TXT_ADD_NOTED" placeholder="Noted"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <label class="section-title">
+                <u>C. Execution Project</u>
+            </label>
+            <div class="form-check" style="margin-bottom:20px;">
+                <label>Execution From :</label>
+                <div class="row">
+                    <div class="col-lg-3" style="text-align:left">
+                        <input class="form-check-input" type="radio" value="TMMI" name="pelaksana" id="WP02002_CHK_TMMIN">
+                        <label class="form-check-label" for="WP02002_CHK_TMMIN">
+                            TMMIN
+                        </label>
+                    </div>
+                    <div class="col-lg-3" style="text-align:left">
+                        <input class="form-check-input" type="radio" value="CONTRACTOR" name="pelaksana" id="WP02002_CHK_CONTRACTOR">
+                        <label class="form-check-label" for="WP02002_CHK_CONTRACTOR">
+                            CONTRACTOR
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group input-job">
+                <label>Company </label>
+                @*<input type="text" maxlength="25" class="form-control space-input" id="WP02002_TXT_ADD_BAGIAN" placeholder="Pengisian Bagian/ PT. / CV.">*@
+                <select class="form-control space-input select2" id="WP02002_DDL_ADD_BAGIAN" disabled>
+                    <option value="">- select -</option>
+                    @{
+                        if (Company != null)
+                        {
+                            if (Company.Count() > 0)
+                            {
+                                foreach (CompanyModel item in Company)
+                                {
+                                    <option style="display:none" value="@item.ID_TB_M_COMPANY" code="@item.COMPANY_CODE">@item.COMPANY_NAME</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="row" style="margin:unset">
+                <div class="col-lg-6 section-wrapper-child">
+                    <label class="section-title-child">
+                        <b><u>Leader</u></b>
+                    </label>
+                    <div class="form-group">
+                        <label>Name </label>
+                        <select class="form-control space-input select2 input-job" id="WP02002_DDL_ADD_NAMALEAD" disabled>
+                            <option value="">- select -</option>
+                            @*@{
+                                if (Employee != null)
+                                {
+                                    if (Employee.Count() > 0)
+                                    {
+                                        foreach (EmployeeModel item in Employee)
+                                        {
+                                            if (item.COMPANY_CODE == "TMMIN")
+                                            {
+                                                <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                            }
+                                            else
+                                            {
+                                                <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY,@item.PIC_STATUS" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }*@
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No A/L </label>
+                        <input type="text" class="form-control space-input" id="WP02002_TXT_ADD_NOALLEAD" disabled placeholder="Pengisian No A/L Pimpinan">
+                    </div>
+                    <div class="form-group">
+                        <label>No HP </label>
+                        <input type="text" class="form-control space-input" disabled id="WP02002_TXT_ADD_NOHPLEAD" placeholder="Pengisian No HP Pimpinan">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 section-wrapper-child">
+                    <label class="section-title-child">
+                        <b><u>Supervisor</u></b>
+                    </label>
+                    <div class="form-group">
+                        <label>Name </label>
+                        <select class="form-control space-input select2 input-job" id="WP02002_DDL_ADD_NAMAPGWS" disabled>
+                            <option value="">- select -</option>
+                            @*@{
+                                if (Employee != null)
+                                {
+                                    if (Employee.Count() > 0)
+                                    {
+                                        foreach (EmployeeModel item in Employee)
+                                        {
+                                            if (item.COMPANY_CODE == "TMMIN")
+                                            {
+                                                <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                            }
+                                            else
+                                            {
+                                                <option style="display:none" value="@item.ID_TB_M_EMPLOYEE" code="@item.ID_TB_M_COMPANY,@item.PIC_STATUS" noanzen="@item.ANZEN_SERTIFICATE_NO" phone="@item.PHONE">@item.NAME</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }*@
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No A/L </label>
+                        <input type="text" class="form-control space-input" id="WP02002_TXT_ADD_NOALPGWS" placeholder="Pengisian No A/L Pengawas" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>No HP </label>
+                        <input type="text" class="form-control space-input" id="WP02002_TXT_ADD_NOHPPGWS" placeholder="Pengisian No HP Pengawas" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin: 15px 0 0 0">
+                <div class="col-lg-12 section-wrapper-child" style="padding:0px">
+                    <label class="section-title-child">
+                        <b><u>Area Mapping</u></b>
+                    </label>
+                    <div class="area-border-container" style="display:contents; position:absolute; width: 100%">
+                        <span class="border-area-location"></span>
+                        <img id="image-area" src="" style="height:280px; width: 100%; cursor:pointer" onclick="showAreaMapping()" />
+                    </div>
+                </div>
+            </div>
+            <br />
+    </div>
+    </div>

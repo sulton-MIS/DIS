@@ -1,0 +1,100 @@
+﻿<form role="form" class="form-horizontal _criteria" id="searchForm">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label required-left">Division</label>
+
+                <div class="input-group input-group-xs col-xs-8 col-sm-9 col-md-8" style="padding-left:11px;padding-right:11px; height: 26px;">
+                    <input id="txtUsername" class="form-control" type="text" style="font-size: 9pt;" required />
+                    <span class="input-group-btn">
+                        <button id="btnlookup" class=" btn btn-default btn-sm" type="button" style="height: 30px; line-height: 0;">&nbsp<i class="fa fa-search"></i>&nbsp</button>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label">Plant</label>
+                <div class="col-xs-8 col-sm-9 col-md-8">
+                    @*<input id="txtdesc" type="text" class="form-control" style="height: 26px; width: 210px;" />*@
+                    @*<input type="text" class="navsearchinput" id="navtxtdesc" autocomplete="off" style="height: 26px; width: 210px;" />*@
+                    
+                    <div class="input-group pos-rel" style="width: 100%;">
+						<input id="navtxtdesc" class="form-control" type="text" value="" />
+					</div>
+
+                </div>
+            </div>
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label">Created</label>
+                <div class="col-xs-8 col-sm-9 col-md-8">
+                    <div class="input-group">
+						<span class="input-group-addon" style="cursor: pointer;">
+							<i class="fa fa-calendar bigger-110"></i>
+						</span>
+
+						<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" data-date-format="dd.mm.yyyy" />
+					</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label">Doc. Date</label>
+                <div class="input-group input-group-xs col-xs-8 col-sm-9 col-md-8" style="padding-left:11px;padding-right:11px">
+                    <div class="input-group" style="cursor: pointer;">
+						<input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd.mm.yyyy" />
+						<span class="input-group-addon">
+							<i class="fa fa-calendar bigger-110"></i>
+						</span>
+					</div>
+                </div>
+            </div>
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label">PR Status</label>
+                <div class="col-xs-8 col-sm-9 col-md-8">
+                    <select id="cmb_status" class="cursor-1 mandatory" style="width: 100%;">
+                        <option class="cursor-1"></option>
+                        <option class="cursor-1">Created</option>
+                        <option class="cursor-1">Outstanding</option>
+                        <option class="cursor-1">Released</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-xs-12 col-sm-6 col-md-2">
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label">Amount</label>
+                <div class="col-xs-8 col-sm-9 col-md-8">
+                    <input type="number" id="amount" class="form-control text-right" min="1" onkeydown="javascript:Key(event)" onblur="javascript:CheckAmount()" />
+                </div>
+            </div>
+            <div class="form-group form-group-xs _criteria">
+                <label class="col-xs-4 col-sm-3 col-md-4 control-label required-left">Released</label>
+                <div class="col-xs-8 col-sm-9 col-md-8">
+                    <label>
+						<input name="switch-field-1" class="ace ace-switch ace-switch-6" type="checkbox" />
+						<span class="lbl"></span>
+					</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6" style="margin-top: 5px;">
+            
+        </div>
+        <div class="col-xs-6 text-right">
+            <div class="form-group-xs _criteria">
+                <button type="button" class="btn btn-primary btn-xs" onclick="javascript:searchData()">Search</button>
+                <button type="reset" class="btn btn-default btn-xs" onclick="javascript:clearData()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+</form>

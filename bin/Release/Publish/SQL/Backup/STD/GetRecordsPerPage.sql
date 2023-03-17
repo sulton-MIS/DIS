@@ -1,0 +1,3 @@
+﻿select CAST(SYSTEM_VALUE_NUM as varchar) from TB_M_SYSTEM
+where SYSTEM_ID = 'RECORDS_PER_PAGE'
+order by SYSTEM_VALUE_NUM ASC

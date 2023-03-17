@@ -1,0 +1,89 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03005;
+
+@{
+    List<WP03005Master> dataParticipant = (List<WP03005Master>)ViewData["dataParticipant"];
+}
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table thead tr {
+        background-color: #eee;
+    }
+</style>
+
+<div style="padding: 15px">
+
+    <font size="2" face="Arial">
+        <h2 style="padding: 1px" >@ViewData["Header"]</h2>
+        <p>  Download Date : @ViewData["Download_date"]</p>
+        <table>
+            <thead>
+                <tr>
+                    <td class="align-center align-middle" style="width: 30px;"> No. </td>
+                    <td class="align-center align-middle" style="width: 100px"> Reg. Number </td>
+                    <td class="align-center align-middle" style="width: 100px"> First Name </td>
+                    <td class="align-center align-middle" style="width: 100px"> Last Name </td>
+                    <td class="align-center align-middle" style="width: 100px"> Username </td>
+                    <td class="align-center align-middle" style="width: 100px"> Email </td>
+                    <td class="align-center align-middle" style="width: 60px"> Identity Type </td>
+                    <td class="align-center align-middle" style="width: 100px"> Identity No. </td>
+                    <td class="align-center align-middle" style="width: 150px"> Address </td>
+                    <td class="align-center align-middle" style="width: 100px"> Phone </td>
+                    <td class="align-center align-middle" style="width: 100px"> Safety Induction No. </td>
+                    <td class="align-center align-middle" style="width: 150px"> Safety Date Start </td>
+                    <td class="align-center align-middle" style="width: 150px"> Safety Date End </td>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!----><!----><!---->
+                @{
+                    if (dataParticipant != null)
+                    {
+                        if (dataParticipant.Count > 0)
+                        {
+                            var number = 1;
+                            foreach (WP03005Master item in dataParticipant)
+                            {
+                                <tr id="row-@number">
+                                    <td class="align-center align-middle"> @item.ROWNUM </td>
+                                    <td class="align-left align-middle"> @item.REG_NO </td>
+                                    <td class="align-left align-middle"> @item.FIRST_NAME </td>
+                                    <td class="align-left align-middle"> @item.LAST_NAME </td>
+                                    <td class="align-center align-middle"> @item.USERNAME </td>
+                                    <td class="align-center align-middle"> @item.EMAIL </td>
+                                    <td class="align-center align-middle"> @item.IDENTITY_TYPE </td>
+                                    <td class="align-center align-middle"> @item.IDENTITY_NO </td>
+                                    <td class="align-center align-middle"> @item.ADDRESS </td>
+                                    <td class="align-center align-middle"> @item.PHONE </td>
+                                    <td class="align-center align-middle"> @item.SAFETY_INDUCTION_NO </td>
+                                    <td class="align-center align-middle"> @item.SAFETY_INDUCTION_FROM.ToString("dd-MMM-yyy") </td>
+                                    <td class="align-center align-middle"> @item.SAFETY_INDUCTION_TO.ToString("dd-MMM-yyy") </td>
+                                </tr>
+                                number++;
+                            }
+                        }
+                        else
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="14" width="90%" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr id="NoDataFound">
+                            <td colspan="14" width="90%" class="text-center">No data found</td>
+                        </tr>
+                    }
+                }
+                <!----><!----><!---->
+            </tbody>
+        </table>
+    </font>
+</div>

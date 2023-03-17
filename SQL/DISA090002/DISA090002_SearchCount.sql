@@ -1,0 +1,28 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@DATA_ID VARCHAR(MAX) = @DATA_ID;
+--DECLARE @@EMPLOYEE_NAME VARCHAR(MAX) = @EMPLOYEE_NAME;
+--DECLARE @@IDENTITYNUMBER VARCHAR(MAX) = @IDENTITYNUMBER;
+
+
+SET @@QUERY = '';
+SET @@QUERY = '
+	SELECT ISNULL(max(ROW_NUM),0) FROM 
+	(
+	SELECT ROW_NUMBER() OVER (ORDER BY target_date ASC) ROW_NUM,
+	target_date as ID, 
+	*
+	FROM  ad_dis_rtjn_sum_qty_amount_target	
+	WHERE 1=1	
+';
+
+IF(@TARGET_DATE <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND target_date LIKE ''%'+RTRIM(@TARGET_DATE)+'%'' ';
+	END
+
+
+SET @@QUERY = @@QUERY+ ') AS TB';
+
+
+EXEC(@@QUERY);
+

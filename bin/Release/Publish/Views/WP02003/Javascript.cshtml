@@ -1,0 +1,1776 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var ACTION = '';
+    var arrayOfEmployee = [];
+    var shift;
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "WP02003") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('.select2').select2();
+        getDataTable();
+        $('#tblIncident').DataTable();
+    });
+
+    function GetFormattedDate(dateToFormat) {
+        var dateObject = new Date(dateToFormat);
+        if (!isNaN(dateObject)) {
+            var day = dateObject.getDate();
+            var month = dateObject.getMonth() + 1;
+            var year = dateObject.getFullYear();
+            day = day < 10 ? "0" + day : day;
+            month = month < 10 ? "0" + month : month;
+            var formattedDate = day + "-" + month + "-" + year;
+        } else {
+            var m = dateToFormat.substr(3, 2);
+            var d = dateToFormat.substr(0, 2);
+            var y = dateToFormat.substr(6, 4);
+            dateToFormat = m + "/" + d + "/" + y;
+            dateObject = new Date(dateToFormat);
+            var day = dateObject.getDate();
+            var month = dateObject.getMonth() + 1;
+            var year = dateObject.getFullYear();
+            day = day < 10 ? "0" + day : day;
+            month = month < 10 ? "0" + month : month;
+            var formattedDate = day + "-" + month + "-" + year;
+        }
+
+        return formattedDate;
+    };
+
+
+    function getDetailInformationProject(h, project_id, project_job_id, wp_daily_id) {
+        ///Clear Dropdown Yg Akan Di Target
+
+        var ddlProjectJob = $('#WP02003_DDL_ADD_PROJECT_JOB').html('');
+        $('#WP02003_DDL_ADD_PROJECT_JOB').change(function () {
+            $.ajax({
+                url: SITE_URL + 'getshift',
+                data: {
+                    proyekId: $('#WP02003_DDL_ADD_PROJECT_JOB').val()
+                },
+                dataType: 'JSON',
+                success: function (e2) {
+                    shift = e2.list;
+                },
+                error: function (e2) {
+                    console.log(e2);
+                }
+            });
+
+            $.ajax({
+                url: (SITE_URL).replace("WP02003", "WP02002") + 'getIMPBLocation',
+                data: {
+                    id: $('#WP02003_DDL_ADD_PROJECT_JOB').val()
+                },
+                success: function (e) {
+                    var data = e.result[0];
+                    $('.miniLocation').remove();
+                    $('.new-border-area-location').remove();
+                    if (e.result.length > 0) {
+                        borderArea = data.BORDER_COLOR;
+                        rotate = data.ROTATION;
+
+                        $('.border-area-location').css('border-color', data.BORDER_COLOR);
+                        $('.border-area-location').css('transform', 'rotate(' + data.ROTATION + 'Rad)');
+                        $('.border-area-location').css('top', (data.TOP_POSITION / data.WINDOW_HEIGHT) * 100 + 2.5 + '%');
+                        $('.border-area-location').css('left', (data.LEFT_POSITION / data.WINDOW_WIDTH) * 100 + '%');
+                        $('.border-area-location').css('width', (data.WIDTH / data.WINDOW_WIDTH) * 100 + 1 + '%');
+                        $('.border-area-location').css('height', (data.HEIGHT / data.WINDOW_HEIGHT) * 100 + '%');
+
+                        if (e.data.length > 0) {
+                            var data2 = e.data;
+                            for (var i = 0; i < data2.length; i++) {
+                                $('.area-border-container').append($('.border-area-location').clone().removeClass('border-area-location').addClass('border-area-location' + i).addClass('new-border-area-location'));
+                                $('.border-area-location' + i).css('border', 'solid 2px ' + data2[i].BORDER_COLOR);
+                                $('.border-area-location' + i).css('transform', 'rotate(' + data2[i].ROTATION + 'Rad)');
+                                $('.border-area-location' + i).css('top', (data2[i].TOP_POSITION / data2[i].WINDOW_HEIGHT) * 100 + 2.5 + '%');
+                                $('.border-area-location' + i).css('left', (data2[i].LEFT_POSITION / data2[i].WINDOW_WIDTH) * 100 + '%');
+                                $('.border-area-location' + i).css('width', (data2[i].WIDTH / data2[i].WINDOW_WIDTH) * 100 + 1 + '%');
+                                $('.border-area-location' + i).css('height', (data2[i].HEIGHT / data2[i].WINDOW_HEIGHT) * 100 + '%');
+
+                                $('#area-content-container').append($('.border-area-location').clone().removeClass('border-area-location').addClass('border-area-content-location' + i).addClass('new-border-area-location'));
+                                $('.border-area-content-location' + i).css('border', 'solid 2px ' + data2[i].BORDER_COLOR);
+                                $('.border-area-content-location' + i).css('transform', 'rotate(' + data2[i].ROTATION + 'Rad)');
+                                $('.border-area-content-location' + i).css('top', (data2[i].TOP_POSITION / data2[i].WINDOW_HEIGHT) * 100 + '%');
+                                $('.border-area-content-location' + i).css('left', (data2[i].LEFT_POSITION / data2[i].WINDOW_WIDTH) * 100 + '%');
+                                $('.border-area-content-location' + i).css('width', (data2[i].WIDTH / data2[i].WINDOW_WIDTH) * 100 + '%');
+                                $('.border-area-content-location' + i).css('height', (data2[i].HEIGHT / data2[i].WINDOW_HEIGHT) * 100 + '%');
+                            }
+                        }
+                    } else {
+                        borderArea = 'green';
+                        rotate = 0;
+                        $('.border-area-location').css('border-color', 'green');
+                        $('.border-area-location').css('transform', 'rotate(' + 0 + 'Rad)');
+                        $('.border-area-location').css('top', 0);
+                        $('.border-area-location').css('left', 0);
+                        $('.border-area-location').css('width', 25);
+                        $('.border-area-location').css('height', 25);
+                    }
+                    $('.border-area-location').html('<i class="fa fa-map-marker miniLocation"></i>');
+                }
+
+            });
+        });
+
+
+        if (h == "add") {
+            $('#WP02003_ADD_PROJECT_AREA').val('');
+            $('#WP02003_ADD_PROJECT_LOCATION').val('');
+            $('#WP02003_ADD_PELAKSANA').val('');
+            $('#WP02003_ADD_PROJECT_START_DATE').val('');
+            $('#WP02003_ADD_PROJECT_END_DATE').val('');
+            $('#WP02003_ADD_PELAKSANA').val('');
+
+            $.ajax({
+                url: SITE_URL + 'getProjectDetail',
+                data: {
+                    ID: project_id
+                },
+                dataType: 'JSON',
+                success: function (e) {
+                    $('#WP02003_ADD_PROJECT_AREA').val(e.list.AREA_NAME);
+                    $('#image-area').attr('src', e.list.AREA_PATH);
+                    $('#WP02003_ADD_PROJECT_LOCATION').val(e.list.LOCATION_NAME);
+                    $('#WP02003_ADD_PELAKSANA').val(e.list.COMPANY_NAME);
+                    $('#WP02003_ADD_PROJECT_START_DATE').val(GetFormattedDate(e.list.IMPLEMENT_DATE_FROM));
+                    $('#WP02003_ADD_PROJECT_END_DATE').val(GetFormattedDate(e.list.IMPLEMENT_DATE_TO));
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+
+
+            $.ajax({
+                url: SITE_URL + 'getProjectJob',
+                data: {
+                    WP_PROJECT_ID: project_id
+                },
+                dataType: 'JSON',
+                success: function (e) {
+                    var option = '<option value="-1">--Please Select Job--</option>';
+                    for (var i = 0; i < e.list.length; i++) {
+                        option += '<option value="' + e.list[i].ID + '">' + e.list[i].JOB_NAME + "-" + e.list[i].WP_IMPB_NO + '</option>';
+                    }
+                    ddlProjectJob.append(option);
+                },
+
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        }
+        else if (h == "edit") {
+            $('#WP02003_ADD_PROJECT_LOCATION').val('');
+            $('#WP02003_ADD_PELAKSANA').val('');
+            $('#WP02003_ADD_PROJECT_START_DATE').val('');
+            $('#WP02003_ADD_PROJECT_END_DATE').val('');
+            $('#WP02003_ADD_PELAKSANA').val('');
+
+            $.ajax({
+                url: SITE_URL + 'getProjectDetail',
+                data: {
+                    ID: project_id
+                },
+                dataType: 'JSON',
+                success: function (e) {
+                    $('#WP02003_ADD_PROJECT_LOCATION').val(e.list.AREA_NAME);
+                    $('#WP02003_ADD_PELAKSANA').val(e.list.COMPANY_NAME);
+                    $('#WP02003_ADD_PROJECT_START_DATE').val(GetFormattedDate(e.list.IMPLEMENT_DATE_FROM));
+                    $('#WP02003_ADD_PROJECT_END_DATE').val(GetFormattedDate(e.list.IMPLEMENT_DATE_TO));
+                    $('#WP02003_ADD_PELAKSANA').val(e.list.COMPANY_NAME);
+                    $('#WP02003_DDL_ADD_PROJECT').val(project_id).trigger('change');
+
+                    $.ajax({
+                        url: SITE_URL + 'getWpDailyWorkEqu',
+                        data: {
+                            WP_DAILY_ID: wp_daily_id
+                        },
+                        dataType: 'JSON',
+                        success: function (e2) {
+                            $.each(e2.list, function (idx, itm) {
+                                $('#WP02003_ADD_WP_DAILY_ID').val(itm.TB_R_WP_DAILY_ID);
+                                $('#WP02003_ADD_JOBTITLE').val(itm.TITLE);
+                                if (itm.DAILY_DOC != "") {
+                                    $('#addPdf').attr("value", NEW_SITE_URL + 'Content/Upload/' + itm.DAILY_DOC);
+                                }
+                                AddDropDownWorkItem('edit', itm.TB_M_ITEM_ID, itm.TB_R_WP_DAILY_WORK_EQUIPMENT_ID);
+                            })
+                        },
+                        error: function (e2) {
+                            console.log(e2);
+                        }
+                    });
+                    $.ajax({
+                        url: SITE_URL + 'getWpDailyUtilReq',
+                        data: {
+                            WP_DAILY_ID: wp_daily_id
+                        },
+                        dataType: 'JSON',
+                        success: function (e2) {
+                            $.each(e2.list, function (idx, itm) {
+                                AddDropDownUtility('edit', itm.TB_M_ITEM_ID, itm.TB_R_WP_DAILY_UTIL_REQUEST_ID);
+                            })
+                        },
+                        error: function (e2) {
+                            console.log(e2);
+                        }
+                    });
+                    $.ajax({
+                        url: SITE_URL + 'getWpDailyAPD',
+                        data: {
+                            WP_DAILY_ID: wp_daily_id
+                        },
+                        dataType: 'JSON',
+                        success: function (e2) {
+                            $.each(e2.list, function (idx, itm) {
+                                AddDropDownAPD('edit', itm.TB_M_ITEM_ID, itm.TB_R_WP_DAILY_APD_ID);
+                            })
+                        },
+                        error: function (e2) {
+                            console.log(e2);
+                        }
+                    });
+                    $.ajax({
+                        url: SITE_URL + 'getWpDailyWorkList',
+                        data: {
+                            WP_DAILY_ID: wp_daily_id
+                        },
+                        dataType: 'JSON',
+                        success: function (e2) {
+                            console.log(e2.list);
+                            var employee_list = [];
+                            $.each(e2.list, function (idx, itm) {
+                                var obj = {
+                                    "id": itm.TB_M_EMPLOYEE_ID,
+                                    "nik": itm.NIK,
+                                    "first_name": itm.FIRST_NAME
+                                }
+                                employee_list.push(obj);
+                                setEmployeeList('edit', '', itm.TB_R_WP_DAILY_WORKER_LIST_ID, itm.TB_M_EMPLOYEE_ID);
+                                //AddDropDownListPekerja('edit', itm.TB_M_EMPLOYEE_ID, itm.TB_R_WP_DAILY_WORKER_LIST_ID);
+                            })
+                            renderEmployee(employee_list);
+                        },
+                        error: function (e2) {
+                            console.log(e2);
+                        }
+                    });
+                    $.ajax({
+                        url: SITE_URL + 'getWpDailyWiDe',
+                        data: {
+                            WP_DAILY_ID: wp_daily_id
+                        },
+                        dataType: 'JSON',
+                        success: function (e2) {
+                            $.each(e2.list, function (idx, itm) {
+                                AddWIDTable('edit', itm.TB_M_EMPLOYEE_ID, itm.TB_R_WP_DAILY_WI_DEN_ID, [itm.WORKING_NAME, itm.TIME_FROM, itm.TIME_TO, itm.STOP_SIX]);
+                            })
+                        },
+                        error: function (e2) {
+                            console.log(e2);
+                        }
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+
+            //$('#WP02003_DDL_ADD_PROJECT_JOB').html('')
+
+            $.ajax({
+                url: SITE_URL + 'getProjectJob',
+                data: {
+                    WP_PROJECT_ID: project_id
+                },
+                dataType: 'JSON',
+                success: function (e) {
+                    var option = '<option value="0"></option>';
+                    //var option = '';
+                    for (var i = 0; i < e.list.length; i++) {
+                        option += '<option value="' + e.list[i].ID + '">' + e.list[i].JOB_NAME + "-" + e.list[i].WP_IMPB_NO + '</option>';
+                    }
+                    ddlProjectJob.append(option);
+                    $('#WP02003_DDL_ADD_PROJECT_JOB').val(project_job_id);
+                },
+
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        }
+    }
+
+
+    var counterWorkItem = 1;
+    function AddDropDownWorkItem(sel, selectedItem, wid) {
+
+        var labelItem = $("<label>" + counterWorkItem + "</label>");
+        var ddlWorkItem = $("<select name='ddlWorkItem' class='select2'  style='width: 400px;' />");
+
+        $.ajax({
+            url: SITE_URL + 'getWorkItem',
+            data: "{}",
+            dataType: 'JSON',
+            success: function (e) {
+                var option = '<option value="-1">--Please Select Work Item--</option>';
+                for (var i = 0; i < e.list.length; i++) {
+                    option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+                }
+
+                ddlWorkItem.append(option);
+                if (sel == 'add') {
+                    $.ajax({
+                        url: SITE_URL + 'getGuid',
+                        dataType: 'JSON',
+                        success: function (e) {
+                            dataDailyWorkEquipment.push({
+                                TB_R_WP_DAILY_WORK_EQUIPMENT_ID: e.guid,
+                                TB_R_WP_DAILY_ID: "",
+                                TB_M_ITEM_ID: "",
+                                ACTION: "add"
+                            })
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                } else if (sel == 'edit') {
+                    ddlWorkItem.val(selectedItem);
+                    dataDailyWorkEquipment.push({
+                        TB_R_WP_DAILY_WORK_EQUIPMENT_ID: wid,
+                        TB_R_WP_DAILY_ID: "",
+                        TB_M_ITEM_ID: "",
+                        ACTION: "edit"
+                    })
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+
+
+        //Reference the container Table.
+        var tblContainer = $("#tblContainerWorkItem");
+
+        //Add the Table row.
+        var row = tblContainer[0].insertRow(-1);
+
+        //Add the Label to Table Row.
+        var cell = row.insertCell(-1);
+        cell.className = "id_work_item";
+
+        $(cell).append(labelItem);
+
+        //Add the DropDownList to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(ddlWorkItem);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            //Determine the reference of the Row using the Button.
+            var row = btnRemove.closest("TR");
+
+            //Delete the Table row.
+            row.remove();
+            updateRowOrderWorkItem();
+
+            dataDailyWorkEquipment.splice((row.index() - 1), 1);
+        });
+
+        //Add the Remove Buttton to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(btnRemove);
+        updateRowOrderWorkItem();
+        counterWorkItem++;
+    };
+
+    function updateRowOrderWorkItem() {
+        $('td.id_work_item').each(function (i) {
+            $(this).text(i + 1);
+        });
+
+    }
+
+    var counterUtility = 1;
+    function AddDropDownUtility(sel, selectedItem, wid) {
+        var labelItem = $("<label>" + counterUtility + "</label>");
+        var ddlUtility = $("<select name='ddlUtility' class='select2'  style='width: 400px;'/>");
+
+        $.ajax({
+            url: SITE_URL + 'getUtilityItemRequest',
+            data: "{}",
+            dataType: 'JSON',
+            success: function (e) {
+                var option = '<option value="-1">--Please Select Utility--</option>';
+                for (var i = 0; i < e.list.length; i++) {
+                    option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+                }
+
+                ddlUtility.append(option);
+                if (sel == 'add') {
+                    $.ajax({
+                        url: SITE_URL + 'getGuid',
+                        dataType: 'JSON',
+                        success: function (e) {
+                            dataDailyUtilRequest.push({
+                                TB_R_WP_DAILY_UTIL_REQUEST_ID: e.guid,
+                                TB_R_WP_DAILY_ID: "",
+                                TB_M_ITEM_ID: "",
+                                ACTION: "add"
+                            })
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                } else if (sel == 'edit') {
+                    ddlUtility.val(selectedItem);
+                    dataDailyUtilRequest.push({
+                        TB_R_WP_DAILY_UTIL_REQUEST_ID: wid,
+                        TB_R_WP_DAILY_ID: "",
+                        TB_M_ITEM_ID: "",
+                        ACTION: "edit"
+                    })
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+
+
+        //Reference the container Table.
+        var tblContainer = $("#tblContainerUtility");
+
+        //Add the Table row.
+        var row = tblContainer[0].insertRow(-1);
+
+        //Add the Label to Table Row.
+        var cell = row.insertCell(-1);
+        cell.className = "id_utilyty";
+
+        $(cell).append(labelItem);
+
+        //Add the DropDownList to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(ddlUtility);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            //Determine the reference of the Row using the Button.
+            var row = btnRemove.closest("TR");
+
+            //Delete the Table row.
+            row.remove();
+            updateRowOrderUtility();
+
+            dataDailyUtilRequest.splice((row.index() - 1), 1);
+        });
+
+        //Add the Remove Buttton to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(btnRemove);
+        updateRowOrderUtility();
+        counterUtility++;
+    }
+
+    function updateRowOrderUtility() {
+        $('td.id_utilyty').each(function (i) {
+            $(this).text(i + 1);
+        });
+    }
+
+    var counterAPD = 1;
+    function AddDropDownAPD(sel, selectedItem, wid) {
+        var labelItem = $("<label>" + counterAPD + "</label>");
+        var ddlAPD = $("<select name='ddlAPD' class='select2'  style='width: 400px;'/>");
+
+        $.ajax({
+            url: SITE_URL + 'getAPD',
+            data: "{}",
+            dataType: 'JSON',
+            success: function (e) {
+                var option = '<option value="-1">--Please Select APD--</option>';
+                for (var i = 0; i < e.list.length; i++) {
+                    option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+                }
+                ddlAPD.append(option);
+                if (sel == 'add') {
+                    $.ajax({
+                        url: SITE_URL + 'getGuid',
+                        dataType: 'JSON',
+                        success: function (e) {
+                            dataDailyApd.push({
+                                TB_R_WP_DAILY_APD_ID: e.guid,
+                                TB_R_WP_DAILY_ID: "",
+                                TB_M_ITEM_ID: "",
+                                ACTION: "add"
+                            })
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                } else if (sel == 'edit') {
+                    ddlAPD.val(selectedItem);
+                    dataDailyApd.push({
+                        TB_R_WP_DAILY_APD_ID: wid,
+                        TB_R_WP_DAILY_ID: "",
+                        TB_M_ITEM_ID: "",
+                        ACTION: "edit"
+                    })
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+
+
+        //Reference the container Table.
+        var tblContainer = $("#tblContainerAPD");
+
+        //Add the Table row.
+        var row = tblContainer[0].insertRow(-1);
+
+        //Add the Label to Table Row.
+        var cell = row.insertCell(-1);
+        cell.className = "id_apd";
+
+        $(cell).append(labelItem);
+
+        //Add the DropDownList to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(ddlAPD);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            //Determine the reference of the Row using the Button.
+            var row = btnRemove.closest("TR");
+
+            //Delete the Table row.
+            row.remove();
+            updateRowOrderAPD();
+
+            dataDailyApd.splice((row.index() - 1), 1);
+        });
+
+        //Add the Remove Buttton to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(btnRemove);
+        updateRowOrderAPD();
+        counterAPD++;
+    }
+
+    function updateRowOrderAPD() {
+        $('td.id_apd').each(function (i) {
+            $(this).text(i + 1);
+        });
+    }
+
+    $("#btnAddListPekerja").on("click", function () {
+        //$('#addSystemId').val('');
+        //$('#addSystemType').val('');
+        //$('#addSystemCD').val('');
+        //$('#addSystemValidFR').val('');
+        //$('#addSystemValidTO').val('');
+        //$('#addSystemValueTxt').val('');
+        //$('#addSystemValueNum').val('');
+        //$('#addSystemValueDt').val('');
+
+        //document.getElementById("tambah_data").style.display = "";
+        var modal = $('#modalForm').modal();
+        modal.show();
+
+    });
+
+    function getIncidentTable(datas) {
+        $.ajax({
+            type: "GET",
+            url: 'WP02003/getListIncidentJson',
+            async: true,
+            data: {
+                EMPLOYEE_ID: $(datas).attr('data-value')
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                $('#tblIncident').DataTable().destroy();
+                $('#tblIncident').DataTable({
+                    processing: true,
+                    autoWidth: false,
+                    data: e.list,
+                    createdRow: function (row, data, dataIndex) {
+                        if (data.INCIDENT_LEVEL == 'Low') {
+                            $(row).addClass('bg-success');
+                        } else if (data.INCIDENT_LEVEL == 'Medium') {
+                            $(row).addClass('bg-warning');
+                        } else {
+                            $(row).addClass('bg-danger');
+                        }
+                    },
+                    columns: [
+                        {
+                            data: 'null', width: '30px', className: 'text-center', render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        { 'data': 'IMPB', width: '150px' },
+                        { 'data': 'INCIDENT_TITLE', width: '100px' },
+                        { 'data': 'INCIDENT_LEVEL', className: 'text-center', width: '15px' },
+                        { 'data': 'INCIDENT_DATE', width: '45px' }
+                    ]
+                });
+            },
+        });
+
+        $('.captionIncidentList').html('Incident List : ' + $(datas).attr('data-name'));
+    }
+
+
+    function getDataTable() {
+        $.ajax({
+            type: "GET",
+            url: 'WP02003/getListPekerjaJson',
+            async: true,
+            data: {
+                PROJECT_ID: $('#WP02003_DDL_ADD_PROJECT_JOB').val()
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: OnSuccess,
+        });
+    }
+
+    function OnSuccess(response) {
+        var row_i = 1;
+        $("#tblEmployee").DataTable(
+            {
+                processing: true,
+                autoWidth: false,
+                data: response.list,
+                createdRow: function (row, data, dataIndex) {
+                    $(row).addClass('rowEmployee').attr('data-name', data.EMPLOYEE_NAME).attr('data-value', data.ID_TB_M_EMPLOYEE);
+                },
+                columns: [
+                    {
+                        data: 'ID_TB_M_EMPLOYEE', width: '30px', className: 'text-center', render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        width: '50px', className: 'text-center middleCheck', data: function (data, type, row, meta) {
+                            return '<input type="checkbox" onchange="checkbox_onchange(this)" id="' + data.ID_TB_M_EMPLOYEE + '" value="' + data.ID_TB_M_EMPLOYEE + '" data-nik="' + data.IDENTITY_NO + '" />';
+                        }
+                    },
+                    { 'data': 'IDENTITY_NO', width: '100px' },
+                    { 'data': 'EMPLOYEE_NAME' },
+                    {
+                        width: '50px', className: 'text-center nopadding', data: function (data, type, row, meta) {
+                            if (data.TOTAL_INCIDENT == 0) {
+                                return '<button class="btn btn-success form-control btn-xs"><span class="badge">0</span></button>';
+                            } else if (data.TOTAL_INCIDENT <= 3) {
+                                return '<button class="btn btn-primary form-control btn-xs"><span class="badge">' + data.TOTAL_INCIDENT + '</span></button>';
+                            } else {
+                                return '<button class="btn btn-danger  form-control btn-xs"><span class="badge">' + data.TOTAL_INCIDENT + '</span></button>';
+                            }
+                        }
+                    }]
+            });
+        $('.rowEmployee').click(function (e) {
+            $('.rowEmployee').css('background-color', 'white').css('color', 'black');
+            $(this).css('background-color', 'black').css('color', 'white');
+            getIncidentTable(this);
+        });
+    };
+
+    function setEmployeeList(action, guid, dailyId, employeeId) {
+        if (dataDailyWorkerList.find(o => o.TB_M_EMPLOYEE_ID !== employeeId)) {
+            dataDailyWorkerList.push({
+                TB_R_WP_DAILY_WORKER_LIST_ID: guid,
+                TB_R_WP_DAILY_ID: dailyId,
+                TB_M_EMPLOYEE_ID: employeeId,
+                ACTION: action
+            })
+        }
+    }
+
+    function checkbox_onchange(el) {
+
+        if (el.checked) {
+
+            $.ajax({
+                url: SITE_URL + 'getGuid',
+                dataType: 'JSON',
+                success: function (e) {
+                    if (setEmployeeList.count == 0) {
+                        setEmployeeList('add', e.guid, '', el.value);
+                    } else {
+                        setEmployeeList('edit', '', '', el.value);
+                    }
+                    dataDailyWorkerList.push({
+                        TB_R_WP_DAILY_WORKER_LIST_ID: e.guid,
+                        TB_R_WP_DAILY_ID: "",
+                        TB_M_EMPLOYEE_ID: el.value,
+                        ACTION: "add"
+                    })
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        } else {
+            // var index = array.indexOf(el.value);
+            dataDailyWorkerList.splice(dataDailyWorkerList.findIndex(item => item.TB_M_EMPLOYEE_ID === el.value), 1);
+        }
+    }
+
+
+
+    function add_employee() {
+        var emlpoyee_list = [];
+
+        $('#tblEmployee tbody tr').each(function () {
+            $(this).find('td input:checked').each(function () {
+                console.log($(this).val());
+                var obj = {
+                    "id": $(this).val(),
+                    "nik": $(this).attr('data-nik'),
+                    "first_name": $(this).parent().next().next().text()
+                }
+                emlpoyee_list.push(obj);
+            });
+        });
+
+        renderEmployee(emlpoyee_list);
+        $('#modalForm').hide();
+    }
+
+    //render to employee table
+    function renderEmployee(emlpoyee_list) {
+        var counterPekerja = 1;
+        var tblContainer = $("#tblContainerPekerja");
+        $("#tblContainerPekerja tr").remove();
+        var labelItem = $("<label>" + counterPekerja + "</label>");
+        emlpoyee_list.forEach(function (item) {
+            //Add the Table row.
+            var row = tblContainer[0].insertRow(-1);
+            var labelItem = $("<label>" + counterPekerja + "</label>");
+            //Add the Label to Table Row.
+            var cell = row.insertCell(-1);
+            cell.className = "id_pekerja";
+            $(cell).attr('data-id', item.id).attr('data-name', item.first_name);
+            $(cell).append(labelItem);
+            //Add employee Nik to Table Row.
+            var labelName = $("<label data-id=" + item.id + ">" + item.nik + "</label>");
+            cell = row.insertCell(-1);
+            $(cell).append(labelName);
+
+            //Add employee name to Table Row.
+            var labelName = $("<label name='ddlPekerja' data-id=" + item.id + ">" + item.first_name + "</label>");
+            cell = row.insertCell(-1);
+            $(cell).append(labelName);
+
+            //Create a Remove Button.
+            var btnRemove = $("<input type = 'button' value = 'Remove' />");
+            btnRemove.click(function () {
+                //Determine the reference of the Row using the Button.
+                var row = btnRemove.closest("TR");
+
+                //Delete the Table row.
+                row.remove();
+                updateRowOrderPekerja();
+
+                dataDailyWorkerList.splice((row.index() - 1), 1);
+
+            });
+
+            //Add the Remove Buttton to Table Row.
+            cell = row.insertCell(-1);
+            $(cell).append(btnRemove);
+            counterPekerja++;
+
+
+        });
+
+    };
+
+
+    var counterPekerja = 1;
+    function AddDropDownListPekerja(sel, selectedItem, wid) {
+        var labelItem = $("<label>" + counterPekerja + "</label>");
+        var ddlPekerja = $("<select name='ddlPekerja' class='select2'  style='width: 400px;' />");
+
+        $.ajax({
+            url: SITE_URL + 'getListPekerja',
+            data: "{}",
+            dataType: 'JSON',
+            success: function (e) {
+                var option = '<option value="-1">--Please Select Pekerja--</option>';
+                for (var i = 0; i < e.list.length; i++) {
+                    option += '<option value="' + e.list[i].ID_TB_M_EMPLOYEE + '">' + e.list[i].FIRST_NAME + '</option>';
+                }
+                ddlPekerja.append(option);
+                if (sel == 'add') {
+                    $.ajax({
+                        url: SITE_URL + 'getGuid',
+                        dataType: 'JSON',
+                        success: function (e) {
+                            dataDailyWorkerList.push({
+                                TB_R_WP_DAILY_WORKER_LIST_ID: e.guid,
+                                TB_R_WP_DAILY_ID: "",
+                                TB_M_EMPLOYEE_ID: "",
+                                ACTION: "add"
+                            })
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                } else if (sel == 'edit') {
+                    ddlPekerja.val(selectedItem);
+                    dataDailyWorkerList.push({
+                        TB_R_WP_DAILY_WORKER_LIST_ID: wid,
+                        TB_R_WP_DAILY_ID: "",
+                        TB_M_EMPLOYEE_ID: "",
+                        ACTION: "edit"
+                    })
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+
+
+        //Reference the container Table.
+        var tblContainer = $("#tblContainerPekerja");
+
+        //Add the Table row.
+        var row = tblContainer[0].insertRow(-1);
+
+        //Add the Label to Table Row.
+        var cell = row.insertCell(-1);
+        cell.className = "id_pekerja";
+
+        $(cell).append(labelItem);
+
+        //Add the DropDownList to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(ddlPekerja);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            //Determine the reference of the Row using the Button.
+            var row = btnRemove.closest("TR");
+
+            //Delete the Table row.
+            row.remove();
+            updateRowOrderPekerja();
+
+            dataDailyWorkerList.splice((row.index() - 1), 1);
+        });
+
+        //Add the Remove Buttton to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(btnRemove);
+        updateRowOrderPekerja();
+        counterPekerja++;
+    }
+
+    function pad(d) {
+        return (d < 10) ? '0' + d.toString() : d.toString();
+    }
+
+    function updateRowOrderPekerja() {
+        $('td.id_pekerja').each(function (i) {
+            $(this).text(i + 1);
+        });
+    }
+
+    var counterWID = 1;
+    function AddWIDTable(sel, selectedItem, wid, itmDet) {
+        var labelItem = $("<label>" + counterWID + "</label>");
+        var txtWorkDay = $("<input name='projectName' type='text' style='width: 400px;'/>");
+        var ddlPic = $("<select name='ddlPic' class='select2' style='width: 200px;' />");
+        var ddlTimeStart = $("<select name='ddlTimeStart' />");
+        var ddlTimeEnd = $("<select name='ddlTimeEnd' />");
+        var labelStart = $("<label>" + "Start " + "</label>");
+        var labelTo = $("<label>" + " To " + "</label>");
+        var cba = $("<input name='cba' type='checkbox'/>");
+        var cbb = $("<input name='cbb' type='checkbox'/>");
+        var cbc = $("<input name='cbc' type='checkbox'/>");
+        var cbd = $("<input name='cbd' type='checkbox'/>");
+        var cbe = $("<input name='cbe' type='checkbox'/>");
+        var cbf = $("<input name='cbf' type='checkbox'/>");
+        var cbo = $("<input name='cbo' type='checkbox'/>");
+
+
+        $.ajax({
+            url: SITE_URL + 'getListPekerjaJson',
+            data: "{}",
+            dataType: 'JSON',
+            success: function (e) {
+                var option = '<option value="-1">--Please Select Pic--</option>';
+                for (var i = 0; i < e.list.length; i++) {
+                    option += '<option value="' + e.list[i].ID_TB_M_EMPLOYEE + '">' + e.list[i].EMPLOYEE_NAME + '</option>';
+                    console.log(e.list[i].ID_TB_M_EMPLOYEE);
+                }
+                ddlPic.append(option);
+                if (sel == 'add') {
+                    $.ajax({
+                        url: SITE_URL + 'getGuid',
+                        dataType: 'JSON',
+                        success: function (e) {
+                            dataDailyWiDen.push({
+                                TB_R_WP_DAILY_WI_DEN_ID: e.guid,
+                                TB_R_WP_DAILY_ID: "",
+                                WORKING_NAME: "",
+                                TIME_FROM: "",
+                                TIME_TO: "",
+                                STOP_SIX: "",
+                                TB_M_EMPLOYEE_ID: "",
+                                ACTION: "add"
+                            })
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                } else if (sel == 'edit') {
+                    ddlPic.val(selectedItem);
+                    txtWorkDay.val(itmDet[0])
+                    var str1 = itmDet[1].toString().split(' ');
+                    var str2 = str1[0].split('/');
+                    var newDate = str2[1] + '/' + str2[0] + '/' + str2[2] + ' ' + str1[1];
+                    var d = new Date(newDate);
+                    var minutes = d.getMinutes().toString().length == 1 ? '0' + d.getMinutes() : d.getMinutes();
+                    var hour = d.getHours();
+                    var timeStart = hour + ':' + minutes;
+                    ddlTimeStart.find('option:contains(' + timeStart + ')').prop("selected", true);
+                    str1 = itmDet[2].toString().split(' ');
+                    str2 = str1[0].split('/');
+                    newDate = str2[1] + '/' + str2[0] + '/' + str2[2] + ' ' + str1[1];
+                    d = new Date(newDate);
+                    minutes = d.getMinutes().toString().length == 1 ? '0' + d.getMinutes() : d.getMinutes();
+                    hour = d.getHours();
+                    var timeEnd = hour + ':' + minutes;
+                    ddlTimeEnd.find('option:contains(' + timeEnd + ')').prop("selected", true);
+                    for (var i = 0; i < itmDet[3].toString().length; i++) {
+                        if (itmDet[3].toString().substr(i, 1) == 'A') {
+                            cba.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'B') {
+                            cbb.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'C') {
+                            cbc.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'D') {
+                            cbd.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'E') {
+                            cbe.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'F') {
+                            cbf.prop('checked', true);
+                        } if (itmDet[3].toString().substr(i, 1) == 'O') {
+                            cbo.prop('checked', true);
+                        }
+                    }
+                    dataDailyWiDen.push({
+                        TB_R_WP_DAILY_WI_DEN_ID: wid,
+                        TB_R_WP_DAILY_ID: "",
+                        WORKING_NAME: "",
+                        TIME_FROM: "",
+                        TIME_TO: "",
+                        STOP_SIX: "",
+                        TB_M_EMPLOYEE_ID: "",
+                        ACTION: "edit"
+                    })
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+
+        var DataTimes = [];
+        if (shift) {
+            var start = parseInt(shift[0].Start.trim().substring(0, 2))
+            var end = parseInt(shift[0].End.trim().substring(0, 2))
+            var id = 1;
+            for (var i = start; i <= end; i++) {
+                DataTimes.push({
+                    TimeId: id,
+                    TimeValue: pad(i) + ":00"
+                });
+                id++;
+            }
+
+
+        }
+        ddlTimeStart.change(function () {
+
+        });
+
+        ddlTimeEnd.change(function () {
+            var startTime = parseInt(ddlTimeStart.val());
+            var endTime = parseInt($(this).val());
+            if (endTime < startTime)
+                $(this).val(ddlTimeStart.val());
+            alert('Waktu Pelaksanaan selesai tidak boleh lebih kecil dari waktu awal');
+        });
+        console.log('Date TIme : ' + DataTimes);
+        $(DataTimes).each(function () {
+            var option = $("<option />");
+
+            //Set Customer Name in Text part.
+            option.html(this.TimeValue);
+
+            //Set CustomerId in Value part.
+            option.val(this.TimeId);
+
+            //Add the Option element to DropDownList.
+            ddlTimeStart.append(option);
+        });
+
+
+        $(DataTimes).each(function () {
+            var option = $("<option />");
+
+            //Set Customer Name in Text part.
+            option.html(this.TimeValue);
+
+            //Set CustomerId in Value part.
+            option.val(this.TimeId);
+
+            //Add the Option element to DropDownList.
+            ddlTimeEnd.append(option);
+        });
+
+
+
+        //Reference the container Table.
+        var tblContainer = $("#tblContainerWID");
+
+        //Add the Table row.
+        var row = tblContainer[0].insertRow(-1);
+
+        //Add the Label to Table Row.
+        var cell = row.insertCell(-1);
+        cell.className = "id_wid";
+
+        $(cell).append(labelItem);
+
+        //Add the TextBox to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(txtWorkDay);
+
+        //Add the DropDownList to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(ddlPic);
+
+
+        //Add the  TimeStart to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(labelStart);
+        $(cell).append(ddlTimeStart);
+        $(cell).append(labelTo);
+        $(cell).append(ddlTimeEnd);
+
+        //Add the checkbox to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(cba);
+        cell = row.insertCell(-1);
+        $(cell).append(cbb);
+        cell = row.insertCell(-1);
+        $(cell).append(cbc);
+        cell = row.insertCell(-1);
+        $(cell).append(cbd);
+        cell = row.insertCell(-1);
+        $(cell).append(cbe);
+        cell = row.insertCell(-1);
+        $(cell).append(cbf);
+        cell = row.insertCell(-1);
+        $(cell).append(cbo);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            //Determine the reference of the Row using the Button.
+            var row = btnRemove.closest("TR");
+
+            //Delete the Table row.
+            row.remove();
+            updateRowOrderWID();
+
+            dataDailyWiDen.splice((row.index() - 2), 1);
+        });
+
+        //Add the Remove Buttton to Table Row.
+        cell = row.insertCell(-1);
+        $(cell).append(btnRemove);
+        updateRowOrderWID();
+        counterWID++;
+    }
+
+    function updateRowOrderWID() {
+        $('td.id_wid').each(function (i) {
+            $(this).text(i + 1);
+        });
+    }
+
+    function MoveFoto(foto, regnumber) {
+        var reader = new FileReader();
+        var myFormData = new FormData();
+        myFormData.append('ImagePath', $(foto)[0].files[0]);
+        myFormData.append('Name_File', regnumber);
+        $.ajax({
+            url: SITE_URL + "MoveFile",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: myFormData,
+            success: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    var dataDailyWorkEquipment = [];
+    var dataDailyUtilRequest = [];
+    var dataDailyApd = [];
+    var dataDailyWorkerList = [];
+    var dataDailyWiDen = [];
+    function addNew(type) {
+        var wp_daily_id = $('#WP02003_ADD_WP_DAILY_ID').val();
+        var wp_project_id = $('#WP02003_DDL_ADD_PROJECT').val();
+        var wp_project_job_id = $('#WP02003_DDL_ADD_PROJECT_JOB').val();
+        var job_title = $('#WP02003_ADD_JOBTITLE').val();
+        var daily_doc = "";
+        if ($('#addPdf').val() != "") {
+            var GET_FOTO_NAME = ($('#addPdf')[0].files[0].name).split('.');
+            daily_doc = (GET_FOTO_NAME[0]).toUpperCase() + "." + GET_FOTO_NAME[1];
+        }
+        var tblContainerWorkItem = $('#tblContainerWorkItem');
+        tblContainerWorkItem.find('tbody > tr').each(function (idx, itm) {
+            if (idx > 0) {
+                dataDailyWorkEquipment[idx - 1].TB_R_WP_DAILY_ID = wp_daily_id;
+                dataDailyWorkEquipment[idx - 1].TB_M_ITEM_ID = $(itm).find('select[name="ddlWorkItem"]').val();
+            }
+        });
+        var tblContainerUtility = $('#tblContainerUtility');
+        tblContainerUtility.find('tbody > tr').each(function (idx, itm) {
+            if (idx > 0) {
+                dataDailyUtilRequest[idx - 1].TB_R_WP_DAILY_ID = wp_daily_id;
+                dataDailyUtilRequest[idx - 1].TB_M_ITEM_ID = $(itm).find('select[name="ddlUtility"]').val();
+            }
+        });
+        var tblContainerAPD = $('#tblContainerAPD');
+        tblContainerAPD.find('tbody > tr').each(function (idx, itm) {
+            if (idx > 0) {
+                dataDailyApd[idx - 1].TB_R_WP_DAILY_ID = wp_daily_id;
+                dataDailyApd[idx - 1].TB_M_ITEM_ID = $(itm).find('select[name="ddlAPD"]').val();
+            }
+        });
+        var tblContainerPekerja = $('#tblContainerPekerja');
+        tblContainerPekerja.find('tbody > tr').each(function (idx, itm) {
+            if (idx > 0) {
+                dataDailyWorkerList[idx - 1].TB_R_WP_DAILY_ID = wp_daily_id;
+                dataDailyWorkerList[idx - 1].TB_M_EMPLOYEE_ID = $(itm).find('label[name="ddlPekerja"]').text();
+            }
+        });
+        var tblContainerWID = $('#tblContainerWID');
+        tblContainerWID.find('tbody > tr').each(function (idx, itm) {
+            if (idx > 1) {
+                dataDailyWiDen[idx - 2].TB_R_WP_DAILY_ID = wp_daily_id;
+                dataDailyWiDen[idx - 2].WORKING_NAME = $(itm).find('input[name="projectName"]').val();
+                var timeStart = $(itm).find('select[name="ddlTimeStart"] option:selected').text();
+                var timeEnd = $(itm).find('select[name="ddlTimeEnd"] option:selected').text();
+                var curDate = getCurDate();
+                timeStart = curDate + ' ' + timeStart;
+                timeEnd = curDate + ' ' + timeEnd;
+                dataDailyWiDen[idx - 2].TIME_FROM = timeStart;
+                dataDailyWiDen[idx - 2].TIME_TO = timeEnd;
+                var stopSix = '';
+                if ($(itm).find('input[name="cba"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'A';
+                }
+                if ($(itm).find('input[name="cbb"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'B';
+                }
+                if ($(itm).find('input[name="cbc"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'C';
+                }
+                if ($(itm).find('input[name="cbd"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'D';
+                }
+                if ($(itm).find('input[name="cbe"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'E';
+                }
+                if ($(itm).find('input[name="cbf"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'F';
+                }
+                if ($(itm).find('input[name="cbo"][type="checkbox"]').is(':checked')) {
+                    stopSix = stopSix + 'O';
+                }
+                dataDailyWiDen[idx - 2].STOP_SIX = stopSix;
+                dataDailyWiDen[idx - 2].TB_M_EMPLOYEE_ID = $(itm).find('select[name="ddlPic"]').val();
+            }
+        });
+
+        var data = {
+            TB_R_WP_DAILY_ID: wp_daily_id,
+            WP_PROJECT_ID: wp_project_id,
+            WP_PROJECT_JOB_ID: wp_project_job_id,
+            JOB_TITLE: job_title,
+            DAILY_DOC: daily_doc,
+            LISTDATADAILYWORKEQUIPMENT: dataDailyWorkEquipment,
+            LISTDATADAILYUTILREQUEST: dataDailyUtilRequest,
+            LISTDATADAILYAPD: dataDailyApd,
+            LISTDATADAILYWORKERLIST: dataDailyWorkerList,
+            LISTDATADAILYWIDEN: dataDailyWiDen,
+            STATUS: type
+        };
+
+        if (ACTION == 'add') {
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + 'ADD_NEW',
+                async: false,
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.sts == "TRUE") {
+                        toastr.success("Data Has Been Save Successfuly");
+                        searchData();
+                        cancelAdd();
+
+                        if (daily_doc != "") {
+                            MoveFoto('#addPdf', daily_doc);
+                        }
+                    } else {
+                        toastr.warning(res.Exec[0].LINE_STS);
+                    }
+                },
+                error: function (res) {
+                    toastr.error(res.Message);
+                }
+            });
+        } else if (ACTION == 'edit') {
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + 'UPDATE_DATA',
+                async: false,
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.sts == "TRUE") {
+                        toastr.success("Data Has Been Updated Successfuly");
+                        searchData();
+                        cancelAdd();
+
+                        if (daily_doc != "") {
+                            if ($('#addPdf')[0].files[0]) {
+                                MoveFoto('#addPdf', daily_doc);
+                            }
+                        }
+                    } else {
+                        toastr.warning(res.Exec[0].LINE_STS);
+                    }
+                },
+                error: function (res) {
+                    toastr.error(res.Message);
+                }
+            });
+        }
+    }
+
+    function getCurDate() {
+        var d = new Date(),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchProjectName').val("");
+        $('#searchLocation').val("");
+        $('#searchDate').val("");
+        $('#searchDateTo').val("");
+        $('#searchDivision').val("");
+        $('#tableBody').html("");
+        $('#searchStatus').val("");
+        $('#otherStatus').val("");
+        $('#searchTitleKYK').val("");
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var project_name = $('#searchProjectName').val();
+        var company = $('#searchCompany').val();
+        var title = $('#searchTitleKYK').val();
+
+        if (status == 'Other') {
+            status = $('#otherStatus').val();
+        }
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                PROJECT_NAME: project_name,
+                COMPANY: company,
+                TITLE: title
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+
+                scroll_and_checkbox();
+                cek_perdata();
+
+                $("#tblScroll").find('button[name="btn_delete_data"]').on("click", function () {
+                    $('#Confirmation_Delete_Popup').modal();
+                    idxRowDeleted = $(this).closest('tr').index();
+                });
+            }
+        });
+    }
+
+    var idxRowDeleted = 0;
+    function delete_data() {
+        var tr = $("#tblScroll").find('tr:nth(' + idxRowDeleted + ')');
+        var ID = tr.find('input[name="WP_DAILY_ID"]').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'WP02003/Delete_Data',
+            async: false,
+            data: {
+                data: ID
+            },
+            success: function (data) {
+                if (data.sts == "TRUE") {
+                    toastr.success(data.message);
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                $("#Confirmation_Delete_Popup").modal('hide');
+
+                OnSearch(1);
+                //xxx
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    function showAdd() {
+        $('.submitbtn').show();
+        $('.actionbtn').removeAttr("disabled");
+        $('.input-project').removeAttr("disabled");
+        $('#inputForm').show();
+        $('#formData').hide();
+        $('#formPage').hide();
+        $('#formSearch').hide();
+        $('#GridProject').hide();
+        //radiobtn = document.getElementById("WP02001_CHK_ADD_STNEW");
+        //radiobtn.checked = true;
+        $('.input-project').val('').trigger('change');
+        $('#WP_PROJECT_ID').val("0").trigger("change");
+        $('#WP02001_TBL_LIST_JOBPROYEK').html('');
+        $('#WP02001_TXT_ADD_PROJECTCODE').attr("disabled", "disabled");
+        clearTbDetail();
+        ACTION = 'add';
+    }
+
+    function cancelAdd() {
+        $('#GridProject').show();
+        $('#inputForm').hide();
+        $('#tambah_data').hide();
+        $('#formData').show();
+        $('#formPage').show();
+        $('#formSearch').show();
+        $('.form-control').find('input:text').val('');
+        $('.form-control').find('select').val('');
+        //radiobtn = document.getElementById("WP02001_CHK_ADD_STNEW");
+        //radiobtn.checked = true;
+    }
+
+    function EditDataProject(obj) {
+        var row = $(obj).closest('tr');
+        var WP_DAILY_ID = row.find('input[type="hidden"][name="WP_DAILY_ID"]').val();
+        var PROJECT_ID = row.find('input[type="hidden"][name="PROJECT_ID"]').val();
+        var PROJECT_JOB_ID = row.find('input[type="hidden"][name="PROJECT_JOB_ID"]').val();
+        showAdd();
+        clearTbDetail();
+        getDetailInformationProject('edit', PROJECT_ID, PROJECT_JOB_ID, WP_DAILY_ID);
+        ACTION = 'edit';
+    }
+
+    function clearTbDetail() {
+        $('#tblContainerWorkItem').find('tr').each(function (idx, itm) {
+            if (idx > 0) {
+                $(itm).remove();
+            }
+        })
+        $('#tblContainerUtility').find('tr').each(function (idx, itm) {
+            if (idx > 0) {
+                $(itm).remove();
+            }
+        })
+        $('#tblContainerAPD').find('tr').each(function (idx, itm) {
+            if (idx > 0) {
+                $(itm).remove();
+            }
+        })
+        $('#tblContainerPekerja').find('tr').each(function (idx, itm) {
+            if (idx > 0) {
+                $(itm).remove();
+            }
+        })
+        $('#tblContainerWID').find('tr').each(function (idx, itm) {
+            if (idx > 1) {
+                $(itm).remove();
+            }
+        })
+    }
+
+    //function AddDropDownListPIC() {
+    //    var ddListPic = $(".ddListPic");
+    //    $.ajax({
+    //        url: SITE_URL + 'getListPekerja',
+    //        data: "{}",
+    //        dataType: 'JSON',
+    //        success: function (e) {
+    //            ddListPic.empty().append('<option selected="selected" value="0">Please select</option>');
+    //            for (var i = 0; i < e.list.length; i++) {
+    //                ddListPic.append($("<option></option>").val(e.list[i].ID_TB_M_EMPLOYEE).html(e.list[i].FIRST_NAME));
+    //            }
+    //        },
+    //        error: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+    //};
+    //var number = 1;
+    //function AddWIDTable() {
+    //    var html = '';
+    //    html += '<tr>';
+    //    html += '<td  class="row-id">' + number + '</td>';
+    //    html += '<td><input type="text" name="arrworktoday[]" class="form-control" /></td>';
+    //    html += '<td><select  name="ddListPic" class="ddListPic" width="200px"></select>';
+    //    html += '</td>';
+    //    html += '<td><input type="text" name="arrjampelaksanaan[]" class="form-control" /></td>';
+    //    html += '<td><input type="text" name="arrjampelaksanaan[]" class="form-control" /></td>';
+    //    html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+    //    $('#table_WID').append(html);
+
+    //    $(document).on('click', '#addBtnWID, .remove', function () {
+    //        $(this).closest('tr').remove();
+    //        updateRowOrderWidTable();
+    //        AddDropDownListPIC();
+    //    });
+    //    number++;
+
+    //}
+
+    //function updateRowOrderWidTable() {
+    //    $('td.row-id').each(function (i) {
+    //        $(this).text(i + 1);
+    //    });
+    //}
+
+     //function AddDropDownWorkItem() {
+    //    var $newRow = $('.TemplateRowWorkItem').clone(true);
+    //    //console.log("New Row = " + $newRow);
+
+    //    console.log("New Row = " + $newRow.find('.WorkItem').val($(".TemplateRowWorkItem").find('.WorkItem').val()));
+
+    //    $newRow.find('.WorkItem').val($(".TemplateRowWorkItem").find('.WorkItem').val());
+    //    //$newRow.find('*').andSelf().removeAttr('id');
+
+    //    console.log(" ** " + $newRow.find('*').andSelf().removeAttr('id'));
+
+    //    $('#BoxTableWorkItem tr:last').before($newRow);
+    //    updateRowOrderWorkItem();
+    //}
+
+    //function DeleteWorkItem(obj) {
+    //    $(obj).closest('tr').remove();
+    //    updateRowOrderWorkItem();
+    //}
+
+    //function updateRowOrderWorkItem() {
+    //    $('td.id_work_item').each(function (i) {
+    //        $(this).text(i + 1);
+    //    });
+    //}
+
+
+    //function AddDropDownWorkItem() {
+
+    //    var objNumber = $("<label/>");
+    //    //Create a DropDownList element.
+    //    var ddlWorkItem = $("<select name='ddlWorkItem' />");
+    //    $.ajax({
+    //        url: SITE_URL + 'getWorkItem',
+    //        data: "{}",
+    //        dataType: 'JSON',
+    //        success: function (e) {
+    //            console.log(e);
+    //            var option = '<option value="-1">--Please Select Work Item--</option>';
+    //            for (var i = 0; i < e.list.length; i++) {
+    //                option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+    //            }
+    //            ddlWorkItem.append(option);
+    //        },
+    //        error: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+
+    //    //Reference the container DIV.
+    //    var dvContainer = $("#divWorkItem")
+
+    //    //Add the DropDownList to DIV.
+    //    var div = $("<div/>");
+    //    div.append(ddlWorkItem);
+
+    //    //Create a Remove Button.
+    //    var btnRemove = $("<input type = 'button' value = 'Remove' />");
+    //    btnRemove.click(function () {
+    //        $(this).parent().remove();
+    //    });
+
+    //    //Add the Remove Buttton to DIV.
+    //    div.append(btnRemove);
+
+    //    //Add the DIV to the container DIV.
+    //    dvContainer.append(div);
+    //};
+
+    //function AddDropDownUtilityItemRequest() {
+
+    //    //Create a DropDownList element.
+    //    var ddlUtility = $("<select  name='ddUtilityItemReq'/>");
+    //    $.ajax({
+    //        url: SITE_URL + 'getUtilityItemRequest',
+    //        data: "{}",
+    //        dataType: 'JSON',
+    //        success: function (e) {
+    //            var option = '<option value="-1">--Please Select Utility Item Request--</option>';
+    //            for (var i = 0; i < e.list.length; i++) {
+    //                option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+    //            }
+    //            ddlUtility.append(option);
+    //        },
+    //        error: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+
+    //    //Reference the container DIV.
+    //    var dvContainer = $("#divUtilityItemRequest")
+
+    //    //Add the DropDownList to DIV.
+    //    var div = $("<div/>");
+    //    div.append(ddlUtility);
+
+    //    //Create a Remove Button.
+    //    var btnRemove = $("<input type = 'button' value = 'Remove' />");
+    //    btnRemove.click(function () {
+    //        $(this).parent().remove();
+    //    });
+
+    //    //Add the Remove Buttton to DIV.
+    //    div.append(btnRemove);
+
+    //    //Add the DIV to the container DIV.
+    //    dvContainer.append(div);
+    //};
+
+    //function AddDropDownAPD() {
+
+    //    //Create a DropDownList element.
+    //    var ddlApd = $("<select  name='ddAPD'/>");
+    //    $.ajax({
+    //        url: SITE_URL + 'getAPD',
+    //        data: "{}",
+    //        dataType: 'JSON',
+    //        success: function (e) {
+    //            var option = '<option value="-1">--Please Select APD--</option>';
+    //            for (var i = 0; i < e.list.length; i++) {
+    //                option += '<option value="' + e.list[i].ID_TB_M_ITEM + '">' + e.list[i].ITEM_NAME + '</option>';
+    //            }
+    //            ddlApd.append(option);
+    //        },
+    //        error: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+
+    //    //Reference the container DIV.
+    //    var dvContainer = $("#divAPD")
+
+    //    //Add the DropDownList to DIV.
+    //    var div = $("<div/>");
+    //    div.append(ddlApd);
+
+    //    //Create a Remove Button.
+    //    var btnRemove = $("<input type = 'button' value = 'Remove' />");
+    //    btnRemove.click(function () {
+    //        $(this).parent().remove();
+    //    });
+
+    //    //Add the Remove Buttton to DIV.
+    //    div.append(btnRemove);
+
+    //    //Add the DIV to the container DIV.
+    //    dvContainer.append(div);
+    //};
+
+    //function AddDropDownListPekerja() {
+
+    //    //Create a DropDownList element.
+    //    var ddlPekerja = $("<select name='ddPekerjaList'/>");
+    //    $.ajax({
+    //        url: SITE_URL + 'getListPekerja',
+    //        data: "{}",
+    //        dataType: 'JSON',
+    //        success: function (e) {
+    //            var option = '<option value="-1">--Please Select Pekerja--</option>';
+    //            for (var i = 0; i < e.list.length; i++) {
+    //                option += '<option value="' + e.list[i].ID_TB_M_EMPLOYEE + '">' + e.list[i].FIRST_NAME + '</option>';
+    //            }
+    //            ddlPekerja.append(option);
+    //        },
+    //        error: function (e) {
+    //            console.log(e);
+    //        }
+    //    });
+
+    //    //Reference the container DIV.
+    //    var dvContainer = $("#divListPekerja")
+
+    //    //Add the DropDownList to DIV.
+    //    var div = $("<div/>");
+    //    div.append(ddlPekerja);
+
+    //    //Create a Remove Button.
+    //    var btnRemove = $("<input type = 'button' value = 'Remove' />");
+    //    btnRemove.click(function () {
+    //        $(this).parent().remove();
+    //    });
+
+    //    //Add the Remove Buttton to DIV.
+    //    div.append(btnRemove);
+
+    //    //Add the DIV to the container DIV.
+    //    dvContainer.append(div);
+    //};
+
+
+    //tombol Add New
+
+
+
+</script>

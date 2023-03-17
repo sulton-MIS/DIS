@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Halte 10</title>
+	<script src="../../Chart.bundle.js"></script>
+	<script src="../utils.js"></script>
+</head>
+
+<body>
+	<table style="width: 100%">
+			<tr>
+				<td style="width: 75%">
+					<!-- <div style="width: 75%">-->
+					<div>
+						<canvas id="canvas"></canvas>
+					</div>
+				</td>
+				<td>
+					<!-- <div style="width: 25%"> -->
+					<div>
+						<canvas id="canvas_sum"></canvas>
+					</div>
+				</td>
+			</tr>
+	</table>
+
+	<script>
+		var chartData = {
+			labels: [
+						'07.00-08.00',
+						'08.00-09.00',						
+						'09.00-10.00',						
+						'10.00-11.00',						
+						'11.00-12.40',						
+						'12.40-13.40',						
+						'13.40-14.40',						
+						'14.40-15.40',						
+						'15.40-16.40',						
+						'16.40-17.40',						
+						'17.40-20.00',						
+						'20.00-21.00',						
+						'21.00-22.00',						
+						'22.00-23.00',						
+						'23.00-00.00',						
+						'00.00-01.00',						
+						'01.00-02.00',						
+						'02.00-03.00',						
+						'03.00-05.00',						
+						'05.00-06.00',						
+						'06.00-07.00'						
+					],
+			datasets: [
+			{
+				type: 'line',
+				label: 'Man Power',
+				borderColor: window.chartColors.blue,
+				borderWidth: 2,
+				fill: false,
+				data: [
+					6,
+					6,
+					6,
+					6,
+					6,
+					6,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					6,
+					6,
+					6,
+					5,
+					5,
+					5,
+					5
+				]
+			},
+			{
+				type: 'line',
+				label: 'Target',
+				borderColor: window.chartColors.orange,
+				borderWidth: 2,
+				fill: false,
+				data: [
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268,
+					268
+				]
+			},{
+				type: 'bar',
+				label: 'Aktual',
+				backgroundColor: window.chartColors.green,
+				data: [
+					210,
+					288,
+					215,
+					252,
+					225,
+					308,
+					292,
+					171,
+					229,
+					216,
+					188,
+					233,
+					233,
+					264,
+					209,
+					215,
+					237,
+					182,
+					135,
+					223,
+					203
+				],
+				options: {
+					        plugins: {
+					            legend: {
+					                labels: {
+					                    // This more specific font property overrides the global property
+					                    font: {
+					                        size: 20
+					                    }
+					                }
+					            }
+					        }
+					    },
+
+				borderColor: 'white',
+				borderWidth: 2
+			},
+			]
+
+		};
+
+
+var chartData_sum = {
+			datasets: [
+			{
+				type: 'bar',
+				label: 'Aktual',
+				backgroundColor: window.chartColors.orange,
+				data: [5618],
+				borderColor: 'white',
+				borderWidth: 2
+				
+		       
+
+
+			},{
+				type: 'bar',
+				label: 'Pencapaian',
+				backgroundColor: window.chartColors.grey,
+				data: [4728],
+				borderColor: 'white',
+				borderWidth: 2
+			}
+			]
+
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myMixedChart = new Chart(ctx, {
+				type: 'bar',
+				data: chartData,
+				options: {
+					responsive: true,
+					title: {
+						display: true,
+						text: 'Monitoring Output Gaikan 2X'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: true
+					}
+
+				}
+			});
+
+
+			var ctx_sum = document.getElementById('canvas_sum').getContext('2d');
+			window.myMixedChart = new Chart(ctx_sum, {
+				type: 'bar',
+				data: chartData_sum,
+				options: {
+					responsive: true,
+					title: {
+						display: true,
+						text: 'Monitoring Akumulasi Output'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: true
+					}
+
+				}
+			});
+
+
+		};
+
+		/*document.getElementById('randomizeData').addEventListener('click', function() {
+			chartData.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+			});
+			window.myMixedChart.update();
+		});*/
+	</script>
+</body>
+
+</html>

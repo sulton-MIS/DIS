@@ -1,0 +1,305 @@
+﻿@{
+    Layout = "~/Views/Shared_Manajemen_Asset/_Layout.cshtml";
+}
+
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    List<ListAssetModel> ListAsset = (List<ListAssetModel>)ViewData["no_asset"];
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+
+<style>
+    h3 {
+        font-family: 'Segoe UI';
+        font-weight: 400;
+        color: #2c2b2b;
+        font-size: 35px;
+        text-align: center;
+        position: relative;
+    }
+
+        h3:before {
+            position: absolute;
+            content: '';
+            width: 100%;
+            left: 0;
+            top: 22px;
+            background: #b4b4b4;
+            height: 1px;
+        }
+
+        h3 i {
+            font-style: normal;
+            background: #f2f2f2;
+            position: relative;
+            padding: 10px;
+        }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /*input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }*/
+
+    input[type=text], textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+    input[type=file]{
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    /*input[type=submit] {
+        background-color: #04AA6D;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }*/
+
+    .btn_add {
+        background-color: #04AA6D;
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+    .btn_clear {
+        background-color: #b4b4b4;
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+    .container {
+        margin-top: 20px;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 10px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 10px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+    @@media screen and (max-width: 600px) {
+        .col-25, .col-75, input[type=submit] {
+            width: 100%;
+            margin-top: 0;
+        }
+    }
+</style>
+
+
+
+@*<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+            <h2>@ViewData["Title1"]</h2>
+        </div>
+    </div>*@
+
+<div class="container">
+    <center><h3><b><i>FORM INPUT AUDIT</i></b></h3></center>
+    <div class="row" style="margin-top:30px;">
+        <div class="col-25">
+            <label for="JenisAudit">JENIS AUDIT <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <select class="form-control" id="addJenisAudit" name="">
+                <option value="" style="font-style: italic; color: gray">--- Pilih Jenis Audit ---</option>
+                <option value="BULANAN"> BULANAN </option>
+                <option value="SEMESTER">SEMESTER </option>
+            </select>
+        </div>
+    </div>
+    <div class="row" id="display_Bulanan">
+        <div class="col-25">
+            <label for="Bulan">PERIODE BULAN <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            @*<input id="addMonthAudit" type="month" class="form-control" value="" />*@
+            <input type="text" class="datepicker-months" id="addMonthAudit" placeholder="(Pilih Bulan)" />
+        </div>
+    </div>
+    <div class="row" id="display_Semester">
+        <div class="col-25">
+            <label for="JenisAudit">PERIODE SEMESTER <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <select class="form-control" id="addPeriodeSemester" name="">
+                <option value="" style="font-style: italic; color: gray">--- Pilih Periode Semester ---</option>
+                <option value="1"> 1 </option>
+                <option value="2"> 2 </option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="JenisAudit">TAHUN <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <input type="text" class="datepicker" id="addYear" placeholder="(Pilih Tahun)" />
+        </div>
+    </div>
+    <hr style="width: 100%; border: 1px solid #eaeaea" />
+
+    <div class="row">
+        <div class="col-25">
+            <label for="no_asset">NO. ASSET <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <select class="form-control select2" id="addNoAsset" required>
+                <option value="" selected="selected" style="font-style: italic; color: gray"> --- Pilih No. Asset --- </option>
+                @{
+                    if (ListAsset != null)
+                    {
+                        if (ListAsset.Count() > 0)
+                        {
+                            foreach (ListAssetModel item in ListAsset)
+                            {
+                                <option value="@item.no_asset">@item.no_asset</option>
+                            }
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="nama_asset">NAMA ASSET</label>
+        </div>
+        <div class="col-75">
+            <input readonly type="text" id="addNamaAsset">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="nama_asset_invoice">NAMA ASSET INVOICE </label>
+        </div>
+        <div class="col-75">
+            <input readonly type="text" id="addNamaAssetInvoice">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="nama_user">NAMA PENGGUNA ASSET </label>
+        </div>
+        <div class="col-75">
+            <input readonly type="text" id="addNamaUser">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="lokasi_asset">LOKASI ASSET </label>
+        </div>
+        <div class="col-75">
+            <input readonly type="text" id="addLokasiAsset">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="halte">HALTE </label>
+        </div>
+        <div class="col-75">
+            <input readonly type="text" id="addHalte">
+        </div>
+    </div>
+    <hr style="width: 100%; border: 1px solid #eaeaea" />
+
+    <div class="row">
+        <div class="col-25">
+            <label for="StatusKondisi">STATUS KONDISI <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <select class="form-control" id="addStatusKondisi" name="">
+                <option value="" style="font-style: italic; color: gray">--- Pilih Status Kondisi ---</option>
+                <option value="OK">OK</option>
+                <option value="NG">NG</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-25">
+            <label for="subject">KETERANGAN <font style="color: red">*</font></label>
+        </div>
+        <div class="col-75">
+            <textarea id="addKeterangan" name="keteranganStyle" placeholder="Write something.." style="height:200px"></textarea>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-25">
+            <label for="subject">LAMPIRAN FOTO (<font style="color: red">*</font>opsional)</label>
+        </div>
+        <div class="col-75">
+            <input type="file" id="addNamaFoto">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        @*<input onclick="add_check()" name="btn_add" type="submit" value="Submit">*@
+        <button class="btn btn-primary" onclick="add_check()" style="float: right; background-color: #04AA6D; color: white;">Submit</button>
+        <button class="btn btn-grey" onclick="clear_add()" style="float: right; background-color: #b4b4b4; color: white; margin-right: 10px ">Clear</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+
+@Html.Partial("Audit_Asset/PopupForm")
+@Html.Partial("Audit_Asset/Javascript_Input_Audit")

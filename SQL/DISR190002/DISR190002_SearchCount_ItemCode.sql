@@ -1,0 +1,25 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@DATA_ID VARCHAR(MAX) = @DATA_ID;
+
+
+SET @@QUERY = '';
+SET @@QUERY = '
+	SELECT ISNULL(max(ROW_NUM),0) FROM 
+	(
+	SELECT ROW_NUMBER() OVER (ORDER BY CODE ASC) ROW_NUM,
+	    CODE as ID,
+		*
+	FROM 
+		dbo.XPRTS 	
+	WHERE 1=1	
+';
+IF(@CODE <> '')
+    BEGIN
+        SET @@QUERY = @@QUERY + 'AND KCODE LIKE ''%' + RTRIM(@CODE) + '%'' ';
+	END
+
+SET @@QUERY = @@QUERY+ ') AS TB';
+
+
+EXEC(@@QUERY);
+

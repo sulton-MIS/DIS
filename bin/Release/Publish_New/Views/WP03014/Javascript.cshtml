@@ -1,0 +1,417 @@
+﻿<script>
+    var SITE_URL = window.location.href + "/";
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        //OnSearch(1);
+
+    });
+
+    // open form new
+    $("#btn_new").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Add',
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    });
+
+    // back botton
+    function back() {
+        location.href = "/WP03014"
+    }
+
+    // back botton
+    function back_to_home() {
+        location.href = "/WPMember"
+    }
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Save / Insert
+    function Insert() {
+        var Worker = $('#addWorker').val();
+        var Project = $('#addProject').val();
+        var Company = $('#addCompany').val();
+        var JoinDate = $('#addJoinDate').val();
+        var Company_from = $('#addCompany_from').val();
+        var Company_to = $('#addCompany_to').val();
+
+        var status = true;
+
+        if (Worker == null || Worker == "") {
+            toastr.warning("Worker Number Cannot Be Empty");
+            status = false;
+        }
+        if (Project == null || Project == "") {
+            toastr.warning("Project Name Cannot Be Empty");
+            status = false;
+        }
+        if (Company == null || Company == "") {
+            toastr.warning("Company Cannot Be Empty");
+            status = false;
+        }
+        if (JoinDate == null || JoinDate == "") {
+            toastr.warning("Join Date Cannot Be Empty");
+            status = false;
+        }
+        if (Company_from == null || Company_from == "") {
+            toastr.warning("Company from Cannot Be Empty");
+            status = false;
+        }
+        if (Company_to == null || Company_to == "") {
+            toastr.warning("Company to Cannot Be Empty");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: 'WP03014/Insert',
+            async: false,
+            data: {
+                Worker: Worker
+                , Project: Project
+                , Company: Company
+                , JoinDate: JoinDate
+                , Company_from: Company_from
+                , Company_to: Company_to
+            }
+            , success: function (data) {
+                if (data.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                back();
+            }
+        });
+
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#editID');
+        var Worker = $('#editWorker');
+        var Project = $('#editProject');
+        var Company = $('#editCompany');
+        var JoinDate = $('#editJoinDate');
+        var Company_from = $('#editCompany_from');
+        var Company_to = $('#editCompany_to');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Edit',
+            async: false,
+            data: {
+                ID: Send_Var[0],
+                Worker: Send_Var[1],
+                Project: Send_Var[2],
+                Company: Send_Var[3],
+                JoinDate: Send_Var[4],
+                Company_from: Send_Var[5],
+                Company_to: Send_Var[6]
+            },
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function Update() {
+        var ID = $('#editID').val();
+        var Worker = $('#editWorker').val();
+        var Project = $('#editProject').val();
+        var Company = $('#editCompany').val();
+        var JoinDate = $('#editJoinDate').val();
+        var Company_from = $('#editCompany_from').val();
+        var Company_to = $('#editCompany_to').val();
+
+        var Send_Var = ID + "," + Worker + "," + Project + "," + Company + "," + JoinDate + "," + Company_from + "," + Company_to;
+
+        if (Worker == null || Worker == "") {
+            toastr.warning("Registration Number Cannot Be Empty");
+            return;
+        }
+        if (Project == null || Project == "") {
+            toastr.warning("Project Number Cannot Be Empty");
+            return;
+        }
+        if (Company == null || Company == "") {
+            toastr.warning("Company Number Cannot Be Empty");
+            return;
+        }
+        if (JoinDate == null || JoinDate == "") {
+            toastr.warning("JoinDate Number Cannot Be Empty");
+            return;
+        }
+        if (Company_from == null || Company_from == "") {
+            toastr.warning("Company from Number Cannot Be Empty");
+            return;
+        }
+        if (Company_to == null || Company_to == "") {
+            toastr.warning("Company to Number Cannot Be Empty");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: 'WP03014/Update',
+            async: false,
+            data: {
+                DATA: Send_Var
+            },
+            success: function (data) {
+                console.log(Var);
+                if (data.sts == "TRUE") {
+                    toastr.success(data.message);
+                    cancel_edit();
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                $("#PopupForm_EditConfirm").modal('hide');
+
+                back();
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP03014/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchUserName').val("");
+        $('#searchRegNo').val("");
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                UserName: "",
+                RegNo: "",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var Worker = $('#searchWorker').val();
+        var Project = $('#searchProject').val();
+        var Company = $('#searchCompany').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                Worker: Worker,
+                Project: Project,
+                Company: Company
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+</script>

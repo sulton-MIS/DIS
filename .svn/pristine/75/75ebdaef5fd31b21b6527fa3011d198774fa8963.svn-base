@@ -1,0 +1,1 @@
+﻿SELECT * FROM TB_M_LOC

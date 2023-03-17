@@ -1,0 +1,71 @@
+﻿@using AI070.Models;
+@{
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>No REG : </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="searchNoReg" />
+                                    </td>
+                                    <td>Username : </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="searchUsername" />
+                                    </td>
+                                    <td>Email : </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="searchEmail" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

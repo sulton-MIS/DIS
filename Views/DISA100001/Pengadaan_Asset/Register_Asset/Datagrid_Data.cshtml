@@ -1,0 +1,195 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA100001Master> DataWP = (List<DISA100001Master>)ViewData["DataDISA100001"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    //List<DISA100001> Status_Cmb = (List<DISA100001>)ViewData["Status_Cmb"];
+    //List<DISA100001> Time_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> ExecTime_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> Model_type = (List<DISA100001>)ViewData["Model_type"];
+    var flg_status_dispose= @ViewData["FLG_STATUS_DISPOSE"];
+}
+
+<style>
+    table{
+        background-color: white !important;
+    }
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;" rowspan="2">NO</th>
+                            <th style="width: 200px;" rowspan="2">NO. ASSET</th>
+                            <th style="width: 300px;" rowspan="2">NAMA ASSET</th>
+                            <th style="width: 200px;" rowspan="2">GAMBAR</th>
+                            <th style="width: 200px;" rowspan="2">MEREK</th>
+                            <th style="width: 200px;" rowspan="2">TIPE</th>
+                            <th style="width: 200px;" rowspan="2">SUPPLIER</th>
+                            <th style="width: 100px;" rowspan="2">TAHUN PEROLEHAN</th>
+                            <th style="width: 50px;" rowspan="2">QTY</th>
+                            <th style="width: 200px;" rowspan="2">HARGA SATUAN</th>
+                            <th style="width: 200px;" rowspan="2">TOTAL</th>
+                            <th style="width: 100px;" rowspan="2">JENIS ASSET</th>
+                            <th style="width: 100px;" rowspan="2">KAT. ASSET</th>
+                            <th style="width: 200px;" rowspan="2">PIC BELI</th>
+                            <th style="width: 200px;" rowspan="2">DEPART. USER</th>
+                            <th style="width: 200px;" rowspan="2">NAMA USER</th>
+                            <th style="width: 100px;" rowspan="2">KODE LOKASI</th>
+                            <th style="width: 200px;" rowspan="2">NAMA LOKASI</th>
+                            <th style="width: 50px;" rowspan="2">HALTE</th>
+                            <th style="width: 200px;" rowspan="2">JENIS DOC.</th>
+                            <th style="width: 200px;" rowspan="2">NO. BC</th>
+                            <th style="width: 100px;" rowspan="2">TGL. BC</th>
+                            <th style="width: 100px;" rowspan="2">TGL. REGISTER</th>
+                            <th style="width: 100px;" rowspan="2">STATUS ASSET</th>
+                            <th style="width: 100px;" rowspan="2">LABEL STATUS</th>
+                            <th style="width: 100px;" rowspan="2">STATUS DISPOSE</th>
+                            @*<th style="width: 100px;" rowspan="2">TGL. DISPOSE</th>*@
+                            @{ 
+                                if(@ViewData["FLG_STATUS_DISPOSE"]== "Dispose"){
+                                    <th style="width: 120px;" rowspan="2">TGL. DISPOSE</th>
+                                }
+                            
+                            }
+
+                            <th style="width: 60px;" rowspan="2">DETAIL</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 350px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA100001Master item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            @{
+                                                if (item.FLG_DISPOSE_ASSET != "Dispose")
+                                                {
+                                                    <td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox" value="@item.ID,@item.NO_ASSET,@item.NAMA_ASSET,@item.NAMA_FOTO, @item.MEREK, @item.TIPE, @item.SUPPLIER, @item.TAHUN, @item.QTY, @item.HARGA_SATUAN, @item.TOTAL, @item.JENIS_ASSET, @item.KATEGORI_ASSET, @item.PIC_BELI, @item.DEPT_USER, @item.NAMA_USER, @item.KD_LOKASI, @item.NAMA_LOKASI, @item.HALTE, @item.JENIS_DOC, @item.NO_BC, @item.TGL_BC, @item.TGL_REGIST, @item.STATUS, @item.FLG_LABEL_ASSET, @item.FLG_DISPOSE_ASSET"
+                                                               type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    </td>
+                                                }
+                                            }
+                                            <td style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 200px"> @item.NO_ASSET</td>
+                                            <td style="width: 300px"> @item.NAMA_ASSET</td>
+                                            @*<td style="width: 200px"> <img src="~/Content/Upload/Foto/ManajementAsset/test5.PNG" class="width-30" /> </td>*@
+                                            <td style="width: 200px; text-align:center;"> <img src="~/Content/Upload/Foto/ManajementAsset/@item.NAMA_FOTO" style="width:100px; height:75px; text-align: center" /> </td>
+                                            <td style="width: 200px"> @item.MEREK</td>
+                                            <td style="width: 200px"> @item.TIPE</td>
+                                            <td style="width: 200px"> @item.SUPPLIER</td>
+                                            <td style="width: 100px"> @item.TAHUN</td>
+                                            <td style="width: 50px"> @item.QTY</td>
+                                            <td style="width: 200px" id="harga_satuan">RP. @item.HARGA_SATUAN </td>
+                                            <td style="width: 200px">Rp. @item.TOTAL</td>
+                                            @{
+                                                if (item.JENIS_ASSET == "FA")
+                                                {
+                                                    <td style="width: 100px"> Fixed Asset </td>
+                                                }
+                                                else if (item.JENIS_ASSET == "A")
+                                                {
+                                                    <td style="width: 100px"> Asset </td>
+                                                }
+
+                                            }
+                                            <td style="width: 100px"> @item.KATEGORI_ASSET</td>
+                                            <td style="width: 200px"> @item.PIC_BELI</td>
+                                            <td style="width: 200px"> @item.DEPT_USER</td>
+                                            <td style="width: 200px"> @item.NAMA_USER</td>
+                                            <td style="width: 100px"> @item.KD_LOKASI</td>
+                                            <td style="width: 200px"> @item.NAMA_LOKASI</td>
+                                            <td style="width: 50px"> @item.HALTE</td>
+                                            <td style="width: 200px"> @item.JENIS_DOC</td>
+                                            <td style="width: 200px"> @item.NO_BC</td>
+                                            <td style="width: 100px"> @item.TGL_BC</td>
+                                            <td style="width: 100px"> @item.TGL_REGIST</td>
+                                            <td style="width: 100px"> @item.STATUS</td>
+                                            <td style="width: 100px"> @item.FLG_LABEL_ASSET</td>
+                                            <td style="width: 100px"> @item.FLG_DISPOSE_ASSET</td>
+                                            @*<td style="width: 100px"> @item.TGL_DISPOSE</td>*@
+                                            @{
+                                                if (item.FLG_DISPOSE_ASSET == "Dispose")
+                                                {
+                                                    <td style="width: 120px"> @item.TGL_DISPOSE</td>
+                                                }
+                                            }
+                                            <td style="width: 60px">
+                                                 @*<a onclick="reloadDetail('@item.ID')" href='javascript:void(0)' class="btn btn-info2" style="display:inline-block; padding:0;">Show</a>*@
+                                                <button type="button" id="@item.ID" class="btn btn-success btn-xs" onclick="reloadDetail(this)" style="display: inline-block;">Show</button>
+                                            </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

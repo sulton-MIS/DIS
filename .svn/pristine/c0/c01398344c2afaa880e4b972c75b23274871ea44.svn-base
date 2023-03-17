@@ -1,0 +1,174 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.WP02002Master;
+@{
+    List<EmployeeModel> Employee = (List<EmployeeModel>)ViewData["Employee"];
+    List<AreaModel> Areas = (List<AreaModel>)ViewData["Area"];
+
+    string UserIDLogin = (string)ViewData["userid_login"];
+    string UserNameLogin = (string)ViewData["username_login"];
+}
+<input type="text" id="UserIDLogin" value="@UserIDLogin" style="display:none;" />
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add new Incident</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Incident Title</label>
+                        <input type="text" class="form-control space-input" id="WP02007_TXT_ADD_INCIDENT_TITLE" maxlength="50">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PIC</label>
+                        <select class="form-control space-input select2 input-job" id="WP02007_DDL_ADD_INCIDENT_PIC">
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Area</label>
+                        <select class="form-control space-input select2" id="WP02007_DDL_ADD_AREA" required disabled>
+                            <option value="">- select -</option>
+                            @{
+                                if (Areas != null)
+                                {
+                                    if (Areas.Count() > 0)
+                                    {
+                                        foreach (AreaModel item in Areas)
+                                        {
+                                            <option value="@item.ID_TB_M_AREA">@item.AREA_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Incident Date</label>
+                        <input type="text" class="form-control space-input datepicker" style="text-align:center" id="WP02007_TXT_ADD_INCIDENT_DATE">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Incident Level</label>
+                        <select id="WP02007_DDL_ADD_INCIDENT_LEVEL" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Evidence</label>
+                        <input style="width:100%" class="form-control" type="file" id="WP02007_ADD_EVIDENCE" name="WP02007_ADD_EVIDENCE" accept="image/x-png,image/gif,image/jpeg">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Reported By</label>
+                        <select class="form-control space-input input-job" id="WP02007_DDL_ADD_REPORTED_BY" disabled>
+                            <option value="@UserIDLogin" selected="selected">@UserNameLogin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Action / Prosecution</label>
+                        <textarea rows="3" class="form-control space-input" id="WP02007_TXT_ADD_ACTION" maxlength="200"></textarea>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="InsertIncident()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit Incident</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Incident Title</label>
+                        <input type="text" class="form-control space-input" id="WP02007_TXT_EDIT_INCIDENT_TITLE" maxlength="50">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PIC</label>
+                        <select class="form-control space-input select2 input-job" id="WP02007_DDL_EDIT_INCIDENT_PIC">
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Area</label>
+                        <select class="form-control space-input select2" id="WP02007_DDL_EDIT_AREA" required disabled>
+                            <option value="">- select -</option>
+                            @{
+                                if (Areas != null)
+                                {
+                                    if (Areas.Count() > 0)
+                                    {
+                                        foreach (AreaModel item in Areas)
+                                        {
+                                            <option value="@item.ID_TB_M_AREA">@item.AREA_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Incident Date</label>
+                        <input type="text" class="form-control space-input datepicker" style="text-align:center" id="WP02007_TXT_EDIT_INCIDENT_DATE">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Incident Level</label>
+                        <select id="WP02007_DDL_EDIT_INCIDENT_LEVEL" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Evidence</label>
+                        <input style="width:100%" class="form-control" type="file" id="WP02007_EDIT_EVIDENCE" name="WP02007_EDIT_EVIDENCE" accept="image/x-png,image/gif,image/jpeg">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Reported By</label>
+                        <select class="form-control space-input  input-job" id="WP02007_DDL_EDIT_REPORTED_BY" disabled>
+                            <option value="@UserIDLogin" selected="selected">@UserNameLogin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Action / Prosecution</label>
+                        <textarea rows="3" class="form-control space-input" id="WP02007_TXT_EDIT_ACTION" maxlength="200"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="UpdateIncident()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

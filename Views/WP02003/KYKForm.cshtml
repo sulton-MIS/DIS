@@ -1,0 +1,333 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02003Master;
+@{
+
+    List<ProjectModel> Projects = (List<ProjectModel>)ViewData["Project"];
+    List<ProjectJobModel> ProjectJobs = (List<ProjectJobModel>)ViewData["ProjectJob"];
+    List<WorkItemModel> Items = (List<WorkItemModel>)ViewData["WorkItem"];
+    List<WorkItemModel> Utilitys = (List<WorkItemModel>)ViewData["Utility"];
+    List<WorkItemModel> APDS = (List<WorkItemModel>)ViewData["APD"];
+    List<PekerjaModel> Pekerjas = (List<PekerjaModel>)ViewData["Pekerja"];
+
+
+
+    List<AreaModel> Areas = (List<AreaModel>)ViewData["Area"];
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+}
+
+@{
+    <input type="hidden" id="WP02003_ADD_WP_DAILY_ID" value="@System.Guid.NewGuid().ToString()" />
+}
+<div class="row">
+    <label class="section-title">
+        <u>IDENTITAS PEKERJAAN</u>
+    </label>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label class="required">Project Name </label>
+            <select id="WP02003_DDL_ADD_PROJECT" onchange="getDetailInformationProject('add', this.value)" class="form-control input-xxlarge select2" required>
+                <option value="">- select -</option>
+                @{
+                    if (Projects != null)
+                    {
+                        if (Projects.Count() > 0)
+                        {
+                            foreach (ProjectModel item in Projects)
+                            {
+                                <option value="@item.ID">@item.PROJECT_NAME</option>
+                            }
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label>Project Area </label>
+            <input id="WP02003_ADD_PROJECT_AREA" class="form-control" type="text" >
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label>Project Location </label>
+            <input id="WP02003_ADD_PROJECT_LOCATION" class="form-control" type="text" >
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label>Pelaksana (PT/CV) </label>
+            <input id="WP02003_ADD_PELAKSANA" class="form-control" type="text" >
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>Periode Project Start </label>
+                    <input id="WP02003_ADD_PROJECT_START_DATE" class="form-control" type="text" >
+                </div>
+                <div class="col-lg-6">
+                    <label>Periode Project End </label>
+                    <input id="WP02003_ADD_PROJECT_END_DATE" class="form-control" type="text" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <label class="required"> Job Responsible</label>
+        <select id="WP02003_DDL_ADD_PROJECT_JOB" class="form-control">
+            @{
+                if (ProjectJobs != null)
+                {
+                    if (ProjectJobs.Count() > 0)
+                    {
+                        foreach (ProjectJobModel item in ProjectJobs)
+                        {
+                            <option value="@item.ID">@item.JOB_NAME</option>
+                        }
+                    }
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>KYK Title </label>
+            <input id="WP02003_ADD_JOBTITLE" class="form-control" type="text">
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 30px;">
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>I. PERALATAN KERJA</u>
+        </label>
+        <div class="form-group">
+           <button type="button" id="btnAddPeralatanKerja"  onclick="AddDropDownWorkItem('add')" class="btn btn-primary btn-xs btn-data">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add Data
+            </button>
+        </div>
+        <div class="form-group">
+            <table id="tblContainerWorkItem" class="table table-bordered" border="0" cellpadding="5" cellspacing="5">
+                <tr>
+                    <th width="30px">No</th>
+                    <th width="220px">Alat Kerja</th>
+                    <th width="30px">Action</th>
+                </tr>
+            </table>
+            @*<table id="BoxTableWorkItem" class="table table-bordered">
+                    <tr>
+                        <th>No</th>
+                        <th>Alat Kerja</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr class="TemplateRowWorkItem">
+                        <td class="id_work_item">1</td>
+                        <td>
+                            <select class="WorkItem form-control" required>
+                                <option value="">- select -</option>
+                                @{
+                                    if (Items != null)
+                                    {
+                                        if (Items.Count() > 0)
+                                        {
+                                            foreach (WorkItemModel item in Items)
+                                            {
+                                                <option value="@item.ID_TB_M_ITEM">@item.ITEM_NAME</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td><button type="button" name="remove" onclick="DeleteWorkItem(this)" class="btn btn-danger btn-sm remove"><span class="glyphicon glyphicon-minus"></span></button></td>
+                    </tr>
+                </table>*@
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>II. LAYOUT LOCATION</u>
+        </label>
+        <div class="form-group">
+            <div class="col-md-12 no-padding">
+                <div class="area-border-container" style="display:contents; position:absolute; width: 100%">
+                    <span class="border-area-location"></span>
+                    <img id="image-area" src="" style="height:280px; width: 100%; cursor:pointer" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>III. UTILITY ITEM REQUEST</u>
+        </label>
+        <div class="form-group">
+            <button type="button" id="btnAddUtility"  onclick="AddDropDownUtility('add')" class="btn btn-primary btn-xs add btn-data">
+                <span class="glyphicon glyphicon-plus"></span>Add Data
+            </button>
+        </div>
+        <div class="form-group">
+            <table id="tblContainerUtility" class="table table-bordered" border="0" cellpadding="5" cellspacing="5">
+                <tr>
+                    <th width="30px">No</th>
+                    <th width="220px">Utility Item</th>
+                    <th width="30px">Action</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>IV. APD (ALAT PELINDUNG DIRI)</u>
+        </label>
+        <div class="form-group">
+            <button type="button" id="btnAddAPD"  onclick="AddDropDownAPD('add')" class="btn btn-primary btn-xs add btn-data">
+                <span class="glyphicon glyphicon-plus">
+                </span>Add Data
+            </button>
+        </div>
+        <div class="form-group">
+            <table id="tblContainerAPD" class="table table-bordered" border="0" cellpadding="5" cellspacing="5">
+                <tr>
+                    <th width="30px">No</th>
+                    <th>Alat Pelindung Diri Item (APD)</th>
+                    <th width="30px">Action</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>V. LIST PEKERJA</u>
+        </label>
+        <div class="form-group">
+            @*<button type="button" id="btnAddListPekerja" onclick="AddDropDownListPekerja('add')" class="btn btn-primary btn-xs add">
+            <span class="glyphicon glyphicon-plus"></span> Add Data
+        </button>*@
+           <button type="button" id="btnAddListPekerja"  onclick="" class="btn btn-primary btn-xs add btn-data">
+            <span class="glyphicon glyphicon-plus"></span> Add Data
+            </button>
+        </div>
+        <div class="form-group">
+            <table id="tblContainerPekerja" class="table table-bordered" border="0" cellpadding="5" cellspacing="5">
+                <tr>
+                    <th width="30px">No</th>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th width="30px">Action</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <br />
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <label class="section-title">
+            <u>WORK INSTRUCTION & DENWACHO</u>
+        </label>
+        <div class="form-group">
+            <button type="button" id="addBtnWID"  name="add" onclick="AddWIDTable('add')" class="btn btn-primary btn-xs add btn-data">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add Data
+            </button>
+        </div>
+        <div class="table-repsonsive">
+
+            <table id="tblContainerWID" class="table table-bordered" border="0" cellpadding="5" cellspacing="5">
+                <tr>
+                    <th width="30px" rowspan="2">No</th>
+                    <th width="400px" rowspan="2">Pekerjaan Hari Ini</th>
+                    <th rowspan="2"> PIC</th>
+                    <th rowspan="2">Jam Pelaksanaan</th>
+                    <th style="width: 250px;" colspan="7">Potensi Bahaya (STOP 6)</th>
+                    <th rowspan="2">Action</th>
+                </tr>
+                <tr>
+                    <th style="width: 20px; background:yellow">A</th>
+                    <th style="width: 20px; background:yellow">B</th>
+                    <th style="width: 20px; background:yellow">C</th>
+                    <th style="width: 20px; background:yellow">D</th>
+                    <th style="width: 20px; background:yellow">E</th>
+                    <th style="width: 20px; background:yellow">F</th>
+                    <th style="width: 20px; background:yellow">O</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-12">
+            <label class="required">File</label>
+            <input type="file" @*onchange="change_image('add',this)"*@ class="btn btn-info btn-xs form-control" accept="application/pdf" id="addPdf" />
+            <img onerror="this.style.display='none'" id="addImageBox" src="" style="height:150px;width:100%" />
+        </div>
+    </div>
+</div>
+
+
+    <style type="text/css">
+        #divWorkItem div {
+            margin-bottom: 10px;
+        }
+
+        #divWorkItem input {
+            margin-left: 10px;
+        }
+
+        #divAPD div {
+            margin-bottom: 10px;
+        }
+
+        #divAPD input {
+            margin-left: 10px;
+        }
+
+        #divUtilityItemRequest div {
+            margin-bottom: 10px;
+        }
+
+        #divUtilityItemRequest input {
+            margin-left: 10px;
+        }
+
+        #divListPekerja div {
+            margin-bottom: 10px;
+        }
+
+        #divListPekerja input {
+            margin-left: 10px;
+        }
+
+
+        .select2-container--default .select2-selection--single {
+            position: relative;
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+            }
+    </style>

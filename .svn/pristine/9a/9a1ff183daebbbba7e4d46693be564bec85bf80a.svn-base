@@ -1,0 +1,370 @@
+﻿@using AI070.Models.WP03014Master;
+@{
+    var form_type = ViewBag.form_type;
+    List<WorkerModel> Worker = (List<WorkerModel>)ViewData["WORKER_LIST"];
+    List<ProjectModel> Project = (List<ProjectModel>)ViewData["PROJECT_LIST"];
+    List<CompanyModel> Company = (List<CompanyModel>)ViewData["COMPANY_LIST"];
+}
+
+@{
+
+    if (form_type == "New")
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col align-right">
+                    <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+                    <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Worker : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addWorker" class="form-control">
+                            @{
+                                if (Worker != null)
+                                {
+                                    if (Worker.Count() > 0)
+                                    {
+                                        foreach (WorkerModel item in Worker)
+                                        {
+                                            <option value="@item.ID"> [ @item.REG_NO ] - @item.EMPLOYEE_NAME </option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Project : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addProject" class="form-control">
+                            @{
+                                if (Project != null)
+                                {
+                                    if (Project.Count() > 0)
+                                    {
+                                        foreach (ProjectModel item in Project)
+                                        {
+                                            <option value="@item.ID"> [ @item.PROJECT_CODE ] - @item.PROJECT_NAME </option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addCompany" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Join Date: <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addJoinDate" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company From : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addCompany_from" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company To : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addCompany_to" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary btn-xs" id="btn_insert" onclick="Insert()"><i class="fa fa-check"></i>Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col align-right">
+                    <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+                    <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Worker : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.ID" style="display:none" type="text" maxlength="50" id="editID" class="form-control" placeholder="">
+
+                        <select id="editWorker" class="form-control">
+                            @{
+                                if (Worker != null)
+                                {
+                                    if (Worker.Count() > 0)
+                                    {
+                                        foreach (WorkerModel item in Worker)
+                                        {
+                                            if (ViewBag.Worker == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> [ @item.REG_NO ] - @item.EMPLOYEE_NAME </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> [ @item.REG_NO ] - @item.EMPLOYEE_NAME </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Project : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="editProject" class="form-control">
+                            @{
+                                if (Project != null)
+                                {
+                                    if (Project.Count() > 0)
+                                    {
+                                        foreach (ProjectModel item in Project)
+                                        {
+                                            if (ViewBag.Project == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> [ @item.PROJECT_CODE ] - @item.PROJECT_NAME </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> [ @item.PROJECT_CODE ] - @item.PROJECT_NAME </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="editCompany" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            if (ViewBag.Company == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Join Date: <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.JoinDate" class="form-control" id="editJoinDate" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company From : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="editCompany_from" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            if (ViewBag.Company_from == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Company To : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="editCompany_to" class="form-control">
+                            @{
+                                if (Company != null)
+                                {
+                                    if (Company.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Company)
+                                        {
+                                            if (ViewBag.Company_to == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> [ @item.COMPANY_CODE ] - @item.COMPANY_NAME </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary btn-xs" id="btn_insert" onclick="Update()"><i class="fa fa-check"></i>Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+<style>
+
+
+    #data-container {
+        display: initial;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .panel-member {
+            600px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .panel-member {
+            min-height: 520px;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    .text-test {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<div id="data-container" style="display:none" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="panel panel-member">
+                    <div class="pull-left button-back">
+                        <button class="btn btn-danger btn-sm"><i class="fa fa-arrow-circle-left"></i></button>
+                    </div>
+                    <div class="panel-body">
+                        <h1 class="text-test">
+                            IM HERE
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

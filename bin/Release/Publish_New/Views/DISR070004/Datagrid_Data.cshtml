@@ -1,0 +1,152 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR070004Master;
+@{
+    List<DISR070004Master> DataWP = (List<DISR070004Master>)ViewData["DataDISR070004"];
+    List<DISR070004> Status_Cmb = (List<DISR070004>)ViewData["Status_Cmb"];
+    List<DISR070004> Time_Cmb = (List<DISR070004>)ViewData["Time_Cmb"];
+    List<DISR070004> ExecTime_Cmb = (List<DISR070004>)ViewData["Time_Cmb"];
+    List<DISR070004> Model_type = (List<DISR070004>)ViewData["Model_type"];
+
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;" rowspan="2">No</th>
+                            <th style="width: 150px;" rowspan="2">ID Mesin</th>
+                            <th style="width: 300px;" rowspan="2">Nama Mesin</th>
+                            <th style="width: 200px;" rowspan="2">Kategori Proses</th>
+                            <th style="width: 200px;" rowspan="2">IP Adress</th>
+                            <th style="width: 200px;" rowspan="2">Line</th>
+                            <th style="width: 200px;" rowspan="2">Cluster</th>
+                            <th style="width: 200px;" rowspan="2">Factory</th>
+                            <th style="width: 200px;" rowspan="2">Comment</th>
+                            <th style="width: 200px;" rowspan="2">Waktu Registrasi</th>
+                            <th style="width: 200px;" rowspan="2">Group Mesin</th>
+                            <th style="width: 200px;" rowspan="2">Urutan Group Mesin</th>
+                            <th style="width: 200px;" rowspan="2">Flag Visible Oven</th>
+                            <th style="width: 200px;" rowspan="2">Machine Name</th>
+                            <th style="width: 200px;" rowspan="2">Initial Mesin</th>
+                            @*<th style="width: 200px;" rowspan="2">FLAG COUNT</th>*@
+                        </tr>
+                        <!--<tr>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                        <th style="width: 150px; border: initial; ">Date</th>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>-->
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISR070004Master item in DataWP)
+                                    {
+                                        //string sts = "";
+                                        //if (@item.STATUSTEXT == "1")
+                                        //{
+                                        //    sts = "Active";
+                                        //}
+                                        //else
+                                        //{
+                                        //    sts = "Not Active";
+                                        //}
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td style="width: 100px; text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID,@item.id_kikai,@item.name_kikai,@item.name_koteishubetsu,@item.IPaddress,@item.line,@item.cluster,@item.factory,@item.comment,@item.time_koshin,@item.group_kikai,@item.group_kikai_sort,@item.flg_visible_oven,@item.machine_name,@item.initial_kikai" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                            </td>
+                                            <td style="width: 40px">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 150px"> @item.id_kikai</td>
+                                            <td style="width: 300px"> @item.name_kikai</td>
+                                            <td style="width: 200px"> @item.name_koteishubetsu</td>
+                                            <td style="width: 200px"> @item.IPaddress</td>
+                                            <td style="width: 200px"> @item.line</td>
+                                            <td style="width: 200px"> @item.cluster</td>
+                                            <td style="width: 200px"> @item.factory</td>
+                                            <td style="width: 200px"> @item.comment</td>
+                                            <td style="width: 200px"> @item.time_koshin</td>
+                                            <td style="width: 200px"> @item.group_kikai</td>
+                                            <td style="width: 200px"> @item.group_kikai_sort</td>
+                                            <td style="width: 200px"> @item.flg_visible_oven</td>
+                                            <td style="width: 200px"> @item.machine_name</td>
+                                            <td style="width: 200px"> @item.initial_kikai</td>
+                                            @*<td style="width: 200px"> @item.flgCount </td>*@
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

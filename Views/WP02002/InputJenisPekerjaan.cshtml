@@ -1,0 +1,289 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02002Master;
+@{
+    List<WorkingTypeModel> WorkingType = (List<WorkingTypeModel>)ViewData["WorkingType"];
+
+}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>E. Type of work to be carried out</u>
+        </label>
+
+
+    </div>
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" class="btn btn-primary btn-xs pull-right jobbtn" id="WP02002_BTN_ADD_SHOW_PEKERJAAN" style="width: 80px;"><i class="fa fa-plus"></i> Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="row">
+        <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+            <div style="border: 1px solid #ccc; overflow:scroll; position: relative;">
+                <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+                <div id="tScrollHead" style="width: 100%; border-right:1px solid #fff">
+                    <table id="TBL_HEADER_PEKERJAAN" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                        <thead>
+                            <tr>
+                                <th style="width: 200px;" rowspan="2">Job</th>
+                                <th style="width: 120px;" colspan="3">Danger Level</th>
+                                <th style="width: 140px;" colspan="7">Date</th>
+                                <th style="width: 140px;" colspan="7">STOP-6 Category</th>
+                                <th style="width: 100px;" rowspan="2">Action</th>
+                            </tr>
+                            <tr>
+                                <!--Colspan Dari "Tingkat Bahaya"-->
+                                <th style="width: 40px; ">High</th>
+                                <th style="width: 40px; ">Medium</th>
+                                <th style="width: 40px; ">Low</th>
+                                <!--Colspan Dari "Tanggal"-->
+                                <th id="WP02002_TH_ADD_D1" style="width: 20px; "> 1</th>
+                                <th id="WP02002_TH_ADD_D2" style="width: 20px; "> 2</th>
+                                <th id="WP02002_TH_ADD_D3" style="width: 20px; "> 3</th>
+                                <th id="WP02002_TH_ADD_D4" style="width: 20px; "> 4</th>
+                                <th id="WP02002_TH_ADD_D5" style="width: 20px; "> 5</th>
+                                <th id="WP02002_TH_ADD_D6" style="width: 20px; "> 6</th>
+                                <th id="WP02002_TH_ADD_D7" style="width: 20px; "> 7</th>
+                                <!--Colspan Dari "STOP-6"-->
+                                <th style="width: 20px; background:yellow">A</th>
+                                <th style="width: 20px; background:yellow">B</th>
+                                <th style="width: 20px; background:yellow">C</th>
+                                <th style="width: 20px; background:yellow">D</th>
+                                <th style="width: 20px; background:yellow">E</th>
+                                <th style="width: 20px; background:yellow">F</th>
+                                <th style="width: 20px; background:yellow">Alfa</th>
+                            </tr>
+
+                        </thead>
+                    </table>
+                </div>
+
+                <!--data grid-->
+                <div id="tScrollBody" style="height: 255px;">
+                    <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                        <tbody id="WP02002_TBL_ADD_PEKERJAAN" style="display: none;">
+                            <tr>
+                                <td style="width: 200px; padding:0!important">
+                                    <select style="width:100%" id="WP02002_DDL_ADD_PEKERJAAN" class="bg-danger select2">
+                                        @{
+                                            if (WorkingType != null)
+                                            {
+                                                if (WorkingType.Count() > 0)
+                                                {
+                                                    foreach (WorkingTypeModel item in WorkingType)
+                                                    {
+                                                        <option value="@item.ID_TB_M_WORKING_TYPE">@item.WORKING_NAME</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td style="width: 40px; padding:0!important; text-align:center" id="tk-bahaya-add">
+                                    <input style="width:100%" class="tk-bahaya check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_TKTINGGI" name="add_1" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check" for="WP02002_CHK_ADD_TKTINGGI"></label>
+                                </td>
+                                <td style="width: 40px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="tk-bahaya check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_TKSEDANG" name="add_2" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check" for="WP02002_CHK_ADD_TKSEDANG"></label>
+                                </td>
+                                <td style="width: 40px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="tk-bahaya check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_TKRENDAH" name="add_3" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check" for="WP02002_CHK_ADD_TKRENDAH"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D1" name="add_4">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D1"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D2" name="add_5">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D2"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D3" name="add_6">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D3"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D4" name="add_7">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D4"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D5" name="add_8">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D5"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D6" name="add_9">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D6"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_D7" name="add_10">
+                                    <label class="label-check" for="WP02002_CHK_ADD_D7"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6A" name="add_11">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6A"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6B" name="add_12">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6B"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6C" name="add_13">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6C"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6D" name="add_14">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6D"></label>
+                                </td>
+                                <td style="width: 20px;padding: 0 !important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6E" name="add_15">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6E"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6F" name="add_16">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6F"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_ADD_STOP6ALPHA" name="add_17">
+                                    <label class="label-check" for="WP02002_CHK_ADD_STOP6ALPHA"></label>
+                                </td>
+                                <td style="width: 100px; text-align:center; text-align:center">
+                                    <button type="button" id="WP02002_BTN_ADD_PEKERJAAN" onclick="addDataPekerjaan()" class="btn btn-primary btn-xs" style="width: 60px;">
+                                        <i class="fa fa-save">
+                                        </i>
+                                    </button>
+                                    <button type="button" id="WP02002_BTN_ADD_PEKERJAANCLOSE" class="btn btn-danger btn-xs" style="margin-left: 4px; width: 60px"><i class="fa fa-sign-out"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody id="WP02002_TBL_EDIT_PEKERJAAN" style="display: none;">
+                            <tr>
+                                <td style="width: 200px; padding:0!important">
+                                    <select style="width:100%" id="WP02002_DDL_EDIT_PEKERJAAN" class="bg-danger select2">
+                                        @{
+                                            if (WorkingType != null)
+                                            {
+                                                if (WorkingType.Count() > 0)
+                                                {
+                                                    foreach (WorkingTypeModel item in WorkingType)
+                                                    {
+                                                        <option value="@item.ID_TB_M_WORKING_TYPE">@item.WORKING_NAME</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td style="width: 40px; padding:0!important; text-align:center" id="tk-bahaya-edit">
+                                    <input style="width:100%" class="tk-bahaya-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_TKTINGGI" name="edit_1" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_TKTINGGI"></label>
+                                </td>
+                                <td style="width: 40px; padding: 0 !important; text-align:center">
+                                    <input style="width:100%" class="tk-bahaya-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_TKSEDANG" name="edit_2" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check"  for="WP02002_CHK_EDIT_TKSEDANG"></label>
+                                </td>
+                                <td style="width: 40px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="tk-bahaya-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_TKRENDAH" name="edit_3" onclick="selectOnlyThis(this.id)">
+                                    <label class="label-check"  for="WP02002_CHK_EDIT_TKRENDAH"></label>
+                                </td>
+                                <td style="width: 20px;padding: 0 !important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_MONDAY" name="edit_4">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_MONDAY"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_TUESDAY" name="edit_5">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_TUESDAY"></label>
+                                </td>
+                                <td style="width: 20px;padding: 0 !important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_WEDNESDAY" name="edit_6">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_WEDNESDAY"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_THURSDAY" name="edit_7">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_THURSDAY"></label>
+                                </td>
+                                <td style="width: 20px;padding: 0 !important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_FRIDAY" name="edit_8">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_FRIDAY"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_SATURDAY" name="edit_9">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_SATURDAY"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="day-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_SUNDAY" name="edit_10">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_SUNDAY"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6A" name="edit_11">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6A"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6B" name="edit_12">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6B"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6C" name="edit_13">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6C"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width: 100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6D" name="edit_14">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6D"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6E" name="edit_15">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6E"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6F" name="edit_16">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6F"></label>
+                                </td>
+                                <td style="width: 20px; padding:0!important; text-align:center">
+                                    <input style="width:100%" class="stop6-class-edit check-input form-check-input" type="checkbox" value="" id="WP02002_CHK_EDIT_STOP6ALPHA" name="edit_17">
+                                    <label class="label-check" for="WP02002_CHK_EDIT_STOP6ALPHA"></label>
+                                </td>
+                                <td style="width: 100px; text-align:center">
+                                    <button type="button" id="WP02002_BTN_EDIT_PEKERJAAN" class="btn btn-primary btn-xs" style="width: 60px;">
+                                        <i class="fa fa-save">
+                                        </i>
+                                    </button>
+                                    <button type="button" id="WP02002_BTN_EDIT_PEKERJAANCLOSE" class="btn btn-danger btn-xs" style="margin-left: 4px; width: 60px"><i class="fa fa-sign-out"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody id="WP02002_TBL_LIST_PEKERJAAN" class="listdatagrid">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .tk-bahaya form-check-input:checked + label:after {
+        width: 100%;
+        height: 100%;
+        content: "";
+        background-color: #000;
+        left: 0px;
+        position: absolute;
+        top: 0px;
+    }
+    #tk-bahaya-add input[type="checkbox"]:checked {
+        position: relative;
+        background-color: #FFF;
+        border-radius: 2px;
+        border: 1px solid #CCC;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+        color: black;
+        cursor: pointer;
+    }
+</style>

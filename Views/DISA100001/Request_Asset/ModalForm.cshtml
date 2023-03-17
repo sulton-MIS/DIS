@@ -1,0 +1,406 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using Toyota.Common.Credential
+@using AI070.Models.DISA100001Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    //List<UrutanModel> Urutan = (List<UrutanModel>)ViewData["no_urut"];
+    //var Urutan_no = ViewData["no_urut"];
+
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+
+<!--form add new data-->
+<div id="modalAddForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD NO.REQUEST ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                @*<input id="addNoUrut" type="hidden" class="form-control" value="@Urutan_no" />*@
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-6">
+                        <label class="required"> NAMA ASSET (KETERANGAN)</label>
+                        <input id="addNamaAsset" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> QTY<span style="color:red">*</span> </label>
+                        <input id="addQty" required type="number" class="form-control" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-6">
+                        <label class="required"> PIC REQUEST<span style="color:red">*</span> </label>
+                        <input id="addPicReq" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> DEPARTMENT<span style="color:red">*</span> </label>
+                        @*<input id="addDepartment" required type="text" class="form-control" />*@
+                        <select class="form-control" id="addDepartment" required>
+                            <option id="addDepartment" value="-"></option>
+                            <option id="addDepartment" value="ACC">ACC</option>
+                            <option id="addDepartment" value="BP">BP</option>
+                            <option id="addDepartment" value="CMS">CMS</option>
+                            <option id="addDepartment" value="GO">GO</option>
+                            <option id="addDepartment" value="ME">ME</option>
+                            <option id="addDepartment" value="MNF">MNF</option>
+                            <option id="addDepartment" value="RND">RND</option>
+                            <option id="addDepartment" value="QA/QC">QA/QC</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-6">
+                        <label class="required"> TANGGAL REQUEST<span style="color:red">*</span> </label>
+                        <input id="addTglReq" required type="datetime-local" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT REQUEST ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label> NO. REQUEST ASSET </label>
+                        <input id="editNoRequestAsset" readonly type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TGL.REQUEST ASSET </label>
+                        <input id="editTglRequest" type="text" readonly class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label> NAMA. ASSET </label>
+                        <input id="editNamaAsset" type="text" class="form-control" />
+                    </div>
+                    @*<div class="col-md-6">
+                            <label class="required"> QTY ASSET<span style="color:red">*</span> </label>
+                            <input id="editQtyAsset" type="text" class="form-control" />
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label> PIC. REQUEST </label>
+                        <input id="editPicRequest" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> DEPT. REQUEST </label>
+                        @*<input id="editDeptRequest" type="text" class="form-control" />*@
+                        <select class="form-control" id="editDeptRequest" name="dropdown">
+                            <option id="editDeptRequest" value="BP" selected="selected"> BP</option>
+                            <option id="editDeptRequest" value="CMS" selected="selected"> CMS</option>
+                            <option id="editDeptRequest" value="GO" selected="selected"> GO</option>
+                            <option id="editDeptRequest" value="ME" selected="selected"> ME</option>
+                            <option id="editDeptRequest" value="MNF" selected="selected"> MNF</option>
+                            <option id="editDeptRequest" value="RND" selected="selected"> RND</option>
+                            <option id="editDeptRequest" value="QA/QC" selected="selected"> QA/QC</option>
+                        </select>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form Register data Asset-->
+<div id="modalRegisterForm" class="modal fade" style="border: 1px solid black">
+    <div class="modal-dialog modal-md" style="width:50% !important">
+        <div class="modal-content">
+            <div class="modal-header" style="">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title" style="">FORM REGISTER ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="">
+                    <input style="display:none" type="text" maxlength="50" id="RegisterID" class="form-control" placeholder="" />
+                    <div class="col-md-4">
+                        <label> NO. REQUEST ASSET </label>
+                        <input id="registerNoRequestAsset" readonly type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> PIC. REQUEST  </label>
+                        <input id="registerPicRequest" type="text" readonly class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> DEPT. REQUEST </label>
+                        <input id="registerDeptRequest" type="text" readonly class="form-control" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-4">
+                        <label> ID PR</label>
+                        <input id="registerIdPR" type="text" disabled class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> NAMA ASSET </label>
+                        <input id="registerNamaAsset" type="text" disabled class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> NAMA ASSET (INVOICE)<span style="color:red">*</span> </label>
+                        <input id="registerNamaAssetInvoice" required type="text" autocomplete="off" class="form-control" placeholder="Masukkan Nama Asset (Invoice)" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <label class="required"> ITEM CODE<span style="color:red">*</span> </label>
+                        <input id="registerItemCode" type="text" required autocomplete="off" class="form-control" placeholder="Masukkan Item Code" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> MEREK/BRAND<span style="color:red">*</span> </label>
+                        <input id="registerMerek" type="text" required autocomplete="off" class="form-control" placeholder="Masukkan Merek" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> TIPE<span style="color:red">*</span> </label>
+                        <input id="registerTipe" type="text" required autocomplete="off" class="form-control" placeholder="Masukkan Type" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <label class="required"> JENIS DOKUMEN<span style="color:red">*</span> </label>
+                        <select class="form-control" id="registerJenisDoc" name="dropdown" required>
+                            <option id="registerJenisDoc" value="" selected="selected"> --Pilih-- </option>
+                            <option id="registerJenisDoc" value="BC 3.2"> BC 3.2 </option>
+                            <option id="registerJenisDoc" value="BC 4.0"> BC 4.0 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> NO. AJU<span style="color:red">*</span> </label>
+                        <input id="registerNoAJU" required type="text" autocomplete="off" class="form-control" placeholder="Masukkan No.Aju" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> JENIS ASSET<span style="color:red">*</span> </label>
+                        <select class="form-control" id="registerJenisAsset" name="dropdown" required>
+                            <option id="registerJenisAsset" value="" selected="selected"> --Pilih-- </option>
+                            <option id="registerJenisAsset" value="FA"> FIXED ASSET </option>
+                            <option id="registerJenisAsset" value="SA"> SMALL ASSET </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <label class="required"> TGL. DOKUMEN<span style="color:red">*</span> </label>
+                        <input id="registerTglDok" required type="date" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> TGL. MASUK/ TGL. REGISTER<span style="color:red">*</span> </label>
+                        <input id="registerTglRegister" required type="date" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> KATEGORI ASSET<span style="color:red">*</span> </label>
+                        <select class="form-control" id="registerKategoriAsset" name="dropdown" required>
+                            <option id="registerKategoriAsset" value="" selected="selected"> --Pilih-- </option>
+                            <option id="registerKategoriAsset" value="A"> A </option>
+                            <option id="registerKategoriAsset" value="B"> B </option>
+                            <option id="registerKategoriAsset" value="C"> C </option>
+                            <option id="registerKategoriAsset" value="D"> D </option>
+                            <option id="registerKategoriAsset" value="E"> E </option>
+                            <option id="registerKategoriAsset" value="F"> F </option>
+                            <option id="registerKategoriAsset" value="G"> G </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <label> SUPPLIER<span style="color:red">*</span> </label>
+                        <input id="registerSupplier" required type="text" class="form-control" autocomplete="off" placeholder="Masukkan Supplier" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> HARGA SATUAN<span style="color:red">*</span> </label>
+                        <input type="currency" id="registerHargaSatuan" autocomplete="off" required class="form-control" placeholder="Masukkan Harga Satuan" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> TAHUN<span style="color:red">*</span> </label>
+                        @*<input id="registerTahun" type="date" class="form-control datepicker"/>*@
+                        @*<input id="registerTahun" required type="number" class="form-control" autocomplete="off" placeholder="Masukkan Tahun" />*@
+                        <input type="text" class="form-control datepicker" id="registerTahun" placeholder="(Pilih Tahun)" />
+
+                        @*@{
+                                string tahun = DateTime.Now.ToString("yyyy");
+                                <input id="registerTahun" type="number" class="form-control" max="4" value="@tahun" placeholder="Masukkan Tahun" />
+                            }*@
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+
+                    <div class="col-md-4">
+                        <label> UMUR EKONOMIS <span style="color:red">*</span> </label>
+                        <input id="registerUmur" type="number" class="form-control" autocomplete="off" placeholder="Masukkan Umur" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> KETERANGAN<span style="color:red">*</span> </label>
+                        @*<input id="registerKet" required type="text" class="form-control" autocomplete="off" placeholder="Masukkan Keterangan" />*@
+                        <textarea id="registerKet" required class="form-control" placeholder="Masukkan Keterangan"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label> SPESIFIKASI<span style="color:red">*</span> </label>
+                        @*<input id="registerSpesifikasi" required type="text" class="form-control" autocomplete="off" placeholder="Masukkan Spesifikasi" />*@
+                        <textarea id="registerSpesifikasi" required class="form-control" placeholder="Masukkan Spesifikasi"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="margin-top:10px">
+                        <input type="checkbox" class="chkboxname" id="chkDetail">
+                        <b><u><i>**Input Gambar dan Lokasi</i></u></b>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px" id="display_detail_gambar">
+                    <div class="col-md-6">
+                        <label class="required"> GAMBAR </label>
+                        <input type="file" onchange="change_image('add',this)" class="btn btn-white btn-xs" accept="image/*" id="registerNamaFoto" />
+                        @*<img onerror="this.style.display='none'" id="addImageBox" src="" style="height:300px;width:100%" />*@
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px" id="display_detail_user">
+                    <div class="col-md-4">
+                        <label class="required"> NAMA USER </label>
+                        <input id="registerNamaUser" type="text" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> DEPT. USER </label>
+                        <select class="form-control" id="registerDeptUser" name="dropdown">
+                            <option id="registerDeptUser" value="">- PILIH -</option>
+                            <option id="registerDeptUser" value="ACC">ACC</option>
+                            <option id="registerDeptUser" value="BP">BP</option>
+                            <option id="registerDeptUser" value="CMS">CMS</option>
+                            <option id="registerDeptUser" value="GO">GO</option>
+                            <option id="registerDeptUser" value="ME">ME</option>
+                            <option id="registerDeptUser" value="MNF">MNF</option>
+                            <option id="registerDeptUser" value="RND">RND</option>
+                            <option id="registerDeptUser" value="QA/QC">QA/QC</option>
+                        </select>
+                    </div>
+                    @*<div class="col-md-4">
+                            <label class="required"> STATUS KONDISI<span style="color:red">*</span> </label>
+                            <select class="form-control" id="registerStatusKondisi" name="dropdown">
+                                <option id="registerStatusKondisi" value="" selected="selected"> --Pilih-- </option>
+                                <option id="registerStatusKondisi" value="OK"> OK </option>
+                                <option id="registerStatusKondisi" value="NG"> NG </option>
+                            </select>
+                        </div>*@
+                </div>
+                <div class="row" style="margin-top:10px" id="display_detail_lokasi">
+                    <div class="col-md-4">
+                        <label class="required"> LOKASI </label>
+                        @*<input id="addKdLokasi" required type="text" class="form-control" />*@
+                        <select id="registerKdLokasi" required class="form-control">
+                            <option id="registerKdLokasi" value="" selected="selected">--PILIH--</option>
+                            @{
+                                if (Lokasi != null)
+                                {
+                                    if (Lokasi.Count() > 0)
+                                    {
+                                        foreach (LokasiModel item in Lokasi)
+                                        {
+                                            <option id="registerKdLokasi" value="@item.kd_lokasi">@item.nama_lokasi</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> HALTE </label>
+                        @*<input id="registerHalte" type="number" class="form-control" placeholder="Masukkan Halte" />*@
+                        <select class="form-control" id="registerHalte" name="dropdown">
+                            <option id="registerHalte" value="" selected="selected"> --Pilih-- </option>
+                            <option id="registerHalte" value="NON-HALTE"> NON-HALTE </option>
+                            <option id="registerHalte" value="1"> 1 </option>
+                            <option id="registerHalte" value="2"> 2 </option>
+                            <option id="registerHalte" value="3"> 3 </option>
+                            <option id="registerHalte" value="4"> 4 </option>
+                            <option id="registerHalte" value="5"> 5 </option>
+                            <option id="registerHalte" value="6"> 6 </option>
+                            <option id="registerHalte" value="7"> 7 </option>
+                            <option id="registerHalte" value="8"> 8 </option>
+                            <option id="registerHalte" value="9"> 9 </option>
+                            <option id="registerHalte" value="10"> 10 </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="register_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> SAVE </button>
+                @*<button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal" onclick="clear_register()"><i class="fa fa-times"></i>  CANCEL</button>*@
+                <button onclick="clear_register()" class="btn btn-danger btn-sm" style="width: 80px;"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+    var currencyInput = document.querySelector('input[type="currency"]')
+    var currency = 'IDR' //https://www.currency-iso.org/dam/downloads/lists/list_one.xml
+
+    // format inital value
+    onBlur({ target: currencyInput })
+
+    // bind event listeners
+    currencyInput.addEventListener('focus', onFocus)
+    currencyInput.addEventListener('blur', onBlur)
+
+
+    function localStringToNumber(s) {
+        return Number(String(s).replace(/[^0-9.-]+/g, ""))
+    }
+
+    function onFocus(e) {
+        var value = e.target.value;
+        e.target.value = value ? localStringToNumber(value) : ''
+    }
+
+    function onBlur(e) {
+        var value = e.target.value
+
+        var options = {
+            maximumFractionDigits: 2,
+            currency: currency,
+            style: "currency",
+            currencyDisplay: "symbol"
+        }
+
+        e.target.value = (value || value === 0)
+            ? localStringToNumber(value).toLocaleString(undefined, options)
+            : ''
+    }
+
+</script>

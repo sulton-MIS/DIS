@@ -1,0 +1,3611 @@
+﻿
+    <script>
+    var SITE_URL = window.location.href + "/";
+    var ListDataWorkingHours = [];
+    var ListPekerjaan = "";
+    var ListDampakPIC = "";
+    var ListBahayaPIC = "";
+    var ListUser = "";
+    var ListShift = "";
+    var Message = [];
+    var CountShift = 0;
+    var RiskCount = 0;
+    var RiskValue = 0.0;
+    var RiskGrade = "";
+    var RiskAvg = 0.0;
+    var PelaksanaValue = "";
+
+    var GET_SITE_URL = (window.location.href).split('/');
+        var NEW_SITE_URL = "";
+
+        for (var i = 0; i < GET_SITE_URL.length; i++) {
+            if (GET_SITE_URL[i] != "WP02002") {
+                NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+            }
+    }
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+        $('#inputForm').hide();
+
+        //ListUser = GetListOption("WP02002_DDL_ADD_USER");
+        ListPekerjaan = GetListOption("WP02002_DDL_ADD_PEKERJAAN");
+        //ListDampakPIC = GetListOption("WP02002_DDL_ADD_DAMPAK_PIC");
+        //ListBahayaPIC = GetListOption("WP02002_DDL_ADD_BAHAYA_PIC");
+        ListShift = GetListOption("WP02002_DDL_ADD_WORKINGHOURS");
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('.hksafety').hide();
+        $('.hkenv').hide();
+
+        $('.select2').select2({ width: '100%' });
+
+        $.ajax({
+            url: NEW_SITE_URL + "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP020") {
+                        $('#modal-submit-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+        $('.datepicker').datepicker({
+            format: 'dd M yyyy',
+        });
+
+        $("#searchDate").datepicker("update", new Date());
+
+        $("#searchDateTo").datepicker("update", new Date());
+
+        $('#searchDivision').val($('#SectionUserLogin').val()).trigger("change");
+
+    });
+
+
+    function SubmitWorkFlow(element) {
+        var data = element.dataset.title;
+        $('#idTrx').val(data);
+
+        $('#submit_ID').val('submitwf');
+        $('#PopupForm_SubmitIMPBConfirm').modal();
+    }
+
+    function PrintReport(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        window.open(window.location.href + '/PrintReportIMPB?WP_PROJECT_JOB_ID=' + Obj.WP_PROJECT_JOB_ID + '&WP_IMPB_NO=' + Obj.WP_IMPB_NO);
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+     function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+     }
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    // auto fill location
+    // auto fill location
+    function getDataLocation() {
+        $.ajax({
+            url: SITE_URL + 'getLocation',
+            dataType: "JSON",
+            data: {
+                PROJECT_CODE : $('#addProjectCode').val()
+            },
+            success: function (e) {
+                $('#addLocation').val(e.data[0].AREA_CD);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    // auto fill location
+    function getEditDataLocation() {
+        $.ajax({
+        url: SITE_URL + 'getLocation',
+        dataType: "JSON",
+        data: {
+            PROJECT_CODE : $('#editProjectCode').val()
+        },
+        success: function (e) {
+            $('#editLocation').val(e.data[0].Location);
+        },
+        error: function (e) {
+            console.log(e);
+        }
+    });
+    }
+
+    //tombol Add New
+    function addNew() {
+        var projectCode = $('#addProjectCode').val();
+        var jobs = $('#addJobs').val();
+        var dangerLevel = $('.dangerLevel:checked').val();
+        var date = $('#addDate').val();
+        var CATA = $('#addCatA:checked').val();
+        var CATB = $('#addCatB:checked').val();
+        var CATC = $('#addCatC:checked').val();
+        var CATD = $('#addCatD:checked').val();
+        var CATE = $('#addCatE:checked').val();
+        var CATF = $('#addCatF:checked').val();
+        var remarks = $('#addRemarks').val();
+        var sts = true;
+
+        if (projectCode == null || projectCode == "") {
+            GenerateMessage("PROJECT CODE", "MWP008");
+            sts = false;
+        }
+
+        if (jobs == null || jobs == "") {
+            GenerateMessage("JOBS", "MWP008");
+            sts = false;
+        }
+
+        if (dangerLevel == null || dangerLevel == "") {
+            GenerateMessage("DANGER LEVEL", "MWP008");
+            sts = false;
+        }
+
+        if (date == null || date == "") {
+            GenerateMessage("DATE", "MWP008");
+            sts = false;
+        }
+
+        if (CATA == null && CATB == null && CATC == null && CATD == null && CATE == null && CATF == null) {
+            GenerateMessage("CATEGORY", "MWP008");
+            sts = false;
+        }
+
+        if (remarks == null || remarks == "") {
+            GenerateMessage("REMARKS", "MWP008");
+            sts = false;
+        }
+
+        if (sts == false) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                PROJECT_CODE: projectCode,
+                JOBS: jobs,
+                DANGERLEVEL: dangerLevel,
+                DATE: date,
+                CATA: CATA,
+                CATB: CATB,
+                CATC: CATC,
+                CATD: CATD,
+                CATE: CATE,
+                CATF: CATF,
+                REMARKS: remarks
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    GenerateMessage("", "MWP001");
+                    searchData();
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.Exec[0].LINE_STS);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var project_code = $('#editProjectCode');
+        var jobs = $('#editJobs');
+        var low = $('#editLow');
+        var medium = $('#editMedium');
+        var high = $('#editHigh');
+        var date = $('#editDate');
+        var catA = $('#editCatA');
+        var catB = $('#editCatB');
+        var catC = $('#editCatC');
+        var catD = $('#editCatD');
+        var catE = $('#editCatE');
+        var catF = $('#editCatF');
+        var remarks = $('#editRemarks');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        project_code.append('<option>'+Send_Var[1]+'</option>');
+        project_code.val(Send_Var[1]);
+        jobs.val(Send_Var[2]);
+
+        if (Send_Var[3] == 1) {
+            $('.editDangerLevel').prop('checked', false);
+            $(low).prop('checked', true);
+        } else if (Send_Var[4] == 1) {
+            $('.editDangerLevel').prop('checked', false);
+            $(medium).prop('checked', true);
+        } else {
+            $('.editDangerLevel').prop('checked', false);
+            $(high).prop('checked', true);
+        }
+
+        date.val(Send_Var[6]);
+        if (Send_Var[7] == 1) {
+            catA.prop('checked', true);
+        } else if (Send_Var[8] == 1) {
+            catB.prop('checked', true);
+        } else if (Send_Var[9] == 1) {
+            catC.prop('checked', true);
+        } else if (Send_Var[10] == 1) {
+            catD.prop('checked', true);
+        } else if (Send_Var[11] == 1) {
+            catE.prop('checked', true);
+        } else if (Send_Var[12] == 1) {
+            catF.prop('checked', true);
+        }
+
+        remarks.val(Send_Var[13]);
+
+        $('#edit_data').show();
+        $('.row-' + Send_Var[0]).hide();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var project_code = $('#editProjectCode').val();
+                var jobs = $('#editJobs').val();
+                var low = $('#editLow').val();
+                var medium = $('#editMedium').val();
+                var high = $('#editHigh').val();
+                var date = $('#editDate').val();
+                var CATA = $('#editCatA:checked').val();
+                var CATB = $('#editCatB:checked').val();
+                var CATC = $('#editCatC:checked').val();
+                var CATD = $('#editCatD:checked').val();
+                var CATE = $('#editCatE:checked').val();
+                var CATF = $('#editCatF:checked').val();
+
+                if (CATA != 1) {
+                    CATA = 0;
+                }
+
+                if (CATB != 1) {
+                    CATB = 0;
+                }
+
+                if (CATC != 1) {
+                    CATC = 0;
+                }
+
+                if (CATD != 1) {
+                    CATD = 0;
+                }
+
+                if (CATE != 1) {
+                    CATE = 0;
+                }
+
+                if (CATF != 1) {
+                    CATF = 0;
+                }
+                var dangerLevel = $('.editDangerLevel:checked').val();
+                var remarks = $('#editRemarks').val();
+                var Send_Var = ID + "," + project_code + "," + jobs + "," + low + "," + medium + "," + high + "," + date + "," + CATA+ "," + CATB+ "," + CATC+ "," + CATD+ "," + CATE+ "," + CATF + "," + remarks;
+
+                var sts = true;
+
+                if (project_code == null || project_code == "") {
+                    GenerateMessage("PROJECT CODE", "MWP008");
+                    sts = false;
+                }
+
+                if (jobs == null || jobs == "") {
+                    GenerateMessage("JOBS", "MWP008");
+                    sts = false;
+                }
+
+                if (dangerLevel == null || dangerLevel == "") {
+                    GenerateMessage("DANGER LEVEL", "MWP008");
+                    sts = false;
+                }
+
+                if (date == null || date == "") {
+                    GenerateMessage("DATE", "MWP008");
+                    sts = false;
+                }
+
+                if (CATA == null && CATB == null && CATC == null && CATD == null && CATE == null && CATF == null) {
+                    GenerateMessage("CATEGORY", "MWP008");
+                    sts = false;
+                }
+
+                if (remarks == null || remarks == "") {
+                    GenerateMessage("REMARKS", "MWP008");
+                    sts = false;
+                }
+
+                if (sts == false) {
+                    return;
+                }
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP02002/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                        if (data.sts == "TRUE") {
+                            GenerateMessage("", "MWP003");
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0] ;
+                    }
+
+                }
+            });
+            //console.log(Send_Var);
+
+            $.ajax({
+                type: "POST",
+                url: 'WP02002/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        GenerateMessage("", "MWP002");
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchIMPB').val("");
+        $('#searchProjectName').val("");
+        $('#searchLocation').val("");
+        $('#searchDate').val("");
+        $('#searchDateTo').val("");
+        $('#searchDivision').val("");
+        $('#tableBody').html("");
+        $('#searchCompany').val("");
+        $('#searchCode').val("");
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        $('#NoDataFound').closest('tr').remove();
+        $('#addProjectCode').val('');
+        $('#addProjectName').val('');
+        $('#addLocation').val('');
+        $('#addDate').val('');
+        $('#addDivision').val('');
+        $('#addExecutor').val('');
+        $('#addContractorName').val('');
+        $('#addLeaderName').val('');
+        $('#addSupervisorName').val('');
+        $('.dangerLevel').prop('checked', false);
+        $('.CategoryCheck').prop('checked', false);
+        document.getElementById("tambah_data").style.display = "";
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    function CheckDanger(checked) {
+        $('.dangerLevel').prop('checked', false);
+        $(checked).prop('checked', true);
+    }
+
+    function editCheckDanger(checked) {
+        $('.editDangerLevel').prop('checked', false);
+        $(checked).prop('checked', true);
+    }
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                PROJECT_CODE: $('#searchProjectCode').val(),
+                PROJECT_NAME: $('#searchProjectName').val(),
+                DATE_FROM: $('#searchDate').val(),
+                DATE_TO: $('#searchDateTo').val(),
+                COMPANY: $('#searchCompany').val(),
+                LOCATION: $('#searchLocation').val(),
+                DIVISION: $('#searchDivision').val(),
+                WP_IMPB_NO: $('#searchIMPB').val(),
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+
+                //// time unit
+                //var time_unit_val = Var.split(',')[6].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_unit_val).prop('disabled', true);
+
+                //// time value
+                //var time_value_val = Var.split(',')[7].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_value_val).prop('disabled', true);
+                //$('#' + time_value_val).attr('placeholder', Var.split(',')[2].replace(/^\s+|\s+$/g, ''));
+
+                //// exec time
+                //var exec_time_val = Var.split(',')[8].replace(/^\s+|\s+$/g, '');
+                //$('#' + exec_time_val).prop('disabled', true);
+
+                //// status
+                //var status_val = Var.split(',')[9].replace(/^\s+|\s+$/g, '');
+                //$('#' + status_val).prop('disabled', true);
+
+
+                // tombol save edit
+                //var save_edit = Var.split(',')[11].replace(/^\s+|\s+$/g, '');
+
+                //// tombol cancel edit
+                //var cancel_edit = Var.split(',')[12].replace(/^\s+|\s+$/g, '');
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    function GetListOption(element) {
+
+        return $('#' + element).html();
+    }
+
+    function MappingListOption(element, arr) {
+        $('#' + element).html('');
+        $('#' + element).html(arr);
+    }
+
+    var Binding = {
+        Dropdown: function () {
+            //MappingListOption("WP02002_DDL_ADD_USER", ListUser);
+            MappingListOption("WP02002_DDL_ADD_PEKERJAAN", ListPekerjaan);
+            //MappingListOption("WP02002_DDL_ADD_DAMPAK_PIC", ListDampakPIC);
+            //MappingListOption("WP02002_DDL_ADD_BAHAYA_PIC", ListBahayaPIC);
+            MappingListOption("WP02002_DDL_ADD_WORKINGHOURS", ListShift);
+
+            $("#WP02002_DDL_ADD_BAGIAN").val("").trigger("change");
+            $("#WP02002_DDL_ADD_BAGIAN").attr('disabled', 'disabled');
+
+            $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').html('');
+            $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').html('');
+            $('#WP02002_BTN_ADD_SHOW_BAHAYA').attr("disabled", "disabled");
+            $('#WP02002_BTN_ADD_SHOW_DAMPAK').attr("disabled", "disabled");
+
+            $('#WP02002_DDL_ADD_NAMALEAD').val('').trigger("change");
+            $('#WP02002_DDL_ADD_NAMAPGWS').val('').trigger("change");
+            $('#WP02002_DDL_ADD_NAMALEAD').attr('disabled', 'disabled');
+            $('#WP02002_DDL_ADD_NAMAPGWS').attr('disabled', 'disabled');
+        },
+        Data: function (Obj) {
+            $('#WP02002_TXT_ADD_IMPBNO').val(Obj.WP_IMPB_NO).trigger("change");
+            $('#WP02002_TXT_ADD_PROJECTCODE').val(Obj.PROJECT_CODE).trigger("change");
+            $('#WP02002_TXT_ADD_PROJECTNAME').val(Obj.PROJECT_NAME).trigger("change");
+            $('#WP02002_DDL_ADD_AREA').val(Obj.ID_TB_M_AREA).trigger("change");
+            $('#WP02002_DDL_ADD_LOC').val(Obj.ID_TB_M_LOCATION).trigger("change");
+            $('#WP02002_DDL_ADD_DIV').val(Obj.DEP_OR_DIV_CODE).trigger("change");
+            $('#WP02002_DT_ADD_PELAKSANAAN').datepicker("update", new Date(Obj.IMPLEMENT_DATE_FROM));
+            $('#WP02002_DT_TO_ADD_PELAKSANAAN').datepicker("update", new Date(Obj.IMPLEMENT_DATE_TO));
+            console.log(Obj.START_DATE);
+            $('#WP02002_DT_JOB_START').datepicker("update", new Date(Obj.START_DATE)).trigger("change");
+            $('#WP02002_DT_JOB_END').datepicker("update", new Date(Obj.END_DATE));
+            $('#WP02002_TXT_ADD_NOTED').val(Obj.WORKING_NOTES).trigger("change");
+            $('#WP_PROJECT_JOB_ID').val(Obj.ID);
+            $('#WP02002_TXT_ADD_JOBNAME').val(Obj.JOB_NAME);
+
+            if (Obj.JOB_STATUS != "Not Yet") {
+
+                if (Obj.EXECUTOR == "1") {
+                    //$('input[type=radio][name=pelaksana]').val("TMMI").trigger("change");
+                    $('input[type=radio][name=pelaksana]')[0].value = "TMMI";
+                    $($('input[type=radio][name=pelaksana]')[0]).trigger('change');
+                    $('#WP02002_CHK_TMMIN').prop('checked', true);
+                }
+                else {
+                    $('input[type=radio][name=pelaksana]')[0].value = "CONTRACTOR";
+                    $($('input[type=radio][name=pelaksana]')[0]).trigger('change');
+                    $('#WP02002_CHK_CONTRACTOR').prop('checked', true);
+                    //$('input[type=radio][name=pelaksana]').val("CONTRACTOR").trigger("change");
+                    //$('#WP02002_CHK_CONTRACTOR').prop('checked', true);
+                }
+
+                $('#WP02002_DDL_ADD_BAGIAN').val(Obj.ID_TB_M_COMPANY).trigger("change");
+                $('#WP02002_DDL_ADD_NAMALEAD').val(Obj.EMPLOYEE_LEAD_PROJECT).trigger("change");
+                $('#WP02002_DDL_ADD_NAMAPGWS').val(Obj.EMPLOYEE_SUPERVISOR_PROJECT).trigger("change");
+
+                $.ajax({
+                    url: SITE_URL + "GetDataDetail",
+                    type: "GET",
+                    data: { WP_PROJECT_JOB_ID: Obj.ID },
+                    async: false
+                }).done(function (data, textStatus, jqXHR) {
+                    Binding.Detail(data.result);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    toastr.error(errorThrown);
+                })
+            }
+
+            if (Obj.PROJECT_STATUS == "SUBMITED") {
+                $('.actionbtn').attr("disabled", "disabled");
+                $('.input-project').attr("disabled", "disabled");
+            }
+            else {
+                $('.actionbtn').removeAttr("disabled");
+                $('.input-project').removeAttr("disabled");
+            }
+
+            if (Obj.JOB_STATUS == "SUBMITED") {
+                $('.submitbtn').hide();
+
+                $('.template').hide();
+                $("#pnlInput").find("input,select,textarea,button").prop("disabled", true);
+                $('.jobbtn').attr("disabled", "disabled");
+                $('.input-job').attr("disabled", "disabled");
+                $('#WP02002_DDL_ADD_BAGIAN').attr("disabled", "disabled");
+                $('.cbpelaksana').attr("disabled", "disabled");
+            }
+            else {
+                $('.submitbtn').show();
+
+
+                $("#pnlInput").find("input,select,textarea,button").prop("disabled", false);
+                $('.jobbtn').removeAttr("disabled");
+                $('.input-job').removeAttr("disabled");
+                $('#WP02002_DDL_ADD_BAGIAN').removeAttr("disabled");
+                $('.cbpelaksana').removeAttr("disabled");
+            }
+
+        },
+        Detail: function (Obj) {
+            $('#uploadedsafety').html('');
+            $('#uploadedenv').html('');
+
+            $.each(Obj.project_list_working, function (index, value) {
+                $("#WP02002_DDL_ADD_PEKERJAAN").val(value.ID_TB_M_WORKING_TYPE).trigger("change");
+                $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+                $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+
+                $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+                $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+
+                LoadEditDataPekerjaan(value);
+
+                var values = $('#WP02002_DDL_ADD_PEKERJAAN').val();
+                $("#WP02002_DDL_ADD_PEKERJAAN option[value='" + values + "']").remove();
+                $("#WP02002_DDL_EDIT_PEKERJAAN option[value='" + values + "']").remove();
+            });
+
+            $.each(Obj.project_list_identification, function (index, value) {
+                $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val(value.ID_TB_M_WORKING_TYPE).trigger("change");
+                $('#WP02002_TXT_ADD_BAHAYA_POTENSI').val(value.IDENTITY_DANGER_POTENTIAL).trigger("change");
+                $('#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN').val(value.IDENTITY_DANGER_PREVENTION).trigger("change");
+                $('#WP02002_DDL_ADD_BAHAYA_PIC').val(value.ID_TB_M_EMPLOYEE).trigger("change");
+                $('#WP02002_TXT_ADD_BAHAYA_KETERANGAN').val(value.HENKANTEN_SAFETY).trigger("change");
+                tableBuilderBahaya($('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_BAHAYA_POTENSI"), $("#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN"), $("#WP02002_DDL_ADD_BAHAYA_PIC option:selected"), $("#WP02002_TXT_ADD_BAHAYA_KETERANGAN"), value.ID);
+
+                var _pekerjaan = $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val();
+                var _pic = $('#WP02002_DDL_ADD_BAHAYA_PIC').val();
+                $("#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+                $("#WP02002_DDL_ADD_BAHAYA_PIC option[value='" + _pic + "']").remove();
+
+                $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+                $("#WP02002_DDL_EDIT_BAHAYA_PIC option[value='" + _pic + "']").remove();
+            });
+
+            $.each(Obj.project_list_impact, function (index, value) {
+                $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val(value.ID_TB_M_WORKING_TYPE).trigger("change");
+                $('#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN').val(value.IDENTITY_IMPACT_POTENTIAL).trigger("change");
+                $('#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN').val(value.IDENTITY_IMPACT_PREVENTION).trigger("change");
+                $('#WP02002_DDL_ADD_DAMPAK_PIC').val(value.ID_TB_M_EMPLOYEE).trigger("change");
+                $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN').val(value.HENKANTEN_ENV).trigger("change");
+                tableBuilderDampak($('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN"), $("#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN"), $("#WP02002_DDL_ADD_DAMPAK_PIC option:selected"), $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN'), value.ID);
+
+                var _pekerjaan = $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val();
+                var _pic = $('#WP02002_DDL_ADD_DAMPAK_PIC').val();
+                $("#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+                $("#WP02002_DDL_ADD_DAMPAK_PIC option[value='" + _pic + "']").remove();
+
+                $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+                $("#WP02002_DDL_EDIT_DAMPAK_PIC option[value='" + _pic + "']").remove();
+            });
+
+            $.each(Obj.project_list_shift, function (index, value) {
+                $('#WP02002_DDL_ADD_WORKINGHOURS').val(value.SHIFT_ID).trigger("change");
+                //console.log($('#WP02002_DDL_ADD_WORKINGHOURS option:selected').attr('name'));
+                var _data = ($('#WP02002_DDL_ADD_WORKINGHOURS option:selected').attr('name')).split(',');
+
+                tableBuilderWorkingHours($('#WP02002_DDL_ADD_WORKINGHOURS option:selected'), _data[0], _data[1], value.ID);
+
+                var _WORKINGHOURS = $('#WP02002_DDL_ADD_WORKINGHOURS').val();
+                $("#WP02002_DDL_ADD_WORKINGHOURS option[value='" + _WORKINGHOURS + "']").remove();
+
+                $("#WP02002_DDL_EDIT_WORKINGHOURS option[value='" + _WORKINGHOURS + "']").remove();
+            });
+
+            $.each(Obj.project_list_supervision, function (index, value) {
+
+                $('#WP02002_DDL_ADD_USER').val(value.ID_TB_M_EMPLOYEE).trigger("change");
+
+                var _data = $('#WP02002_DDL_ADD_USER option:selected').attr('name').split(',');
+
+                tableBuilderPengawasan($('#WP02002_DDL_ADD_USER option:selected'), _data[0], _data[1], _data[2], _data[3], value.ID);
+
+                var _user = $('#WP02002_DDL_ADD_USER').val();
+                $("#WP02002_DDL_ADD_USER option[value='" + _user + "']").remove();
+
+                $("#WP02002_DDL_EDIT_USER option[value='" + _user + "']").remove();
+            });
+
+            if (Obj.project_henkaten_safety.IS_HENKATEN_SAFETY == "True") {
+                $('.hksafety').show();
+                document.getElementById("WP02002_CHK_ADD_HKSAFETY").checked = true;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYPROCESS").checked = Obj.project_henkaten_safety.HK_SAFETY_PROCESS == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYMACHINE").checked = Obj.project_henkaten_safety.HK_SAFETY_MACHINE == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYMODIF").checked = Obj.project_henkaten_safety.HK_SAFETY_MODIFICATION == "True" ? true : false;
+
+                $('#uploadedsafety').append('<a href="../../Content/Upload/Henkaten/' + $('#WP02002_TXT_ADD_IMPBNO').val() + '_SAFETY.pdf"' + '  target="_blank"> Download Uploaded File</a>')
+            }
+            else {
+                $('.hksafety').hide();
+                document.getElementById("WP02002_CHK_ADD_HKSAFETY").checked = false;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYPROCESS").checked = Obj.project_henkaten_safety.HK_SAFETY_PROCESS == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYMACHINE").checked = Obj.project_henkaten_safety.HK_SAFETY_MACHINE == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKSAFETYMODIF").checked = Obj.project_henkaten_safety.HK_SAFETY_MODIFICATION == "True" ? true : false;
+                $('#uploadedsafety').html('');
+            }
+
+            if (Obj.project_henkaten_env.IS_HENKATEN_ENV == "True") {
+                $('.hkenv').show();
+                document.getElementById("WP02002_CHK_ADD_HKENV").checked = true;
+                document.getElementById("WP02002_CHK_ADD_HKENVPROCESS").checked = Obj.project_henkaten_env.HK_ENV_PROCESS == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVMACHINE").checked = Obj.project_henkaten_env.HK_ENV_MACHINE == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVBUILDING").checked = Obj.project_henkaten_env.HK_ENV_BUILDING == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVMATERIAL").checked = Obj.project_henkaten_env.HK_ENV_MATERIAL == "True" ? true : false;
+
+                $('#uploadedenv').append('<a href="../../Content/Upload/Henkaten/' + $('#WP02002_TXT_ADD_IMPBNO').val() + '_ENV.pdf"' +'  target="_blank"> Download Uploaded File</a>')
+            }
+            else {
+                $('.hkenv').hide();
+                document.getElementById("WP02002_CHK_ADD_HKENV").checked = false;
+                document.getElementById("WP02002_CHK_ADD_HKENVPROCESS").checked = Obj.project_henkaten_env.HK_ENV_PROCESS == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVMACHINE").checked = Obj.project_henkaten_env.HK_ENV_MACHINE == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVBUILDING").checked = Obj.project_henkaten_env.HK_ENV_BUILDING == "True" ? true : false;
+                document.getElementById("WP02002_CHK_ADD_HKENVMATERIAL").checked = Obj.project_henkaten_env.HK_ENV_MATERIAL == "True" ? true : false;
+                $('#uploadedenv').html('');
+            }
+        },
+        Screen: function () {
+            $('#inputForm').show();
+            $('#formData').hide();
+            $('#formPage').hide();
+            $('#formSearch').hide();
+            $('#GridProject').hide();
+            $('#SearchCriteriaForm').hide();
+            $('#area-container').hide();
+
+            $('input[type=radio][name=pelaksana]').removeAttr("checked");
+
+            $('#WP02002_TXT_ADD_NOALPGWS').val('');
+            $('#WP02002_TXT_ADD_NOHPPGWS').val('');
+
+            $('#WP02002_TXT_ADD_NOALLEAD').val('');
+            $('#WP02002_TXT_ADD_NOHPLEAD').val('');
+
+            $("#WP02002_DDL_ADD_PEKERJAAN").val($("#WP02002_DDL_ADD_PEKERJAAN option:first").val()).select2({width: '100%'});
+
+            $('.listdatagrid').html("");
+            $('.hk-bahaya').removeAttr('checked');
+            $('.hk-dampak').removeAttr('checked');
+            $('.hkenv').hide();
+            $('.hksafety').hide();
+
+            document.getElementById("WP02002_FILE_HKSAFETY").value = null;
+            document.getElementById("WP02002_FILE_HKENV").value = null;
+
+            btnsearch = document.getElementById("btn-scroll-up");
+            btnsearch.click();
+
+            $('#HK_SAFETY_ID').val("0");
+            $('#HK_ENV_ID').val("0");
+            $('#IMPLEMENTOR_ID').val("0");
+            
+        },
+    }
+
+    function EditDataDetail(element) {
+
+        $('#RiskGrade').html("");
+        Binding.Screen();
+        Binding.Dropdown();
+        $('.select2').select2({ width: '100%' });
+
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+        $('#image-area').attr('src', Obj.IMAGE_PATH);
+        $('#image-area-full').attr('src', Obj.IMAGE_PATH);
+
+        Binding.Data(Obj);
+
+        if (Obj.JOB_STATUS == "APPROVAL" || Obj.JOB_STATUS == "SUBMITED") {
+            $('.submitbtn').hide();
+        }
+
+        $.ajax({
+            url: SITE_URL + 'getIMPBLocation',
+            data: {
+                id: Obj.WP_PROJECT_JOB_ID
+            },
+            success: function (e) {
+                var data = e.result[0];
+                $('.miniLocation').remove();
+                $('.new-border-area-location').remove();
+                if (e.result.length > 0) {
+                    $('#draggable').css('top', (data.TOP_POSITION / data.WINDOW_HEIGHT) * 100 + '%');
+                    $('#draggable').css('left', (data.LEFT_POSITION / data.WINDOW_WIDTH) * 100 + '%');
+                    $('#target').css('transform', 'rotate(' + data.ROTATION + 'Rad)');
+                    $('#target').css('border-color', data.BORDER_COLOR);
+                    $('#target').css('width', (window.innerWidth * (data.WIDTH / data.WINDOW_WIDTH)) + 'px');
+                    $('#target').css('height', (window.innerHeight * ((data.HEIGHT / data.WINDOW_HEIGHT))) + 'px');
+
+                    borderArea = data.BORDER_COLOR;
+                    rotate = data.ROTATION;
+
+                    $('.border-area-location').css('border-color', data.BORDER_COLOR);
+                    $('.border-area-location').css('transform', 'rotate(' + data.ROTATION + 'Rad)');
+                    $('.border-area-location').css('top', (data.TOP_POSITION / data.WINDOW_HEIGHT) * 100 + 2.5 + '%');
+                    $('.border-area-location').css('left', (data.LEFT_POSITION / data.WINDOW_WIDTH) * 100 + '%');
+                    $('.border-area-location').css('width', (data.WIDTH / data.WINDOW_WIDTH) * 100 + 1 + '%');
+                    $('.border-area-location').css('height', (data.HEIGHT / data.WINDOW_HEIGHT) * 100 + '%');
+
+                    if (e.data.length > 0) {
+                        var data2 = e.data;
+                        console.log(data2.length);
+                        for (var i = 0; i < data2.length; i++) {
+                            $('.area-border-container').append($('.border-area-location').clone().removeClass('border-area-location').addClass('border-area-location' + i).addClass('new-border-area-location'));
+                            $('.border-area-location' + i).css('border', 'solid 2px ' + data2[i].BORDER_COLOR);
+                            $('.border-area-location' + i).css('transform', 'rotate(' + data2[i].ROTATION + 'Rad)');
+                            $('.border-area-location' + i).css('top', (data2[i].TOP_POSITION / data2[i].WINDOW_HEIGHT) * 100 + 2.5 + '%');
+                            $('.border-area-location' + i).css('left', (data2[i].LEFT_POSITION / data2[i].WINDOW_WIDTH) * 100 + '%');
+                            $('.border-area-location' + i).css('width', (data2[i].WIDTH / data2[i].WINDOW_WIDTH) * 100 + 1 + '%');
+                            $('.border-area-location' + i).css('height', (data2[i].HEIGHT / data2[i].WINDOW_HEIGHT) * 100 + '%');
+
+                            $('#area-content-container').append($('.border-area-location').clone().removeClass('border-area-location').addClass('border-area-content-location' + i).addClass('new-border-area-location'));
+                            $('.border-area-content-location' + i).css('border', 'solid 2px ' + data2[i].BORDER_COLOR);
+                            $('.border-area-content-location' + i).css('transform', 'rotate(' + data2[i].ROTATION + 'Rad)');
+                            $('.border-area-content-location' + i).css('top', (data2[i].TOP_POSITION / data2[i].WINDOW_HEIGHT) * 100 + '%');
+                            $('.border-area-content-location' + i).css('left', (data2[i].LEFT_POSITION / data2[i].WINDOW_WIDTH) * 100 + '%');
+                            $('.border-area-content-location' + i).css('width', (data2[i].WIDTH / data2[i].WINDOW_WIDTH) * 100 + '%');
+                            $('.border-area-content-location' + i).css('height', (data2[i].HEIGHT / data2[i].WINDOW_HEIGHT) * 100 + '%');
+                        }
+                    }
+                } else {
+                    $('#draggable').css('top', 0);
+                    $('#draggable').css('left', 0);
+                    $('#target').css('transform', 'rotate(' + 0 + 'Rad)');
+                    $('#target').css('border-color', 'green');
+                    $('#target').css('width', '10vh');
+                    $('#target').css('height', '10vh');
+                    borderArea = 'green';
+                    rotate = 0;
+                    $('.border-area-location').css('border-color', 'green');
+                    $('.border-area-location').css('transform', 'rotate(' + 0 + 'Rad)');
+                    $('.border-area-location').css('top', 0);
+                    $('.border-area-location').css('left', 0);
+                    $('.border-area-location').css('width', 25);
+                    $('.border-area-location').css('height', 25);
+                }
+                $('.border-area-location').html('<i class="fa fa-map-marker miniLocation"></i>');
+            }
+
+        });
+
+        if (Obj.WORKING_STATUS == "True") {
+            radiobtn = document.getElementById("WP02002_CHK_ADD_STNEW");
+            radiobtn.checked = true;
+        }
+        else {
+            radiobtns = document.getElementById("WP02002_CHK_ADD_STEXTEND");
+            radiobtns.checked = true;
+        }
+
+        $('#WP02002_TBL_ADD_PEKERJAAN').hide();
+        $('#WP02002_TBL_ADD_BAHAYA').hide();
+        $('#WP02002_TBL_ADD_DAMPAK').hide();
+        $('#WP02002_TBL_ADD_PENGAWASAN').hide();
+
+        $('#WP02002_TBL_EDIT_PEKERJAAN').hide();
+        $('#WP02002_TBL_EDIT_BAHAYA').hide();
+        $('#WP02002_TBL_EDIT_DAMPAK').hide();
+        $('#WP02002_TBL_EDIT_PENGAWASAN').hide();
+
+        $('#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN').val('');
+        $('#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN').val('');
+        $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val('');
+        $('#WP02002_DDL_ADD_DAMPAK_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN').val('');
+
+        $('#WP02002_TXT_EDIT_DAMPAK_LINGKUNGAN').val('');
+        $('#WP02002_TXT_EDIT_DAMPAK_PENCEGAHAN').val('');
+        $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').val('');
+        $('#WP02002_DDL_EDIT_DAMPAK_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_EDIT_DAMPAK_KETERANGAN').val('');
+
+        $('#WP02002_TXT_ADD_BAHAYA_POTENSI').val('');
+        $('#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN').val('');
+        $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val('');
+        $('#WP02002_DDL_ADD_BAHAYA_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_ADD_BAHAYA_KETERANGAN').val('');
+
+        $('#WP02002_TXT_EDIT_BAHAYA_POTENSI').val('');
+        $('#WP02002_TXT_EDIT_BAHAYA_PENCEGAHAN').val('');
+        $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').val('');
+        $('#WP02002_DDL_EDIT_BAHAYA_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_EDIT_BAHAYA_KETERANGAN').val('');
+
+        $('#WP02002_TXT_ADD_NOREG').val('');
+        $('#WP02002_TXT_ADD_NOHANDPHONE').val('');
+        $('#WP02002_TXT_ADD_NODEPT').val('');
+        $('#WP02002_TXT_ADD_NOANZEN').val('');
+        $('#WP02002_DDL_ADD_USER').val(null).trigger("change");
+
+        $('#WP02002_TXT_EDIT_NOREG').val('');
+        $('#WP02002_TXT_EDIT_NOHANDPHONE').val('');
+        $('#WP02002_TXT_EDIT_NODEPT').val('');
+        $('#WP02002_TXT_EDIT_NOANZEN').val('');
+        $('#WP02002_DDL_EDIT_USER').val(null).trigger("change");
+    }
+
+    function MappingDateStringToInputDate(strDate) {
+        var arrDate = strDate.substring(0, 10);
+        //var NewStr = arrDate[2].toString().substring(0,4).trim() + "-" + (parseInt(arrDate[1].toString()) > 9 ? arrDate[1] : ((arrDate[1]).includes(0))? arrDate[1] : "0" + arrDate[1] ) + "-" + (parseInt(arrDate[0].toString()) > 9 ? arrDate[0] : ((arrDate[0]).includes(0))? arrDate[0] : "0" + arrDate[0] );
+        return arrDate;
+    }
+
+    function confirmAdd() {
+        var value_id = $('#add_ID').val();
+
+        switch (value_id) {
+            case 'pekerjaan':
+                confirmAddPekerjaan();
+                break;
+            case 'bahaya':
+                confirmAddBahaya();
+                break;
+            case 'dampak':
+                confirmAddDampak();
+                break;
+            case 'pengawasan':
+                confirmAddPengawasan();
+                break;
+            case 'jobproyek':
+                confirmAddJobProyek();
+                break;
+            case 'shift':
+                confirmAddWorkingHours();
+                break;
+        }
+    }
+
+    function confirmEdit() {
+        var value_id = $('#edit_ID').val();
+
+        switch (value_id) {
+            case 'pekerjaan':
+                confirmEditPekerjaan();
+                break;
+            case 'bahaya':
+                confirmEditBahaya();
+                break;
+            case 'dampak':
+                confirmEditDampak();
+                break;
+            case 'pengawasan':
+                confirmEditPengawasan();
+                break;
+            case 'jobproyek':
+                confirmEditJobProyek();
+                break;
+            case 'draft':
+                confirmsaveAsDraft();
+                break;
+            case 'shift':
+                confirmEditWorkingHours();
+                break;
+        }
+    }
+
+    function confirmDelete() {
+        var value_id = $('#delete_ID').val();
+
+        switch (value_id) {
+            case 'pekerjaan':
+                confirmDeletePekerjaan();
+                break;
+            case 'bahaya':
+                confirmDeleteBahaya();
+                break;
+            case 'dampak':
+                confirmDeleteDampak();
+                break;
+            case 'pengawasan':
+                confirmDeletePengawasan();
+                break;
+            case 'jobproyek':
+                confirmDeleteJobProyek();
+                break;
+            case 'shift':
+                confirmDeleteWorkingHours();
+                break;
+        }
+    }
+
+    function confirmSubmit() {
+        var value_id = $('#submit_ID').val();
+
+        switch (value_id) {
+            case 'submitjob':
+                ProcessSubmitJob();
+                break;
+            case 'submitwf':
+                ProcessSubmitWF();
+                break;
+            case 'submitdetail':
+                confirmsubmitData();
+                break;
+        }
+    }
+
+    function cancelAdd() {
+        $('#inputForm').hide();
+        $('#formData').show();
+        $('#formPage').show();
+        $('#formSearch').show();
+        $('#GridProject').show();
+        $('#SearchCriteriaForm').show();
+        $('#area-container').hide();
+    }
+
+    function showAreaMapping() {
+        $('#inputForm').hide();
+        $('#formData').hide();
+        $('#formPage').hide();
+        $('#formSearch').hide();
+        $('#GridProject').hide();
+        $('#SearchCriteriaForm').hide();
+        $('#area-container').show();
+
+        $('#navbar').hide();
+        $('#breadcrumbs').hide();
+        $('#sidebar').hide();
+        $('#section-pageheader').hide();
+        $('.control-label.text-muted').hide();
+        $('.main-content').css('margin', '0');
+        $('.page-content').addClass('zero-important');
+        $('html').css('overflow', 'hidden');
+    }
+
+    function saveLocationArea() {
+        $('#inputForm').show();
+        $('#formData').hide();
+        $('#formPage').hide();
+        $('#formSearch').hide();
+        $('#GridProject').hide();
+        $('#SearchCriteriaForm').hide();
+        $('#area-container').hide();
+
+        $('#navbar').show();
+        $('#breadcrumbs').show();
+        $('#sidebar').show();
+        $('#section-pageheader').show();
+        $('.control-label.text-muted').show();
+        $('.main-content').css('margin-left', '43px');
+        $('.page-content').removeClass('zero-important');
+        $('html').css('overflow', 'auto');
+    }
+
+    function SubmitJob(element) {
+
+        var data = element.dataset.title;
+        $('#idTrx').val(data);
+
+        $('#submit_ID').val('submitjob');
+        $('#PopupForm_SubmitIMPBConfirm').modal();
+    }
+
+    function ProcessSubmitJob() {
+        var data = $('#idTrx').val();
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        var _data = JSON.stringify({
+            JOB_NAME: Obj.JOB_NAME,
+            WP_PROJECT_ID: Obj.WP_PROJECT_ID,
+            WP_PROJECT_JOB_ID: Obj.ID,
+            JOB_STATUS: "SUBMITED",
+            ID: Obj.ID,
+            WP_IMPB_NO: Obj.WP_IMPB_NO,
+        })
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Submit_Only",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    GenerateMessage("", "MWP001");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function ProcessSubmitWF() {
+        var data = $('#idTrx').val();
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        var _data = JSON.stringify({
+            JOB_NAME: Obj.JOB_NAME,
+            WP_PROJECT_ID: Obj.WP_PROJECT_ID,
+            WP_PROJECT_JOB_ID: Obj.ID,
+            JOB_STATUS: "APPROVAL",
+            ID: Obj.ID,
+            WP_IMPB_NO: Obj.WP_IMPB_NO,
+            RISK_LEVEL: Obj.RISK_LEVEL
+        })
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Submit_Only",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    GenerateMessage("", "MWP001");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function DeleteDataDetail(element) {
+        var data = element.dataset.title;
+        $('#idTrx').val(data);
+
+        $('#delete_ID').val('deletejob');
+        $('#PopupForm_DeleteIMPBConfirm').modal();
+    }
+
+    function saveAsDraft() {
+        if (getListWorking().length < 1) {
+            GenerateMessage("Working List", "MWP008");
+            return;
+        }
+
+        if (getListIdentification().length < 1) {
+            GenerateMessage("Identification List", "MWP008");
+            return;
+        }
+
+        if (getListImpact().length < 1) {
+            GenerateMessage("Impact List", "MWP008");
+            return;
+        }
+
+        if (getListSupervision().length < 1) {
+            GenerateMessage("Supervision List", "MWP008");
+            return;
+        }
+
+        if (getShift().length < 1) {
+            GenerateMessage("Shift List", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_BAGIAN").val() == "" || $("#WP02002_DDL_ADD_BAGIAN").val() == null) {
+            GenerateMessage("Company", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_NAMALEAD").val() == "" || $("#WP02002_DDL_ADD_NAMALEAD").val() == null) {
+            GenerateMessage("Leader Company", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_NAMAPGWS").val() == "" || $("#WP02002_DDL_ADD_NAMAPGWS").val() == null) {
+            GenerateMessage("Supervisor Company", "MWP008");
+            return;
+        }
+
+        $('#edit_ID').val('draft');
+        $('#PopupForm_EditIMPBConfirm').modal();
+
+    }
+
+    function confirmsaveAsDraft() {
+
+
+
+        var _data = JSON.stringify({
+            WP_PROJECT_JOB_ID: $('#WP_PROJECT_JOB_ID').val(),
+            ID: $('#WP_PROJECT_JOB_ID').val(),
+            IMPLEMENTOR_ID: $('#IMPLEMENTOR_ID').val(),
+            WP_IMPB_NO: $('#WP02002_TXT_ADD_IMPBNO').val(),
+            ID_TB_M_AREA: $('#WP02002_DDL_ADD_AREA').val(),
+            WP_PROJECT_NAME: $("#WP02002_TXT_ADD_PROJECTNAME").val(),
+            ID_TB_M_LOCATION: $("#WP02002_DDL_ADD_LOC").val(),
+            DEP_OR_DIV_CODE: $("#WP02002_DDL_ADD_DIV").val(),
+            IMPLEMENT_DATE_FROM: $("#WP02002_DT_ADD_PELAKSANAAN").val(),
+            JOB_STATUS: "DRAFT",
+            JOB_NAME: $('#WP02002_TXT_ADD_JOBNAME').val(),
+            WORKING_STATUS: $("#WP02002_CHK_ADD_ST").prop('checked') ? '1' : '0',
+            WORKING_NOTES: $("#WP02002_TXT_ADD_NOTED").val(),
+            EXECUTOR: PelaksanaValue == "TMMI" ? '1' : '2',
+            ID_TB_M_COMPANY: $("#WP02002_DDL_ADD_BAGIAN").val(),
+            EMPLOYEE_LEAD_PROJECT: $("#WP02002_DDL_ADD_NAMALEAD").val(),
+            EMPLOYEE_SUPERVISOR_PROJECT: $("#WP02002_DDL_ADD_NAMAPGWS").val(),
+            project_list_working: getListWorking(),
+            project_list_identification: getListIdentification(),
+            project_list_impact: getListImpact(),
+            project_list_supervision: getListSupervision(),
+            project_list_shift: getShift(),
+            project_henkaten_safety: getHenkatenSafety(),
+            project_henkaten_env: getHenkatenEnv(),
+            RISK_LEVEL: RiskGrade,
+
+            //to IMPB Location
+            topPos: topPos,
+            leftPos: leftPos,
+            widthSquare: widthSquare,
+            heightSquare: heightSquare,
+            windowWidth: windowWidth,
+            windowHeight: windowHeight,
+            borderColor: borderArea,
+            rotate: rotate
+        });
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Update_Data",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+
+                if (res.sts == "TRUE") {
+
+                    var formData = new FormData();
+                    formData.append("WP_IMPB_NO", res.WP_IMPB_NO);
+                    var fileInput = document.getElementById("WP02002_FILE_HKSAFETY");
+                    var fileInputs = document.getElementById("WP02002_FILE_HKENV");
+
+                    if ($('#WP02002_CHK_ADD_HKSAFETY')[0].checked && fileInput.files[0] != null) {
+
+                        var fsFileName = fileInput.files[0].name;
+                        var fsExtension = fsFileName.split('.').pop();
+
+                        fsFileName = res.WP_IMPB_NO + "_SAFETY." + fsExtension;
+                        formData.append("HKSAFETYNAME", fsFileName);
+
+                        var fsFile = fileInput.files[0];
+                        formData.append('HKSAFETYFILE', fsFile);
+                    }
+                    else {
+                        formData.append("HKSAFETYNAME", "");
+                        formData.append('HKSAFETYFILE', null);
+                    }
+
+                    if ($('#WP02002_CHK_ADD_HKENV')[0].checked && fileInput.files[0] != null) {
+
+                        var fsFileNames = fileInputs.files[0].name;
+                        var fsExtensions = fsFileNames.split('.').pop();
+
+                        fsFileNames = res.WP_IMPB_NO + "_ENV." + fsExtensions;
+
+                        formData.append("HKENVNAME", fsFileNames);
+
+                        var fsFiles = fileInputs.files[0];
+                        formData.append('HKENVFILE', fsFiles);
+                    }
+                    else {
+                        formData.append("HKENVNAME", "");
+                        formData.append('HKENVFILE', null);
+                    }
+
+                    $.ajax({
+                        url: SITE_URL + "UploadHenkatenFile",
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        async: false,
+                        data: formData,
+                        success: function (e) {
+                            console.log(e);
+                        }
+                    });
+
+                    cancelAdd();
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    GenerateMessage("", "MWP001");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function submitData() {
+        if (getListWorking().length < 1) {
+            GenerateMessage("Working List", "MWP008");
+            return;
+        }
+
+        if (getListIdentification().length < 1) {
+            GenerateMessage("Identification List", "MWP008");
+            return;
+        }
+
+        if (getListImpact().length < 1) {
+            GenerateMessage("Impact List", "MWP008");
+            return;
+        }
+
+        if (getListSupervision().length < 1) {
+            GenerateMessage("Supervision List", "MWP008");
+            return;
+        }
+
+        if (getShift().length < 1) {
+            GenerateMessage("Shift List", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_BAGIAN").val() == "" || $("#WP02002_DDL_ADD_BAGIAN").val() == null) {
+            GenerateMessage("Company", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_NAMALEAD").val() == "" || $("#WP02002_DDL_ADD_NAMALEAD").val() == null) {
+            GenerateMessage("Leader Company", "MWP008");
+            return;
+        }
+
+        if ($("#WP02002_DDL_ADD_NAMAPGWS").val() == "" || $("#WP02002_DDL_ADD_NAMAPGWS").val() == null) {
+            GenerateMessage("Supervisor Company", "MWP008");
+            return;
+        }
+
+        $('#submit_ID').val('submitdetail');
+        $('#PopupForm_SubmitIMPBConfirm').modal();
+    }
+
+    function confirmsubmitData() {
+        if (getListWorking().length < 1) {
+            GenerateMessage("Working List", "MWP008");
+            return;
+        }
+
+        if (getListIdentification().length < 1) {
+            GenerateMessage("Identification List", "MWP008");
+            return;
+        }
+
+        if (getListImpact().length < 1) {
+            GenerateMessage("Impact List", "MWP008");
+            return;
+        }
+
+        if (getListSupervision().length < 1) {
+            GenerateMessage("Supervision List", "MWP008");
+            return;
+        }
+
+        if (getShift().length < 1) {
+            GenerateMessage("Shift List", "MWP008");
+            return;
+        }
+
+        var _data = JSON.stringify({
+            WP_PROJECT_JOB_ID: $('#WP_PROJECT_JOB_ID').val(),
+            ID: $('#WP_PROJECT_JOB_ID').val(),
+            IMPLEMENTOR_ID: $('#IMPLEMENTOR_ID').val(),
+            WP_IMPB_NO: $('#WP02002_TXT_ADD_IMPBNO').val(),
+            ID_TB_M_AREA: $('#WP02002_DDL_ADD_AREA').val(),
+            WP_PROJECT_NAME: $("#WP02002_TXT_ADD_PROJECTNAME").val(),
+            ID_TB_M_LOCATION: $("#WP02002_DDL_ADD_LOC").val(),
+            DEP_OR_DIV_CODE: $("#WP02002_DDL_ADD_DIV").val(),
+            IMPLEMENT_DATE_FROM: $("#WP02002_DT_ADD_PELAKSANAAN").val(),
+            JOB_STATUS: "SUBMITED",
+            JOB_NAME: $('#WP02002_TXT_ADD_JOBNAME').val(),
+            WORKING_STATUS: $("#WP02002_CHK_ADD_ST").prop('checked') ? '1' : '0',
+            WORKING_NOTES: $("#WP02002_TXT_ADD_NOTED").val(),
+            EXECUTOR: PelaksanaValue == "TMMI" ? '1' : '2',
+            ID_TB_M_COMPANY: $("#WP02002_DDL_ADD_BAGIAN").val(),
+            EMPLOYEE_LEAD_PROJECT: $("#WP02002_DDL_ADD_NAMALEAD").val(),
+            EMPLOYEE_SUPERVISOR_PROJECT: $("#WP02002_DDL_ADD_NAMAPGWS").val(),
+            project_list_working: getListWorking(),
+            project_list_identification: getListIdentification(),
+            project_list_impact: getListImpact(),
+            project_list_supervision: getListSupervision(),
+            project_list_shift: getShift(),
+            project_henkaten_safety: getHenkatenSafety(),
+            project_henkaten_env: getHenkatenEnv(),
+            RISK_LEVEL: RiskGrade,
+
+            //to IMPB Location
+            topPos: topPos,
+            leftPos: leftPos,
+            widthSquare: widthSquare,
+            heightSquare: heightSquare,
+            windowWidth: windowWidth,
+            windowHeight: windowHeight,
+            borderColor: borderArea,
+            rotate: rotate
+        });
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Update_Data",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+
+                if (res.sts == "TRUE") {
+
+                    var formData = new FormData();
+                    formData.append("WP_IMPB_NO", res.WP_IMPB_NO);
+                    var fileInput = document.getElementById("WP02002_FILE_HKSAFETY");
+                    var fileInputs = document.getElementById("WP02002_FILE_HKENV");
+
+                    if ($('#WP02002_CHK_ADD_HKSAFETY')[0].checked && fileInput.files[0] != null) {
+
+                        var fsFileName = fileInput.files[0].name;
+                        var fsExtension = fsFileName.split('.').pop();
+
+                        fsFileName = res.WP_IMPB_NO + "_SAFETY." + fsExtension;
+                        formData.append("HKSAFETYNAME", fsFileName);
+
+                        var fsFile = fileInput.files[0];
+                        formData.append('HKSAFETYFILE', fsFile);
+                    }
+                    else {
+                        formData.append("HKSAFETYNAME", "");
+                        formData.append('HKSAFETYFILE', null);
+                    }
+
+                    if ($('#WP02002_CHK_ADD_HKENV')[0].checked && fileInput.files[0] != null) {
+
+                        var fsFileNames = fileInputs.files[0].name;
+                        var fsExtensions = fsFileNames.split('.').pop();
+
+                        fsFileNames = res.WP_IMPB_NO + "_ENV." + fsExtensions;
+
+                        formData.append("HKENVNAME", fsFileNames);
+
+                        var fsFiles = fileInputs.files[0];
+                        formData.append('HKENVFILE', fsFiles);
+                    }
+                    else {
+                        formData.append("HKENVNAME", "");
+                        formData.append('HKENVFILE', null);
+                    }
+
+                    $.ajax({
+                        url: SITE_URL + "UploadHenkatenFile",
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        async: false,
+                        data: formData,
+                        success: function (e) {
+                            console.log(e);
+                        }
+                    });
+
+                    cancelAdd();
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    GenerateMessage("", "MWP001");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //<----------------------------------------------START B. PELAKSANA PROYEK------------------------------------------->
+
+    $('#WP02002_DT_ADD_PELAKSANAAN').on("change", function () {
+        var valueOfDate = $(this).val().split('-');
+        const _date = new Date(valueOfDate[0], parseInt(valueOfDate[1]) - 1, valueOfDate[2]);
+        _date.setDate(_date.getDate() + 7);
+        var day = 1;
+        for (var d = new Date(valueOfDate[0], parseInt(valueOfDate[1]) - 1, valueOfDate[2]); d < _date; d.setDate(d.getDate() + 1)) {
+
+            $('#WP02002_TH_ADD_D' + day).text(d.getDate());
+            day++;
+        }
+
+
+    })
+
+
+    $('input[type=radio][name=pelaksana]').change(function () {
+        $('#WP02002_DDL_ADD_BAGIAN').removeAttr('disabled');
+        $('#WP02002_DDL_ADD_BAGIAN').val('').trigger("change");
+        $("#WP02002_DDL_ADD_BAGIAN option").hide();
+
+        $('#WP02002_DDL_ADD_NAMALEAD').val('');
+        $('#WP02002_DDL_ADD_NAMAPGWS').val('');
+        $('#WP02002_DDL_ADD_NAMALEAD').attr('disabled', 'disabled');
+        $('#WP02002_DDL_ADD_NAMAPGWS').attr('disabled', 'disabled');
+
+        $('#WP02002_TXT_ADD_NOALPGWS').val('');
+        $('#WP02002_TXT_ADD_NOHPPGWS').val('');
+
+        $('#WP02002_TXT_ADD_NOALLEAD').val('');
+        $('#WP02002_TXT_ADD_NOHPLEAD').val('');
+
+        PelaksanaValue = this.value;
+        //console.log(PelaksanaValue);
+
+        if (this.value == 'TMMI') {
+            $("#WP02002_DDL_ADD_BAGIAN option[code=TMMIN]").prop('disabled', false);
+            $("#WP02002_DDL_ADD_BAGIAN option:not([code=TMMIN])").prop('disabled', true);
+        }
+        else {
+            $("#WP02002_DDL_ADD_BAGIAN option[code=TMMIN]").prop('disabled', true);
+            $("#WP02002_DDL_ADD_BAGIAN option:not([code=TMMIN])").prop('disabled', false);
+        }
+    });
+
+    $("#WP02002_DDL_ADD_BAGIAN").on("change", function () {
+        $('#WP02002_DDL_ADD_NAMALEAD').attr('disabled', 'disabled');
+        $('#WP02002_DDL_ADD_NAMALEAD').val('').trigger("change");
+
+        $('#WP02002_DDL_ADD_NAMAPGWS').attr('disabled', 'disabled');
+        $('#WP02002_DDL_ADD_NAMAPGWS').val('').trigger("change");
+
+        $('#WP02002_TXT_ADD_NOALLEAD').val('');
+        $('#WP02002_TXT_ADD_NOHPLEAD').val('');
+
+        $('#WP02002_TXT_ADD_NOALPGWS').val('');
+        $('#WP02002_TXT_ADD_NOHPPGWS').val('');
+
+        var value = $('#WP02002_DDL_ADD_BAGIAN option:selected').val();
+        if (PelaksanaValue == 'TMMI') {
+            $('#WP02002_DDL_ADD_NAMALEAD').removeAttr('disabled');
+            //$("#WP02002_DDL_ADD_NAMALEAD option").hide();
+            //var code = value;
+            ////console.log(code);
+            //$("#WP02002_DDL_ADD_NAMALEAD option[code='" + code + "']").prop('disabled', false);
+            //$("#WP02002_DDL_ADD_NAMALEAD option:not([code='" + code + "'])").prop('disabled', true);
+
+            $('#WP02002_DDL_ADD_NAMAPGWS').removeAttr('disabled');
+            //$("#WP02002_DDL_ADD_NAMAPGWS option").hide();
+            //var code = value;
+
+            //$("#WP02002_DDL_ADD_NAMAPGWS option[code='" + code + "']").prop('disabled', false);
+            //$("#WP02002_DDL_ADD_NAMAPGWS option:not([code='" + code + "'])").prop('disabled', true);
+
+            $('.picddl').removeAttr('disabled');
+            //$(".picddl option").hide();
+            //$(".picddl option[code='" + value + "']").prop('disabled', false);
+            //$(".picddl option:not([code='" + value + "'])").prop('disabled', true);
+            BindingEmployeeDynamic("WP02002_DDL_ADD_NAMALEAD", $("#WP02002_DDL_ADD_BAGIAN").val());
+            BindingEmployeeDynamic("WP02002_DDL_ADD_NAMAPGWS", $("#WP02002_DDL_ADD_BAGIAN").val());
+        }
+        else {
+            if (value != '') {
+                $('#WP02002_DDL_ADD_NAMALEAD').removeAttr('disabled');
+                //$("#WP02002_DDL_ADD_NAMALEAD option").hide();
+                //var code = value + ',' + "PMP"
+                ////console.log(code);
+                //$("#WP02002_DDL_ADD_NAMALEAD option[code='" + code + "']").prop('disabled', false);
+                //$("#WP02002_DDL_ADD_NAMALEAD option:not([code='" + code + "'])").prop('disabled', true);
+
+                $('#WP02002_DDL_ADD_NAMAPGWS').removeAttr('disabled');
+                //$("#WP02002_DDL_ADD_NAMAPGWS option").hide();
+                //var code = value + ',' + "PNG"
+
+                //$("#WP02002_DDL_ADD_NAMAPGWS option[code='" + code + "']").prop('disabled', false);
+                //$("#WP02002_DDL_ADD_NAMAPGWS option:not([code='" + code + "'])").prop('disabled', true);
+
+                $('.picddl').removeAttr('disabled');
+                //$(".picddl option").hide();
+                //$(".picddl option[code='" + value + "']").prop('disabled', false);
+                //$(".picddl option:not([code='" + value + "'])").prop('disabled', true);
+                BindingEmployeeDynamic("WP02002_DDL_ADD_NAMALEAD", $("#WP02002_DDL_ADD_BAGIAN").val(), "PMP");
+                BindingEmployeeDynamic("WP02002_DDL_ADD_NAMAPGWS", $("#WP02002_DDL_ADD_BAGIAN").val(), "PNG");
+            }
+        }
+    });
+
+
+    $('#WP02002_DDL_ADD_NAMALEAD').change(function () {
+        if ($('#WP02002_DDL_ADD_NAMALEAD').val() != null || $('#WP02002_DDL_ADD_NAMALEAD').val() != "") {
+            DataEmployeeDetail($('#WP02002_DDL_ADD_NAMALEAD').val(), "PMP");
+        }
+        
+    });
+
+    $('#WP02002_DDL_ADD_NAMAPGWS').change(function () {
+        if ($('#WP02002_DDL_ADD_NAMAPGWS').val() != null || $('#WP02002_DDL_ADD_NAMAPGWS').val() != "") {
+            DataEmployeeDetail($('#WP02002_DDL_ADD_NAMAPGWS').val(), "PNG");
+        }
+        
+    });
+
+    //<----------------------------------------------END B. PELAKSANA PROYEK--------------------------------------------->
+
+    //<----------------------------------------------START C. PEKERJAAN REGION------------------------------------------->
+    function selectOnlyThis(id) {
+
+        document.getElementById("WP02002_CHK_EDIT_TKTINGGI").checked = false;
+        document.getElementById("WP02002_CHK_EDIT_TKSEDANG").checked = false;
+        document.getElementById("WP02002_CHK_EDIT_TKRENDAH").checked = false;
+
+        document.getElementById("WP02002_CHK_ADD_TKTINGGI").checked = false;
+        document.getElementById("WP02002_CHK_ADD_TKSEDANG").checked = false;
+        document.getElementById("WP02002_CHK_ADD_TKRENDAH").checked = false;
+
+        document.getElementById(id).checked = true;
+    }
+
+    function refreshClass() {
+        $('.tk-bahaya').removeAttr('checked');
+        $('.tk-bahaya').removeAttr('disabled');
+
+        $('.day-class').removeAttr('checked');
+        $('.day-class').removeAttr('disabled');
+
+        $('.stop6-class').removeAttr('checked');
+        $('.stop6-class').removeAttr('disabled');
+    }
+
+    function addDataPekerjaan() {
+        //$('#add_ID').val('pekerjaan');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddPekerjaan();
+    }
+
+    function editDataPekerjaan() {
+        //$('#edit_ID').val('pekerjaan');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditPekerjaan();
+    }
+
+    function deleteDataPekerjaan(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+
+        $.each(row.cells, function (index, value) {
+            if (index == 1) {
+                if ($($(value).children()).is(':checked'))
+                    RiskValue = RiskValue - 3;
+            }
+
+            if (index == 2) {
+                if ($($(value).children()).is(':checked'))
+                    RiskValue = RiskValue - 2;
+            }
+
+            if (index == 3) {
+                if ($($(value).children()).is(':checked'))
+                    RiskValue = RiskValue - 1;
+            }
+
+            RiskCount = RiskCount - 1;
+            RiskAvg = parseFloat(RiskValue) / parseFloat(RiskCount);
+
+            if (RiskAvg <= 1.5) {
+                RiskGrade = "Low";
+                document.getElementById("RiskGrade").style.color = "green";
+            }
+            else if (RiskAvg <= 2.5) {
+                RiskGrade = "Medium";
+                document.getElementById("RiskGrade").style.color = "blue";
+            }
+            else if (RiskAvg > 2.5) {
+                RiskGrade = "High";
+                document.getElementById("RiskGrade").style.color = "red";
+            }
+
+            $('#RiskGrade').html("Job Risk Level : " + RiskGrade);
+        });
+
+        confirmDeletePekerjaan();
+    }
+
+    $("#WP02002_BTN_ADD_SHOW_PEKERJAAN").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+        $('#WP02002_DDL_ADD_PEKERJAAN').val('');
+
+        refreshClass();
+
+        document.getElementById("WP02002_TBL_ADD_PEKERJAAN").style.display = "";
+
+        $("#WP02002_BTN_ADD_PEKERJAANCLOSE").on("click", function () {
+
+            $('#WP02002_TBL_ADD_PEKERJAAN').hide();
+        });
+        $("#WP02002_DDL_ADD_PEKERJAAN").val($("#WP02002_DDL_ADD_PEKERJAAN option:first").val())
+    });
+
+    function confirmDeletePekerjaan() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteData",
+                type: "GET",
+                data: { ID: Id, Mode: "Working" },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+                    $('#WP02002_DDL_ADD_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_EDIT_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+
+                    if ($("#WP02002_TBL_LIST_PEKERJAAN > tr").length < 1) {
+                        $('#WP02002_BTN_ADD_SHOW_BAHAYA').attr('disabled', 'disabled');
+                        $('#WP02002_BTN_ADD_SHOW_DAMPAK').attr('disabled', 'disabled');
+                    }
+                    _row.remove();
+
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            });
+        }
+        else {
+            $('#WP02002_DDL_ADD_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_EDIT_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+
+            if ($("#WP02002_TBL_LIST_PEKERJAAN > tr").length < 1) {
+                $('#WP02002_BTN_ADD_SHOW_BAHAYA').attr('disabled', 'disabled');
+                $('#WP02002_BTN_ADD_SHOW_DAMPAK').attr('disabled', 'disabled');
+            }
+            _row.remove();
+        }
+    }
+
+    function confirmAddPekerjaan() {
+        var _tk_bahaya = $('.tk-bahaya:checked');
+        var _day_class = $('.day-class:checked');
+        var _stop6_class = $('.stop6-class:checked');
+
+        if ($('#WP02002_DDL_ADD_PEKERJAAN').val() == null || $('#WP02002_DDL_ADD_PEKERJAAN').val() == '') {
+            GenerateMessage("Pekerjaan", "MWP008");
+            $('.tk-bahaya').removeAttr('disabled');
+            $('.day-class').removeAttr('disabled');
+            $('.stop6-class').removeAttr('disabled');
+
+            return;
+        }
+
+        if (_tk_bahaya.length < 1) {
+            GenerateMessage("Tingkat Bahaya", "MWP021");
+            $('.tk-bahaya').removeAttr('disabled');
+            $('.day-class').removeAttr('disabled');
+            $('.stop6-class').removeAttr('disabled');
+            return;
+        }
+
+        if (_day_class.length < 1) {
+            GenerateMessage("Tanggal", "MWP021");
+            $('.tk-bahaya').removeAttr('disabled');
+            $('.day-class').removeAttr('disabled');
+            $('.stop6-class').removeAttr('disabled');
+            return;
+        }
+
+        if (_stop6_class.length < 1) {
+            GenerateMessage("Stop 6 Category", "MWP021");
+            $('.tk-bahaya').removeAttr('disabled');
+            $('.day-class').removeAttr('disabled');
+            $('.stop6-class').removeAttr('disabled');
+            return;
+        }
+
+        var DataPekerjaanNew = {
+            DANGER_TYPE: 0,
+            DAY_1: "0",
+            DAY_2: "0",
+            DAY_3: "0",
+            DAY_4: "0",
+            DAY_5: "0",
+            DAY_6: "0",
+            DAY_7: "0",
+            SIX_A: "0",
+            SIX_B: "0",
+            SIX_C: "0",
+            SIX_D: "0",
+            SIX_E: "0",
+            SIX_F: "0",
+            SIX_ALPHA: "0",
+            ID: 0
+        }
+
+        var _arr_tk_bahaya = $('.tk-bahaya');
+        var _arr_day_class = $('.day-class');
+        var _arr_stop6_class = $('.stop6-class');
+
+
+        for (var i = 0; _arr_tk_bahaya[i]; ++i) {
+            if (_arr_tk_bahaya[i].checked) {
+                //$(_arr_tk_bahaya[i]).attr('checked', 'checked');
+
+                //if (i == 0) {
+                //    RiskValue += 3;
+                //}
+
+                //if (i == 1) {
+                //    RiskValue += 2;
+                //}
+
+                //if (i == 2) {
+                //    RiskValue += 1;
+                //}
+
+                //RiskCount += 1;
+                //RiskAvg = parseFloat(RiskValue) / parseFloat(RiskCount);
+
+                //if (RiskAvg <= 1.5) {
+                //    RiskGrade = "Low";
+                //    document.getElementById("RiskGrade").style.color = "green";
+                //}
+                //else if (RiskAvg <= 2.5) {
+                //    RiskGrade = "Medium";
+                //    document.getElementById("RiskGrade").style.color = "blue";
+                //}
+                //else if (RiskAvg > 2.5) {
+                //    RiskGrade = "High";
+                //    document.getElementById("RiskGrade").style.color = "red";
+                //}
+
+                //$('#RiskGrade').html("Job Risk Level : " + RiskGrade);
+
+                DataPekerjaanNew.DANGER_TYPE = i;
+            }
+        }
+
+        for (var i = 0; _arr_day_class[i]; ++i) {
+            if (_arr_day_class[i].checked) {
+                if (i == 0) {
+                    DataPekerjaanNew.DAY_1 = "1";
+                }
+                else if (i == 1) {
+                    DataPekerjaanNew.DAY_2 = "1";
+                }
+                else if (i == 2) {
+                    DataPekerjaanNew.DAY_3 = "1";
+                }
+                else if (i == 3) {
+                    DataPekerjaanNew.DAY_4 = "1";
+                }
+                else if (i == 4) {
+                    DataPekerjaanNew.DAY_5 = "1";
+                }
+                else if (i == 5) {
+                    DataPekerjaanNew.DAY_6 = "1";
+                }
+                else if (i == 6) {
+                    DataPekerjaanNew.DAY_7 = "1";
+                }
+            }
+        }
+
+        for (var i = 0; _arr_stop6_class[i]; ++i) {
+            if (_arr_stop6_class[i].checked) {
+                if (i == 0) {
+                    DataPekerjaanNew.SIX_A = "1";
+                }
+                else if (i == 1) {
+                    DataPekerjaanNew.SIX_B = "1";
+                }
+                else if (i == 2) {
+                    DataPekerjaanNew.SIX_C = "1";
+                }
+                else if (i == 3) {
+                    DataPekerjaanNew.SIX_D = "1";
+                }
+                else if (i == 4) {
+                    DataPekerjaanNew.SIX_E = "1";
+                }
+                else if (i == 5) {
+                    DataPekerjaanNew.SIX_F = "1";
+                }
+                else if (i == 6) {
+                    DataPekerjaanNew.SIX_ALPHA = "1";
+                }
+            }
+        }
+
+        //tableBuilder(_arr_new_tk_bahaya, _arr_new_day_class, _arr_new_stop6_class, 0);
+        LoadEditDataPekerjaan(DataPekerjaanNew);
+
+        $('#WP02002_BTN_ADD_SHOW_BAHAYA').removeAttr('disabled');
+        $('#WP02002_BTN_ADD_SHOW_DAMPAK').removeAttr('disabled');
+
+        $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+        $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+
+        $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+        $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').append('<option value="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" selected="selected">' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</option>');
+
+        var value = $('#WP02002_DDL_ADD_PEKERJAAN').val();
+        $("#WP02002_DDL_ADD_PEKERJAAN option[value='" + value + "']").remove();
+        $("#WP02002_DDL_EDIT_PEKERJAAN option[value='" + value + "']").remove();
+
+    }
+
+    function tableBuilder(_arr_tk_bahaya, _arr_day_class, _arr_stop6_class, _id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id +'" style="width: 200px; padding:0!important" name="' + $('#WP02002_DDL_ADD_PEKERJAAN').val() + '" >' + $("#WP02002_DDL_ADD_PEKERJAAN option:selected").text() + '</td>';
+        for (var i = 0; _arr_tk_bahaya[i]; ++i) {
+            html += '<td style="width: 40px; padding:0!important;text-align:center">' + _arr_tk_bahaya[i] + '</td>';
+        }
+        for (var i = 0; _arr_day_class[i]; ++i) {
+            html += '<td style="width: 20px; padding:0!important;text-align:center">' + _arr_day_class[i] + '</td>';
+        }
+        for (var i = 0; _arr_stop6_class[i]; ++i) {
+            html += '<td style="width: 20px; padding:0!important;text-align:center">' + _arr_stop6_class[i] + '</td>';
+        }
+        html += '<td style="width: 100px; text-align:center">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px;" onclick="actionEditPekerjaan(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:5px;" onclick="deleteDataPekerjaan(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>';
+
+        //html = html.replace(/[/\\*]/g, "");
+
+        $('#WP02002_TBL_LIST_PEKERJAAN').append(html);
+        $('#WP02002_TBL_ADD_PEKERJAAN').hide();
+    }
+
+    function actionEditPekerjaan(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $('#WP02002_DDL_EDIT_PEKERJAAN').append('<option value="' + $(row).find('td:first-child').attr('name') + '" selected="selected">' + $(row).find('td:first-child').text() + '</option>');
+                $('#WP02002_DDL_EDIT_PEKERJAAN').val($(value).attr("name")).trigger("change");
+
+            }
+            else {
+                if (index == 1) {
+                    if ($($(value).children()).is(':checked'))
+                        RiskValue = RiskValue - 3;
+                }
+
+                if (index == 2) {
+                    if ($($(value).children()).is(':checked'))
+                        RiskValue = RiskValue - 2;
+                }
+
+                if (index == 3) {
+                    if ($($(value).children()).is(':checked'))
+                        RiskValue = RiskValue - 1;
+                }
+
+                $('input[name="edit_' + index + '"]').prop('checked', false);
+                if ($($(value).children()).is(':checked'))
+                    $('input[name="edit_' + index + '"]').prop('checked', true);
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02002_BTN_ADD_SHOW_PEKERJAAN').attr('disabled', 'disabled');
+
+        $('#WP02002_TBL_EDIT_PEKERJAAN').show();
+        $("#WP02002_BTN_EDIT_PEKERJAANCLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02002_TBL_EDIT_PEKERJAAN').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_PEKERJAAN').removeAttr('disabled');
+            $("#WP02002_DDL_EDIT_PEKERJAAN option[value='" + $(row).find('td:first-child').attr('name') + "']").remove();
+        });
+
+        $('#WP02002_BTN_EDIT_PEKERJAAN').on("click", function (e) {
+            e.stopPropagation();
+            editDataPekerjaan();
+        })
+    }
+
+    function confirmEditPekerjaan() {
+        $('#WP02002_DDL_ADD_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '">' + $(_row).find('td:first-child').text() + '</option>');
+
+        $.each(_row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $(value).text($("#WP02002_DDL_EDIT_PEKERJAAN").select2('data').text);
+                $(value).attr('name', $("#WP02002_DDL_EDIT_PEKERJAAN").val());
+                $("#WP02002_DDL_ADD_PEKERJAAN option[value='" + $("#WP02002_DDL_EDIT_PEKERJAAN").val() + "']").remove();
+                $("#WP02002_DDL_EDIT_PEKERJAAN option[value='" + $("#WP02002_DDL_EDIT_PEKERJAAN").val() + "']").remove();
+            }
+            else {
+                $($(value).children()).prop('checked', false);
+                if ($('input[name="edit_' + index + '"]').is(':checked')) {
+                    $($(value).children()).prop('checked', true);
+                }
+
+                if (index == 1) {
+                    if ($('input[name="edit_' + index + '"]').is(':checked'))
+                        RiskValue = RiskValue + 3;
+                }
+
+                if (index == 2) {
+                    if ($('input[name="edit_' + index + '"]').is(':checked'))
+                        RiskValue = RiskValue + 2;
+                }
+
+                if (index == 3) {
+                    if ($('input[name="edit_' + index + '"]').is(':checked'))
+                        RiskValue = RiskValue + 1;
+                }
+            }
+        });
+
+        $(_row).show();
+        $('#WP02002_TBL_EDIT_PEKERJAAN').hide();
+        $('button[name="btn_edit_row"').removeAttr('disabled');
+        $('button[name="btn_delete_row"').removeAttr('disabled');
+        $('#WP02002_BTN_ADD_SHOW_PEKERJAAN').removeAttr('disabled');
+
+        RiskAvg = parseFloat(RiskValue) / parseFloat(RiskCount);
+
+        if (RiskAvg <= 1.5) {
+            RiskGrade = "Low";
+            document.getElementById("RiskGrade").style.color = "green";
+        }
+        else if (RiskAvg <= 2.5) {
+            RiskGrade = "Medium";
+            document.getElementById("RiskGrade").style.color = "blue";
+        }
+        else if (RiskAvg > 2.5) {
+            RiskGrade = "High";
+            document.getElementById("RiskGrade").style.color = "red";
+        }
+
+        $('#RiskGrade').html("Job Risk Level : " + RiskGrade);
+    }
+
+    var _arr_tk_bahaya2_clone = 0;
+    var _arr_day_class2_clone = 0;
+    var _arr_stop6_class2_clone = 0;
+    function LoadEditDataPekerjaan(Obj) {
+        var IndexTingkatbahaya = parseInt(Obj.DANGER_TYPE);
+        //$("#WP02002_DDL_ADD_PEKERJAAN").val(Obj.ID_TB_M_WORKING_TYPE).trigger("change");
+
+        var _arr_tk_bahaya = $('.tk-bahaya');
+        var _arr_day_class = $('.day-class');
+        var _arr_stop6_class = $('.stop6-class');
+
+        var _arr_new_tk_bahaya = [];
+        var _arr_new_day_class = [];
+        var _arr_new_stop6_class = [];
+
+        for (var i = 0; _arr_tk_bahaya[i]; ++i) {
+            if (i == IndexTingkatbahaya) {
+                $(_arr_tk_bahaya[i]).attr('checked', 'checked');
+
+                if (i == 0) {
+                    RiskValue += 3;
+                }
+
+                if (i == 1) {
+                    RiskValue += 2;
+                }
+
+                if (i == 2) {
+                    RiskValue += 1;
+                }
+
+                RiskCount += 1;
+                RiskAvg = parseFloat(RiskValue) / parseFloat(RiskCount);
+
+                if (RiskAvg <= 1.5) {
+                    RiskGrade = "Low";
+                    document.getElementById("RiskGrade").style.color = "green";
+                }
+                else if (RiskAvg <= 2.5) {
+                    RiskGrade = "Medium";
+                    document.getElementById("RiskGrade").style.color = "blue";
+                }
+                else if (RiskAvg > 2.5) {
+                    RiskGrade = "High";
+                    document.getElementById("RiskGrade").style.color = "red";
+                }
+
+                $('#RiskGrade').html("Job Risk Level : " + RiskGrade);
+            }
+            else {
+                $(_arr_tk_bahaya[i]).removeAttr('checked');
+            }
+
+
+
+            $(_arr_tk_bahaya[i]).attr('disabled', 'disabled');
+            $(_arr_tk_bahaya[i]).removeClass('tk-bahaya');
+            _arr_tk_bahaya2_clone = _arr_tk_bahaya2_clone + 1;
+            var data = $('<div>').append($(_arr_tk_bahaya[i]).clone().attr('id', 'WP02002_CHK_ADD_TKTINGGI2_' + _arr_tk_bahaya2_clone)).html() + '<label class="label-check"  for="WP02002_CHK_ADD_TKTINGGI2_"' + _arr_tk_bahaya2_clone + '></label>';
+            _arr_new_tk_bahaya.push(data);
+            $(_arr_tk_bahaya[i]).addClass('tk-bahaya');
+        }
+
+        for (var i = 0; _arr_day_class[i]; ++i) {
+
+            if (i == 0) {
+                if (Obj.DAY_1 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 1) {
+                if (Obj.DAY_2 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 2) {
+                if (Obj.DAY_3 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 3) {
+                if (Obj.DAY_4 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 4) {
+                if (Obj.DAY_5 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 5) {
+                if (Obj.DAY_6 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 6) {
+                if (Obj.DAY_7 == "1") {
+                    $(_arr_day_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_day_class[i]).removeAttr('checked');
+                }
+            }
+
+
+            $(_arr_day_class[i]).attr('disabled', 'disabled');
+            $(_arr_day_class[i]).removeClass('day-class');
+            _arr_day_class2_clone = _arr_day_class2_clone + 1;
+            var data = $('<div>').append($(_arr_day_class[i]).clone().attr('id', 'WP02002_CHK_ADD_D12_' + _arr_day_class2_clone)).html() + '<label class="label-check"  for="WP02002_CHK_ADD_D12_"' + _arr_day_class2_clone + '></label>';
+            _arr_new_day_class.push(data);
+            $(_arr_day_class[i]).addClass('day-class');
+
+        }
+
+        for (var i = 0; _arr_stop6_class[i]; ++i) {
+
+            if (i == 0) {
+                if (Obj.SIX_A == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 1) {
+                if (Obj.SIX_B == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 2) {
+                if (Obj.SIX_C == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 3) {
+                if (Obj.SIX_D == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 4) {
+                if (Obj.SIX_E == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 5) {
+                if (Obj.SIX_F == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            if (i == 6) {
+                if (Obj.SIX_ALPHA == "1") {
+                    $(_arr_stop6_class[i]).attr('checked', 'checked');
+                }
+                else {
+                    $(_arr_stop6_class[i]).removeAttr('checked');
+                }
+            }
+
+            $(_arr_stop6_class[i]).attr('disabled', 'disabled');
+            $(_arr_stop6_class[i]).removeClass('stop6-class');
+            _arr_stop6_class2_clone = _arr_stop6_class2_clone + 1;
+            var data = $('<div>').append($(_arr_stop6_class[i]).clone().attr('id', 'WP02002_CHK_ADD_STOP6A2_' + _arr_stop6_class2_clone)).html() + '<label class="label-check"  for="WP02002_CHK_ADD_STOP6A2_"' + _arr_stop6_class2_clone + '></label>';;
+            _arr_new_stop6_class.push(data);
+            $(_arr_stop6_class[i]).addClass('stop6-class');
+        }
+
+        tableBuilder(_arr_new_tk_bahaya, _arr_new_day_class, _arr_new_stop6_class, Obj.ID);
+
+
+    }
+    //<----------------------------------------------END   C. PEKERJAAN REGION------------------------------------------->
+
+
+    //<----------------------------------------------START D. BAHAYA REGION------------------------------------------->
+    function addDataBahaya() {
+        //$('#add_ID').val('bahaya');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddBahaya();
+    }
+
+    function editDataBahaya() {
+        //$('#edit_ID').val('bahaya');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        
+        confirmEditBahaya();
+    }
+
+    function deleteDataBahaya(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('bahaya');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeleteBahaya();
+    }
+
+    $("#WP02002_BTN_ADD_SHOW_BAHAYA").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+        $('#WP02002_TXT_ADD_BAHAYA_POTENSI').val('');
+        $('#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN').val('');
+        $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val(null);
+        $('#WP02002_DDL_ADD_BAHAYA_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_ADD_BAHAYA_KETERANGAN').val('');
+        BindingEmployeeDynamic("WP02002_DDL_ADD_BAHAYA_PIC", $("#WP02002_DDL_ADD_BAGIAN").val());
+        
+
+        document.getElementById("WP02002_TBL_ADD_BAHAYA").style.display = "";
+
+        $("#WP02002_BTN_ADD_BAHAYA_CLOSE").on("click", function () {
+            $('#WP02002_TBL_ADD_BAHAYA').hide();
+        });
+    });
+
+    function confirmDeleteBahaya() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteData",
+                type: "GET",
+                data: { ID: Id, Mode: "Identification" },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+                    $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_ADD_BAHAYA_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+                    //$('#WP02002_DDL_ADD_BAHAYA_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+                    $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_EDIT_BAHAYA_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+                    //$('#WP02002_DDL_EDIT_BAHAYA_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+                    _row.remove();
+
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            });
+        }
+        else {
+            $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_ADD_BAHAYA_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+            //$('#WP02002_DDL_ADD_BAHAYA_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+            $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_EDIT_BAHAYA_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+            //$('#WP02002_DDL_EDIT_BAHAYA_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+            _row.remove();
+        }
+
+    }
+
+    function confirmAddBahaya() {
+
+        if ($('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val() == null || $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val() == '') {
+            GenerateMessage("Pekerjaan", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_TXT_ADD_BAHAYA_POTENSI').val() == null || $('#WP02002_TXT_ADD_BAHAYA_POTENSI').val() == '') {
+            GenerateMessage("Identifikasi Potensi Bahaya", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN').val() == null || $('#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN').val() == '') {
+            GenerateMessage("Tindak Pencegahan", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_DDL_ADD_BAHAYA_PIC').val() == null || $('#WP02002_DDL_ADD_BAHAYA_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        //if ($('#WP02002_TXT_ADD_BAHAYA_KETERANGAN').val() == null || $('#WP02002_TXT_ADD_BAHAYA_KETERANGAN').val() == '') {
+        //    GenerateMessage("Henkanten", "MWP008");
+        //    return;
+        //}
+
+
+        //tableBuilderBahaya($('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_BAHAYA_POTENSI"), $("#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN"), $("#WP02002_DDL_ADD_BAHAYA_PIC option:selected"), $('#WP02002_DDL_ADD_BAHAYA_KETERANGAN option:selected'));
+
+        tableBuilderBahaya($('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_BAHAYA_POTENSI"), $("#WP02002_TXT_ADD_BAHAYA_PENCEGAHAN"), $("#WP02002_DDL_ADD_BAHAYA_PIC option:selected"), $("#WP02002_TXT_ADD_BAHAYA_KETERANGAN"), 0);
+
+        var _pekerjaan = $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val();
+        var _pic = $('#WP02002_DDL_ADD_BAHAYA_PIC').val();
+        //var _keterangan = $('#WP02002_DDL_ADD_BAHAYA_KETERANGAN').val();
+        $("#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+        $("#WP02002_DDL_ADD_BAHAYA_PIC option[value='" + _pic + "']").remove();
+        //$("#WP02002_DDL_ADD_BAHAYA_KETERANGAN option[value='" + _keterangan + "']").remove();
+
+        $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+        $("#WP02002_DDL_EDIT_BAHAYA_PIC option[value='" + _pic + "']").remove();
+        //$("#WP02002_DDL_EDIT_BAHAYA_KETERANGAN option[value='" + _keterangan + "']").remove();
+    }
+
+    function tableBuilderBahaya(_pekerjaan, _potensi, _pencegahan, _pic, _keterangan,_id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id +'" style="width: 200px; padding:0!important" name="' + $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').val() + '">' + _pekerjaan.text() + '</td>';
+
+        html += '<td style="width: 130px; padding:0!important">' + _potensi.val() + '</td>';
+
+        html += '<td style="width: 130px; padding:0!important">' + _pencegahan.val() + '</td>';
+
+        html += '<td style="width: 100PX; padding:0!important" name="' + $('#WP02002_DDL_ADD_BAHAYA_PIC').val() + '">' + _pic.text() + '</td>';
+
+        //html += '<td style="width: 125px; padding:0!important" name="' + $('#WP02002_DDL_ADD_BAHAYA_KETERANGAN').val() + '">' + _keterangan.text() + '</td>';
+        html += '<td style="width: 125px; padding:0!important">' + _keterangan.val() + '</td>';
+
+        html += '<td style="width: 100px">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditBahaya(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataBahaya(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02002_TBL_LIST_BAHAYA').append(html);
+        $('#WP02002_TBL_ADD_BAHAYA').hide();
+    }
+
+    function actionEditBahaya(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+        BindingEmployeeDynamic("WP02002_DDL_EDIT_BAHAYA_PIC", $("#WP02002_DDL_ADD_BAGIAN").val());
+
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').append('<option value="' + $(row).find('td:first-child').attr('name') + '" selected="selected">' + $(row).find('td:first-child').text() + '</option>');
+                $('#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN').val($(value).attr("name")).trigger("change");
+            }
+            else if (index == 1) { //set value for text area Identifikasi Potensi Bahaya
+                $('#WP02002_TXT_EDIT_BAHAYA_POTENSI').val($(value).text());
+            }
+            else if (index == 2) { //set value for text area Tindakan Pencegahan
+                $('#WP02002_TXT_EDIT_BAHAYA_PENCEGAHAN').val($(value).text());
+            }
+            else if (index == 3) { //set value for text area PIC
+                $('#WP02002_DDL_EDIT_BAHAYA_PIC').append('<option value="' + $(row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(row).find('td:nth-child(4)').text() + '</option>');
+                $('#WP02002_DDL_EDIT_BAHAYA_PIC').val($(value).attr("name")).trigger("change");
+            }
+            else if (index == 4) { //set value for text area Keterangan (Henkaten Safety)
+
+                //$('#WP02002_DDL_EDIT_BAHAYA_KETERANGAN').append('<option value="' + $(row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(row).find('td:nth-child(5)').text() + '</option>');
+                //$('#WP02002_DDL_EDIT_BAHAYA_KETERANGAN').val($(value).attr("name"));
+                $('#WP02002_TXT_EDIT_BAHAYA_KETERANGAN').val($(value).text());
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02002_BTN_ADD_SHOW_BAHAYA').attr('disabled', 'disabled');
+
+        $('#WP02002_TBL_EDIT_BAHAYA').show();
+        $("#WP02002_BTN_EDIT_BAHAYA_CLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02002_TBL_EDIT_BAHAYA').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_BAHAYA').removeAttr('disabled');
+            $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option[value='" + $(row).find('td:first-child').attr('name') + "']").remove();
+            $("#WP02002_DDL_EDIT_BAHAYA_PIC option[value='" + $(row).find('td:nth-child(4)').attr('name') + "']").remove();
+            //$("#WP02002_DDL_EDIT_BAHAYA_KETERANGAN option[value='" + $(row).find('td:nth-child(5)').attr('name') + "']").remove();
+        });
+
+        $('#WP02002_BTN_EDIT_BAHAYA').on("click", function (e) {
+            editDataBahaya();
+            e.stopPropagation();
+        })
+    }
+
+    function confirmEditBahaya() {
+        $('#WP02002_DDL_ADD_BAHAYA_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '">' + $(_row).find('td:first-child').text() + '</option>');
+
+        var PekerjaanSelected = $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option:selected").val();
+        var TextPekerjaan = $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option:selected").text();
+
+        if (TextPekerjaan != "") {
+            //set field pekerjaan
+            $(_row).find('td:first-child').text(TextPekerjaan);
+            $(_row).find('td:first-child').attr('name', PekerjaanSelected);
+
+            //set field identifikasi potensi bahaya
+            $(_row).find('td:nth-child(2)').text($('#WP02002_TXT_EDIT_BAHAYA_POTENSI').val());
+
+            //set value for text area Tindakan Pencegahan
+            $(_row).find('td:nth-child(3)').text($('#WP02002_TXT_EDIT_BAHAYA_PENCEGAHAN').val());
+
+            //set value for text area PIC
+            $(_row).find('td:nth-child(4)').text($('#WP02002_DDL_EDIT_BAHAYA_PIC').select2('data').text);
+            $(_row).find('td:nth-child(4)').attr('name', $("#WP02002_DDL_EDIT_BAHAYA_PIC").val());
+
+
+            $(_row).find('td:nth-child(5)').text($('#WP02002_TXT_EDIT_BAHAYA_KETERANGAN').val());
+
+
+            $(_row).show();
+            $('#WP02002_TBL_EDIT_BAHAYA').hide();
+            $('button[name="btn_edit_row"').removeAttr('disabled');
+            $('button[name="btn_delete_row"').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_BAHAYA').removeAttr('disabled');
+
+            $("#WP02002_DDL_EDIT_BAHAYA_PEKERJAAN option[value='" + PekerjaanSelected + "']").remove();
+            $("#WP02002_DDL_ADD_BAHAYA_PEKERJAAN option[value='" + PekerjaanSelected + "']").remove();
+        }
+        
+    }
+
+    function showHenkatenSafety(e) {
+        if (e.checked) {
+            $('.hksafety').show();
+            $('.templatesafety').show();
+        }
+        else {
+            $('.hksafety').hide();
+            $('.templatesafety').hide();
+            $('.hk-bahaya').removeAttr("checked");
+        }
+    }
+    //<----------------------------------------------END   D. BAHAYA REGION------------------------------------------->
+
+    //<----------------------------------------------START D. DAMPAK REGION------------------------------------------->
+    function addDataDampak() {
+        //$('#add_ID').val('dampak');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddDampak();
+    }
+
+    function editDataDampak() {
+        //$('#edit_ID').val('dampak');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditDampak();
+    }
+
+    function deleteDataDampak(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('dampak');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeleteDampak();
+    }
+
+    $("#WP02002_BTN_ADD_SHOW_DAMPAK").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+        $('#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN').val('');
+        $('#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN').val('');
+        $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val(null);
+        $('#WP02002_DDL_ADD_DAMPAK_PIC').val(null).trigger("change");
+        $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN').val('');
+        BindingEmployeeDynamic("WP02002_DDL_ADD_DAMPAK_PIC", $("#WP02002_DDL_ADD_BAGIAN").val());
+        
+
+        document.getElementById("WP02002_TBL_ADD_DAMPAK").style.display = "";
+
+        $("#WP02002_BTN_ADD_DAMPAK_CLOSE").on("click", function () {
+            $('#WP02002_TBL_ADD_DAMPAK').hide();
+        });
+    });
+
+    function confirmDeleteDampak() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteData",
+                type: "GET",
+                data: { ID: Id, Mode: "Impact" },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+
+                    $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_ADD_DAMPAK_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+                    // $('#WP02002_DDL_ADD_DAMPAK_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+                    $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_EDIT_DAMPAK_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+                    //$('#WP02002_DDL_EDIT_DAMPAK_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+                    _row.remove();
+
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            });
+        }
+        else {
+
+            $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_ADD_DAMPAK_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+            // $('#WP02002_DDL_ADD_DAMPAK_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+
+            $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" selected="selected">' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_EDIT_DAMPAK_PIC').append('<option value="' + $(_row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(4)').text() + '</option>');
+            //$('#WP02002_DDL_EDIT_DAMPAK_KETERANGAN').append('<option value="' + $(_row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(_row).find('td:nth-child(5)').text() + '</option>');
+            _row.remove();
+        }
+    }
+
+    function confirmAddDampak() {
+
+        if ($('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val() == null || $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val() == '') {
+            GenerateMessage("Pekerjaan", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN').val() == null || $('#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN').val() == '') {
+            GenerateMessage("Identifikasi Dampak Lingkungan", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN').val() == null || $('#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN').val() == '') {
+            GenerateMessage("Tindak Pencegahan", "MWP008");
+            return;
+        }
+
+        if ($('#WP02002_DDL_ADD_DAMPAK_PIC').val() == null || $('#WP02002_DDL_ADD_DAMPAK_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        //if ($('#WP02002_TXT_ADD_DAMPAK_KETERANGAN').val() == null || $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN').val() == '') {
+        //    GenerateMessage("Henkanten", "MWP008");
+        //    return;
+        //}
+
+
+        //tableBuilderDampak($('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN"), $("#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN"), $("#WP02002_DDL_ADD_DAMPAK_PIC option:selected"), $('#WP02002_DDL_ADD_DAMPAK_KETERANGAN option:selected'));
+
+        tableBuilderDampak($('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option:selected'), $("#WP02002_TXT_ADD_DAMPAK_LINGKUNGAN"), $("#WP02002_TXT_ADD_DAMPAK_PENCEGAHAN"), $("#WP02002_DDL_ADD_DAMPAK_PIC option:selected"), $('#WP02002_TXT_ADD_DAMPAK_KETERANGAN'),0);
+
+        var _pekerjaan = $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val();
+        var _pic = $('#WP02002_DDL_ADD_DAMPAK_PIC').val();
+        //var _keterangan = $('#WP02002_DDL_ADD_DAMPAK_KETERANGAN').val();
+        $("#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+        $("#WP02002_DDL_ADD_DAMPAK_PIC option[value='" + _pic + "']").remove();
+        //$("#WP02002_DDL_ADD_DAMPAK_KETERANGAN option[value='" + _keterangan + "']").remove();
+
+        $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option[value='" + _pekerjaan + "']").remove();
+        $("#WP02002_DDL_EDIT_DAMPAK_PIC option[value='" + _pic + "']").remove();
+        // $("#WP02002_DDL_EDIT_DAMPAK_KETERANGAN option[value='" + _keterangan + "']").remove();
+    }
+
+    function tableBuilderDampak(_pekerjaan, _potensi, _pencegahan, _pic, _keterangan, _id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id +'" style="width: 200px; padding:0!important" name="' + $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').val() + '">' + _pekerjaan.text() + '</td>';
+
+        html += '<td style="width: 130px; padding:0!important">' + _potensi.val() + '</td>';
+
+        html += '<td style="width: 130px; padding:0!important">' + _pencegahan.val() + '</td>';
+
+        html += '<td style="width: 100PX; padding:0!important" name="' + $('#WP02002_DDL_ADD_DAMPAK_PIC').val() + '">' + _pic.text() + '</td>';
+
+        html += '<td style="width: 125px; padding:0!important">' + _keterangan.val() + '</td>';
+
+        html += '<td style="width: 100px; text-align:center">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px;" onclick="actionEditDampak(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:5px;" onclick="deleteDataDampak(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02002_TBL_LIST_DAMPAK').append(html);
+        $('#WP02002_TBL_ADD_DAMPAK').hide();
+    }
+
+    function actionEditDampak(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+        BindingEmployeeDynamic("WP02002_DDL_EDIT_DAMPAK_PIC", $("#WP02002_DDL_ADD_BAGIAN").val());
+
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').append('<option value="' + $(row).find('td:first-child').attr('name') + '" selected="selected">' + $(row).find('td:first-child').text() + '</option>');
+                $('#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN').val($(value).attr("name")).trigger("change");
+            }
+            else if (index == 1) { //set value for text area Identifikasi Potensi DAMPAK
+                $('#WP02002_TXT_EDIT_DAMPAK_LINGKUNGAN').val($(value).text());
+            }
+            else if (index == 2) { //set value for text area Tindakan Pencegahan
+                $('#WP02002_TXT_EDIT_DAMPAK_PENCEGAHAN').val($(value).text());
+            }
+            else if (index == 3) { //set value for text area PIC
+                $('#WP02002_DDL_EDIT_DAMPAK_PIC').append('<option value="' + $(row).find('td:nth-child(4)').attr('name') + '" selected="selected">' + $(row).find('td:nth-child(4)').text() + '</option>');
+                $('#WP02002_DDL_EDIT_DAMPAK_PIC').val($(value).attr("name")).trigger("change");
+            }
+            else if (index == 4) { //set value for text area Keterangan (Henkaten Safety)
+                $('#WP02002_TXT_EDIT_DAMPAK_KETERANGAN').val($(value).text());
+                //$('#WP02002_DDL_EDIT_DAMPAK_KETERANGAN').append('<option value="' + $(row).find('td:nth-child(5)').attr('name') + '" selected="selected">' + $(row).find('td:nth-child(5)').text() + '</option>');
+                //$('#WP02002_DDL_EDIT_DAMPAK_KETERANGAN').val($(value).attr("name"));
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02002_BTN_ADD_SHOW_DAMPAK').attr('disabled', 'disabled');
+
+        $('#WP02002_TBL_EDIT_DAMPAK').show();
+        $("#WP02002_BTN_EDIT_DAMPAK_CLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02002_TBL_EDIT_DAMPAK').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_DAMPAK').removeAttr('disabled');
+            $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option[value='" + $(row).find('td:first-child').attr('name') + "']").remove();
+            $("#WP02002_DDL_EDIT_DAMPAK_PIC option[value='" + $(row).find('td:nth-child(4)').attr('name') + "']").remove();
+            //$("#WP02002_DDL_EDIT_DAMPAK_KETERANGAN option[value='" + $(row).find('td:nth-child(5)').attr('name') + "']").remove();
+        });
+
+        $('#WP02002_BTN_EDIT_DAMPAK').on("click", function (e) {
+            e.stopPropagation();
+            editDataDampak();
+        })
+    }
+
+    function confirmEditDampak() {
+        $('#WP02002_DDL_ADD_DAMPAK_PEKERJAAN').append('<option value="' + $(_row).find('td:first-child').attr('name') + '">' + $(_row).find('td:first-child').text() + '</option>');
+
+        var PekerjaanSelected = $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option:selected").val();
+        var TextPekerjaan = $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option:selected").text();
+        if (TextPekerjaan != "") {
+            //set field pekerjaan
+            $(_row).find('td:first-child').text(TextPekerjaan);
+            $(_row).find('td:first-child').attr('name', PekerjaanSelected);
+
+
+            //set field identifikasi potensi bahaya
+            $(_row).find('td:nth-child(2)').text($('#WP02002_TXT_EDIT_DAMPAK_LINGKUNGAN').val());
+
+            //set value for text area Tindakan Pencegahan
+            $(_row).find('td:nth-child(3)').text($('#WP02002_TXT_EDIT_DAMPAK_PENCEGAHAN').val());
+
+            //set value for text area PIC
+            $(_row).find('td:nth-child(4)').text($('#WP02002_DDL_EDIT_DAMPAK_PIC').select2('data').text);
+            $(_row).find('td:nth-child(4)').attr('name', $("#WP02002_DDL_EDIT_DAMPAK_PIC").val());
+
+            $(_row).find('td:nth-child(5)').text($('#WP02002_TXT_EDIT_DAMPAK_KETERANGAN').val());
+
+            $(_row).show();
+            $('#WP02002_TBL_EDIT_DAMPAK').hide();
+            $('button[name="btn_edit_row"').removeAttr('disabled');
+            $('button[name="btn_delete_row"').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_DAMPAK').removeAttr('disabled');
+
+            $("#WP02002_DDL_ADD_DAMPAK_PEKERJAAN option[value='" + $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN").val() + "']").remove();
+            $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN option[value='" + $("#WP02002_DDL_EDIT_DAMPAK_PEKERJAAN").val() + "']").remove();
+        }
+    }
+
+    function showHenkatenEnviroment(e) {
+        if (e.checked) {
+            $('.hkenv').show();
+            $('.templateenv').show();
+        }
+        else {
+            $('.hkenv').hide();
+            $('.templateenv').hide();
+            $('.hk-dampak').removeAttr("checked");
+        }
+    }
+    //<----------------------------------------------END   D. DAMPK REGION------------------------------------------->
+
+    //<----------------------------------------------START   E. PENGAWASAN------------------------------------------->
+    function addDataPengawasan() {
+        //$('#add_ID').val('pengawasan');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddPengawasan();
+    }
+
+    function editDataPengawasan() {
+        //$('#edit_ID').val('pengawasan');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditPengawasan();
+    }
+
+    function deleteDataPengawasan(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('pengawasan');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeletePengawasan();
+    }
+
+    $("#WP02002_BTN_ADD_SHOW_PENGAWASAN").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+
+        $('#WP02002_TXT_ADD_NOREG').val('');
+        $('#WP02002_TXT_ADD_NOHANDPHONE').val('');
+        $('#WP02002_TXT_ADD_NODEPT').val('');
+        $('#WP02002_TXT_ADD_NOANZEN').val('');
+        $("#WP02002_DDL_ADD_USER").val(null).trigger("change");
+        $('.pws').attr("disabled", "disabled");
+        $("#WP02002_DDL_ADD_USER").select2({
+            ajax: {
+                url: SITE_URL + 'GetDataEmployee',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        company: 0,
+                        picstatus: "",
+                        companycode: "TMMIN",
+                        EmployeeId: 0
+                        // page: params.page
+                    };
+                },
+                processResults: function (data, search) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            templateResult: function (item) {
+                if (item.loading) return item.text;
+                return item.text;
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            width: '100%'
+        });
+
+        document.getElementById("WP02002_TBL_ADD_PENGAWASAN").style.display = "";
+
+        $("#WP02002_BTN_ADD_PENGAWASAN_CLOSE").on("click", function () {
+            $('#WP02002_TBL_ADD_PENGAWASAN').hide();
+        });
+    });
+
+    $('#WP02002_DDL_ADD_USER').on("change", function () {
+        var testval = $('#WP02002_DDL_ADD_USER').val();
+        if (testval != null) {
+            DataEmployeeDetail(testval, "SPVADD");
+        }
+    })
+
+    $('#WP02002_DDL_EDIT_USER').on("change", function () {
+        var testval = $('#WP02002_DDL_EDIT_USER').val();
+        if (testval != null) {
+            DataEmployeeDetail(testval, "SPVEDIT");
+        }
+    })
+
+    function confirmDeletePengawasan() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteData",
+                type: "GET",
+                data: { ID: Id, Mode: "Supervision" },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+
+                    var name = $(_row).find('td:nth-child(2)').text() + ',' + $(_row).find('td:nth-child(3)').text() + ',' + $(_row).find('td:nth-child(4)').text() + ',' + $(_row).find('td:nth-child(5)').text();
+                    $('#WP02002_DDL_ADD_USER').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_EDIT_USER').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+                    _row.remove();
+
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            });
+        }
+        else {
+            var name = $(_row).find('td:nth-child(2)').text() + ',' + $(_row).find('td:nth-child(3)').text() + ',' + $(_row).find('td:nth-child(4)').text() + ',' + $(_row).find('td:nth-child(5)').text();
+            $('#WP02002_DDL_ADD_USER').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_EDIT_USER').append('<option value="' + $(_row).find('td:first-child').attr('name') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+            _row.remove();
+        }
+
+    }
+
+    function confirmAddPengawasan() {
+
+        if ($('#WP02002_DDL_ADD_USER').val() == null || $('#WP02002_DDL_ADD_USER').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        var validstate = true;
+
+        $('#WP02002_TBL_LIST_PENGAWASAN > tr').each(function (index, value) {
+            if ($(value).find('td:first-child').attr("name") == $('#WP02002_DDL_ADD_USER option:selected').val()) {
+                GenerateMessage("PIC Supervision", "MWP004");
+                validstate = false;
+                return;
+            }
+        });
+
+        if (validstate == true) {
+            tableBuilderPengawasan($('#WP02002_DDL_ADD_USER option:selected'), $('#WP02002_TXT_ADD_NOREG').val(), $('#WP02002_TXT_ADD_NOHANDPHONE').val()
+                , $('#WP02002_TXT_ADD_NODEPT').val(), $('#WP02002_TXT_ADD_NOANZEN').val(), 0);
+
+            var _user = $('#WP02002_DDL_ADD_USER').val();
+            $("#WP02002_DDL_ADD_USER option[value='" + _user + "']").remove();
+
+            $("#WP02002_DDL_EDIT_USER option[value='" + _user + "']").remove();
+        }
+        
+
+    }
+
+    function tableBuilderPengawasan(_user, _noreg, _nohandphone, _dept, _anzen, _id) {
+        var html = '<tr>';
+        html += '<td data-title="'+ _id +'" style="width: 150px; padding:0!important" name="' + _user.val() + '">' + _user.text() + '</td>';
+
+        html += '<td style="width: 125px; padding:0!important">' + _noreg + '</td>';
+
+        html += '<td style="width: 125px; padding:0!important">' + _nohandphone + '</td>';
+
+        html += '<td style="width: 125PX; padding:0!important">' + _dept + '</td>';
+
+        html += '<td style="width: 125px; padding:0!important">' + _anzen + '</td>';
+
+        html += '<td style="width: 100px">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditPengawasan(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataPengawasan(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02002_TBL_LIST_PENGAWASAN').append(html);
+        $('#WP02002_TBL_ADD_PENGAWASAN').hide();
+    }
+
+    function actionEditPengawasan(obj) {
+        $('.pws').attr("disabled", "disabled");
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+        var name = $(_row).find('td:nth-child(2)').text() + ',' + $(_row).find('td:nth-child(3)').text() + ',' + $(_row).find('td:nth-child(4)').text() + ',' + $(_row).find('td:nth-child(5)').text();
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $("#WP02002_DDL_EDIT_USER").select2({
+                    ajax: {
+                        url: SITE_URL + 'GetDataEmployee',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                term: params.term,
+                                company: 0,
+                                picstatus: "",
+                                companycode: "TMMIN",
+                                EmployeeId: 0
+                                // page: params.page
+                            };
+                        },
+                        processResults: function (data, search) {
+                            return {
+                                results: data
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: function (item) {
+                        if (item.loading) return item.text;
+                        return item.text;
+                    },
+                    escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                    minimumInputLength: 1,
+                    width: '100%'
+                });
+                $('#WP02002_DDL_EDIT_USER').append('<option value="' + $(row).find('td:first-child').attr('name') + '" name="' + name + '"  >' + $(row).find('td:first-child').text() + '</option>');
+                $('#WP02002_DDL_EDIT_USER').val($(value).attr("name")).trigger("change");
+            }
+            else if (index == 1) { //set value for text area Identifikasi Potensi DAMPAK
+                $('#WP02002_TXT_EDIT_NOREG').val($(value).text());
+            }
+            else if (index == 2) { //set value for text area Tindakan Pencegahan
+                $('#WP02002_TXT_EDIT_NOHANDPHONE').val($(value).text());
+            }
+            else if (index == 3) { //set value for text area PIC
+                $('#WP02002_TXT_EDIT_NODEPT').val($(value).text());
+            }
+            else if (index == 4) { //set value for text area Keterangan (Henkaten Safety)
+                $('#WP02002_TXT_EDIT_NOANZEN').val($(value).text());
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02002_BTN_ADD_SHOW_PENGAWASAN').attr('disabled', 'disabled');
+
+        $('#WP02002_TBL_EDIT_PENGAWASAN').show();
+        $("#WP02002_BTN_EDIT_PENGAWASAN_CLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02002_TBL_EDIT_PENGAWASAN').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_PENGAWASAN').removeAttr('disabled');
+            $("#WP02002_DDL_EDIT_USER option[value='" + $(row).find('td:first-child').attr('name') + "']").remove();
+        });
+
+        $('#WP02002_BTN_EDIT_PENGAWASAN').on("click", function (e) {
+            e.stopPropagation();
+            editDataPengawasan();
+        })
+    }
+
+    function confirmEditPengawasan() {
+        var ddlsel = $("#WP02002_DDL_EDIT_USER").select2('data').text;
+        if (ddlsel != "" && $("#WP02002_DDL_EDIT_USER").val() != "") {
+            $(_row).find('td:first-child').text(ddlsel);
+            $(_row).find('td:first-child').attr('name', $("#WP02002_DDL_EDIT_USER").val());
+            $("#WP02002_DDL_ADD_USER option[value='" + $("#WP02002_DDL_EDIT_USER").val() + "']").remove();
+            $("#WP02002_DDL_EDIT_USER option[value='" + $("#WP02002_DDL_EDIT_USER").val() + "']").remove();
+
+            //set field identifikasi potensi bahaya
+            $(_row).find('td:nth-child(2)').text($('#WP02002_TXT_EDIT_NOREG').val());
+
+            //set value for text area Tindakan Pencegahan
+            $(_row).find('td:nth-child(3)').text($('#WP02002_TXT_EDIT_NOHANDPHONE').val());
+
+            //set value for text area PIC
+            $(_row).find('td:nth-child(4)').text($('#WP02002_TXT_EDIT_NODEPT').val());
+
+            $(_row).find('td:nth-child(5)').text($('#WP02002_TXT_EDIT_NOANZEN').val());
+
+            $(_row).show();
+            $('#WP02002_TBL_EDIT_PENGAWASAN').hide();
+            $('button[name="btn_edit_row"').removeAttr('disabled');
+            $('button[name="btn_delete_row"').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_PENGAWASAN').removeAttr('disabled');
+        }
+        
+    }
+
+    //<----------------------------------------------END   E. PENGAWASAN------------------------------------------->
+
+    //<----------------------------------------------START   SHIFT------------------------------------------->
+    function addDataWorkingHours() {
+        //$('#add_ID').val('shift');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddWorkingHours();
+    }
+
+    function editDataWorkingHours() {
+        //$('#edit_ID').val('shift');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditWorkingHours();
+    }
+
+    function deleteDataWorkingHours(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('shift');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeleteWorkingHours();
+    }
+
+    $("#WP02002_BTN_ADD_SHOW_WORKINGHOURS").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+
+        $('#WP02002_DDL_ADD_WORKINGHOURS').val('');
+
+        document.getElementById("WP02002_TBL_ADD_WORKINGHOURS").style.display = "";
+
+        $("#WP02002_BTN_ADD_WORKINGHOURS_CLOSE").on("click", function () {
+            $('#WP02002_TBL_ADD_WORKINGHOURS').hide();
+        });
+    });
+
+    function confirmDeleteWorkingHours() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            $.ajax({
+                url: SITE_URL + "DeleteData",
+                type: "GET",
+                data: { ID: Id, Mode: "Shift" },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (data.Message != "") {
+                    toastr.error(data.Message);
+                }
+                else {
+                    toastr.success("Data has been deleted");
+
+                    var name = $(_row).find('td:first-child').attr('id') + ',' + $(_row).find('td:first-child').text();
+                    $('#WP02002_DDL_ADD_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+                    $('#WP02002_DDL_EDIT_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+                    _row.remove();
+
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            });
+        }
+        else {
+            var name = $(_row).find('td:first-child').attr('id') + ',' + $(_row).find('td:first-child').text();
+            $('#WP02002_DDL_ADD_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+            $('#WP02002_DDL_EDIT_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+            _row.remove();
+        }
+
+    }
+
+    function confirmAddWorkingHours() {
+
+        if ($('#WP02002_DDL_ADD_WORKINGHOURS').val() == null || $('#WP02002_DDL_ADD_WORKINGHOURS').val() == '') {
+            GenerateMessage("Shift", "MWP008");
+            return;
+        }
+
+        var total_data_wh = $('#WP02002_DDL_ADD_WORKINGHOURS option:selected').length;
+        if (total_data_wh > 0) {
+            var _data = $('#WP02002_DDL_ADD_WORKINGHOURS option:selected').attr('name').split(',');
+
+            tableBuilderWorkingHours($('#WP02002_DDL_ADD_WORKINGHOURS option:selected'), _data[0], _data[1], 0);
+        }
+
+        var _WORKINGHOURS = $('#WP02002_DDL_ADD_WORKINGHOURS').val();
+        $("#WP02002_DDL_ADD_WORKINGHOURS option[value='" + _WORKINGHOURS + "']").remove();
+
+        $("#WP02002_DDL_EDIT_WORKINGHOURS option[value='" + _WORKINGHOURS + "']").remove();
+
+
+    }
+
+    function tableBuilderWorkingHours(_WORKINGHOURS, _val, _text, _id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id + '" style="width: 50%; padding:0!important" id="' + _WORKINGHOURS.val() + '">' + _WORKINGHOURS.text() + '</td>';
+
+        html += '<td style="width: 50%">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditWorkingHours(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataWorkingHours(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02002_TBL_LIST_WORKINGHOURS').append(html);
+        $('#WP02002_TBL_ADD_WORKINGHOURS').hide();
+
+        CountShift += 1;
+
+        if (CountShift >= 3) {
+            $('#WP02002_BTN_ADD_SHOW_WORKINGHOURS').attr("disabled", "disabled");
+        }
+    }
+
+    function actionEditWorkingHours(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+        var name = $(_row).find('td:first-child').attr('id') + ',' + $(_row).find('td:first-child').text();
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                $('#WP02002_DDL_EDIT_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+                $('#WP02002_DDL_EDIT_WORKINGHOURS').val($(value).attr("id"));
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02002_BTN_ADD_SHOW_WORKINGHOURS').attr('disabled', 'disabled');
+
+        $('#WP02002_TBL_EDIT_WORKINGHOURS').show();
+        $("#WP02002_BTN_EDIT_WORKINGHOURS_CLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02002_TBL_EDIT_WORKINGHOURS').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_WORKINGHOURS').removeAttr('disabled');
+            $("#WP02002_DDL_EDIT_WORKINGHOURS option[value='" + $(row).find('td:first-child').attr('id') + "']").remove();
+        });
+
+        $('#WP02002_BTN_EDIT_WORKINGHOURS').on("click", function (e) {
+            e.stopPropagation();
+            editDataWorkingHours();
+        })
+    }
+
+    function confirmEditWorkingHours() {
+        if ($("#WP02002_DDL_EDIT_WORKINGHOURS option:selected").text() != "") {
+            var name = $(_row).find('td:first-child').attr('id') + ',' + $(_row).find('td:first-child').text();
+            $('#WP02002_DDL_ADD_WORKINGHOURS').append('<option value="' + $(_row).find('td:first-child').attr('id') + '" name="' + name + '"  >' + $(_row).find('td:first-child').text() + '</option>');
+            var _data = $('#WP02002_DDL_EDIT_WORKINGHOURS option:selected').attr('name').split(',');
+
+
+            $(_row).find('td:first-child').text($("#WP02002_DDL_EDIT_WORKINGHOURS option:selected").text());
+            $(_row).find('td:first-child').attr('id', $("#WP02002_DDL_EDIT_WORKINGHOURS").val());
+            $("#WP02002_DDL_ADD_WORKINGHOURS option[value='" + $("#WP02002_DDL_EDIT_WORKINGHOURS").val() + "']").remove();
+            $("#WP02002_DDL_EDIT_WORKINGHOURS option[value='" + $("#WP02002_DDL_EDIT_WORKINGHOURS").val() + "']").remove();
+
+            $(_row).show();
+            $('#WP02002_TBL_EDIT_WORKINGHOURS').hide();
+            $('button[name="btn_edit_row"').removeAttr('disabled');
+            $('button[name="btn_delete_row"').removeAttr('disabled');
+            $('#WP02002_BTN_ADD_SHOW_WORKINGHOURS').removeAttr('disabled');
+        }
+    }
+
+    //<----------------------------------------------END   SHIFT------------------------------------------->
+
+    function getListWorking() {
+        var _list = [];
+
+        $('#WP02002_TBL_LIST_PEKERJAAN > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID_TB_M_WORKING_TYPE"] = $(value).find('td:first-child').attr("name");
+            _data["DANGER_TYPE"] = $(value).find('td:nth-child(2)').children().prop("checked") ? '0' : $(value).find('td:nth-child(3)').children().prop("checked") ? '1' : '2';
+            _data["DAY_1"] = $(value).find('td:nth-child(5)').children().prop("checked") ? '1' : '0';
+            _data["DAY_2"] = $(value).find('td:nth-child(6)').children().prop("checked") ? '1' : '0';
+            _data["DAY_3"] = $(value).find('td:nth-child(7)').children().prop("checked") ? '1' : '0';
+            _data["DAY_4"] = $(value).find('td:nth-child(8)').children().prop("checked") ? '1' : '0';
+            _data["DAY_5"] = $(value).find('td:nth-child(9)').children().prop("checked") ? '1' : '0';
+            _data["DAY_6"] = $(value).find('td:nth-child(10)').children().prop("checked") ? '1' : '0';
+            _data["DAY_7"] = $(value).find('td:nth-child(11)').children().prop("checked") ? '1' : '0';
+            _data["SIX_A"] = $(value).find('td:nth-child(12)').children().prop("checked") ? '1' : '0';
+            _data["SIX_B"] = $(value).find('td:nth-child(13)').children().prop("checked") ? '1' : '0';
+            _data["SIX_C"] = $(value).find('td:nth-child(14)').children().prop("checked") ? '1' : '0';
+            _data["SIX_D"] = $(value).find('td:nth-child(15)').children().prop("checked") ? '1' : '0';
+            _data["SIX_E"] = $(value).find('td:nth-child(16)').children().prop("checked") ? '1' : '0';
+            _data["SIX_F"] = $(value).find('td:nth-child(17)').children().prop("checked") ? '1' : '0';
+            _data["SIX_ALPHA"] = $(value).find('td:nth-child(18)').children().prop("checked") ? '1' : '0';
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function getListIdentification() {
+        var _list = [];
+
+        $('#WP02002_TBL_LIST_BAHAYA > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID_TB_M_WORKING_TYPE"] = $(value).find('td:first-child').attr("name");
+            _data["IDENTITY_DANGER_POTENTIAL"] = $(value).find('td:nth-child(2)').text()
+            _data["IDENTITY_DANGER_PREVENTION"] = $(value).find('td:nth-child(3)').text();
+            _data["ID_TB_M_EMPLOYEE"] = $(value).find('td:nth-child(4)').attr("name");
+            _data["HENKANTEN_SAFETY"] = $(value).find('td:nth-child(5)').text();
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            ///console.log(_data);
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function getListImpact() {
+        var _list = [];
+
+        $('#WP02002_TBL_LIST_DAMPAK > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID_TB_M_WORKING_TYPE"] = $(value).find('td:first-child').attr("name");
+            _data["IDENTITY_IMPACT_POTENTIAL"] = $(value).find('td:nth-child(2)').text()
+            _data["IDENTITY_IMPACT_PREVENTION"] = $(value).find('td:nth-child(3)').text();
+            _data["ID_TB_M_EMPLOYEE"] = $(value).find('td:nth-child(4)').attr("name");
+            _data["HENKANTEN_ENV"] = $(value).find('td:nth-child(5)').text();
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            //console.log(_data);
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function getListSupervision() {
+        var _list = [];
+
+        $('#WP02002_TBL_LIST_PENGAWASAN > tr').each(function (index, value) {
+            var _data = {};
+            _data["ID_TB_M_EMPLOYEE"] = $(value).find('td:first-child').attr("name");
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            //console.log(_data);
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function getShift() {
+        var _list = [];
+
+        $('#WP02002_TBL_LIST_WORKINGHOURS > tr').each(function (index, value) {
+            var _data = {};
+            _data["SHIFT_ID"] = $(value).find('td:first-child').attr("id");
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            //console.log(_data);
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function getHenkatenSafety() {
+        var _data = {};
+
+        if ($('#WP02002_CHK_ADD_HKSAFETY')[0].checked) {
+            _data.HK_SAFETY_PROCESS = $('#WP02002_CHK_ADD_HKSAFETYPROCESS')[0].checked ? "1" : "0";
+            _data.HK_SAFETY_MACHINE = $('#WP02002_CHK_ADD_HKSAFETYMACHINE')[0].checked ? "1" : "0";
+            _data.HK_SAFETY_MODIFICATION = $('#WP02002_CHK_ADD_HKSAFETYMODIF')[0].checked ? "1" : "0";
+            _data.IS_HENKATEN_SAFETY = "1";
+        }
+        else {
+            _data.IS_HENKATEN_SAFETY = "0";
+            _data.HK_SAFETY_PROCESS = "0";
+            _data.HK_SAFETY_MACHINE = "0";
+            _data.HK_SAFETY_MODIFICATION = "0";
+        }
+
+        _data.WP_PROJECT_JOB_ID = $('#WP_PROJECT_JOB_ID').val();
+        _data.ID = $('#HK_SAFETY_ID').val();
+
+        return _data;
+    }
+
+    function getHenkatenEnv() {
+        var _data = {};
+
+        if ($('#WP02002_CHK_ADD_HKENV')[0].checked) {
+            _data.HK_ENV_PROCESS = $('#WP02002_CHK_ADD_HKENVPROCESS')[0].checked ? "1" : "0";
+            _data.HK_ENV_MACHINE = $('#WP02002_CHK_ADD_HKENVMACHINE')[0].checked ? "1" : "0";
+            _data.HK_ENV_MATERIAL = $('#WP02002_CHK_ADD_HKENVMATERIAL')[0].checked ? "1" : "0";
+            _data.HK_ENV_BUILDING = $('#WP02002_CHK_ADD_HKENVBUILDING')[0].checked ? "1" : "0";
+            _data.IS_HENKATEN_ENV = "1";
+        }
+        else {
+            _data.IS_HENKATEN_ENV = "0";
+            _data.HK_ENV_PROCESS =  "0";
+            _data.HK_ENV_MACHINE =  "0";
+            _data.HK_ENV_MATERIAL =  "0";
+            _data.HK_ENV_BUILDING =  "0";
+        }
+
+        _data.WP_PROJECT_JOB_ID = $('#WP_PROJECT_JOB_ID').val();
+        _data.ID = $('#HK_ENV_ID').val();
+
+        return _data;
+    }
+
+    function CheckExistsArray(value, arr) {
+        var isExist = false;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
+    }
+
+    $('#WP02002_DT_JOB_START').on("change", function () {
+        var _date = new Date($('#WP02002_DT_JOB_START').val());
+
+        var currday = _date.getDate();
+        var futureday = currday + 7;
+
+        var day = 1;
+        for (var i = 1; currday <= futureday; i++) {
+            var textdate = _date;
+
+            $('#WP02002_TH_ADD_D' + i).text(textdate.getDate());
+            currday += 1;
+            _date.setDate(_date.getDate() + 1);
+        }
+
+
+    });
+
+    function BindingEmployeeDynamic(element, company=0, picstatus="",companycode="", employeeid=0) {
+        $("#" + element).html("");
+        $("#"+element).select2({
+            ajax: {
+                url: SITE_URL + 'GetDataEmployee',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        company: company,
+                        picstatus: picstatus,
+                        companycode: companycode,
+                        EmployeeId: employeeid
+                        // page: params.page
+                    };
+                },
+                processResults: function (data, search) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true,
+                async: false
+            },
+            templateResult: function (item) {
+                if (item.loading) return item.text;
+                return item.text;
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            width: '100%'
+        });
+    }
+
+    function DataEmployeeDetail(EmployeeId,Type="") {
+        if (EmployeeId != "" && EmployeeId != null) {
+            $.ajax({
+                url: SITE_URL + "GetDataEmployeeDetail",
+                type: "GET",
+                data: { EmployeeId: EmployeeId },
+                async: false
+            }).done(function (data, textStatus, jqXHR) {
+                if (Type == "PMP") {
+                    $('#WP02002_TXT_ADD_NOALLEAD').val(data.ANZEN_SERTIFICATE_NO);
+                    $('#WP02002_TXT_ADD_NOHPLEAD').val(data.PHONE);
+                }
+                else if (Type == "PNG") {
+                    $('#WP02002_TXT_ADD_NOALPGWS').val(data.ANZEN_SERTIFICATE_NO);
+                    $('#WP02002_TXT_ADD_NOHPPGWS').val(data.PHONE);
+                }
+                else if (Type == "SPVADD") {
+                    $('#WP02002_TXT_ADD_NOREG').val(data.REG_NO);
+                    $('#WP02002_TXT_ADD_NOHANDPHONE').val(data.PHONE);
+                    $('#WP02002_TXT_ADD_NODEPT').val(data.SECTION);
+                    $('#WP02002_TXT_ADD_NOANZEN').val(data.ANZEN_SERTIFICATE_NO);
+                }
+                else if (Type == "SPVEDIT") {
+                    $('#WP02002_TXT_EDIT_NOREG').val(data.REG_NO);
+                    $('#WP02002_TXT_EDIT_NOHANDPHONE').val(data.PHONE);
+                    $('#WP02002_TXT_EDIT_NODEPT').val(data.SECTION);
+                    $('#WP02002_TXT_EDIT_NOANZEN').val(data.ANZEN_SERTIFICATE_NO);
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+            })
+        }
+    }
+    </script>

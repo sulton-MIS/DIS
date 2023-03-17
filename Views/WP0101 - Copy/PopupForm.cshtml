@@ -1,0 +1,89 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<!--form confirm delete data-->
+<div id="Confirmation_Delete_Popup" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="delete_ID" />
+
+                <div> Are you sure want to Delete this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" onclick="delete_order($('#delete_ID').val())" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form confirm add data-->
+<div id="PopupForm_AddNewConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <div> Are you sure want to Save this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Add_New" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Add_New" onclick="addNew()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--form add data-->
+<!--form confirm update data-->
+<div id="PopupForm_EditConfirm" class="modal fade" style="z-index:9999!important">
+    <div class="modal-dialog modal-md" style="width:300px!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="@Url.Content("~/Content/Bootstrap/img/question.png")" height="40" width="40" class="modal-icon" /></span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="popup-title">Confirmation</h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" style="display:none" id="edit_ID" />
+                <input type="text" style="display:none" id="edit_NO" />
+
+                <div> Are you sure want to Update this data ?</div>
+                <div class="row" style="padding-left: 10px;">
+                    <div id="confirmationModal">&nbsp;</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" id="btn_Confirm_Edit_Data" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+                    <button type="button" id="btnNo" class="btn btn-default btn-sm" data-dismiss="modal">No</button>*@
+                <button type="button" id="btn_Confirm_Edit_Data" onclick="updateData()" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> Yes</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form update data-->

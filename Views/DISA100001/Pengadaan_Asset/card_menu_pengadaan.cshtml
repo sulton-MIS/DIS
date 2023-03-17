@@ -1,0 +1,109 @@
+﻿<!-- Style Desain Page -->
+<style> 
+    .menu-text-panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align:center;
+        vertical-align: middle;
+    }
+
+    .menu-panel:hover {
+        background-color: rgb(84, 96, 125);
+        cursor: pointer;
+    }
+
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border: 0;
+        border-top: 2px solid black;
+    }
+
+    .row{
+        margin:0;
+        padding:0;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .menu-panel {
+            min-height: 250px;
+        }
+
+        .fa-menu-icon{
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .menu-panel {
+            min-height: 350px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        .menu-text{
+            font-size: 25px;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+    
+</style>
+
+
+<!-- Page View -->
+<div id="menu-container" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -30px; margin-left: 10px;">
+                    <h1><b><u>MENU @ViewData["Title1"] </u></b></h1>
+            </div>
+
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="REQ_ASSET">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-shopping-basket fa-menu-icon"></i><br />
+                            <b class="menu-text">REQ. PENGADAAN ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="REG_ASSET">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-registered fa-menu-icon"></i><br />
+                            <b class="menu-text">REGISTER NO.ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="panel panel-default menu-panel" data-target="DATA_ASSET">
+                    <div class="panel-body">
+                        <p class="menu-text-panel">
+                            <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                            <b class="menu-text">LIST DATA MASTER ASSET</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

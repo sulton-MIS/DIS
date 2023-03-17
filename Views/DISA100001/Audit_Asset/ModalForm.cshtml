@@ -1,0 +1,379 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using Toyota.Common.Credential
+@using AI070.Models.DISA100001Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    List<ListAssetModel> ListAsset = (List<ListAssetModel>)ViewData["no_asset"];
+    //List<UrutanModel> Urutan = (List<UrutanModel>)ViewData["no_urut"];
+    //var Urutan_no = ViewData["no_urut"];
+
+}
+<script>
+
+</script>
+
+<style>
+    /*.new {
+        color: red;
+        font-weight: bold;
+        animation: animate 1.0s linear infinite;
+    }
+
+    @@keyframes animate {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }*/
+</style>
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD DISPOSE ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="">
+                    <div class="col-md-12">
+                        <label class="required"> @*Tanggal:*@ </label>
+                        @{
+                            var tglSekarang = DateTime.Now.ToString("dd-MM-yyyy");
+                            var hariSekarang = DateTime.Now.ToString("dddd");
+                        }
+                        <font style="font-size: 16px; font-style:italic">@hariSekarang, @tglSekarang</font>
+                        @*<input id="addTglLapor" readonly type="text" class="form-control" value="@tglSekarang" />*@
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        <label class="required"> No. Asset <font style="color: red">*</font> </label>
+                        <select class="form-control select2" id="addNoAsset" required>
+                            <option value="" selected="selected">---PILIH---</option>
+                            @{
+                                if (ListAsset != null)
+                                {
+                                    if (ListAsset.Count() > 0)
+                                    {
+                                        foreach (ListAssetModel item in ListAsset)
+                                        {
+                                            <option value="@item.no_asset">@item.no_asset</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        <label class="required"> Lampiran Gambar <font style="color: red">*</font> </label>
+                        <input type="file" onchange="change_image('add',this)" class="btn btn-white btn-xs form-control" accept="image/*" id="addNamaFoto" />
+                        <img onerror="this.style.display='none'" id="addImageBox" src="" style="height:300px;width:100%" />
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        <label class="required"> Keterangan <font style="color: red">*</font> </label>
+                        <textarea id="addKeterangan" class="form-control" style="height:120px"></textarea>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button onclick="clear_add()" class="btn btn-danger btn-sm" style="width: 80px;"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:80% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT DISPOSE ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style=";">
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+
+                </div>
+                <div class="row" style="">
+                    <div class="col-md-4">
+                        <label> NO. AUDIT </label>
+                        <input id="editNoAudit" readonly type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> JENIS AUDIT </label>
+                        <input id="editJenisAudit" readonly type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> NO. ASSET </label>
+                        <input id="editNoAsset" readonly type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                   
+                    <div class="col-md-4" id="periode_semester">
+                        <label class="required"> PERIODE SEMESTER </label>
+                        <select id="editPeriodeSemester" class="form-control">
+                            <option value="">--- Pilih Semester ---</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" id="periode_bulan">
+                        <label class="required"> PERIODE BULAN </label>
+                        <input type="text" class="form-control datepicker-months" id="editPeriodeBulan" placeholder="(Pilih Bulan)" value="" />
+                    </div>
+                    <div class="col-md-4" id="">
+                        <label class="required"> TAHUN </label>
+                        <input type="text" class="form-control datepicker" id="editTahun" placeholder="(Pilih Tahun)" value="" />
+                    </div>
+                    <div class="col-md-4" id="">
+                        <label class="required"> STATUS KONDISI </label>
+                        <select id="editStatusKondisi" class="form-control">
+                            <option value="">--- Pilih Status Kondisi ---</option>
+                            <option value="OK">OK</option>
+                            <option value="NG">NG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <label class="required"> KETERANGAN </label>
+                        <textarea id="editKeterangan" class="form-control" style="height:120px"></textarea>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-6">
+                        <label class="required"> CURRENT IMAGE </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="chkboxname" id="chkChangeImage">
+                        <b><u><i>**CHANGE IMAGE</i></u></b>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-top:0px">
+                    <div class="col-md-6" style="margin-top: 30px">
+                        <img onerror="this.style.display='none'" id="bfrImageEdit" src="" style="height:350px;width:100%" />
+                    </div>
+                    <div class="col-md-6" style="margin-top:10px" id="display_change_image">
+                        <input type="file" onchange="change_image('edit',this)" class="btn btn-white btn-xs form-control" accept="image/*" id="editNamaFoto" />
+                        <img onerror="this.style.display='none'" id="editImageBox" src="" style="height: 350px; width: 100%" />
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:0px">
+                    <div class="col-md-12">
+
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Show Lampiran Foto-->
+<div id="modalShowImageForm" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:50% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="cancel_edit()" type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM SHOW IMAGE LAMPIRAN</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="margin-top:0px">
+                    <input style="display:none" type="text" maxlength="50" id="ID" class="form-control" placeholder="" />
+                    <input style="display:none" type="text" id="ID_TB_M_AUDIT" class="form-control" />
+                    @*<input style="display:none" type="text" id="nmfoto" class="form-control" />*@
+                </div>
+
+                <div class="row" style="margin-top:0px">
+                    <div class="col-md-12">
+                        <img onerror="this.style.display='none'" id="currentimg" src="" style="height: 500px; width: 100%; border: 1px solid #eaeaea " />
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                @*<button onclick="image_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>*@
+                @*<button onclick="cancel_edit()" type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CLOSE</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Show Lampiran Detail-->
+<div id="modalShowDataDetail" class="modal fade">
+    <div class="modal-dialog modal-md" style="width:80% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="cancel_edit()" type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM SHOW DETAIL LAMPIRAN</h4>
+            </div>
+
+            <div class="modal-body">
+                <table style="border:none; width: 100%">
+                    <tr>
+                        <td>
+                            <input style="display:none" type="text" maxlength="50" id="ID" class="form-control" placeholder="" />
+                            <input style="display:none" type="text" id="ID_TB_M_DISPOSE" class="form-control" />
+                        </td>
+                    </tr>
+                    <tr style="margin-top: 0px;">
+                        <td rowspan="7">
+                            <img onerror="this.style.display='none'" id="currentimg" src="" style="height: 350px; width: 500px; border: 1px solid #eaeaea " />
+                        </td>
+                        <td colspan="1" style="border-right: 1px solid #dddddd">
+                            <label class="required"> NO. DISPOSE </label>
+                            <p>
+                                <label for="show_NO_DISPOSE" style="vertical-align: middle; font-size: 24px; font-weight: bold; font-family: 'Segoe UI'"></label>
+                            </p>
+                        </td>
+                        <td colspan="2">
+                            <label class="required"> STATUS APPROVAL </label>
+                            <p>
+                                <label for="show_STATUS_APPROVAL" style="vertical-align: middle; font-size: 24px; font-weight: bold; font-family: 'Segoe UI'"></label>
+                            </p>
+                        </td>
+
+                    </tr>
+                    <tr style="margin-top: 10px;">
+
+                        <td colspan="4">
+                            <label class="required"> KETERANGAN DISPOSE </label>
+                            <textarea disabled="disabled" id="show_KETERANGAN_DISPOSE" class="form-control" style="height:120px; background-color:ghostwhite;"></textarea>
+                        </td>
+
+                    </tr>
+                    <tr style="margin-top: 10px;">
+                        <td>
+                            <label> NO. DISPOSE </label>
+                            <input id="show_NO_DISPOSE" readonly="readonly" type="text" class="form-control" style="background: white;" />
+                        </td>
+                        <td>
+                            <label> NO. ASSET </label>
+                            <input id="show_NO_ASSET" readonly="readonly" type="text" autocomplete="off" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> STATUS APPROVAL </label>
+                            <input id="show_STATUS_APPROVAL" readonly="readonly" type="text" autocomplete="off" class="form-control" style="background-color: white;" />
+                        </td>
+                    </tr>
+                    <tr style="margin-top: 10px;">
+                        <td>
+                            <label> NAMA ASSET </label>
+                            <input id="show_NAMA_ASSET" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> NAMA ASSET INVOICE </label>
+                            <input id="show_NAMA_ASSET_INV" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> ITEM CODE </label>
+                            <input id="show_ITEM_CODE" readonly="readonly" type="text" autocomplete="off" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> SUPPLIER </label>
+                            <input id="show_SUPPLIER" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                    </tr>
+                    <tr style="margin-top: 10px;">
+                        <td>
+                            <label> MEREK </label>
+                            <input id="show_MEREK" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> TIPE </label>
+                            <input id="show_TIPE" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> SPESIFIKASI </label>
+                            <input id="show_SPESIFIKASI" readonly="readonly" type="text" autocomplete="off" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> HARGA SATUAN </label>
+                            <input id="show_HARGA_SATUAN" readonly="readonly" type="text" autocomplete="off" class="form-control" style="background-color: white;" />
+                        </td>
+                    </tr>
+                    <tr style="margin-top: 10px;">
+                        <td>
+                            <label> TAHUN MASUK </label>
+                            <input id="show_TAHUN" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> BULAN MASUK </label>
+                            <input id="show_BULAN" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> UMUR EKONOMIS (tahun) </label>
+                            <input id="show_UMUR_EKONOMIS" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                    </tr>
+                    <tr style="margin-top: 10px;">
+                        <td>
+                            <label> NAMA USER </label>
+                            <input id="show_NAMA_USER" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> DEPT. USER</label>
+                            <input id="show_DEPT_USER" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                        <td>
+                            <label> HALTE </label>
+                            <input id="show_HALTE" readonly="readonly" type="text" class="form-control" style="background-color: white;" />
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                @*<button onclick="image_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>*@
+                @*<button onclick="cancel_edit()" type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CLOSE</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+

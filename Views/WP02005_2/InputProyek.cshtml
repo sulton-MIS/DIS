@@ -1,0 +1,148 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02005Master;
+@{
+
+    List<CompanyModel> Companys = (List<CompanyModel>)ViewData["Company"];
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+    List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+    List<AI070.Models.WP02002Master.AreaModel> Areas = (List<AI070.Models.WP02002Master.AreaModel>)ViewData["Area"];
+}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>Project Information</u>
+        </label>
+
+        <div class="form-group">
+            <label>Project Code</label>
+            <input required type="text" maxlength="25" class="form-control space-input" id="PROJECTCODE" placeholder="Nama Proyek" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Project Name</label>
+            <input required type="text" maxlength="25" class="form-control space-input" id="PROJECTNAME" placeholder="Nama Proyek" disabled>
+        </div>
+        <div class="form-group">
+            <label>Job Name</label>
+            <input required type="text" maxlength="25" class="form-control space-input " id="JOBNAME" placeholder="Nama Proyek" disabled>
+        </div>
+        <div class="form-group">
+            <label>Project Area <span style="color:red">*</span></label>
+            <select class="form-control space-input select2" id="JOB_AREA" required disabled>
+                <option value="">- select -</option>
+                @{
+                    if (Areas != null)
+                    {
+                        if (Areas.Count() > 0)
+                        {
+                            foreach (AI070.Models.WP02002Master.AreaModel item in Areas)
+                            {
+                                <option value="@item.ID_TB_M_AREA">@item.AREA_NAME</option>
+                            }
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>Job Information</u>
+        </label>
+        <div class="form-group">
+            <label>IMPB No</label>
+            <input required type="text" maxlength="25" class="form-control space-input" id="IMPBNO" placeholder="Nama Proyek" disabled>
+        </div>
+        <div class="form-group">
+            <label>Project Company <span style="color:red">*</span></label>
+            <select class="form-control space-input select2" id="JOB_COMPANY" required disabled>
+                <option value="">- select -</option>
+                @{
+                    if (Companys != null)
+                    {
+                        if (Companys.Count() > 0)
+                        {
+                            foreach (CompanyModel item in Companys)
+                            {
+                                <option value="@item.ID_TB_M_COMPANY">@item.COMPANY_NAME</option>
+                            }
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Leader</label>
+            <input required type="text" maxlength="25" class="form-control space-input" id="LEADER_NAME" placeholder="Nama Proyek" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Supervisor</label>
+            <input required type="text" maxlength="25" class="form-control space-input" id="SUPERVISOR_NAME" placeholder="Nama Proyek" disabled>
+        </div>
+
+    </div>
+    <hr />
+       
+</div>
+<br />
+
+
+@*<div class="row ">
+    
+    <div class="col-lg-6">
+        <label class="section-title">
+            <u>Project Execution</u>
+        </label>
+        <div class="form-group">
+            <label>Incident Title <span style="color:red">*</span></label>
+            <input type="hidden" id="WP_PROJECT_ID" value="0" />
+            <input type="text" maxlength="25" class="form-control space-input input-project" id="INCIDENT_TITLE" placeholder="Incident Title">
+        </div>
+        <div class="form-group">
+            <label>Incident Description <span style="color:red">*</span></label>
+            <input required type="text" maxlength="25" class="form-control space-input input-project" id="INCIDENT_DESCRIPTION" placeholder="Incident Description">
+        </div>
+
+        
+        <div class="form-group">
+            <label>Photo <span style="color:red">*</span></label>
+            <input type="file" id="SupportPhoto" accept="image/png, image/jpeg" />
+        </div>
+        <div class="form-group">
+            <label>Document <span style="color:red">*</span></label>
+            <input type="file" id="SupportDoc" accept=".doc,.docx,.pdf" />
+        </div>
+
+        <div class="form-group">
+            <label>Rating Company <span style="color:red">*</span></label>
+            <div id="rateCompany" class="rateyo"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Rating Leader <span style="color:red">*</span></label>
+            <div id="rateLeader" class="rateyo"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Rating Supervisor <span style="color:red">*</span></label>
+            <div id="rateSupervisor" class="rateyo"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Rating Worker <span style="color:red">*</span></label>
+            <div id="rateWorker" class="rateyo"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Evaluation <span style="color:red">*</span></label>
+            <textarea class="form-control" id="EVALUATION_NOTES" rows="3" maxlength="1000"></textarea>
+        </div>
+    </div>
+    
+</div>*@

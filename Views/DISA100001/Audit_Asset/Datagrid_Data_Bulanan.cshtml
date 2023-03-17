@@ -1,0 +1,191 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA10001_AUDIT_ASSET> DataWP = (List<DISA10001_AUDIT_ASSET>)ViewData["DataDISA100001"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    //List<DISA100001> Status_Cmb = (List<DISA100001>)ViewData["Status_Cmb"];
+    //List<DISA100001> Time_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> ExecTime_Cmb = (List<DISA100001>)ViewData["Time_Cmb"];
+    //List<DISA100001> Model_type = (List<DISA100001>)ViewData["Model_type"];
+    //var flg_status_dispose= @ViewData["FLG_STATUS_DISPOSE"];
+}
+
+<style>
+    table{
+        background-color: white !important;
+    }
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+
+    #tr1 {
+        border: 1px solid black;
+        height: 150px;
+    }
+
+    #tr2 {
+        text-align: center;
+        border: 1px solid black;
+        height: 10px;
+    }
+
+    /*---- TABEL UNTUK QTY & AMOUNT ----*/
+    .tbDataCount td {
+        border: 1px solid #ddd;
+        text-align: right;
+    }
+
+    .tbDataCount_thead {
+        border: 1px solid #ddd;
+        font-weight: bold;
+        font-size: 14px;
+        background-color: #54607d;
+        text-align: center;
+        color: white;
+    }
+        .tbDataCount_thead th {
+            border: 1px solid #ddd;
+        }
+</style>
+
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <table class="tbDataCount table-bordered table-condensed table-fixed" style="margin-top:10px; border:1px solid; height: 30px; width: 20%; height: 120px">
+                <tr class="tbDataCount_thead">
+                    <th style="width: 50px">  </th>
+                    <th style="width: 100px;"> Qty </th>
+                    <th style="width: 200px;"> Amount </th>
+                </tr>
+                <tr style="">
+                    <td style="font-weight: bold"> Total </td>
+                    <td>@ViewData["Qty_Total"]</td>
+                    <td>@ViewData["Amount_Total"]</td>
+                </tr>
+                <tr style="">
+                    <td style="font-weight: bold"> FA </td>
+                    <td>@ViewData["Qty_FA"]</td>
+                    <td>@ViewData["Amount_FA"]</td>
+                </tr>
+                <tr style="">
+                    <td style="font-weight: bold"> SA </td>
+                    <td>@ViewData["Qty_SA"]</td>
+                    <td>@ViewData["Amount_SA"]</td>
+                </tr>
+            </table>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; margin-top:10px">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            </th>
+                            <th style="width: 40px;">NO</th>
+                            <th style="width: 200px;">NO. AUDIT</th>
+                            <th style="width: 200px;">JENIS AUDIT</th>
+                            <th style="width: 150px;">PERIODE BULAN</th>
+                            <th style="width: 200px;">NO. ASSET</th>
+                            <th style="width: 200px;">NAMA ASSET</th>
+                            <th style="width: 200px;">JENIS ASSET</th>
+                            <th style="width: 200px;">KATEGORI ASSET</th>
+                            <th style="width: 150px;">TAHUN</th>
+                            <th style="width: 200px;">STATUS</th>
+                            <th style="width: 400px;">KETERANGAN</th>
+                            <th style="width: 200px;">LAMPIRAN FOTO</th>
+                            <th style="width: 200px;">CREATED BY</th>
+                            <th style="width: 200px;">CREATED DATE</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 500px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA10001_AUDIT_ASSET item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID,@item.ID_TB_M_AUDIT,@item.NO_AUDIT,@item.JENIS_AUDIT,@item.NO_ASSET,@item.KETERANGAN,@item.PERIODE_BULAN,@item.TAHUN,@item.STATUS_KONDISI,@item.NAMA_FOTO_AUDIT"
+                                                       type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+
+                                            </td>
+                                            <td>
+                                                <input type="hidden" id="rowData-@item.ID_TB_M_AUDIT" value="@Json.Encode(item)" /> @* Pass data to Json for retrieve to Javascript*@
+                                            </td>
+                                            <td style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 200px"> @item.NO_AUDIT</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.JENIS_AUDIT</td>
+                                            <td class="align-center align-middle" style="width: 150px"> @item.PERIODE_BULAN</td>
+                                            <td style="width: 200px"> @item.NO_ASSET</td>
+                                            <td style="width: 200px"> @item.NAMA_ASSET</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.JENIS_ASSET</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.KATEGORI_ASSET</td>
+                                            <td class="align-center align-middle" style="width: 150px"> @item.TAHUN</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.STATUS_KONDISI</td>
+                                            <td style="width: 400px"> @item.KETERANGAN</td>
+                                            <td class="align-center align-middle" style="width: 200px">
+                                                <label data-title="@item.ID_TB_M_AUDIT" onclick="showImage(this)" id="btn_change" style="text-decoration:underline; cursor:pointer">Lihat Gambar</label>
+                                            </td>
+                                            <td style="width: 200px"> @item.CREATED_BY</td>
+                                            <td class="align-center align-middle" style="width: 200px"> @item.CREATED_DATE</td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

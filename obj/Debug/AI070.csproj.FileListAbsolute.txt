@@ -1,0 +1,76 @@
+D:\wp_new\wp\bin\AI070.dll.config
+D:\wp_new\wp\bin\AI070.xml
+D:\wp_new\wp\bin\AI070.dll
+D:\wp_new\wp\bin\AI070.pdb
+D:\wp_new\wp\bin\Newtonsoft.Json.dll
+D:\wp_new\wp\obj\Debug\AI070.csproj.CopyComplete
+D:\wp_new\wp\obj\Debug\AI070.dll
+D:\wp_new\wp\obj\Debug\AI070.pdb
+D:\wp_new\wp\bin\Rotativa.dll
+D:\wp_new\wp\obj\Debug\AI070.csprojAssemblyReference.cache
+D:\2Program DIS\DIS System\wp\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+D:\2Program DIS\DIS System\wp\obj\Debug\AI070.dll
+D:\2Program DIS\DIS System\wp\obj\Debug\AI070.pdb
+D:\2Program DIS\DIS System\wp\bin\AI070.dll.config
+D:\2Program DIS\DIS System\wp\bin\AI070.xml
+D:\2Program DIS\DIS System\wp\bin\AI070.dll
+D:\2Program DIS\DIS System\wp\bin\AI070.pdb
+D:\2Program DIS\DIS System\wp\bin\Newtonsoft.Json.dll
+D:\2Program DIS\DIS System\wp\bin\Rotativa.dll
+D:\2Program DIS\DIS System\wp\obj\Debug\AI070.csproj.CopyComplete
+D:\2Program DIS\DIS System\wp\obj\Debug\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\wp\bin\AI070.dll.config
+E:\Source Code Baru\wp\bin\AI070.xml
+E:\Source Code Baru\wp\bin\AI070.dll
+E:\Source Code Baru\wp\bin\AI070.pdb
+E:\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\wp\bin\Rotativa.dll
+E:\Source Code Baru\wp\obj\Debug\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\wp\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\wp\obj\Debug\AI070.csproj.CopyComplete
+E:\Source Code Baru\wp\obj\Debug\AI070.dll
+E:\Source Code Baru\wp\obj\Debug\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\wp\bin\AI070.xml
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll
+E:\Sulton\Source Code Baru\wp\bin\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\wp\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\wp\obj\Debug\AI070.csprojAssemblyReference.cache
+E:\Sulton\Source Code Baru\wp\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\wp\obj\Debug\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\wp\obj\Debug\AI070.dll
+E:\Sulton\Source Code Baru\wp\obj\Debug\AI070.pdb
+E:\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Source Code Baru\DIS\bin\AI070.xml
+E:\Source Code Baru\DIS\bin\AI070.dll
+E:\Source Code Baru\DIS\bin\AI070.pdb
+E:\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Source Code Baru\DIS\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\DIS\obj\Debug\AI070.csproj.CopyComplete
+E:\Source Code Baru\DIS\obj\Debug\AI070.dll
+E:\Source Code Baru\DIS\obj\Debug\AI070.pdb
+E:\Source Code Baru\DIS\obj\Debug\AI070.csprojAssemblyReference.cache
+E:\Sulton\DIS\bin\AI070.dll.config
+E:\Sulton\DIS\bin\AI070.xml
+E:\Sulton\DIS\bin\AI070.dll
+E:\Sulton\DIS\bin\AI070.pdb
+E:\Sulton\DIS\bin\Newtonsoft.Json.dll
+E:\Sulton\DIS\bin\Rotativa.dll
+E:\Sulton\DIS\obj\Debug\AI070.csprojAssemblyReference.cache
+E:\Sulton\DIS\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\DIS\obj\Debug\AI070.csproj.CopyComplete
+E:\Sulton\DIS\obj\Debug\AI070.dll
+E:\Sulton\DIS\obj\Debug\AI070.pdb
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\DIS\bin\AI070.xml
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll
+E:\Sulton\Source Code Baru\DIS\bin\AI070.pdb
+E:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\DIS\obj\Debug\AI070.csproj.AssemblyReference.cache
+E:\Sulton\Source Code Baru\DIS\obj\Debug\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\DIS\obj\Debug\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\DIS\obj\Debug\AI070.dll
+E:\Sulton\Source Code Baru\DIS\obj\Debug\AI070.pdb

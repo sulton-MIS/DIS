@@ -1,0 +1,83 @@
+﻿DECLARE @@CNT INT
+	, @@CHK VARCHAR(20)
+	, @@ERR VARCHAR(MAX);
+DECLARE @@MSG_TEXT VARCHAR(MAX);
+DECLARE @@MSG_TYPE VARCHAR(MAX);
+
+BEGIN TRY
+	SET @@CNT = (SELECT COUNT(1) FROM TB_R_WP_DETAIL_WORKING WHERE ID = @ID);
+	IF(@@CNT > 0)
+	BEGIN
+
+		UPDATE TB_R_WP_DETAIL_WORKING 
+			SET ID_TB_M_WORKING_TYPE = @ID_TB_M_WORKING_TYPE,
+				DANGER_TYPE = @DANGER_TYPE,
+				DAY_1 = @DAY_1,
+				DAY_2 = @DAY_2,
+				DAY_3 = @DAY_3,
+				DAY_4 = @DAY_4,
+				DAY_5 = @DAY_5,
+				DAY_6 = @DAY_6,
+				DAY_7 = @DAY_7,
+				SIX_A = @SIX_A,
+				SIX_B = @SIX_B,
+				SIX_C = @SIX_C,
+				SIX_D = @SIX_D,
+				SIX_E = @SIX_E,
+				SIX_F = @SIX_F,
+				SIX_ALPHA = @SIX_ALPHA,
+				[CHANGED_BY] = @username,
+				[CHANGED_DT] = GETDATE()
+		WHERE ID = @ID;
+
+		SET @@CHK = 'TRUE';
+		SET @@ERR = 'NOTHING';
+
+	END ELSE
+	BEGIN
+		INSERT INTO TB_R_WP_DETAIL_WORKING
+		(
+			 [WP_PROJECT_JOB_ID]
+			,ID_TB_M_WORKING_TYPE
+			,DANGER_TYPE
+			,SIX_A
+			,SIX_B
+			,SIX_C
+			,SIX_D
+			,SIX_E
+			,SIX_F
+			,SIX_ALPHA
+			,[CREATED_BY]
+			,[CREATED_DT]
+			,[CHANGED_BY]
+			,[CHANGED_DT]
+		)
+		VALUES
+		(
+			@WP_PROJECT_JOB_ID,
+			@ID_TB_M_WORKING_TYPE
+			,@DANGER_TYPE
+			,@SIX_A
+			,@SIX_B
+			,@SIX_C
+			,@SIX_D
+			,@SIX_E
+			,@SIX_F
+			,@SIX_ALPHA
+			,@username,
+			GETDATE(),
+			@username,
+			GETDATE()
+		);
+
+		SET @@CHK = 'TRUE';
+		SET @@ERR = 'NOTHING';
+	END
+END TRY
+BEGIN CATCH
+	SET @@CHK = 'FALSE';
+	SET @@ERR = 'ERROR INSERT WP_HEADER:' +@WP_IMPB_NO+
+	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+END CATCH
+
+SELECT @@CHK AS STACK, @@ERR AS LINE_STS

@@ -1,0 +1,777 @@
+﻿<script type="text/javascript" src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script type="text/javascript">
+    tinymce.init(
+        {
+            selector: 'textarea',
+            width: 450,
+            height: 100,
+            encoding: 'raw'
+        });
+</script>
+
+<script type="text/javascript">
+
+    var ImageFile = "";
+    var SITE_URL = window.location.href + "/";
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        //OnSearch(1);
+
+    });
+
+    function readURL(input) {
+        if ($('#imgInp').val() == "") {
+            $('#blah').hide();
+        } else {
+            $('#blah').show();
+        }
+        if (ImageFile != "" || ImageFile != "No files selected.") {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah').attr('src', e.target.result);
+                }
+
+                ImageFile = input.files[0];
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+    }
+
+    function readURLEdit(input) {
+        if ($('#imgInpEdit').val() == "") {
+            $('#editblah').hide();
+        } else {
+            $('#editblah').show();
+        }
+        if (ImageFile != "" || ImageFile != "No files selected.") {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#editblah').attr('src', e.target.result);
+                }
+
+                ImageFile = input.files[0];
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+    }
+
+    $("#imgInp").change(function () {
+        readURL(this);
+    });
+
+    $("#imgInpEdit").change(function () {
+        readURLEdit(this);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        tinyMCE.triggerSave();
+        $('#addQUESTION').val('');
+        $('#addANSWER_CHOICE_A').val('');
+        $('#addANSWER_CHOICE_B').val('');
+        $('#addANSWER_CHOICE_C').val('');
+        $('#addANSWER_CHOICE_D').val('');
+        $('#addANSWER_CHOICE_E').val('');
+        $('#addANSWER_KEY').val('');
+
+        if ($('#imgInp').val() == "") {
+            $('#blah').hide();
+        } else {
+            $('#blah').show();
+        }
+
+        $('#modalForm').modal();
+
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol Add Confirm
+    function add_check() {
+        tinyMCE.triggerSave();
+        var CATEGORY = $('#addCategory').val();
+        var QUESTION = $('#addQUESTION').val();
+        var ANSWER_CHOICE_A = $('#addANSWER_CHOICE_A').val();
+        var ANSWER_CHOICE_B = $('#addANSWER_CHOICE_B').val();
+        var ANSWER_CHOICE_C = $('#addANSWER_CHOICE_C').val();
+        var ANSWER_CHOICE_D = $('#addANSWER_CHOICE_D').val();
+        var ANSWER_CHOICE_E = $('#addANSWER_CHOICE_E').val();
+        var ANSWER_KEY = $("input[name='AnswereKey']:checked").val();
+
+        var status = true;
+        if (QUESTION == null || QUESTION == "") {
+            toastr.warning("Data Question Cannot be Empty");
+            status = false;
+        }
+
+        if (CATEGORY == null || CATEGORY == "") {
+            toastr.warning("Data Category Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_A == null || ANSWER_CHOICE_A == "") {
+            toastr.warning("Data Answer Choice A Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_B == null || ANSWER_CHOICE_B == "") {
+            toastr.warning("Data Answer Choice B Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_C == null || ANSWER_CHOICE_C == "") {
+            toastr.warning("Data Answer Choice C Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_D == null || ANSWER_CHOICE_D == "") {
+            toastr.warning("Data Answer Choice D Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_E == null || ANSWER_CHOICE_E == "") {
+            toastr.warning("Data Answer Choice E Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_KEY == null || ANSWER_KEY == "") {
+            toastr.warning("Data Answer Key Cannot be Empty");
+            status = false;
+        }
+
+        if ($('#imgInp').val() != "") {
+            var GET_FOTO_NAME = ($('#imgInp')[0].files[0].name).split('.');
+            var GET_FOTO_SIZE = $('#imgInp')[0].files[0].size;
+            FOTO = (GET_FOTO_NAME[GET_FOTO_NAME.length - 1]).toUpperCase();
+
+            if (FOTO != 'JPG' && FOTO != 'PNG' && FOTO != 'BMP' && FOTO != 'SVG' && FOTO != 'TIFF' && FOTO != 'JPEG' && FOTO != 'GIF') {
+                toastr.error("File Extension  " + FOTO + " not accepted, Please use  Image  file");
+                status = false;
+            }
+
+            var mak_size = 100;
+            if (GET_FOTO_SIZE > (mak_size * 1000)) {
+                toastr.error('File Upload Cannot Exced ' + mak_size + 'KB');
+                status = false;
+            }
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    //tombol Add New
+
+    function addNew_cancel() {
+        $('#PopupForm_AddNewConfirm').modal('hide');
+    }
+
+    function addNew() {
+        tinyMCE.triggerSave();
+        var CATEGORY = $('#addCategory').val();
+        var QUESTION = $('#addQUESTION').val();
+        var ANSWER_CHOICE_A = $('#addANSWER_CHOICE_A').val();
+        var ANSWER_CHOICE_B = $('#addANSWER_CHOICE_B').val();
+        var ANSWER_CHOICE_C = $('#addANSWER_CHOICE_C').val();
+        var ANSWER_CHOICE_D = $('#addANSWER_CHOICE_D').val();
+        var ANSWER_CHOICE_E = $('#addANSWER_CHOICE_E').val();
+        var ANSWER_KEY = $("input[name='AnswereKey']:checked").val();
+        var IMAGE = $('#imgInp').val();
+
+        if (ANSWER_KEY == "A") {
+            ANSWER_KEY = ANSWER_CHOICE_A;
+        } else if (ANSWER_KEY == "B") {
+            ANSWER_KEY = ANSWER_CHOICE_B;
+        } else if (ANSWER_KEY == "C") {
+            ANSWER_KEY = ANSWER_CHOICE_C;
+        } else if (ANSWER_KEY == "D") {
+            ANSWER_KEY = ANSWER_CHOICE_D;
+        } else if (ANSWER_KEY == "E") {
+            ANSWER_KEY = ANSWER_CHOICE_E;
+        }
+
+        if (window.FormData !== undefined) {
+            var fileUpload = $("#form1").get(0);
+
+            // Looping over all files and add it to FormData object
+            if ($('#imgInp').val() != "") {
+                var fileData = new FormData();
+                fileData.append(ImageFile.name, ImageFile);
+            } else {
+                var fileData = null;
+                ImageFile = null;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + 'UploadFiles',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                async: false,
+                data: fileData,
+                success: function (result) {
+                    IMAGE = result;
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        }
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Create',
+            async: false,
+            data: {
+                CATEGORY: CATEGORY,
+                QUESTION: QUESTION,
+                ANSWER_CHOICE_A: ANSWER_CHOICE_A,
+                ANSWER_CHOICE_B: ANSWER_CHOICE_B,
+                ANSWER_CHOICE_C: ANSWER_CHOICE_C,
+                ANSWER_CHOICE_D: ANSWER_CHOICE_D,
+                ANSWER_CHOICE_E: ANSWER_CHOICE_E,
+                ANSWER_KEY: ANSWER_KEY,
+                IMAGE_PATH: IMAGE
+            },
+            success: function (response) {
+                if (response.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+
+                    $('#addCategory').val("");
+                    $('#imgInp').val("");
+                    tinyMCE.get("addQUESTION").setContent("");
+                    tinyMCE.get("addANSWER_CHOICE_A").setContent("");
+                    tinyMCE.get("addANSWER_CHOICE_B").setContent("");
+                    tinyMCE.get("addANSWER_CHOICE_C").setContent("");
+                    tinyMCE.get("addANSWER_CHOICE_D").setContent("");
+                    tinyMCE.get("addANSWER_CHOICE_E").setContent("");
+                    $("input[name=AnswereKey][value=A]").prop('checked', false);
+                    $("input[name=AnswereKey][value=B]").prop('checked', false);
+                    $("input[name=AnswereKey][value=C]").prop('checked', false);
+                    $("input[name=AnswereKey][value=D]").prop('checked', false);
+                    $("input[name=AnswereKey][value=E]").prop('checked', false);
+
+                    //$('#btncloselookup').click();
+                    $('#PopupForm_AddNewConfirm').modal('hide');
+                    $('#modalForm').modal('hide');
+                    OnSearch(1);
+                } else {
+                    toastr.warning(response.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var Category = $('#editCategory');
+        var ImgPath = $('#imgInpEdit');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+
+        var edit_id;
+        var edit_category;
+        var edit_question;
+        var edit_answer_a;
+        var edit_answer_b;
+        var edit_answer_c;
+        var edit_answer_d;
+        var edit_answer_e;
+        var edit_answer_key;
+        var edit_image;
+        var edit_is_deleted;
+
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split('x|xx|,|xx|x');
+
+                edit_id = $(this).data('edit_id');
+                edit_category = ("" + $(this).data('edit_category') + "");
+                edit_question = ("" + $(this).data('edit_question') + "");
+                edit_answer_a = ("" + $(this).data('edit_answer_a') + "");
+                edit_answer_b = ("" + $(this).data('edit_answer_b') + "");
+                edit_answer_c = ("" + $(this).data('edit_answer_c') + "");
+                edit_answer_d = ("" + $(this).data('edit_answer_d') + "");
+                edit_answer_e = ("" + $(this).data('edit_answer_e') + "");
+                edit_answer_key = ("" + $(this).data('edit_answer_key') + "");
+                edit_image = $(this).data('edit_image');
+                edit_is_deleted = $(this).data('edit_is_deleted');
+            }
+        });
+
+        ID.val(edit_id);
+        Category.val(edit_category);
+
+        //ImgPath.val(Send_Var[9].replace(/^.*[\\\/]/, ''));
+        //const dT = new DataTransfer();
+        //dT.items.add(new File([''], Send_Var[9]));
+        //ImgPath.files = dT.files;
+        //ImgPath.val("C:\fakepath\soal_mtk.jpg");
+
+
+
+        tinyMCE.get("editQUESTION").setContent(edit_question);
+        tinyMCE.get("editANSWER_CHOICE_A").setContent(edit_answer_a);
+        tinyMCE.get("editANSWER_CHOICE_B").setContent(edit_answer_b);
+        tinyMCE.get("editANSWER_CHOICE_C").setContent(edit_answer_c);
+        tinyMCE.get("editANSWER_CHOICE_D").setContent(edit_answer_d);
+        tinyMCE.get("editANSWER_CHOICE_E").setContent(edit_answer_e);
+
+        $('#imgInpEdit').hide();
+        $('#editFakeFoto').show();
+        $('#editFileName').text(edit_image).show();
+
+        document.getElementById("editblah").src = edit_image;
+        $('#editblah').show();
+        if (edit_image == "" || edit_image == null || edit_image == "undefined" || edit_image == "No files selected.") {
+            $('#editblah').hide();
+        }
+
+        if (edit_answer_a == edit_answer_key) {
+            $("input[name=AnswereKeyEdit][value=A]").prop('checked', true);
+        } else if (edit_answer_b == edit_answer_key) {
+            $("input[name=AnswereKeyEdit][value=B]").prop('checked', true);
+        } else if (edit_answer_c == edit_answer_key) {
+            $("input[name=AnswereKeyEdit][value=C]").prop('checked', true);
+        } else if (edit_answer_d == edit_answer_key) {
+            $("input[name=AnswereKeyEdit][value=D]").prop('checked', true);
+        } else if (edit_answer_e == edit_answer_key) {
+            $("input[name=AnswereKeyEdit][value=E]").prop('checked', true);
+        }
+
+        $('#modalEditForm').modal();
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function edit_check() {
+        tinyMCE.triggerSave();
+        var QUESTION = $('#editQUESTION').val();
+        var Category = $('#editCategory').val();
+        var ANSWER_CHOICE_A = $('#editANSWER_CHOICE_A').val();
+        var ANSWER_CHOICE_B = $('#editANSWER_CHOICE_B').val();
+        var ANSWER_CHOICE_C = $('#editANSWER_CHOICE_C').val();
+        var ANSWER_CHOICE_D = $('#editANSWER_CHOICE_D').val();
+        var ANSWER_CHOICE_E = $('#editANSWER_CHOICE_E').val();
+        var ANSWER_KEY = $("input[name='AnswereKeyEdit']:checked").val();
+
+        var status = true;
+        if (QUESTION == null || QUESTION == "") {
+            toastr.warning("Data Question Cannot be Empty");
+            status = false;
+        }
+
+        if (Category == null || Category == "") {
+            toastr.warning("Data Category Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_A == null || ANSWER_CHOICE_A == "") {
+            toastr.warning("Data Answer Choice A Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_B == null || ANSWER_CHOICE_B == "") {
+            toastr.warning("Data Answer Choice B Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_C == null || ANSWER_CHOICE_C == "") {
+            toastr.warning("Data Answer Choice C Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_D == null || ANSWER_CHOICE_D == "") {
+            toastr.warning("Data Answer Choice D Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_CHOICE_E == null || ANSWER_CHOICE_E == "") {
+            toastr.warning("Data Answer Choice E Cannot be Empty");
+            status = false;
+        }
+
+        if (ANSWER_KEY == null || ANSWER_KEY == "") {
+            toastr.warning("Data Answer Key Cannot be Empty");
+            status = false;
+        }
+
+
+        if ($('#imgInpEdit').val() != "") {
+            var GET_FOTO_NAME = ($('#imgInpEdit')[0].files[0].name).split('.');
+            var GET_FOTO_SIZE = $('#imgInpEdit')[0].files[0].size;
+            FOTO = (GET_FOTO_NAME[GET_FOTO_NAME.length - 1]).toUpperCase();
+
+            if (FOTO != 'JPG' && FOTO != 'PNG' && FOTO != 'BMP' && FOTO != 'SVG' && FOTO != 'TIFF' && FOTO != 'JPEG' && FOTO != 'GIF') {
+                toastr.error("File Extension  " + FOTO + " not accepted, Please use  Image  file");
+                status = false;
+            }
+
+            var mak_size = 100;
+            if (GET_FOTO_SIZE > (mak_size * 1000)) {
+                toastr.error('File Upload Cannot Exced ' + mak_size + 'KB');
+                status = false;
+            }
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    function updateData_cancel() {
+        $('#PopupForm_EditConfirm').modal('hide');
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                tinyMCE.triggerSave();
+                var QUESTION = $('#editQUESTION').val();
+                var Category = $('#editCategory').val();
+                var ANSWER_CHOICE_A = $('#editANSWER_CHOICE_A').val();
+                var ANSWER_CHOICE_B = $('#editANSWER_CHOICE_B').val();
+                var ANSWER_CHOICE_C = $('#editANSWER_CHOICE_C').val();
+                var ANSWER_CHOICE_D = $('#editANSWER_CHOICE_D').val();
+                var ANSWER_CHOICE_E = $('#editANSWER_CHOICE_E').val();
+                var ANSWER_KEY = $("input[name='AnswereKeyEdit']:checked").val();
+                var IMAGE = $('#imgInpEdit').val();
+
+                if (ANSWER_KEY == "A") {
+                    ANSWER_KEY = ANSWER_CHOICE_A;
+                } else if (ANSWER_KEY == "B") {
+                    ANSWER_KEY = ANSWER_CHOICE_B;
+                } else if (ANSWER_KEY == "C") {
+                    ANSWER_KEY = ANSWER_CHOICE_C;
+                } else if (ANSWER_KEY == "D") {
+                    ANSWER_KEY = ANSWER_CHOICE_D;
+                } else if (ANSWER_KEY == "E") {
+                    ANSWER_KEY = ANSWER_CHOICE_E;
+                }
+
+                var Send_Var = ID + "," + QUESTION + "," + Category + "," + ANSWER_CHOICE_A + "," + ANSWER_CHOICE_B + "," + ANSWER_CHOICE_C + "," + ANSWER_CHOICE_D + "," + ANSWER_CHOICE_E + "," + ANSWER_KEY;
+
+                if (window.FormData !== undefined) {
+                    var fileUpload = $("#form2").get(0);
+
+                    // Looping over all files and add it to FormData object
+                    if ($('#imgInpEdit').val() != "") {
+                        var fileData = new FormData();
+                        fileData.append(ImageFile.name, ImageFile);
+                    }
+                    //else if (document.getElementById("editblah").src.replace(/^.*[\\\/]/, '') != "No%20files%20selected.") {
+                    //    var fileData = new FormData();
+                    //    fileData.append(ImageFile.name, ImageFile);
+                    //}
+                    else {
+                        var fileData = null;
+                        ImageFile = null;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: SITE_URL + 'UploadFiles',
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        async: false,
+                        data: fileData,
+                        success: function (result) {
+                            IMAGE = result;
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                }
+                var Send_Var = Send_Var + "," + IMAGE;
+                $.ajax({
+                    type: "PUT",
+                    url: 'WP03001/Edit',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (response) {
+                        if (response.sts == "TRUE") {
+
+                            toastr.success(response.message);
+                            cancel_edit();
+
+                            $('#PopupForm_EditConfirm').modal('hide');
+                            $('#modalEditForm').modal('hide');
+                            OnSearch(1);
+                        }
+                        else {
+
+                            toastr.warning(response.message);
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP03001/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchQuestion').val("");
+        $('#searchAnswerKey').val("");
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                QUESTION: "xxxxx",
+                ANSWER_KEY: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    function searchData(page, size) {
+        var QUESTION = $('#searchQuestion').val();
+        var ANSWER_KEY = $('#searchAnswerKey').val();
+
+        if (status == 'Other') {
+            status = $('#otherStatus').val();
+        }
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                QUESTION: QUESTION,
+                ANSWER_KEY: ANSWER_KEY
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+
+            total_check = $('.grid-checkbox:checkbox:checked').length;
+            if (total_check == 1) {
+                $('#btn_edit').prop('disabled', false);
+                $('#btn_Delete').prop('disabled', false);
+            } else if (total_check == 0) {
+                $('#btn_edit').prop('disabled', true);
+                $('#btn_Delete').prop('disabled', true);
+            } else {
+                $('#btn_edit').prop('disabled', true);
+                $('#btn_Delete').prop('disabled', false);
+            }
+
+
+            if ($(this).is(':checked')) {
+
+            }
+            else {
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    function change_image(type, input) {
+        if (type == 'add') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBox').attr('src', e.target.result).show();
+                }
+
+                $('.plus-image').css('display', "none");
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $('.plus-image').css('display', "block");
+            }
+        } else {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editblah').attr('src', e.target.result).show();
+                }
+                $('#imgInpEdit').show();
+                $('#editFakeFoto').hide();
+                $('#editFileName').hide();
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+    }
+</script>

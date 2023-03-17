@@ -1,0 +1,124 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR140001Master;
+@{
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LocationModel> Location = (List<LocationModel>)ViewData["Project_Location"];
+    List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+    List<ItemMaster> ListDmcType = (List<ItemMaster>)ViewData["dmc_code"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div id="formSearch" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td style="width:10%">ID BUNDLE : </td>
+                                    <td style="width:25%"><input id="searchIDBundle" class="form-control" type="text" /></td>
+
+                                    <td style="width:10%">NIK : </td>
+                                    <td style="width:25%"><input id="searchNIK" class="form-control" type="text" /></td>
+
+                                    <td style="width:10%">FROM : </td>
+                                    <td style="width:20%">
+                                        <input id="searchDate" autocomplete="off" class="form-control datepicker" style="text-align:center" type="text">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    
+                                    <td style="width:10%">DMC CODE : </td>
+                                    <td style="width:25%">
+                                        <select id="searchDmcCode" class="form-control select2">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (ListDmcType != null)
+                                                {
+                                                    if (ListDmcType.Count() > 0)
+                                                    {
+                                                        foreach (ItemMaster item in ListDmcType)
+                                                        {
+                                                            <option value="@item.DMC_CODE">@item.DMC_CODE</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+
+                                    <td style="width:10%">OPR GAIKAN : </td>
+                                    <td style="width:25%"><input id="searchOprGaikan" class="form-control" type="text" /></td>
+
+                                    <td style="width:10%">TO : </td>
+                                    <td>
+                                        <input id="searchDateTo" autocomplete="off" class="form-control datepicker" style="text-align:center" type="text">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                            @*<button type="button" class="btn btn-info btn-sm">Detail Pekerjaan</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Pelaksana</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Identifikasi</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Pengawasan</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Approval</button>*@
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick="showAdd()"><i class="fa fa-plus"></i> New</button>
+                            @*<button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //var date = new Date();
+    ////date.setDate(date.getDate() - 1);
+    //$(document).ready(function () {
+    //    $('#searchDate').datepicker({
+    //        startDate: date
+    //    });
+    //    $('#searchDateTo').datepicker({
+    //        startDate: date
+    //    });
+    //});
+
+</script>

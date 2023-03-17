@@ -1,0 +1,122 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP01003Master;
+@{
+    List<AreaModel> Area = (List<AreaModel>)ViewData["AREA"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add new Location Master</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label  class="required">AREA</label>
+                        <select id="addAreaCode" style="padding:0" class="form-control">
+                            @{
+                                if (Area != null)
+                                {
+                                    if (Area.Count() > 0)
+                                    {
+                                        foreach (AreaModel item in Area)
+                                        {
+                                            <option value="@item.AREA_ID">@item.AREA_CD</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">LOCATION CODE</label>
+                        <input type="text" maxlength="10" id="addLocationCode" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">LOCATION NAME</label>
+                        <input type="text" maxlength="50" id="addLocationName" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Status</label>
+                        <select class="form-control" id="addStatus">
+                            <option value="1">Active</option>
+                            <option value="2">Non Active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit Location Master</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">AREA</label>
+                        <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+                        <select id="editAreaCode" style="pediting:0" class="form-control">
+                            @{
+                                if (Area != null)
+                                {
+                                    if (Area.Count() > 0)
+                                    {
+                                        foreach (AreaModel item in Area)
+                                        {
+                                            <option value="@item.AREA_ID">@item.AREA_CD</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">LOCATION CODE</label>
+                        <input type="text" maxlength="10" id="editLocationCode" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">LOCATION NAME</label>
+                        <input type="text" maxlength="50" id="editLocationName" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Status</label>
+                        <select class="form-control" id="editStatus">
+                            <option value="1">Active</option>
+                            <option value="2">Non Active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

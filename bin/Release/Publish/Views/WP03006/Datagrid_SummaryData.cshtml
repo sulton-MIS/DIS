@@ -1,0 +1,167 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03006;
+
+@{
+    List<KeyList> examSubject = (List<KeyList>)ViewData["ExamSubject"];
+    List<WP03006Master> summaryScore = (List<WP03006Master>)ViewData["SummaryData"];
+}
+<style>
+
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%;  border-right:17px solid #fff; position:sticky; top:0;">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <td class="align-center align-middle" style="width: 30px;"> No. </td>
+                            <td class="align-center align-middle" style="width: 150px"> Registration Number </td>
+                            <td class="align-center align-middle" style="width: 150px"> Participan Name </td>
+                            <td class="align-center align-middle" style="width: 80px"> Identity Type </td>
+                            <td class="align-center align-middle" style="width: 150px"> Identity No. </td>
+                            <td class="align-center align-middle" style="width: 150px"> Username </td>
+                            <td class="align-center align-middle" style="width: 150px"> Email </td>
+                            <td class="align-center align-middle" style="width: 150px"> Exam Subject </td>
+                            <td class="align-center align-middle" style="width: 80px"> Correct </td>
+                            <td class="align-center align-middle" style="width: 80px"> Wrong </td>
+                            <td class="align-center align-middle" style="width: 80px"> Not Answer </td>
+                            <td class="align-center align-middle" style="width: 100px"> Remedial </td>
+                            <td class="align-center align-middle" style="width: 80px"> Score </td>
+                            <td class="align-center align-middle" style="width: 80px"> Pass </td>
+                            <td class="align-center align-middle" style="width: 100px"> Duration </td>
+                            <td class="align-center align-middle" style="width: 150px"> Submit Date </td>
+                            <td class="align-center align-middle" style="width: 100px"> Status </td>
+                            @*<td class="align-center align-middle" style="width: 80px"> ID Card </td>
+                            <td class="align-center align-middle" style="width: 80px"> Certificate </td>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 325px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (summaryScore != null)
+                            {
+                                if (summaryScore.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (WP03006Master item in summaryScore)
+                                    {
+                                                <tr id="row-@number">
+                                                    <td class="align-center align-middle" style="width: 30px;"> @item.RowNum </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.REG_NO </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.NAME </td>
+                                                    <td class="align-left align-middle" style="width: 80px"> @item.IDENTITY_TYPE </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.IDENTITY_NO </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.USERNAME </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.EMAIL </td>
+                                                    <td class="align-left align-middle" style="width: 150px"> @item.TITLE </td>
+                                                    <td class="align-center align-middle" style="width: 80px"> @item.CORRECT_AMOUNT </td>
+                                                    <td class="align-center align-middle" style="width: 80px"> @item.WRONG_AMOUNT </td>
+                                                    <td class="align-center align-middle" style="width: 80px"> @item.NOT_ANSWERED_AMOUNT </td>
+                                                    <td class="align-center align-middle" style="width: 100px"> Remedial ke-@item.REMEDIAL </td>
+                                                    <td class="align-center align-middle" style="width: 80px"> @item.SCORE </td>
+                                                    <td class="align-center align-middle" style="width: 80px"> @item.PASS_GRADUATED </td>
+                                                    <td class="align-center align-middle" style="width: 100px"> @item.TIMER minutes </td>
+                                                    <td class="align-center align-middle" style="width: 150px"> @item.SUBMIT_DATE.ToString("dd-MMM-yyy hh:mm:ss") </td>
+                                                    <td class="align-center align-middle" style="width: 100px"> @item.IS_STATUS </td>
+                                                    @*<td class="align-center align-middle" style="width: 80px">
+                                                        @{
+                                                            if (item.IS_STATUS == "PASS")
+                                                            { <a href="WP03006/NameCardByScore?id=@item.ID" target="_blank">Print</a> }
+                                                            else
+                                                            { <span style="color:red;">Not Available</span> }
+                                                        }
+                                                    </td>
+                                                    <td class="align-center align-middle" style="width: 80px">
+                                                        @{
+                                                            if (item.IS_STATUS == "PASS")
+                                                            { <a href="WP03006/CertifiedByScore?id=@item.ID" target="_blank">Print</a> }
+                                                            else
+                                                            { <span style="color:red;">Not Available</span> }
+                                                        }
+                                                    </td>*@
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="NoDataFound">
+                                        <td colspan="8" width="90%" class="text-center">No data found</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="8" width="90%" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

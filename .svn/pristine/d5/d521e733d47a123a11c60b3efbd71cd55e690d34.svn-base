@@ -1,0 +1,167 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.WP04001Master;
+@{
+    List<MenuModel> Menus = (List<MenuModel>)ViewData["Menus"];
+}
+
+    <style>
+        .select2-results__option[aria-selected=true] {
+            display: none;
+        }
+    </style>
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">ADD ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <label>AUTHORIZATION NAME</label>
+                            <input type="text" maxlength="100" id="addAuthorizationName" class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>AUTHORIZATION DESCRIPTION</label>
+                            <textarea style="resize:none" id="addAuthorizationDescription" class="form-control" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Menu</label>
+                            <select id="addMenu" name="addMenu[]" multiple="multiple" class="select2 form-control">
+                                @{
+                                    if (Menus != null)
+                                    {
+                                        if (Menus.Count > 0)
+                                        {
+                                            foreach (MenuModel item in Menus)
+                                            {
+                                                <option value="@item.MENU_CODE" parent="@item.MENU_PARENT">@item.MENU_NAME</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="addNew()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form view new data-->
+<div id="modalViewForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">VIEW ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <label>AUTHORIZATION NAME</label>
+                            <input disabled type="text" maxlength="100" id="viewAuthorizationName" class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>AUTHORIZATION DESCRIPTION</label>
+                            <textarea style="resize:none" id="viewAuthorizationDescription" class="form-control" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Menu</label>
+                            <select disabled id="viewMenu" name="viewMenu[]" multiple="multiple" class=" form-control">
+                                @{
+                                    if (Menus != null)
+                                    {
+                                        if (Menus.Count > 0)
+                                        {
+                                            foreach (MenuModel item in Menus)
+                                            {
+                                                <option value="@item.MENU_CODE" parent="@item.MENU_PARENT">@item.MENU_NAME</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <label>AUTHORIZATION NAME</label>
+                        <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+                        <input type="text" maxlength="100" id="editAuthorizationName" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>AUTHORIZATION DESCRIPTION</label>
+                        <textarea id="editAuthorizationDescription" class="form-control" placeholder="">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Menu</label>
+                        <select id="editMenu" name="editMenu[]" multiple="multiple" class="select2 form-control">
+                            @{
+                                if (Menus != null)
+                                {
+                                    if (Menus.Count > 0)
+                                    {
+                                        foreach (MenuModel item in Menus)
+                                        {
+                                            <option value="@item.MENU_CODE" parent="@item.MENU_PARENT">@item.MENU_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="updateData()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;" data-dismiss="modal"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>

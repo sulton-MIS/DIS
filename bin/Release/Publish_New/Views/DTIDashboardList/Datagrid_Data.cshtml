@@ -1,0 +1,90 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DTIDashboardListRepository;
+@{
+    List<Detail_Data> DataWP = (List<Detail_Data>)ViewData["DataGetDetail"];
+    List<ad_dis_rtjn_master_dashboard_target> bind_target = (List<ad_dis_rtjn_master_dashboard_target>)ViewData["bind_target"];
+}
+                    
+                    <thead style="background: #e6e3e3">                    
+                        <tr>
+                            <th colspan="9" align="right">
+                                <i>
+                                    Target/Day :
+                                    @{
+                                        foreach (ad_dis_rtjn_master_dashboard_target item in bind_target)
+                                        {
+                                            @item.akumulasi_target
+                                        }
+                                    }
+                                </i>
+                            </th>
+                        </tr>
+                        <tr>                            
+                            <th class="align-center align-middle" style="width: 150px;">SHIFT DATE</th>
+                            <th style="width: 150px;">JAM</th>
+                            <th style="width: 100px;">TARGET</th>
+                            <th style="width: 100px;">ACTUAL</th>
+                            <th style="width: 100px;">MANPOWER</th>
+                            <th style="width: 100px;">OPMJ</th>
+                            <th style="width: 100px;">ACC</th>
+                            <th style="width: 400px;">MASALAH</th>
+                            <th style="width: 400px;">ACTION</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="9" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+         
+            <!--data grid-->        
+                    
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (Detail_Data item in DataWP)
+                                    {
+                                        
+                            <tr rowspan="15" id="row-@number" class="row-@item.ID">
+
+                                <td style="width: 150px;" align="center">@item.SHIFT_DATE</td>
+                                <td align="center" style="width: 150px;">@item.JAM</td>
+                                <td align="center" style="width: 100px;">@item.TARGET</td>
+                                @{
+                                    if (item.ACTUAL > 350)
+                                    {
+                                        <td align="center" style="background: #77f5e9; width: 100px;">@item.ACTUAL</td>
+
+                                    }
+                                    else if (item.ACTUAL < 350 && item.ACTUAL > 0)
+                                    {
+                                        <td align="center" style="background: #fb7575; width: 100px;">@item.ACTUAL</td>
+                                    }
+                                    else
+                                    {
+                                        <td align="center" style="width: 100px;">@item.ACTUAL</td>
+                                    }
+                                }
+
+                                <td align="center" style="width: 100px;">@item.MP</td>
+                                <td align="center" style="width: 100px;">@item.OPMJ</td>
+                                <td align="center" style="width: 100px;">@item.ACC</td>
+                                <td style="width: 400px">@item.MASALAH</td>
+                                <td style="width: 400px">@item.ACTION</td>
+                            </tr>
+                                        number++;
+                                        
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+   

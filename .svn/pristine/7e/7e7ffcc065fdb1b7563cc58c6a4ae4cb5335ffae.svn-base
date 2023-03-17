@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu>
+  <menu-item Id="mnuCommon" Enabled="True" Visible="True" Url="#" Text="COMMON" Description="COMMON" Glyph="home">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="PIS0001" Enabled="True" Visible="True" Url="PIS0001" Text="Log Monitoring Header" Description="Log Monitoring Header Screen" Glyph="caret-right" />
+  </menu-item>
+
+  <menu-item Id="mnuIndicationProduction" Enabled="True" Visible="True" Url="#" Text="Indication Production" Description="Indication Production Module" Glyph="file">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="PIS0101" Enabled="True" Visible="True" Url="PIS0101" Text="Page Form Designer Header Screen" Description="Page Form Designer Header Screen" Glyph="caret-right" />
+    <!--<menu-item Id="PIS0104" Enabled="True" Visible="True" Url="PIS0104" Text="Page Form Data Mapping Master Screen" Description="Page Form Data Mapping Master Screen" Glyph="caret-right" />-->
+    <menu-item Id="PIS0106a" Enabled="True" Visible="True" Url="PIS0106a" Text="Page Form Style Master Screen" Description="Page Form Style Master Screen" Glyph="caret-right" />
+    <menu-item Id="PIS0108a" Enabled="True" Visible="True" Url="PIS0108a" Text="Output Terminal Status Control" Description="Output Terminal Status Control" Glyph="caret-right" />
+    <menu-item Id="PIS0109" Enabled="True" Visible="True" Url="PIS0109" Text="Trial Print Harigami Screen" Description="Trial Print Harigami Screen" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="mnuElectornicHarigami" Enabled="True" Visible="True" Url="#" Text="Electronic Harigami" Description="Electronic Harigami Module" Glyph="list-alt">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="PIS0204" Enabled="True" Visible="True" Url="PIS0204" Text="Inquiry Data for Shopping Screen" Description="Inquiry Data for Shopping Screen" Glyph="caret-right" />
+    <menu-item Id="PIS0206" Enabled="True" Visible="True" Url="PIS0206" Text="CCR Info Setting Screen" Description="CCR Info Setting Screen" Glyph="caret-right" />
+    <!--<menu-item Id="PIS0202" Enabled="True" Visible="True" Url="PIS0202" Text="Harigami Shopping Screen" Description="Harigami Shopping Screen" Glyph="caret-right" />-->
+    <!--<menu-item Id="PIS0203" Enabled="True" Visible="True" Url="PIS0203" Text="Pokayoke Harigame Offline Backup Screen" Description="Pokayoke Harigame Offline Backup Screen" Glyph="caret-right" />-->
+  </menu-item>
+  <!--<menu-item Id="mnuPioInline" Enabled="True" Visible="True" Url="#" Text="PIO Inline" Description="PIO Inline Module" Glyph="file">
+    <authorization>
+      <role Id="Admin" />
+    </authorization>
+    <menu-item Id="PIS0301" Enabled="True" Visible="True" Url="PIS0301" Text="Telemail Printing (SubAssy) Screen" Description="Telemail Printing (SubAssy) Screen" Glyph="caret-right" />
+    -->
+  <!--<menu-item Id="PIS0302" Enabled="True" Visible="True" Url="PIS0302" Text="Mapping PIO Inline Screen" Description="Mapping PIO Inline Screen" Glyph="caret-right" />-->
+  <!--
+  </menu-item>
+<-->
+  <menu-item Id="mnuMasterData" Enabled="True" Visible="True" Url="#" Text="Master Data" Description="Master Data" Glyph="file">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="PIS0107" Enabled="True" Visible="True" Url="PIS0107" Text="Printer Master Screen" Description="Printer Master Screen" Glyph="caret-right" />
+    <menu-item Id="PIS0110" Enabled="True" Visible="True" Url="PIS0110" Text="Mapping PIO Inline Screen" Description="Mapping PIO Inline Screen" Glyph="caret-right" />
+    <menu-item Id="PIS0111" Enabled="True" Visible="True" Url="PIS0111" Text="PIO Spec Sequence No Master" Description="PIO Spec Sequence No Master" Glyph="caret-right" />
+    <menu-item Id="PIS0112" Enabled="True" Visible="True" Url="PIS0112" Text="PIO Spec Gentani Master" Description="PIO Spec Gentani Master" Glyph="caret-right" />
+    <menu-item Id="PIS0113" Enabled="True" Visible="True" Url="PIS0113" Text="PIO Completion and Consumption" Description="PIO Completion and Consumption" Glyph="caret-right" />
+    <menu-item Id="PIS0114" Enabled="True" Visible="True" Url="PIS0114" Text="PIO Part Master" Description="PIO Part Master" Glyph="caret-right" />
+    <menu-item Id="PIS0116" Enabled="True" Visible="True" Url="PIS0116" Text="Housekeeping Master" Description="Housekeeping Master" Glyph="caret-right" />
+  </menu-item>
+</menu>

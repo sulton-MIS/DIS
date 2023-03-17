@@ -1,0 +1,116 @@
+﻿<script>
+    $(document).ready(function () {
+
+        //OnSearch(1);
+
+    });
+
+    function back() {
+        location.href = "/WP03005"
+    }
+
+    function refreshFilter() {
+        RegNo = $('#searchRegNo').val();
+        IdentityType = $('#searchIdentityType').val();
+        IdentityNo = $('#searchIdentityNo').val();
+        UserName = $('#searchUserName').val();
+        Email = $('#searchEmail').val();
+    }
+
+    function OnSearch(page) {
+        reloadSummary(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    function clear_search() {
+        $.ajax({
+            type: "GET",
+            url: 'WP03005/GetDataParticipant',
+            async: false,
+            data: {
+                start: 1,
+                display: $('#paging').val(),
+                RegNo: 99999,
+                IdentityNo: 'xxx',
+                UserName: 'xxx',
+                Email: 'xxx'
+            },
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+
+        $('#searchRegNo').val('');
+        $('#searchIdentityNo').val('');
+        $('#searchIdentityType').val('');
+        $('#searchUserName').val('');
+        $('#searchEmail').val('');
+    }
+
+    function reloadSummary(page, size) {
+        refreshFilter()
+
+        $.ajax({
+            type: "GET",
+            url: 'WP03005/GetDataParticipant',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                RegNo: RegNo,
+                IdentityType: IdentityType,
+                IdentityNo: IdentityNo,
+                UserName: UserName,
+                Email: Email
+            },
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    }
+
+    function printPDF() {
+        var RegNo = $('#searchRegNo').val();
+        var IdentityType = $('#searchIdentityType').val();
+        var IdentityNo = $('#searchIdentityNo').val();
+        var UserName = $('#searchUserName').val();
+        var Email = $('#searchEmail').val();
+
+        window.open(
+            'WP03005/PrintPDF?RegNo=' + RegNo + '&IdentityType=' + IdentityType + '&IdentityNo=' + IdentityNo + '&UserName=' + UserName + '&Email=' + Email + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    function printEXCEL() {
+        var RegNo = $('#searchRegNo').val();
+        var IdentityType = $('#searchIdentityType').val();
+        var IdentityNo = $('#searchIdentityNo').val();
+        var UserName = $('#searchUserName').val();
+        var Email = $('#searchEmail').val();
+
+        window.open(
+            'WP03005/PrintExcel?RegNo=' + RegNo + '&IdentityType=' + IdentityType + '&IdentityNo=' + IdentityNo + '&UserName=' + UserName + '&Email=' + Email + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    function reloadDetail(MyID) {
+
+        //_row =
+        //var cols = _row.children("td");
+        var ID = MyID.id.valueOf()
+
+        $.ajax({
+            type: "GET",
+            url: 'WP03005/GetDataParticipant_detailExam?ID=' + ID,
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    }
+
+</script>

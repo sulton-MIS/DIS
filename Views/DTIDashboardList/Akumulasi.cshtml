@@ -1,0 +1,324 @@
+﻿@using AI070.Models.DTIDashboardListRepository;
+@{
+    List<ad_dis_rtjn_master_dashboard_chart_parameter> bind_parameter = (List<ad_dis_rtjn_master_dashboard_chart_parameter>)ViewData["bind_parameter"];
+    List<ad_dis_rtjn_master_dashboard_target> bind_target = (List<ad_dis_rtjn_master_dashboard_target>)ViewData["bind_target"];
+    List<ad_dis_rtjn_master_dashboard_target> bind_akumulasi_tgt = (List<ad_dis_rtjn_master_dashboard_target>)ViewData["bind_akumulasiTgt"];
+    List<Master_Dashboard_Chart_Output_Aktual> bind_akumulasi_act = (List<Master_Dashboard_Chart_Output_Aktual>)ViewData["bind_akumulasiAct"];
+    List<Master_Dashboard_Chart_Output_Aktual> bind_akumulasi_ach = (List<Master_Dashboard_Chart_Output_Aktual>)ViewData["bind_akumulasiAch"];    
+
+    var Proses_List = @ViewBag.Proses_List;
+}
+
+<td>
+    <div class="chart-container" style="position: relative; height:30vh; width:74vw">
+        <canvas id="myChartAkumulasi"></canvas>
+    </div>
+
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+</td>
+
+
+<script>
+        window.setTimeout(function () {
+            window.location.reload();
+        }, 30000); //auto refresh -> for update data rtjn
+
+        //CREATE ARRAY LABEL PER JAM
+        var Label_bar_per_jam_ToConvert = JSON.parse('@Html.Raw(Json.Encode(@bind_parameter))');
+        var Label_bar_per_jam = [];
+        var Bar_aktual_backgroundColor = [];
+        var Bar_aktual_borderColor = [];
+        var Bar_akumulasi_act_backgroundColor = [];
+        var Bar_akumulasi_act_borderColor = [];
+        var Bar_akumulasi_tgt_backgroundColor = [];
+        var Bar_akumulasi_tgt_borderColor = [];
+
+        for (var i = 0; i < Label_bar_per_jam_ToConvert.length; i++) {
+            Label_bar_per_jam = Label_bar_per_jam.concat(Label_bar_per_jam_ToConvert[i]["parameter1"]);
+            Bar_aktual_backgroundColor = Bar_aktual_backgroundColor.concat('rgba(75, 192, 192, 0.5)'); //Warna Hijau
+            Bar_aktual_borderColor = Bar_aktual_borderColor.concat('rgba(75, 192, 192, 1)'); //Garis Hijau
+            Bar_akumulasi_tgt_backgroundColor = Bar_akumulasi_tgt_backgroundColor.concat('rgba(255, 159, 64, 0.5)'); //Orange
+            Bar_akumulasi_tgt_borderColor = Bar_akumulasi_tgt_borderColor.concat('rgba(255, 159, 64, 1)'); //Orange
+            Bar_akumulasi_act_backgroundColor = Bar_akumulasi_act_backgroundColor.concat('rgb(220,220,220)'); //gray
+            Bar_akumulasi_act_borderColor = Bar_akumulasi_act_borderColor.concat('rgba(75, 192, 192, 1)'); //green
+        }
+
+        //CHART DETAIL
+        var ctx = document.getElementById("myChartAkumulasi").getContext('2d');
+        var myChartAkumulasi = new Chart(ctx, {
+
+            type: 'bar',
+            data: {
+
+        labels: ['shift 1', 'shift 2'], //label jam
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Y_MP',
+                        yAxisID: 'Y_MP',
+                        label: 'Pencapaian',
+                        fill: false,
+                        backgroundColor: Bar_aktual_backgroundColor,
+                        borderColor: Bar_aktual_borderColor,
+                        borderWidth: 2,
+                        data: [
+                            '@{ @bind_akumulasi_ach[0].jam_0730_sd_0830 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0830_sd_0930 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0930_sd_1040 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1040_sd_1230 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1230_sd_1330 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1330_sd_1430 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1430_sd_1600 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1600_sd_1700 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1700_sd_1830 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1830_sd_1930 }',
+                            '@{ @bind_akumulasi_ach[0].jam_1930_sd_2030 }',
+                            '@{ @bind_akumulasi_ach[0].jam_2030_sd_2130 }',
+                            '@{ @bind_akumulasi_ach[0].jam_2130_sd_2230 }',
+                            '@{ @bind_akumulasi_ach[0].jam_2230_sd_2330 }',
+                            '@{ @bind_akumulasi_ach[0].jam_2330_sd_0030 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0030_sd_0130 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0130_sd_0230 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0230_sd_0330 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0330_sd_0530 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0530_sd_0630 }',
+                            '@{ @bind_akumulasi_ach[0].jam_0630_sd_0730 }'                                
+                        ]
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Y_PCS',
+                        yAxisID: 'Y_PCS',
+                        label: 'Akumulasi Target',
+                        backgroundColor: Bar_akumulasi_tgt_backgroundColor,
+                        borderColor: Bar_akumulasi_tgt_borderColor,
+                        borderWidth: 1,
+                        data: [
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_1 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_2 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_3 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_4 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_5 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_6 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_7 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_8 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_9 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_10 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_11 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_12 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_13 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_14 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_15_16_istirahat }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_17 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_18 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_19 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_20 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_21 }',
+                            '@{ @bind_akumulasi_tgt[0].target_qty_jam_ke_22 }'
+                        ]
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Y_PCS',
+                        yAxisID: 'Y_PCS',
+                        label: 'Akumulasi Aktual',
+                        backgroundColor: Bar_akumulasi_act_backgroundColor,
+                        borderColor: Bar_akumulasi_act_borderColor,
+                        borderWidth: 1,
+                        data: [
+                               '@{ @bind_akumulasi_act[0].jam_0730_sd_0830 }',
+                               '@{ @bind_akumulasi_act[0].jam_0830_sd_0930 }',
+                               '@{ @bind_akumulasi_act[0].jam_0930_sd_1040 }',
+                               '@{ @bind_akumulasi_act[0].jam_1040_sd_1230 }',
+                               '@{ @bind_akumulasi_act[0].jam_1230_sd_1330 }',
+                               '@{ @bind_akumulasi_act[0].jam_1330_sd_1430 }',
+                               '@{ @bind_akumulasi_act[0].jam_1430_sd_1600 }',
+                               '@{ @bind_akumulasi_act[0].jam_1600_sd_1700 }',
+                               '@{ @bind_akumulasi_act[0].jam_1700_sd_1830 }',
+                               '@{ @bind_akumulasi_act[0].jam_1830_sd_1930 }',
+                               '@{ @bind_akumulasi_act[0].jam_1930_sd_2030 }',
+                               '@{ @bind_akumulasi_act[0].jam_2030_sd_2130 }',
+                               '@{ @bind_akumulasi_act[0].jam_2130_sd_2230 }',
+                               '@{ @bind_akumulasi_act[0].jam_2230_sd_2330 }',
+                               '@{ @bind_akumulasi_act[0].jam_2330_sd_0030 }',
+                               '@{ @bind_akumulasi_act[0].jam_0030_sd_0130 }',
+                               '@{ @bind_akumulasi_act[0].jam_0130_sd_0230 }',
+                               '@{ @bind_akumulasi_act[0].jam_0230_sd_0330 }',
+                               '@{ @bind_akumulasi_act[0].jam_0330_sd_0530 }',
+                               '@{ @bind_akumulasi_act[0].jam_0530_sd_0630 }',
+                               '@{ @bind_akumulasi_act[0].jam_0630_sd_0730 }'
+                            ]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Monitoring Akumulasi Target VS Aktual '+'@{ @Proses_List }'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                    //backgroundColor: 'rgba(72, 241, 12, 1)',
+                    //titleFontColor: 'black'
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'Y_PCS',
+                            type: 'linear',
+                            position: 'left',
+                            gridLines: {
+                                //drawBorder: false,
+                                //color: ['white', 'white', 'white', 'white', 'white'],
+                                //color: "rgba(0, 0, 0, 0)"
+                            },
+                            ticks: {
+                                //min: 0,
+                                //max: 350,
+                                //stepSize: 50
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Shot (Pcs/Sheet)'
+                            }
+                        },
+                        {
+                            id: 'Y_MP',
+                            type: 'linear',
+                            position: 'right',
+                            gridLines: {
+                                //drawBorder: false,
+                                //color: ['white', 'white', 'white', 'white', 'white'],
+                                color: "rgba(0, 0, 0, 0)" //hide grid line
+                            },
+                            ticks: {
+                                min: 0,
+                                max: 200,
+                                stepSize: 20
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Presentase'
+                            }
+                        }
+                    ],
+                    xAxes: [
+                        {
+                            labels: Label_bar_per_jam //label jam
+                        },
+                        {
+                            id: 'X_JAM',
+                            type: 'category',
+                            offset: true,
+                            gridLines: {
+                                offsetGridLines: true,
+                                color: 'red'
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+        //CHART DETAIL LABEL LOOPING
+        Chart.plugins.register({
+            afterDatasetsDraw: function (chart) {
+
+                var ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    var meta = chart.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        meta.data.forEach(function (element, index) {
+                            //alert(dataset.label != "Pencapaian");
+                            if (dataset.label == "Pencapaian" || dataset.label == "Akumulasi Target" || dataset.label == "Akumulasi Aktual") {
+                                    // Draw the text in black, with the specified font
+                                    ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                                    var fontSize = 12;
+                                    var fontStyle = 'normal';
+                                    var fontFamily = 'Helvetica Neue';
+                                    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                    // Just naively convert to string for now
+                                    var dataString = dataset.data[index].toString();
+
+                                    // Make sure alignment settings are correct
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+
+                                    var padding = 5;
+                                    var position = element.tooltipPosition();
+                                    ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+
+
+        //CHART SUMMARY LABEL LOOPING
+        Chart.plugins.register({
+            afterDatasetsDraw: function (chart_sum) {
+
+                //CHART SUMMARY LABEL LOOPING
+                var ctx = chart_sum.ctx_sum;
+                chart_sum.data.datasets.forEach(function (dataset, i) {
+                    var meta = chart_sum.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        meta.data.forEach(function (element, index) {
+
+                            if (dataset.label == "Ak. Target" || dataset.label == "Ak. Aktual") {
+                                    // Draw the text in black, with the specified font
+                                ctx_sum.fillStyle = 'rgb(0, 0, 0)';
+
+                                var fontSize = 12;
+                                var fontStyle = 'normal';
+                                var fontFamily = 'Helvetica Neue';
+                                ctx_sum.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                // Just naively convert to string for now
+                                var dataString = dataset.data[index].toString();
+
+                                // Make sure alignment settings are correct
+                                ctx_sum.textAlign = 'center';
+                                ctx_sum.textBaseline = 'middle';
+
+                                var padding = 5;
+                                var position = element.tooltipPosition();
+                                ctx_sum.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                            }
+
+                        });
+                    }
+                });
+
+            }
+        });
+
+</script>

@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="main-data">
+    @Html.Partial("SearchCriteria")
+    @Html.Partial("Datagrid_Data")
+</div>
+
+@Html.Partial("PopupForm")
+@Html.Partial("Javascript")

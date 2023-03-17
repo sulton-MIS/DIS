@@ -1,0 +1,407 @@
+﻿<script>
+    var SITE_URL = window.location.href + "/";
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        //OnSearch(1);
+
+    });
+
+    // open form new
+    $("#btn_new").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Add',
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    });
+
+    // back botton
+    function back() {
+        location.href = "/WP03004"
+    }
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+            }
+
+            ImageFile = input.files[0];
+
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $("#imgInp").change(function () {
+        readURL(this);
+    });
+
+    //tombol Save / Insert
+    function Insert() {
+        tinyMCE.triggerSave();
+        var Title = $('#addTitle').val();
+        var Description = $('#Exam_for').val();
+        var Description = $('#addDescription').val();
+        var File_Path = $('#imgInp').val();
+        var Content_training = $('#addContent').val();
+
+        var status = true;
+        if (Title == null || Title == "") {
+            toastr.warning("Title Cannot Be Empty");
+            status = false;
+        }
+        if (Description == null || Description == "") {
+            toastr.warning("Description Cannot Be Empty");
+            status = false;
+        }
+        if (File_Path == null || File_Path == "") {
+            toastr.warning("File Modul Cannot Be Empty");
+            status = false;
+        }
+        if (Content_training == null || Content_training == "") {
+            toastr.warning("Content Cannot Be Empty");
+            status = false;
+        }
+        if (status == false) {
+            return;
+        }
+
+        var fileUpload = $("#form1").get(0);
+
+        // Looping over all files and add it to FormData object
+        var fileData = new FormData();
+        fileData.append(ImageFile.name, ImageFile);
+
+        $.ajax({
+            type: "POST",
+            url: 'WP03004/Insert',
+            async: false,
+            data: {
+                Title: Title
+                , Description: Description
+                , Description: Description
+                , File_Path: File_Path
+				, Content_training: Content_training
+				, fileData
+            }
+            , success: function (data) {
+                if (data.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                back();
+            }
+        });
+
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#editID');
+        var Title = $('#editTitle');
+        var Description = $('#editDescription');
+        var File_Modul = $('#editFileModul');
+        var Content_training = $('#editContent');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Edit',
+            async: false,
+            data: {
+                Id: Send_Var[0]
+            },
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+	function Update() {
+        tinyMCE.triggerSave();
+        var id = $('#editID').val();
+        var title = $('#editTitle').val();
+        var Description = $('#editDescription').val();
+        var File_Modul = $('#editFileModul').val();
+        var Content_training = $('#editContent').val();
+
+        if (title == null || title == "") {
+            toastr.warning("Title Cannot Be Empty");
+            return;
+        }
+
+        if (Description == null || Description == "") {
+            toastr.warning("Description Cannot Be Empty");
+            return;
+		}
+
+        var fileUpload = $("#form1").get(0);
+
+        // Looping over all files and add it to FormData object
+        var fileData = new FormData();
+        fileData.append(ImageFile.name, ImageFile);
+
+        $.ajax({
+            type: "PUT",
+            url: 'WP03004/Update',
+            async: false,
+			data: {
+                id,
+                title
+                , Description: Description
+                , File_Modul: File_Modul
+				, Content_training: Content_training
+                , fileData
+            },
+            success: function (data) {
+                console.log(Var);
+                if (data.sts == "TRUE") {
+                    toastr.success(data.message);
+                    cancel_edit();
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                $("#PopupForm_EditConfirm").modal('hide');
+
+                back();
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP03004/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchTITLE').val("");
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                TITLE: "xxxxx",
+                EXAM_TYPE: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var TITLE = $('#searchTITLE').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                TITLE: TITLE
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+</script>
+<script type="text/javascript" src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>

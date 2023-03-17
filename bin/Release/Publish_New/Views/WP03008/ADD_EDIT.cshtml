@@ -1,0 +1,332 @@
+﻿@using AI070.Models.WP03008Master;
+@{
+    var form_type = ViewBag.form_type;
+    List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+}
+
+@{
+
+    if (form_type == "New")
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col align-right">
+                    <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+                    <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Registration Number : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addRegNo" placeholder="Registration Number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">First Name : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addFirstName" placeholder="Enter First Name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Last Name : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addLastName" placeholder="Enter Last Name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Username : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addUsername" placeholder="Enter Username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Password : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addPassword" type="password" placeholder="  Enter Password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Email : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addEmail" type="email" aria-describedby="emailHelp" placeholder="  Enter Email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Address : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="addAddress" placeholder="Enter Address" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Phone : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addPhone" type="tel" placeholder="Enter Phone">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Identity Type : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="addIdentityType" class="form-control">
+                            @{
+                                if (Identity != null)
+                                {
+                                    if (Identity.Count() > 0)
+                                    {
+                                        foreach (IdentityModel item in Identity)
+                                        {
+                                            <option value="@item.ID">@item.IDENTITY_TEXT (@item.ID)</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Identity No : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addIdentityNo" placeholder="Enter Identity No">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Safety Induction No : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addSINo" placeholder="Enter Safety Induction No">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 required">Safety Induction From : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addSIFrom" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Safety Induction To : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="addSITo" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary btn-xs" id="btn_insert" onclick="Insert()"><i class="fa fa-check"></i>Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col align-right">
+                    <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+                    <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Registration Number : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.Id" style="display:none" type="text" maxlength="50" id="editID" class="form-control" placeholder="">
+                        <input value="@ViewBag.RegNo" class="form-control" id="editRegNo" placeholder="Registration Number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">First Name : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.FirstName" class="form-control" id="editFirstName" placeholder="Enter First Name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Last Name : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.LastName" class="form-control" id="editLastName" placeholder="Enter Last Name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Username : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.Username_member" class="form-control" id="editUsername" placeholder="Enter Username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Password : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="" class="form-control" id="editPassword" type="password" placeholder="  Enter Password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Email : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.Email" class="form-control" id="editEmail" type="email" aria-describedby="emailHelp" placeholder="  Enter Email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Address : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="editAddress" placeholder="Enter Address" rows="3">@ViewBag.Address</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Phone : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.Phone" class="form-control" id="editPhone" type="tel" placeholder="Enter Phone">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Identity Type : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <select id="editIdentityType" class="form-control">
+                            @{
+                                if (Identity != null)
+                                {
+                                    if (Identity.Count() > 0)
+                                    {
+                                        foreach (IdentityModel item in Identity)
+                                        {
+                                            if (ViewBag.IdentityType == item.ID)
+                                            {
+                                                <option selected="selected" value="@item.ID"> @item.IDENTITY_TEXT (@item.ID) </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ID"> @item.IDENTITY_TEXT (@item.ID) </option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Identity No : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.IdentityNo" class="form-control" id="editIdentityNo" placeholder="Enter Identity No">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Safety Induction No : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.SINo" class="form-control" id="editSINo" placeholder="Enter Safety Induction No">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Safety Induction From : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.SIFrom" class="form-control" id="editSIFrom" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Safety Induction To : <p style="color:red; display:inline; font-weight: bold;">*</p></label>
+                    <div class="col-sm-8">
+                        <input value="@ViewBag.SITo" class="form-control" id="editSITo" type="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary btn-xs" id="btn_insert" onclick="Update()"><i class="fa fa-check"></i>Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+<style>
+
+    #data-container {
+        display: initial;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .panel-member {
+            600px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .panel-member {
+            min-height: 520px;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    .text-test {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<div id="data-container" style="display:none" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="panel panel-member">
+                    <div class="pull-left button-back">
+                        <button class="btn btn-danger btn-sm"><i class="fa fa-arrow-circle-left"></i></button>
+                    </div>
+                    <div class="panel-body">
+                        <h1 class="text-test">
+                            IM HERE
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

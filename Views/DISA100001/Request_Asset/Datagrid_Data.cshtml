@@ -1,0 +1,189 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA10001_REQUEST_ASSET> List_Request_Asset = (List<DISA10001_REQUEST_ASSET>)ViewData["Data_Request_Asset"];
+    //List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    //var flg_status_dispose= @ViewData["FLG_STATUS_DISPOSE"];
+}
+
+<style>
+    table{
+        background-color: white !important;
+    }
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+        background-color: white !important;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                @*<input type="checkbox" value="All" style="height: 12px;" id="checkall" />*@
+                            </th>
+                            <th style="width: 40px;">NO</th>
+                            <th style="width: 200px;">NO. REQUEST</th>
+                            <th style="width: 150px;">TGL. REQUEST</th>
+                            <th style="width: 300px;">NAMA ASSET</th>
+                            @*<th style="width: 200px;">QTY ASSET</th>*@
+                            <th style="width: 200px;">PIC REQUEST</th>
+                            <th style="width: 200px;">DEPT. REQUEST</th>
+                            <th style="width: 200px;">ID PR</th>
+                            <th style="width: 400px;">STATUS</th>
+                            @*<th style="width: 200px;">TGL PR</th>*@
+                            <th style="width: 100px;" rowspan="2">ACTION</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (List_Request_Asset == null || List_Request_Asset.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 350px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="width: 50%; table-layout: fixed; border: none; background-color:white;">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (List_Request_Asset != null)
+                            {
+                                if (List_Request_Asset.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA10001_REQUEST_ASSET item in List_Request_Asset)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td><input type="hidden" id="rowData-@item.ID" value="@Json.Encode(item)" /></td>
+                                            <td style="width: 30px; text-align: center;" class="grid-checkbox-col">
+                                                @{
+                                                    if (item.STATUS_ASSET.Contains("RECEIVED GOOD") != true && item.STATUS_ASSET.Contains("COMPLETE") != true && item.STATUS_ASSET.Contains("CANCEL") != true)
+                                                    {
+                                                        <input class="grid-checkbox" value="@item.ID,@item.NO_REQUEST_ASSET,@item.TGL_REQUEST,@item.NAMA_ASSET,@item.PIC_REQUEST,@item.DEPT_REQUEST,@item.STATUS_ASSET"
+                                                               type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    }
+                                                    else { 
+                                                         <input class="grid-checkbox" type="checkbox" disabled>  
+                                                    }
+                                                }
+
+                                            </td>
+                                            <td style="width: 40px; text-align:center;">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 200px"> @item.NO_REQUEST_ASSET</td>
+                                            @*@{
+                                                if (@item.TGL_REQUEST.Length.ToString() == "20")
+                                                {
+                                                    var tanggal = @item.TGL_REQUEST.Substring(0, 8); 
+                                                    <td style="width: 150px"> @tanggal </td>  } 
+                                                else { 
+                                                    <td style="width: 150px"> @item.TGL_REQUEST.Substring(0, 10) </td> 
+                                                }
+                                                        
+                                            }*@
+
+                                            <td style="width: 150px"> @item.TGL_REQUEST </td>
+
+                                            <td style="width: 300px"> @item.NAMA_ASSET</td>
+                                            @*<td style="width: 200px"> @item.QTY_ASSET</td>*@
+                                            <td style="width: 200px"> @item.PIC_REQUEST</td>
+                                            <td style="width: 200px"> @item.DEPT_REQUEST</td>
+                                            <td style="width: 200px"> @item.ID_PR</td>
+                                            @{
+                                                var STATUS = item.STATUS_ASSET;
+                                                if (item.STATUS_ASSET == null)
+                                                {
+                                                    <td style="width: 400px;"> @item.STATUS_ASSET</td>
+                                                }
+                                                else if (item.STATUS_ASSET.Contains("CANCEL") == true)
+                                                {
+                                                    <td style="width: 400px; color:red !important"> @item.STATUS_ASSET</td>
+                                                }
+                                                else if (item.STATUS_ASSET.Contains("COMPLETE") == true)
+                                                {
+                                                    <td style="width: 400px; color:green "> @item.STATUS_ASSET</td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="width: 400px; color:black "> @item.STATUS_ASSET</td>
+                                                }
+                                            }
+
+                                            @*<td style="width: 200px"> @item.TGL_PR</td>*@
+                                            @{
+                                                if (item.STATUS_ASSET == null)
+                                                {
+                                                    <td style="width: 100px; text-align: center">
+                                                        <button disabled type="button" id="@item.ID" class="btn btn-info btn-xs" onclick="reloadDetail(this)" style="display: inline-block;">Show</button>
+                                                    </td>
+                                                }
+                                                else if (item.STATUS_ASSET.Contains("RECEIVED GOOD") == true)
+                                                {
+                                                    <td style="width: 100px; text-align:center">
+                                                        @*<a onclick="registerAsset('@item.ID', '@item.ID_PR')" href='javascript:void(0)' class="btn btn-success" style="display:inline-block; padding:0;">Register</a>*@
+                                                        <button type="button" data-title="@item.ID" onclick="registerAsset(this)" class="btn btn-success btn-xs" id="btn_register_data" name="btn_register" style="width: 70px; margin-left:10px;"><i class="fa fa-pencil-square-o"></i> Register</button>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="width: 100px; text-align: center">
+                                                        <button type="button" disabled data-title="@item.ID" onclick="registerAsset(this)" class="btn btn-success btn-xs" id="btn_register_data" name="btn_register" style="width: 70px; margin-left:10px;"><i class="fa fa-pencil-square-o"></i> Register</button>
+                                                        @*<button type="button" id="@item.ID" class="btn btn-success btn-xs" onclick="reloadDetail(this)" style="display: inline-block;">Show</button>*@
+                                                        @*<a onclick="reloadDetail('@item.ID', '@item.NO_REQUEST_ASSET', '@item.ID_PR')" href='javascript:void(0)' class="btn btn-info2" style="display:inline-block; padding:0;">Show</a>*@
+                                                    </td>
+                                                }
+                                            }
+
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Request_Asset/Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

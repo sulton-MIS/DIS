@@ -1,0 +1,103 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03003Master;
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoSidebar.cshtml";
+}
+
+@{
+    ExamDetailSubjectModel examSubject = (ExamDetailSubjectModel)ViewData["DetailSubject"];
+}
+
+<label for="IdSubject" class="cols-sm-2 control-label">
+    @Html.Hidden("IdSubject", @examSubject.ID)
+</label>
+
+<label for="MaxQuestion" class="cols-sm-2 control-label">
+    @Html.Hidden("MaxQuestion", @examSubject.TOTAL_PUBLISHED)
+</label>
+
+<style>
+
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+
+    td {
+        padding-left: 5px;
+    }
+</style>
+
+<div class="row" style="margin-top: -13px; margin-left: 10px; margin-right: 10px">
+    <div class="col-xs-12 col-sm-12 col-md-11">
+        <label class="control-label text-muted"><h2>@examSubject.TITLE</h2></label>
+    </div>
+    <div class="align-right align-top">
+        <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>Passing Score Requrement</td>
+                                    <td> : @examSubject.PASSING_SCORE_REQUIREMENT</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Start Date</td>
+                                    <td> : @examSubject.DATE_START</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Exam Type</td>
+                                    <td> : @examSubject.EXAM_TYPE</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total Soal Saat Ini</td>
+                                    <td> : @examSubject.IS_PUBLISHED</td>
+                                </tr>
+                                <tr>
+                                    <td>Exam Duration</td>
+                                    <td> : @examSubject.EXAM_DURATION</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>End Date</td>
+                                    <td> : @examSubject.DATE_END</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Maksimal Soal</td>
+                                    <td> : @examSubject.TOTAL_PUBLISHED</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Remedial</td>
+                                    <td> : @examSubject.REMEDIAL</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="data_Table">
+    @Html.Partial("Edit_Data")
+</div>
+
+@Html.Partial("EditScripts")

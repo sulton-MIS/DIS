@@ -1,0 +1,1161 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "DATA_ASSET") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_Dispose').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        jQuery('#btn_search').click();
+
+        //search by Press Enter Key
+        enterKey_Press()
+
+        ////format rupiah Harga Satuan
+        //$('#harga_satuan').autoNumeric('init');
+
+        //function addCommas(nStr) {
+        //    nStr += '';
+        //    x = nStr.split('.');
+        //    x1 = x[0];
+        //    x2 = x.length > 1 ? '.' + x[1] : '';
+        //    var rgx = /(\d+)(\d{3})/;
+        //    while (rgx.test(x1)) {
+        //        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        //    }
+        //    return x1 + x2;
+        //}
+
+        //$('.select2').select2({ width: '100%' });
+
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+            addNew();
+        });
+
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+            updateData();
+        });
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        if (Array.isArray(M)) {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M[e];
+                        } else {
+                            NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                        }
+
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function enterKey_Press() {
+        $('input').bind("enterKey", function (e) {
+            if ($('#searchDMCPart').val() == "") {
+                toastr.warning("Please fill column DMC-Type! ");
+            } else {
+                OnSearch(1);
+            }
+        });
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                $(this).trigger("enterKey");
+            }
+        });
+
+    }
+
+    function refreshPage() {
+        //Clear Cache Application
+        $.ajax({
+            url: "",
+            context: document.body,
+            success: function (s, x) {
+                $('html[manifest=saveappoffline.appcache]').attr('content', '');
+                $(this).html(s);
+            }
+        });
+
+        location.reload();
+    }
+
+    function back() {
+        location.href = "/DISA100001/DATA_ASSET";
+    }
+
+    function add_check() {
+        var NO_URUT = $('#addNoUrut').val();
+        var NAMA_ASSET = $('#addNamaAsset').val();
+        //var FOTO_NAME = $('#addNamaAsset').val() + "_" + ($('#addNamaFoto')[0].files[0].name);
+        var FOTO_NAME = $('#addNamaAsset').val();
+        var MEREK = $('#addMerek').val();
+        var TIPE = $('#addTipe').val();
+        var SUPPLIER = $('#addSupplier').val();
+        //var TAHUN = ($('#addTahun').val()).replace('T', ' ');
+        var TAHUN = $('#addTahun').val();
+        var QTY = $('#addQty').val();
+        var HARGA_SATUAN = $('#addHargaSatuan').val();
+        //var TOTAL = $('#addTotal').val();
+        var JENIS_ASSET = $('#addJenisAsset').val();
+        var KATEGORI_ASSET = $('#addKategoriAsset').val();
+        var PIC_BELI = $('#addPicBeli').val();
+        var DEPT_USER = $('#addDeptUser').val();
+        var NAMA_USER = $('#addNamaUser').val();
+        var KD_LOKASI = $('#addKdLokasi').val();
+        var HALTE = $('#addHalte').val();
+        var JENIS_DOC = $('#addJenisDoc').val();
+        var NO_BC = $('#addNoBC').val();
+        var TGL_BC = $('#addTglBC').val();
+        //var TGL_BC = ($('#addTglBC').val()).replace('T', ' ');
+        var TGL_REGIST = $('#addTglRegister').val();
+        //var TGL_REGIST = ($('#addTglRegister').val()).replace('T', ' ');
+        var STATUS = $('#addStatus').val();
+        var FLG_LABEL_ASSET = $('#addFlgStatusLabel').val();
+        var FOTO = "";
+        //if (FOTO_NAME != "") {
+        //    var NAMA_FOTO = FOTO_NAME.split('.');
+        //    FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        //}
+        if ($('#addNamaFoto').val() != "") {
+            var NAMA_FOTO = ($('#addNamaFoto')[0].files[0].name).split('.');
+            FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        }
+
+        if (FOTO == null || FOTO == "") {
+            $.get(NEW_SITE_URL + 'Content/Upload/Foto/ManajementAsset/' + FOTO_NAME + '.PNG')
+                .done(function () {
+
+
+                }).fail(function () {
+                    toastr.error("Extension wrong, please use '.PNG' file!");
+                    //GenerateMessage("PHOTO", "MWP008");
+                    //sts = false;
+                });
+
+        }
+        //else if (FOTO != 'JPG' && FOTO != 'PNG' && FOTO != 'BMP' && FOTO != 'SVG' && FOTO != 'TIFF' && FOTO != 'JPEG' && FOTO != 'GIF')
+        else if (FOTO != 'PNG')
+        {
+            toastr.error("Extension wrong, please use '.PNG' file!");
+            //GenerateMessage("PHOTO", "MWP008");
+            //sts = false;
+        }
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //------------------------------IMAGE-------------------------------
+    function MoveFoto(foto, FOTO_NAME) {
+        var reader = new FileReader();
+        var myFormData = new FormData();
+        myFormData.append('ImagePath', $(foto)[0].files[0]);
+        myFormData.append('Name', FOTO_NAME);
+        $.ajax({
+            url: SITE_URL + "../MoveFile",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: myFormData,
+            success: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    function getExt(filename) {
+        var ext = filename.split('.').pop();
+        if (ext == filename) return "";
+        return ext;
+    }
+
+    function change_image(type, input) {
+        if (type == 'add') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        } else if (type == 'addId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#addImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else if (type == 'editId') {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBoxID').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        else {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#editImageBox').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+    }
+
+    //tombol Add New
+    function addNew() {
+        var NO_URUT = $('#addNoUrut').val();
+        var NAMA_ASSET = $('#addNamaAsset').val();
+        //var FOTO_NAME = $('#addNamaAsset').val() + "_" + ($('#addNamaFoto')[0].files[0].name);
+        var FOTO_NAME = $('#addNamaAsset').val() + "." + getExt(($('#addNamaFoto')[0].files[0].name));
+        var MEREK = $('#addMerek').val();
+        var TIPE = $('#addTipe').val();
+        var SUPPLIER = $('#addSupplier').val();
+        var TAHUN = $('#addTahun').val();
+        var QTY = $('#addQty').val();
+        var HARGA_SATUAN = $('#addHargaSatuan').val();
+        //var TOTAL = $('#addTotal').val();
+        var JENIS_ASSET = $('#addJenisAsset').val();
+        var KATEGORI_ASSET = $('#addKategoriAsset').val();
+        var PIC_BELI = $('#addPicBeli').val();
+        var DEPT_USER = $('#addDeptUser').val();
+        var NAMA_USER = $('#addNamaUser').val();
+        var KD_LOKASI = $('#addKdLokasi').val();
+        var HALTE = $('#addHalte').val();
+        var JENIS_DOC = $('#addJenisDoc').val();
+        var NO_BC = $('#addNoBC').val();
+        var TGL_BC = $('#addTglBC').val();
+        //var TGL_BC = ($('#addTglBC').val()).replace('T', ' ');
+        var TGL_REGIST = $('#addTglRegister').val();
+        //var TGL_REGIST = ($('#addTglRegister').val()).replace('T', ' ');
+        var STATUS = $('#addStatus').val();
+        var FLG_LABEL_ASSET = $('#addFlgStatusLabel').val();
+
+        var FOTO = "";
+        var DATAFILE = "";
+        if (FOTO_NAME != "") {
+            var NAMA_FOTO = FOTO_NAME;
+            var EKSTENSI_FOTO = ($('#addNamaFoto')[0].files[0].name).split('.');
+            FOTO = (EKSTENSI_FOTO[EKSTENSI_FOTO.length - 1]).toUpperCase();
+        }
+
+        if (FOTO != 'PNG') {
+            //GenerateMessage(DATAFILE, "MWP011");
+            toastr.warning("Extension wrong, please use '.PNG' file!");
+        }
+        else {
+            if (NAMA_ASSET != "" && KD_LOKASI != "" && JENIS_ASSET !="" && KATEGORI_ASSET != "") {
+                $.ajax({
+                    type: "POST",
+                    url: SITE_URL + '../ADD_NEW_ASSET',
+                    async: false,
+                    data: {
+                        NO_URUT: NO_URUT,
+                        NAMA_ASSET: NAMA_ASSET,
+                        NAMA_FOTO: NAMA_FOTO,
+                        MEREK: MEREK,
+                        TIPE: TIPE,
+                        SUPPLIER: SUPPLIER,
+                        TAHUN: TAHUN,
+                        QTY: QTY,
+                        HARGA_SATUAN: HARGA_SATUAN,
+                        //TOTAL: TOTAL,
+                        JENIS_ASSET: JENIS_ASSET,
+                        KATEGORI_ASSET: KATEGORI_ASSET,
+                        PIC_BELI: PIC_BELI,
+                        DEPT_USER: DEPT_USER,
+                        NAMA_USER: NAMA_USER,
+                        KD_LOKASI: KD_LOKASI,
+                        HALTE: HALTE,
+                        JENIS_DOC: JENIS_DOC,
+                        NO_BC: NO_BC,
+                        TGL_BC: TGL_BC,
+                        TGL_REGIST: TGL_REGIST,
+                        STATUS: STATUS,
+                        FLG_LABEL_ASSET: FLG_LABEL_ASSET
+                    },
+                    success: function (res) {
+                        if (res.sts == "TRUE") {
+                            toastr.success("Data Has Been Save Successfuly");
+                            searchData();
+                            clear_add();
+                            MoveFoto('#addNamaFoto', NAMA_ASSET);
+                            $('#modalForm').modal('hide');
+                            $('#btncloselookup').click();
+                            $('#btnNo').click();
+                        } else {
+                            toastr.warning(res.message);
+                        }
+                    },
+                    error: function (res) {
+                        toastr.error(res.Message);
+                    }
+                });
+            } else {
+                toastr.error("Saving data has been failed! Please check again before you save it!");
+            }
+
+        }
+    }
+
+
+    function clear_add() {
+        var NO_ASSET = $('#addNoAsset').val();
+        var NAMA_ASSET = $('#addNamaAsset').val();
+        var MEREK = $('#addMerek').val();
+        var SUPPLIER = $('#addSupplier').val();
+    }
+
+    //-----------------------------EDIT IMAGE ASSET--------------------------
+    function changeImage(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        //Show Data to imageModal
+        $('#ID').val(Obj.ID).trigger("change");
+        $('#ID_TB_M_REQ_ASSET').val(Obj.ID_TB_M_REQ_ASSET).trigger("change");
+        $('#nmfoto').val(Obj.NAMA_FOTO).trigger("change");
+        $("#currentimg").attr('src', '../Content/Upload/Foto/ManajementAsset/' + Obj.NAMA_FOTO).show();
+
+        $('#modalChangeImageForm').modal();
+    }
+    function image_check() {
+        var ID = $('#ID').val();
+        var ID_TB_M_REQ_ASSET = $('#ID_TB_M_REQ_ASSET').val();
+        var OLD_FOTO = $('#nmfoto').val();
+        var FOTO_NAME = ID_TB_M_REQ_ASSET.trim() + "." + getExt(($('#editImg')[0].files[0].name));
+
+        var sts = true;
+
+        //Check Format Foto
+        var FORMAT_FOTO = "";
+        if ($('#editImg').val() != "") {
+            var NAMA_FOTO = ($('#editImg')[0].files[0].name).split('.');
+            FORMAT_FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        }
+
+        if (FORMAT_FOTO != 'PNG') {
+            toastr.error("Extension wrong, please use '.PNG' file!");
+            sts = false;
+        }
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditImageConfirm').modal();
+        }
+    }
+
+    function update_image() {
+        var ID = $('#ID').val();
+        var ID_TB_M_REQ_ASSET = $('#ID_TB_M_REQ_ASSET').val();
+        var FOTO_NAME = ID_TB_M_REQ_ASSET.trim() + "." + getExt(($('#editImg')[0].files[0].name));
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../UPDATE_IMAGE_ASSET',
+            async: false,
+            data: {
+                ID: ID,
+                FOTO_NAME: FOTO_NAME
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    //Send Image To Folder
+                    if (FOTO_NAME != "") {
+                        MoveFoto('#editImg', FOTO_NAME);
+                    }
+                    toastr.success("Data Has Been Save Successfuly");
+                    //alert('Data Has Been Save Successfuly');
+                    $('#modalChangeImageForm').modal('hide');
+                    cancel_edit();
+                    jQuery('#btn_search').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+        refreshPage();
+    }
+
+    //------------------------------EDIT DATA ASSET------------------------
+    //tombol Edit
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var NO_ASSET = $('#NoAsset');
+        var NAMA_ASSET = $('#NamaAsset');
+        var NAMA_ASSET_INVOICE = $('#NamaAssetInvoice');
+        var ITEM_CODE = $('#Item_Code');
+        //var NM_FOTO = $('#editNamaFoto');
+        var MEREK = $('#Merek');
+        var TIPE = $('#Tipe');
+        var SUPPLIER = $('#Supplier');
+        var TAHUN = $('#Tahun');
+        var UMUR = $('#UmurEkonomis');
+        var HARGA_SATUAN = $('#HargaSatuan');
+        var JENIS_ASSET = $('#JenisAsset');
+        var KATEGORI_ASSET = $('#KategoriAsset');
+        var DEPT_USER = $('#DeptUser');
+        var NAMA_USER = $('#NamaUser');
+        var KD_LOKASI = $('#KdLokasi');
+        var HALTE = $('#Halte');
+        var STATUS_PENGGUNAAN = $('#StatusPenggunaan');
+        var STATUS_KONDISI = $('#StatusKondisiAsset');
+        var STATUS_PENGADAAN = $('#StatusPengadaanAsset');
+        var LABEL_ASSET = $('#FlgStatusLabel');
+        var ID_TB_M_REQ_ASSET = $('#Edit_ID_TB_M_REQ_ASSET');
+        //var FLG_LABEL_ASSET = $('#editFlgStatusLabel');
+        //var FLG_DISPOSE_ASSET = $('#editFlgDispose');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        NO_ASSET.val(Send_Var[1]);
+        NAMA_ASSET.val(Send_Var[2]);
+        NAMA_ASSET_INVOICE.val(Send_Var[3]);
+        //IMAGE_NOW.val(Send_Var[4]);
+        MEREK.val(Send_Var[4]);
+        TIPE.val(Send_Var[5]);
+        SUPPLIER.val(Send_Var[6]);
+        TAHUN.val(Send_Var[7]);
+        HARGA_SATUAN.val(Send_Var[8]);
+        JENIS_ASSET.val(Send_Var[9]);
+        KATEGORI_ASSET.val(Send_Var[10]);
+        DEPT_USER.val(Send_Var[11]);
+        NAMA_USER.val(Send_Var[12]);
+        KD_LOKASI.val(Send_Var[13]);
+        HALTE.val(Send_Var[14]);
+        STATUS_KONDISI.val(Send_Var[15]);
+        STATUS_PENGADAAN.val(Send_Var[16]);
+        LABEL_ASSET.val(Send_Var[17]);
+        ID_TB_M_REQ_ASSET.val(Send_Var[18]);
+        ITEM_CODE.val(Send_Var[19]);
+        STATUS_PENGGUNAAN.val(Send_Var[20]);
+        UMUR.val(Send_Var[21]);
+
+        //-------OLD DECLARE----------
+        //ID.val(Send_Var[0]);
+        //NO_ASSET.val(Send_Var[1]);
+        //NAMA_ASSET.val(Send_Var[2]);
+        //NAMA_ASSET_INVOICE.val(Send_Var[3]);
+        //ITEM_CODE.val(Send_Var[22]);
+        ////IMAGE_NOW.val(Send_Var[4]);
+        //MEREK.val(Send_Var[5]);
+        //TIPE.val(Send_Var[6]);
+        //SUPPLIER.val(Send_Var[7]);
+        //TAHUN.val(Send_Var[8]);
+        //HARGA_SATUAN.val(Send_Var[9]);
+        //JENIS_ASSET.val(Send_Var[10]);
+        //KATEGORI_ASSET.val(Send_Var[11]);
+        //DEPT_USER.val(Send_Var[12]);
+        //NAMA_USER.val(Send_Var[13]);
+        //KD_LOKASI.val(Send_Var[14]);
+        //HALTE.val(Send_Var[16]);
+        //STATUS_KONDISI.val(Send_Var[17]);
+        //STATUS_PENGADAAN.val(Send_Var[18]);
+        //LABEL_ASSET.val(Send_Var[19]);
+        //ID_TB_M_REQ_ASSET.val(Send_Var[21]);
+        //STATUS_PENGGUNAAN.val(Send_Var[23]);
+
+        ////GET FOTO NOW
+        //var IMAGE_NOW = $("#img_now").attr('src', '../Content/Upload/Foto/ManajementAsset/' + Send_Var[4]).show();
+        
+        $('#modalEditForm').modal();
+    });
+
+    function cancel_edit() {
+        $('input[type="text"]').val('');
+        $('.form-control').val('');
+        $('#editNamaFoto').val('');
+        //$('#editImageBox').val('');
+        $("#editImageBox").attr('src', '../Content/Upload/Foto/ManajementAsset/' + 'nothing').show();
+        $('#modalEditForm').modal('hide');
+    }
+
+    function edit_check() {
+        var ID = $('#EditID').val();
+        var NO_ASSET = $('#NoAsset').val();
+        var NAMA_ASSET_NEW = $('#editNamaAsset').val();
+        var NAMA_ASSET_INVOICE_NEW = $('#editNamaAssetInvoice').val();
+        var ITEM_CODE_NEW = $('#editItem_Code').val();
+        //var NM_FOTO = $('#editNamaFoto').val();
+        //var FOTO_NAME = $('#editNamaAsset').val() + "." + getExt(($('#editNamaFoto')[0].files[0].name));
+        var MEREK_NEW = $('#editMerek').val();
+        var TIPE_NEW = $('#editTipe').val();
+        var SUPPLIER_NEW = $('#editSupplier').val();
+        var TAHUN_NEW = $('#editTahun').val();
+        //var QTY = $('#editQty').val();
+        var HARGA_SATUAN_NEW = $('#editHargaSatuan').val();
+        var JENIS_ASSET_NEW = $('#editJenisAsset').val();
+        var KATEGORI_ASSET_NEW = $('#editKategoriAsset').val();
+        //var PIC_BELI = $('#editPicBeli').val();
+        var DEPT_USER_NEW = $('#editDeptUser').val();
+        var NAMA_USER_NEW = $('#editNamaUser').val();
+        var KD_LOKASI_NEW = $('#editKdLokasi').val();
+        var HALTE_NEW = $('#editHalte').val();
+        //var JENIS_DOC = $('#editJenisDoc').val();
+        //var NO_BC = $('#editNoBC').val();
+        //var TGL_BC = $('#editTglBC').val();
+        //var TGL_REGIST = $('#editTglRegister').val();
+        var STATUS_KONDISI_NEW = $('#editStatusKondisiAsset');
+        var STATUS_PENGADAAN_NEW = $('#editStatusPengadaanAsset');
+        var LABEL_ASSET_NEW = $('#FlgStatusLabel');
+        var ID_TB_M_REQ_ASSET = $('#Edit_ID_TB_M_REQ_ASSET');
+        var STATUS_PENGGUNAAN = $('#editStatusPenggunaan').val();
+        var FLG_LABEL_ASSET = $('#editFlgStatusLabel').val();
+
+        //var FLG_DISPOSE_ASSET = $('#editFlgDispose').val();
+
+        //var FOTO = "";
+        //if ($('#editNamaFoto').val() != "") {
+        //    var NAMA_FOTO = ($('#editNamaFoto')[0].files[0].name);
+        //    FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+        //}
+
+        //var IMAGE = $('#editImageBox').attr('src');
+        //if ($('#editNamaFoto').val() != "") {
+        //    var NAMA_FOTO = ($('#editNamaFoto')[0].files[0].name).split('.');
+        //    FOTO = (NAMA_FOTO[NAMA_FOTO.length - 1]).toUpperCase();
+
+        //    //if (FOTO != 'JPG' && FOTO != 'PNG' && FOTO != 'BMP' && FOTO != 'SVG' && FOTO != 'TIFF' && FOTO != 'JPEG' && FOTO != 'GIF')
+        //    if (FOTO != 'PNG') {
+        //        toastr.warning("Extension wrong, please use '.PNG' file!");
+        //        //GenerateMessage(FOTO, "MWP011");
+        //        //sts = false;
+        //    }
+        //}
+        //else {
+        //    toastr.warning("Please select a photo before you save it!");
+        //}
+
+        //if (IMAGE == null || IMAGE == "") {
+        //    GenerateMessage("PHOTO", "MWP008");
+        //    sts = false;
+        //} else if (IMAGE != null || IMAGE != "") {
+        //    sts = true;
+        //}
+        //else if (FOTO == null || FOTO == "") {
+        //    GenerateMessage("PHOTO", "MWP008");
+        //    sts = false;
+        //}
+
+
+        var sts = true;
+
+        if (sts == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var ID_TB_M_REQ_ASSET = $('#Edit_ID_TB_M_REQ_ASSET').val();
+                var NO_ASSET = $('#NoAsset').val();
+
+                //Get Nama Asset
+                var NAMA_ASSET_NEW = $('#NamaAsset').val();
+                var KETERANGAN_NAMA_ASSET = "";
+                if ($('#editNamaAsset').val() != "") {
+                    NAMA_ASSET_NEW = $('#editNamaAsset').val();
+                    KETERANGAN_NAMA_ASSET = "Nama Asset: " + $('#NamaAsset').val() + "->" + NAMA_ASSET_NEW + " // ";
+                }
+
+                //Get Nama Asset Invoice
+                var NAMA_ASSET_INVOICE_NEW = $('#NamaAssetInvoice').val();
+                var KETERANGAN_NAMA_ASSET_INVOICE = "";
+                if ($('#editNamaAssetInvoice').val() != "") {
+                    NAMA_ASSET_INVOICE_NEW = $('#editNamaAssetInvoice').val();
+                    KETERANGAN_NAMA_ASSET_INVOICE = "Nama Asset Invoice: " + $('#NamaAssetInvoice').val() + "->" + NAMA_ASSET_INVOICE_NEW + " // ";
+                }
+
+                //Get Item Code
+                var ITEM_CODE_NEW = $('#Item_Code').val();
+                var KETERANGAN_ITEM_CODE = "";
+                if ($('#editItem_Code').val() != "") {
+                    ITEM_CODE_NEW = $('#editItem_Code').val();
+                    KETERANGAN_ITEM_CODE = "Item Code: " + $('#Item_Code').val() + "->" + ITEM_CODE_NEW + " // ";
+                }
+
+                //var NM_FOTO = $('#editNamaFoto').val();
+                //var FOTO_NAME_NEW = ID_TB_M_REQ_ASSET + "." + getExt(($('#editNamaFoto')[0].files[0].name));
+                //var FOTO_NAME_NEW = ID_TB_M_REQ_ASSET.trim() + "." + getExt(($('#editNamaFoto')[0].files[0].name));
+
+                //Get Merek
+                var MEREK_NEW = $('#Merek').val();
+                var KETERANGAN_MEREK = "";
+                if ($('#editMerek').val() != "") {
+                    MEREK_NEW = $('#editMerek').val();
+                    KETERANGAN_MEREK = "Merek:" + $('#Merek').val() + "->" + MEREK_NEW + " // ";
+                }
+
+                //Get Tipe
+                var TIPE_NEW = $('#Tipe').val();
+                var KETERANGAN_TIPE = "";
+                if ($('#editTipe').val() != "") {
+                    TIPE_NEW = $('#editTipe').val();
+                    KETERANGAN_TIPE = "Tipe: " + $('#Tipe').val() + "->" + TIPE_NEW + " // ";
+                }
+
+                //Get Supplier
+                var SUPPLIER_NEW = $('#Supplier').val();
+                var KETERANGAN_SUPPLIER = "";
+                if ($('#editSupplier').val() != "") {
+                    SUPPLIER_NEW = $('#editSupplier').val();
+                    KETERANGAN_SUPPLIER = "Supplier: " + $('#Supplier').val() + "->" + SUPPLIER_NEW + " // ";
+                }
+
+                //var TAHUN_NEW = $('#editTahun').val();
+                //var QTY = $('#editQty').val();
+
+                //Get Harga Satuan
+                var HARGA_SATUAN_NEW = $('#HargaSatuan').val();
+                var KETERANGAN_HARGA_SATUAN = "";
+                if ($('#editHargaSatuan').val() != "") {
+                    HARGA_SATUAN_NEW = $('#editHargaSatuan').val().replace(/,/g, '');
+                    KETERANGAN_HARGA_SATUAN = "Harga Satuan: " + $('#HargaSatuan').val() + "->" + HARGA_SATUAN_NEW + " // ";
+                }
+
+                //Get Umur Ekonomis
+                var UMUR_NEW = $('#UmurEkonomis').val();
+                var KETERANGAN_UMUR_EKONOMIS = "";
+                if ($('#editUmurEkonomis').val() != "") {
+                    UMUR_NEW = $('#editUmurEkonomis').val().replace(/,/g, '');
+                    KETERANGAN_UMUR_EKONOMIS = "Umur Ekonomis: " + $('#UmurEkonomis').val() + "->" + UMUR_NEW + " // ";
+                }
+
+                //var JENIS_ASSET_NEW = $('#editJenisAsset').val();
+                //var KATEGORI_ASSET_NEW = $('#editKategoriAsset').val();
+                //var PIC_BELI = $('#editPicBeli').val();
+
+                //Get Dept User
+                var DEPT_USER_NEW = $('#DeptUser').val();
+                var KETERANGAN_DEPT_USER = "";
+                if ($('#editDeptUser').val() != "") {
+                    DEPT_USER_NEW = $('#editDeptUser').val();
+                    KETERANGAN_DEPT_USER = "Dept User: " + $('#DeptUser').val() + "->" + DEPT_USER_NEW + " // ";
+                }
+
+                //Get Nama User
+                var NAMA_USER_NEW = $('#NamaUser').val();
+                var KETERANGAN_NAMA_USER = "";
+                if ($('#editNamaUser').val() != "") {
+                    NAMA_USER_NEW = $('#editNamaUser').val();
+                    KETERANGAN_NAMA_USER = "Nama User: " + $('#NamaUser').val() + "->" + NAMA_USER_NEW + " // ";
+                }
+
+                //Get Lokasi
+                var KD_LOKASI_NEW = $('#KdLokasi').val();
+                var KETERANGAN_LOKASI = "";
+                if ($('#editKdLokasi').val() != "") {
+                    KD_LOKASI_NEW = $('#editKdLokasi').val();
+                    KETERANGAN_LOKASI = "Kode Lokasi: " + $('#KdLokasi').val() + "->" + KD_LOKASI_NEW + " // ";
+                }
+
+                //Get Halte
+                var HALTE_NEW = $('#Halte').val();
+                var KETERANGAN_HALTE = "";
+                if ($('#editHalte').val() != "") {
+                    HALTE_NEW = $('#editHalte').val();
+                    KETERANGAN_HALTE = "Halte: " + $('#Halte').val() + "->" + HALTE_NEW + " // ";
+                }
+
+                //var JENIS_DOC = $('#editJenisDoc').val();
+                //var NO_BC = $('#editNoBC').val();
+                //var TGL_BC = $('#editTglBC').val();
+                //var TGL_REGIST = $('#editTglRegister').val();
+
+                //Get Status Kondisi
+                var STATUS_KONDISI_NEW = $('#StatusKondisiAsset').val();
+                var KETERANGAN_STATUS_KONDISI = "";
+                if ($('#editStatusKondisiAsset').val() != "") {
+                    STATUS_KONDISI_NEW = $('#editStatusKondisiAsset').val();
+                    KETERANGAN_STATUS_KONDISI = "Status Kondisi: " + $('#StatusKondisiAsset').val() + "->" + STATUS_KONDISI_NEW + " // ";
+                }
+
+                //Get Status Pengadaan
+                var STATUS_PENGADAAN_NEW = $('#StatusPengadaanAsset').val();
+                var KETERANGAN_STATUS_PENGADAAN  = "";
+                if ($('#editStatusPengadaanAsset').val() != "") {
+                    STATUS_PENGADAAN_NEW = $('#editStatusPengadaanAsset').val();
+                    KETERANGAN_STATUS_PENGADAAN = "Status Pengadaan: " + $('#StatusPengadaanAsset').val() + "->" + STATUS_PENGADAAN_NEW + " // ";
+                }
+
+                //Get Status Penggunaan
+                var STATUS_PENGGUNAAN_NEW = $('#StatusPenggunaan').val();
+                var KETERANGAN_STATUS_PENGGUNAAN = "";
+                if ($('#editStatusPenggunaan').val() != "") {
+                    STATUS_PENGGUNAAN_NEW = $('#editStatusPenggunaan').val();
+                    KETERANGAN_STATUS_PENGGUNAAN = "Status Penggunaan: " + $('#StatusPenggunaan').val() + "->" + STATUS_PENGGUNAAN_NEW + " // ";
+                }
+
+                //Get Label Asset
+                var FLG_LABEL_ASSET_NEW = "";
+                if ($('#FlgStatusLabel').val() == "BELUM LABEL") {
+                    FLG_LABEL_ASSET_NEW = "0";
+                } else {
+                    FLG_LABEL_ASSET_NEW = "1";
+                }
+                var KETERANGAN_STATUS_LABEL_ASSET = "";
+                if ($('#editFlgStatusLabel').val() != "") {
+                    var FLG_LABEL_ASSET = $('#editFlgStatusLabel').val();
+
+                    if (FLG_LABEL_ASSET == "" || FLG_LABEL_ASSET == 0) {
+                        FLG_LABEL_ASSET = "Belum Label";
+                        FLG_LABEL_ASSET_NEW = "1";
+                    } else {
+                        FLG_LABEL_ASSET = "Sudah Label";
+                        FLG_LABEL_ASSET_NEW = "1";
+                    }
+
+                    KETERANGAN_STATUS_LABEL_ASSET = "Status Label: " + $('#FlgStatusLabel').val() + "->" + FLG_LABEL_ASSET;
+                }
+
+                var KETERANGAN = KETERANGAN_NAMA_ASSET + KETERANGAN_NAMA_ASSET_INVOICE + KETERANGAN_ITEM_CODE + KETERANGAN_MEREK + KETERANGAN_TIPE + KETERANGAN_SUPPLIER + KETERANGAN_HARGA_SATUAN + KETERANGAN_UMUR_EKONOMIS + KETERANGAN_DEPT_USER + KETERANGAN_NAMA_USER + KETERANGAN_LOKASI + KETERANGAN_HALTE + KETERANGAN_STATUS_KONDISI + KETERANGAN_STATUS_PENGGUNAAN + KETERANGAN_STATUS_PENGADAAN + KETERANGAN_STATUS_LABEL_ASSET;
+
+                //var Send_Var = ID + "," + ID_TB_M_REQ_ASSET + "," + NO_ASSET + "," + NAMA_ASSET_NEW + "," + NAMA_ASSET_INVOICE_NEW + "," + ITEM_CODE_NEW + "," + FOTO_NAME_NEW.trim() + "," + MEREK_NEW + "," + TIPE_NEW + "," + SUPPLIER_NEW + "," + HARGA_SATUAN_NEW + "," + DEPT_USER_NEW + "," + NAMA_USER_NEW + "," + KD_LOKASI_NEW + "," + HALTE_NEW + "," + STATUS_KONDISI_NEW + "," + STATUS_PENGADAAN_NEW + "," + STATUS_PENGGUNAAN_NEW + "," + FLG_LABEL_ASSET_NEW;
+                var Send_Var = ID + "," + ID_TB_M_REQ_ASSET + "," + NO_ASSET + "," + NAMA_ASSET_NEW + "," + NAMA_ASSET_INVOICE_NEW + "," + ITEM_CODE_NEW + "," + MEREK_NEW + "," + TIPE_NEW + "," + SUPPLIER_NEW + "," + HARGA_SATUAN_NEW + "," + UMUR_NEW + "," + DEPT_USER_NEW + "," + NAMA_USER_NEW + "," + KD_LOKASI_NEW + "," + HALTE_NEW + "," + STATUS_KONDISI_NEW + "," + STATUS_PENGADAAN_NEW + "," + STATUS_PENGGUNAAN_NEW + "," + FLG_LABEL_ASSET_NEW + "," + KETERANGAN;
+
+                var sts = true;
+
+                $.ajax({
+                    type: "POST",
+                    url: '../DISA100001/Update_Data_Asset',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                    }
+                });
+
+                if (sts == false) {
+                    return;
+                }
+
+            }
+        });
+
+    }
+
+    //---------------------------------------------DOWNLOAD DATA ASSET--------------------------------------
+    $("#btn_download").on("click", function () {
+        $('#Confirmation_Download_Popup').modal();
+    });
+
+    function download_data() {
+        var NO_ASSET = $('#searchNoAsset').val();
+        var NAMA_ASSET = $('#searchNamaAsset').val();
+        var MEREK = $('#searchMerek').val();
+        var SUPPLIER = $('#searchSupplier').val();
+        var FLG_DISPOSE_ASSET = $('#searchStatusAsset').val();
+        window.open(
+            '../DISA100001/DownloadExcel_ListAsset?NO_ASSET=' + NO_ASSET + '&NAMA_ASSET=' + NAMA_ASSET + '&MEREK=' + MEREK + '&SUPPLIER=' + SUPPLIER + '&FLG_DISPOSE_ASSET=' + FLG_DISPOSE_ASSET + '',
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    //----------------------------------------------DELETE DATA ASSET-------------------------------------
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    //Delete funtion
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '../DISA100001/Delete_Data_Asset',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol Dispose
+    $("#btn_Dispose").on("click", function () {
+        $('#Confirmation_Dispose_Popup').modal();
+    });
+    //Dispose funtion
+    function dispose_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'DISA100001/Dispose_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success("Data Master Asset has been Dispose");
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Dispose_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //-----------------------------------------CLEAR SEARCH DATA ASSET-----------------------------------------
+    //tombol clear
+    function clear_search() {
+        $('#searchNamaAsset').val('');
+        $('#searchMerek').val('');
+        $('#searchSupplier').val('');
+        $('#searchStatusAsset').val('');
+
+        var SEARCH_NO_ASSET = '';
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Asset',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                SEARCH_NO_ASSET: SEARCH_NO_ASSET,
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                EMPLOYEE_NAME: "xxxxx",
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    //-------------------------------------------SEARCH DATA ASSET---------------------------------------
+    // tombol search Master Asset
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+        $('#addKdLokasi').val('');
+        $('#addNamaLokasi').val('');
+        $('#addArea').val('');
+
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var NO_ASSET = $('#searchNoAsset').val();
+        var NAMA_ASSET = $('#searchNamaAsset').val();
+        var MEREK = $('#searchMerek').val();
+        var SUPPLIER = $('#searchSupplier').val();
+        var FLG_DISPOSE_ASSET = $('#searchStatusAsset').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + '../Search_Data_Asset',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                NO_ASSET: NO_ASSET,
+                NAMA_ASSET: NAMA_ASSET,
+                MEREK: MEREK,
+                SUPPLIER: SUPPLIER,
+                FLG_DISPOSE_ASSET: FLG_DISPOSE_ASSET
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_Dispose').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_Dispose').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                    $('#btn_Dispose').prop('disabled', false);
+                }
+
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    //Show Detail
+    function reloadDetail(MyID) {
+
+        //_row =
+        //var cols = _row.children("td");
+        var ID = MyID.id.valueOf()
+
+        $.ajax({
+            type: "GET",
+            url: 'GetDataDetail?ID=' + ID,
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    }
+   
+</script>

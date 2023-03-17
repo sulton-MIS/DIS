@@ -1,0 +1,182 @@
+﻿@using AI070.Models.DTIDashboardListRepository;
+@{    
+    var Title = ViewData["Title"];
+    var Proses_List = @ViewBag.Proses_List;
+}
+
+<html>
+<head>
+    <title>Monitoring Output Produksi</title>
+
+
+    <link href="~/Content/Datatable/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link href="~/Content/UI/select2.min.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="/Content/chartjs/Chart.js"></script>
+    <script type="text/javascript" src="/Content/Bootstrap/js/jquery.js"></script>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/datepicker.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/bootstrap-datepicker.js")"></script>
+</head>
+<body>
+    <style type="text/css">
+        body {
+            font-family: roboto;
+        }
+    </style>
+    <table border="1" style=" border-style: groove; border-collapse: collapse; width: 100%;">
+        <tr>
+            <td colspan="2">
+                <div class="col-md-6" align="center">
+                    <br />
+                    <strong><label style="font:bold; font-size:larger;" id="title_halte">====[ @{ @Title } ]====</label></strong>
+                </div>                
+                <div class="col-md-6">
+                    &nbsp;
+                    <label>Halte : </label>
+                    @*<select class="form-control" id="searchHalte" name="dropdown">
+                <option id="searchHalte" value="1" selected="selected"> 1 </option>
+                <option id="searchHalte" value="2" selected="selected"> 2 </option>
+                <option id="searchHalte" value="3" selected="selected"> 3 </option>
+                <option id="searchHalte" value="4" selected="selected"> 4 </option>
+                <option id="searchHalte" value="5" selected="selected"> 5 </option>
+                <option id="searchHalte" value="6" selected="selected"> 6 </option>
+                <option id="searchHalte" value="7" selected="selected"> 7 </option>
+                <option id="searchHalte" value="8" selected="selected"> 8 </option>
+                <option id="searchHalte" value="9" selected="selected"> 9 </option>
+                <option id="searchHalte" value="10" selected="selected"> 10 </option>
+                <option id="searchHalte" value="" selected="selected">  </option>
+            </select>*@
+                    <select onchange="redirect(this.value)" class="required" data-val="true">
+                        <option value="123" @if (@Title.ToString() == "HALTE 1_2_3") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 1_2_3</option>
+                        <option value="41" @if (@Title.ToString() == "HALTE 4 DALAM") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 4 Dalam</option>
+                        <option value="42" @if (@Title.ToString() == "HALTE 4 LUAR") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 4 Luar</option>
+                        <option value="5" @if (@Title.ToString() == "HALTE 5") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 5</option>
+                        <option value="7" @if (@Title.ToString() == "HALTE 7") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 7</option>
+                        <option value="8" @if (@Title.ToString() == "HALTE 8") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 8</option>
+                        <option value="9" @if (@Title.ToString() == "HALTE 9") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 9</option>
+                        <option value="10" @if (@Title.ToString() == "HALTE 10") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 10</option>
+                    </select>
+                    &nbsp;
+                    @*<label>Date : </label>
+            <input id="searchDate" type="text" class="form-control datepicker" />
+            &nbsp;
+            <button type="button" class="btn btn-primary btn-xs" onclick="searchData()" style="width: 80px;"><i class="fa fa-search"></i> Search</button>*@
+                </div>
+                <br />
+            </td>            
+        </tr>
+    </table>
+    <table border="1" style=" border-style: groove; border-collapse: collapse; width: 100%;">
+        @Html.Partial("Datagrid_Data")
+    </table>
+    <table border="1" style=" border-style: groove; border-collapse: collapse; width: 100%;">
+
+        <tr>
+            @if (@Title.ToString() == "HALTE 1_2_3")
+            {
+                @Html.Partial("Halte/_Halte123")
+            }
+            else if (@Title.ToString() == "HALTE 4 DALAM")
+            {
+                @Html.Partial("Halte/_Halte4Dalam")
+            }
+            else if (@Title.ToString() == "HALTE 4 LUAR")
+            {
+                @Html.Partial("Halte/_Halte4Luar")
+            }
+            else if (@Title.ToString() == "HALTE 5")
+            {
+                @Html.Partial("Halte/_Halte5")
+            }
+            else if (@Title.ToString() == "HALTE 7")
+            {
+                @Html.Partial("Halte/_Halte7")
+            }
+            else if (@Title.ToString() == "HALTE 8")
+            {
+                @Html.Partial("Halte/_Halte8")
+            }
+            else if (@Title.ToString() == "HALTE 9")
+            {
+                @Html.Partial("Halte/_Halte9")
+            }
+            else
+            {
+                @Html.Partial("Halte/_Halte10")
+            }
+        </tr>
+    </table>
+    <table border="1" style=" border-style: groove; border-collapse: collapse; width: 100%;">
+        @Html.Partial("Akumulasi")
+    </table>
+
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+    var SITE_URL = window.location.href + "/";
+
+    function searchData() {
+        var halte = $('#searchHalte').val();
+        var date = $('#searchDate').val();        
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'rtjn_dashboard_output_produksi',
+            async: false,
+            data: {  
+                date: date, 
+                halte: halte                               
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    function redirect(dropDownValue) {        
+        window.location.href = '@Url.Action("rtjn_dashboard_output_produksi", "DTIDashboardList")' + '?halte=' + dropDownValue;
+    }
+
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            changeYear: true,
+            showAnim: 'fadeIn',
+            duration: 200,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            currentText: 'Now',
+            shortYearCutoff: '+20',
+            numberOfMonths: 1,
+            showButtonPanel: true,
+            yearRange: 'c-200:c',
+        });
+
+        $('.datetimepicker').datetimepicker({
+            format: 'DD-MM-YYYY HH:mm:ss',
+            minDate: getFormattedDate(new Date())
+        });
+    });
+
+    function getFormattedDate(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear().toString().slice(2);
+        return day + '-' + month + '-' + year;
+    }
+</script>

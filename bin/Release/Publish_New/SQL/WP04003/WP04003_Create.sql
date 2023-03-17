@@ -1,0 +1,61 @@
+﻿DECLARE @@CNT INT
+	, @@CHK VARCHAR(20)
+	, @@ERR VARCHAR(MAX);
+DECLARE @@MSG_TEXT VARCHAR(MAX);
+DECLARE @@MSG_TYPE VARCHAR(MAX);
+
+BEGIN TRY
+	SET @@CNT = (SELECT COUNT(1) FROM TB_M_USER_MAPPING WHERE NOREG = @NOREG);
+	IF(@@CNT > 0)
+	BEGIN
+		SET @@CHK = 'FALSE';
+		SET @@ERR = 'Data Has been Registered';
+		
+	END ELSE
+	BEGIN
+		
+		INSERT INTO TB_M_USER_MAPPING
+		(
+			 [NOREG]
+			,[FIRST_NAME]
+			,[LAST_NAME]
+			,[EMAIL]
+			,[USERNAME]
+			,[ROLE]
+			,[ID_TB_M_AREA]
+			,[ID_TB_M_LOCATION]
+			,[CREATED_BY]
+			,[CREATED_DT]
+			,[UPDATED_BY]
+			,[UPDATED_DT]
+			,USER_ST
+		)
+		VALUES
+		(
+			@NOREG,
+			@FIRST_NAME,
+			@LAST_NAME,
+			@EMAIL,
+			@USERNAME,
+			@ROLE,
+			@AREA,
+			@LOCATION,
+			@username,
+			GETDATE(),
+			@username,
+			GETDATE(),
+			1
+		);
+
+
+		SET @@CHK = 'TRUE';
+		SET @@ERR = 'NOTHING';
+	END
+END TRY
+BEGIN CATCH
+	SET @@CHK = 'FALSE';
+	SET @@ERR = 'ERROR INSERT TB_M_USER_MAPPING:' +@NOREG+
+	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+END CATCH
+
+SELECT @@CHK AS STACK, @@ERR AS LINE_STS

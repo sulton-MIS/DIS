@@ -1,0 +1,156 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR190001Master;
+@{
+
+}
+
+@Html.Partial("view_ManualBook")
+@Html.Partial("view_References")
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-5" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:-55px; left: 100px;  margin-left: 10px; text-align:right; border:0px solid">
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa fa-info-circle"></i> Application References</button>
+            <div class="dropdown-content">
+                <a id="openFileTest" href="#"> Document Test (PT & UAT) </a>
+                <a id="openFileTraining" href="#"> Document Training & Implementasi </a>
+                <a id="openFileEvaluasi" href="#"> Document Evaluasi </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:20px; left: 50px;  margin-left: 10px; text-align:right; border:0px solid">
+        <label class="control-label text-muted"><h7>[<a id="openBook" style="cursor: pointer">Manual Book</a>]</h7></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    @*<td>DMC Code</td>
+                                        <td>
+                                            <input id="searchDMCCode" type="text" class="form-control" autocomplete="off" />
+                                        </td>*@
+                                    <td>DMC Type</td>
+                                    <td>
+                                        <input id="searchDMCPart" type="text" class="form-control" autocomplete="off" />
+                                    </td>
+                                    <td>Lot No.</td>
+                                    <td>
+                                        <input id="searchLotNo" type="text" class="form-control" autocomplete="off" />
+                                    </td>
+
+                                </tr>
+                                @*<tr>
+                                        <td>ID Produksi</td>
+                                        <td>
+                                            <input id="show_IDProduksi" type="text" readonly class="form-control" />
+                                        </td>
+                                    </tr>*@
+
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <p style="margin-left: 10px;"> <u><b>On Search Klik:</b></u>  </p>
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>ID Produksi</td>
+                                    <td>
+                                        <input id="showIDProd" type="text" readonly class="form-control" />
+                                    </td>
+                                    <td>DMC Type</td>
+                                    <td>
+                                        <input id="showCode" type="text" readonly class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lot No.</td>
+                                    <td>
+                                        <input id="showLot" type="text" readonly class="form-control" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <p style="margin-left: 10px;"> <u><b>Last Show Detail:</b></u>  </p>
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>ID Produksi</td>
+                                    <td>
+                                        <input id="show_IDProduksi_last" type="text" readonly class="form-control" />
+                                    </td>
+
+                                    <td>DMC Type </td>
+                                    <td>
+                                        <input id="show_IDSeihin_last" type="text" readonly class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lot No.</td>
+                                    <td>
+                                        <input id="show_LotNo_last" type="text" readonly class="form-control" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

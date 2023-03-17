@@ -1,0 +1,38 @@
+﻿<script>
+	var IdSubject = 0
+	var IdCompany = 0
+
+	$(document).ready(function () {
+        //reloadSummary()
+	});
+
+	function back() {
+		location.href = "/WP03010"
+	}
+
+	function printPDF() {
+        var regNo = $('#regNo').val();
+		var examSubject = $('#examSubject').val();
+
+		window.open(
+			'WP03010/PrintPDF?regNo=' + regNo + '&examSubject=' + examSubject,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function printEXCEL() {
+        var regNo = $('#regNo').val();
+		var examSubject = $('#examSubject').val();
+
+		window.open(
+			'WP03010/PrintExcel?regNo=' + regNo + '&examSubject=' + examSubject,
+		  '_blank' // <- This is what makes it open in a new window.
+		);
+	}
+
+	function clear_Data() {
+        document.getElementById("regNo").value = "";
+		document.getElementById("examSubject").value = "";
+	}
+
+</script>

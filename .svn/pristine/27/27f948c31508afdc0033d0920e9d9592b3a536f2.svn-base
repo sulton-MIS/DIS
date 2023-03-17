@@ -1,0 +1,13 @@
+﻿@using AI070.Models.WP03004Master;
+@model IEnumerable<WP03004Master>
+
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    @Html.Partial("SearchCriteria")
+    @Html.Partial("Datagrid_Data")
+    @Html.Partial("Javascript")
+
+

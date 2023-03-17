@@ -1,0 +1,131 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP04004Master;
+@{
+    List<WP04004Master> DataWP = (List<WP04004Master>)ViewData["DataWP04004"];
+    List<WP04004> Status_Cmb = (List<WP04004>)ViewData["Status_Cmb"];
+    List<WP04004> Time_Cmb = (List<WP04004>)ViewData["Time_Cmb"];
+    List<WP04004> ExecTime_Cmb = (List<WP04004>)ViewData["Time_Cmb"];
+    List<WP04004> Model_type = (List<WP04004>)ViewData["Model_type"];
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100.15%;">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center; " class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 60px;" rowspan="2">No</th>
+                            <th style="width: 150px;" rowspan="2">Username</th>
+                            <th style="width: 350px;" rowspan="2">Plant Name</th>
+                            <th style="width: 350px;" rowspan="2">Company</th>
+                            <th style="width: 300px;" colspan="2">Created</th>
+                            <th style="width: 300px;" colspan="2">Changed</th>
+                        </tr>
+                        <tr>
+                            <!--Colspan Dari "Created"-->
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                            <!--Colspan Dari "Created"-->
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 255px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (WP04004Master item in DataWP)
+                                    {
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px;text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox" value="@item.ID,@item.USERNAME,@item.PLANT_CD,@item.COMPANY" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    </td>
+                                                    <td style="width: 60px
+">
+                                                        @number
+                                                    </td>
+                                                    <td style="width: 150px"> @item.USERNAME </td>
+                                                    <td style="width: 350px"> @item.PLANT_NM </td>
+                                                    <td style="width: 350px"> @item.COMPANY </td>
+                                                    <td style="width: 150px"> @item.CREATED_BY </td>
+                                                    <td style="width: 150px"> @item.CREATED_DT </td>
+                                                    <td style="width: 150px"> @item.UPDATED_BY </td>
+                                                    <td style="width: 150px"> @item.UPDATED_DT </td>
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="NoDataFound">
+                                        <td colspan="8" width="90%" class="text-center">No data found</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="8" width="90%" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+                    <tfoot>
+                        <tr>
+                            <td colspan="8" id="partialPaging">
+                                @Html.Partial("Datagrid_Paging")
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

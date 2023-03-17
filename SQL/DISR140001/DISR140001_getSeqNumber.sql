@@ -1,0 +1,74 @@
+﻿SELECT TOP(1) 
+CONVERT(INT, RIGHT(id_trans, 3)) AS SEQ_NUMBER 
+FROM Z_REX_Data_InOut_FG_Detail 
+WHERE YEAR(trans_date) = @YEAR_TRX 
+AND MONTH(trans_date) = @MONTH_TRX 
+AND DAY(trans_date) = @DAY_TRX 
+ORDER BY trans_date DESC
+
+
+--DECLARE @@CNT INT
+--	, @@CHK VARCHAR(20)
+--	, @@ERR VARCHAR(MAX);
+--DECLARE @@MSG_TEXT VARCHAR(MAX);
+--DECLARE @@MSG_TYPE VARCHAR(MAX);
+
+--BEGIN TRY
+--	SET @@CNT = (SELECT	COUNT(1) 
+--					FROM	dbo.TB_M_SEQ_NUMBER
+--					WHERE TYPE_TRX = @TYPE_TRX
+--					AND YEAR_TRX = @YEAR_TRX
+--					AND MONTH_TRX = @MONTH_TRX);
+--	IF(@@CNT > 0)
+--	BEGIN
+
+--		SELECT	@@CNT = SEQ_NUMBER 
+--		FROM	dbo.TB_M_SEQ_NUMBER
+--		WHERE TYPE_TRX = @TYPE_TRX
+--		AND YEAR_TRX = @YEAR_TRX
+--		AND MONTH_TRX = @MONTH_TRX;
+
+--		UPDATE dbo.TB_M_SEQ_NUMBER
+--		SET SEQ_NUMBER = SEQ_NUMBER+1
+--		WHERE TYPE_TRX = @TYPE_TRX
+--		AND YEAR_TRX = @YEAR_TRX
+--		AND MONTH_TRX = @MONTH_TRX;
+
+--		SET @@CHK = 'TRUE';
+--		SET @@ERR = 'NOTHING';
+
+--	END 
+--	ELSE
+--	BEGIN
+--		INSERT INTO dbo.TB_M_SEQ_NUMBER
+--		(
+--			TYPE_TRX,
+--			YEAR_TRX,
+--			MONTH_TRX,
+--			SEQ_NUMBER,
+--			CREATED_BY,
+--			CREATED_DT
+--		)
+--		VALUES
+--		(
+--			@TYPE_TRX,
+--			@YEAR_TRX,
+--			@MONTH_TRX,
+--			2,
+--			@username,
+--			GETDATE()
+--		);
+
+--		SET @@CNT = 1;
+
+--		SET @@CHK = 'TRUE';
+--		SET @@ERR = 'NOTHING';
+--	END
+--END TRY
+--BEGIN CATCH
+--	SET @@CHK = 'FALSE';
+--	SET @@ERR = 'ERROR INSERT SEQ_NUMBER:' +@TYPE_TRX+
+--	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+--END CATCH
+
+--SELECT @@CHK AS STACK, @@ERR AS LINE_STS,CAST(@@CNT AS VARCHAR(20)) AS SEQ_NUMBER

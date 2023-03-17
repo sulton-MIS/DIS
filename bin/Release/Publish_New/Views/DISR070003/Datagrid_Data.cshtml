@@ -1,0 +1,176 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR070003Master;
+@{
+    List<DISR070003Master> DataWP = (List<DISR070003Master>)ViewData["DataDISR070003"];
+    List<DISR070003> Status_Cmb = (List<DISR070003>)ViewData["Status_Cmb"];
+    List<DISR070003> Time_Cmb = (List<DISR070003>)ViewData["Time_Cmb"];
+    List<DISR070003> ExecTime_Cmb = (List<DISR070003>)ViewData["Time_Cmb"];
+    List<DISR070003> Model_type = (List<DISR070003>)ViewData["Model_type"];
+
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;" rowspan="2">No</th>
+                            <th style="width: 150px" rowspan="2">KODE PROSES</th>
+                            <th style="width: 150px" rowspan="2">NAMA PROSES</th>
+                            <th style="width: 100px;" rowspan="2">HALTE</th>
+                            <th style="width: 150px;" rowspan="2">KATEGORI PROSES</th>
+                            <th style="width: 100px;" rowspan="2">FLAG INCRE. BY CAVITY</th>
+                            <th style="width: 150px;" rowspan="2">ID GAMENSHUBETSU (Qty.Ok by Qty. Schedule)</th>
+                            <th style="width: 100px;" rowspan="2">FLAG Non-RTJN</th>
+                            <th style="width: 150px;" rowspan="2">COMMENT</th>
+                            <th style="width: 150px;" rowspan="2">FLAG RIMEN</th>
+                            <th style="width: 150px;" rowspan="2">FLAG NEED TOOL</th>
+                            <th style="width: 150px;" rowspan="2">FLAG LOGICAL</th>
+                            <th style="width: 150px;" rowspan="2">TIME KOSHIN</th>
+                            <th style="width: 150px;" rowspan="2">INITIAL PROCCESS</th>
+                            <th style="width: 150px;" rowspan="2">FLAG CHECK SCHEDULE</th>
+                            <th style="width: 150px;" rowspan="2">FLAG DISPLAY MATERIAL</th>
+                            <th style="width: 150px;" rowspan="2">FLAG WARNING MATERIAL</th>
+                            <th style="width: 150px;" rowspan="2">FLAG OVEN</th>
+                            <th style="width: 150px;" rowspan="2">GROUP PROCESS</th>
+                            <th style="width: 150px;" rowspan="2">CATEGORY</th>
+                            <th style="width: 150px;" rowspan="2">SORT NO</th>
+                            <th style="width: 150px;" rowspan="2">FLAG CHOKORITSU</th>
+                            <th style="width: 150px;" rowspan="2">BGCOLOR</th>
+                            <th style="width: 150px;" rowspan="2">GROUP PROCCESS COST</th>
+                            <th style="width: 150px;" rowspan="2">TYPE PROCCESS</th>
+                            <th style="width: 150px;" rowspan="2">CATEGORY PROCCESS</th>
+                            <th style="width: 150px;" rowspan="2">PROD. COST LEVEL</th>
+                            <th style="width: 150px;" rowspan="2">FLAG USE CLNBN</th>
+                        </tr>
+                        <!--<tr>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                        <th style="width: 150px; border: initial; ">Date</th>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>-->
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISR070003Master item in DataWP)
+                                    {
+                                        //string sts = "";
+                                        //if (@item.STATUSTEXT == "1")
+                                        //{
+                                        //    sts = "Active";
+                                        //}
+                                        //else
+                                        //{
+                                        //    sts = "Not Active";
+                                        //}
+                                        <tr id="row-@number" class="row-@item.ID">
+                                            <td style="width: 50px; text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID,@item.id_kotei,@item.name_kotei,@item.halte,@item.name_koteishubetsu,@item.flg_increByCavity,@item.id_gamenshubetsu,@item.flg_RTJNon,@item.comment,@item.flg_rimen,@item.flg_need_tool,@item.flag_logical,@item.time_koshin,@item.initial_process,@item.flg_check_schedule,@item.flg_disp_material,@item.flg_warning_material,@item.flg_oven,@item.group_process,@item.category,@item.sort_no,@item.flg_chokoritsu,@item.bgcolor,@item.group_process_cost,@item.type_process,@item.category_process,@item.prod_cost_level,@item.flg_use_cl" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                            </td>
+                                            <td style="width: 40px">
+                                                @item.ROW_NUM
+                                            </td>
+                                            <td style="width: 150px; text-align:center"> @item.id_kotei</td>
+                                            <td style="width: 150px; text-align:left"> @item.name_kotei</td>
+                                            <td style="width: 100px; text-align:center"> @item.halte</td>
+                                            <td style="width: 150px; text-align:left"> @item.name_koteishubetsu </td>
+                                            <td style="width: 100px; text-align:center"> @item.flg_increByCavity </td>
+                                            <td style="width: 150px; text-align:center"> @item.id_gamenshubetsu </td>
+                                            <td style="width: 100px; text-align:center"> @item.flg_RTJNon </td>
+                                            <td style="width: 150px; text-align:center"> @item.comment </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_rimen </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_need_tool </td>
+                                            <td style="width: 150px; text-align:center"> @item.flag_logical </td>
+                                            <td style="width: 150px; text-align:center"> @item.time_koshin </td>
+                                            <td style="width: 150px; text-align:center"> @item.initial_process </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_check_schedule </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_disp_material </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_warning_material </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_oven </td>
+                                            <td style="width: 150px; text-align:center"> @item.group_process </td>
+                                            <td style="width: 150px; text-align:center"> @item.category </td>
+                                            <td style="width: 150px; text-align:center"> @item.sort_no </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_chokoritsu </td>
+                                            <td style="width: 150px; text-align:center"> @item.bgcolor </td>
+                                            <td style="width: 150px; text-align:center"> @item.group_process_cost </td>
+                                            <td style="width: 150px; text-align:center"> @item.type_process </td>
+                                            <td style="width: 150px; text-align:center"> @item.category_process </td>
+                                            <td style="width: 150px; text-align:center"> @item.prod_cost_level </td>
+                                            <td style="width: 150px; text-align:center"> @item.flg_use_cl </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TxDTIPRDModelStoreContainer" CdmEntityContainer="TxDTIPRDEntities3">
+    <EntitySetMapping Name="ad_dis_rtjn_master_actual_masalah">
+      <EntityTypeMapping TypeName="TxDTIPRDModel.ad_dis_rtjn_master_actual_masalah">
+        <MappingFragment StoreEntitySet="ad_dis_rtjn_master_actual_masalah">
+          <ScalarProperty Name="no_id" ColumnName="no_id" />
+          <ScalarProperty Name="halte" ColumnName="halte" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="time" ColumnName="time" />
+          <ScalarProperty Name="opmj" ColumnName="opmj" />
+          <ScalarProperty Name="masalah" ColumnName="masalah" />
+          <ScalarProperty Name="action" ColumnName="action" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

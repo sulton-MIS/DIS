@@ -1,0 +1,237 @@
+D:\2Program DIS\DIS System\wp\bin\AI070.dll.config
+D:\2Program DIS\DIS System\wp\bin\AI070.dll
+D:\2Program DIS\DIS System\wp\bin\AI070.pdb
+D:\2Program DIS\DIS System\wp\bin\Newtonsoft.Json.dll
+D:\2Program DIS\DIS System\wp\bin\Rotativa.dll
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csprojAssemblyReference.cache
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.csproj.CopyComplete
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.dll
+D:\2Program DIS\DIS System\wp\obj\Release\AI070.pdb
+E:\Source Code Baru\wp\bin\AI070.dll.config
+E:\Source Code Baru\wp\bin\AI070.dll
+E:\Source Code Baru\wp\bin\AI070.pdb
+E:\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\wp\bin\Rotativa.dll
+E:\Source Code Baru\wp\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\wp\obj\Release\AI070.csproj.CopyComplete
+E:\Source Code Baru\wp\obj\Release\AI070.dll
+E:\Source Code Baru\wp\obj\Release\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\wp\bin\AI070.dll
+E:\Sulton\Source Code Baru\wp\bin\AI070.pdb
+E:\Sulton\Source Code Baru\wp\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\wp\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.dll
+E:\Sulton\Source Code Baru\wp\obj\Release\AI070.pdb
+E:\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Source Code Baru\DIS\bin\AI070.dll
+E:\Source Code Baru\DIS\bin\AI070.pdb
+E:\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Source Code Baru\DIS\obj\Release\AI070.csprojAssemblyReference.cache
+E:\Source Code Baru\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Source Code Baru\DIS\obj\Release\AI070.csproj.CopyComplete
+E:\Source Code Baru\DIS\obj\Release\AI070.dll
+E:\Source Code Baru\DIS\obj\Release\AI070.pdb
+\\192.168.0.10\BackupVR\DIS\2022\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+\\192.168.0.10\BackupVR\DIS\2022\DIS\bin\AI070.dll.config
+\\192.168.0.10\BackupVR\DIS\2022\DIS\bin\AI070.dll
+\\192.168.0.10\BackupVR\DIS\2022\DIS\bin\AI070.pdb
+\\192.168.0.10\BackupVR\DIS\2022\DIS\bin\Newtonsoft.Json.dll
+\\192.168.0.10\BackupVR\DIS\2022\DIS\bin\Rotativa.dll
+\\192.168.0.10\BackupVR\DIS\2022\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+\\192.168.0.10\BackupVR\DIS\2022\DIS\obj\Release\AI070.csproj.CopyComplete
+\\192.168.0.10\BackupVR\DIS\2022\DIS\obj\Release\AI070.dll
+\\192.168.0.10\BackupVR\DIS\2022\DIS\obj\Release\AI070.pdb
+D:\DIS\bin\AI070.dll.config
+D:\DIS\bin\AI070.dll
+D:\DIS\bin\AI070.pdb
+D:\DIS\bin\Newtonsoft.Json.dll
+D:\DIS\bin\Rotativa.dll
+D:\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+D:\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\DIS\obj\Release\AI070.csproj.CopyComplete
+D:\DIS\obj\Release\AI070.dll
+D:\DIS\obj\Release\AI070.pdb
+D:\DIS\bin\EntityFramework.dll
+D:\DIS\bin\ExcelDataReader.DataSet.dll
+D:\DIS\bin\ExcelDataReader.dll
+D:\DIS\bin\LinqToExcel.dll
+D:\DIS\bin\Remotion.Data.Linq.dll
+D:\DIS\bin\Remotion.dll
+D:\DIS\bin\Remotion.Interfaces.dll
+D:\DIS\bin\EntityFramework.xml
+D:\DIS\bin\ExcelDataReader.pdb
+D:\DIS\bin\ExcelDataReader.xml
+D:\DIS\bin\ExcelDataReader.DataSet.pdb
+D:\DIS\bin\ExcelDataReader.DataSet.xml
+D:\DIS\bin\LinqToExcel.xml
+D:\DIS\bin\WebDriver.dll
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+E:\Sulton\Source Code Baru\DIS\bin\selenium-manager\linux\selenium-manager
+E:\Sulton\Source Code Baru\DIS\bin\selenium-manager\macos\selenium-manager
+E:\Sulton\Source Code Baru\DIS\bin\selenium-manager\windows\selenium-manager.exe
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll.config
+E:\Sulton\Source Code Baru\DIS\bin\AI070.dll
+E:\Sulton\Source Code Baru\DIS\bin\AI070.pdb
+E:\Sulton\Source Code Baru\DIS\bin\BouncyCastle.Crypto.dll
+E:\Sulton\Source Code Baru\DIS\bin\Castle.Core.dll
+E:\Sulton\Source Code Baru\DIS\bin\EntityFramework.SqlServer.dll
+E:\Sulton\Source Code Baru\DIS\bin\EPPlus.Interfaces.dll
+E:\Sulton\Source Code Baru\DIS\bin\EPPlus.System.Drawing.dll
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.dll
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.dll
+E:\Sulton\Source Code Baru\DIS\bin\LinqToExcel.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.IO.RecyclableMemoryStream.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Security.dll
+E:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+E:\Sulton\Source Code Baru\DIS\bin\Owin.dll
+E:\Sulton\Source Code Baru\DIS\bin\Remotion.Data.Linq.dll
+E:\Sulton\Source Code Baru\DIS\bin\Remotion.dll
+E:\Sulton\Source Code Baru\DIS\bin\Remotion.Interfaces.dll
+E:\Sulton\Source Code Baru\DIS\bin\Rotativa.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Buffers.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Memory.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Numerics.Vectors.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Threading.Tasks.Extensions.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.Helpers.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.Razor.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Deployment.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.dll
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Razor.dll
+E:\Sulton\Source Code Baru\DIS\bin\WebDriver.dll
+E:\Sulton\Source Code Baru\DIS\bin\Castle.Core.xml
+E:\Sulton\Source Code Baru\DIS\bin\EntityFramework.SqlServer.xml
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.pdb
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.xml
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.pdb
+E:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.xml
+E:\Sulton\Source Code Baru\DIS\bin\LinqToExcel.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.pdb
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.IO.RecyclableMemoryStream.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Security.xml
+E:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Buffers.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Memory.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Numerics.Vectors.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Threading.Tasks.Extensions.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.Helpers.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.Razor.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Deployment.xml
+E:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Razor.xml
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CopyComplete
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.dll
+E:\Sulton\Source Code Baru\DIS\obj\Release\AI070.pdb
+D:\Sulton\Source Code Baru\DIS\bin\selenium-manager\linux\selenium-manager
+D:\Sulton\Source Code Baru\DIS\bin\selenium-manager\macos\selenium-manager
+D:\Sulton\Source Code Baru\DIS\bin\selenium-manager\windows\selenium-manager.exe
+D:\Sulton\Source Code Baru\DIS\bin\AI070.dll.config
+D:\Sulton\Source Code Baru\DIS\bin\AI070.dll
+D:\Sulton\Source Code Baru\DIS\bin\AI070.pdb
+D:\Sulton\Source Code Baru\DIS\bin\BouncyCastle.Crypto.dll
+D:\Sulton\Source Code Baru\DIS\bin\Castle.Core.dll
+D:\Sulton\Source Code Baru\DIS\bin\EntityFramework.SqlServer.dll
+D:\Sulton\Source Code Baru\DIS\bin\EPPlus.Interfaces.dll
+D:\Sulton\Source Code Baru\DIS\bin\EPPlus.System.Drawing.dll
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.dll
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.dll
+D:\Sulton\Source Code Baru\DIS\bin\LinqToExcel.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.IO.RecyclableMemoryStream.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Security.dll
+D:\Sulton\Source Code Baru\DIS\bin\Neodynamic.SDK.WebClientPrint.dll
+D:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.dll
+D:\Sulton\Source Code Baru\DIS\bin\Owin.dll
+D:\Sulton\Source Code Baru\DIS\bin\Remotion.Data.Linq.dll
+D:\Sulton\Source Code Baru\DIS\bin\Remotion.dll
+D:\Sulton\Source Code Baru\DIS\bin\Remotion.Interfaces.dll
+D:\Sulton\Source Code Baru\DIS\bin\Rotativa.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Buffers.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Memory.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Numerics.Vectors.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Text.Encoding.CodePages.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Threading.Tasks.Extensions.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.Helpers.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.Razor.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Deployment.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Razor.dll
+D:\Sulton\Source Code Baru\DIS\bin\WebDriver.dll
+D:\Sulton\Source Code Baru\DIS\bin\Castle.Core.xml
+D:\Sulton\Source Code Baru\DIS\bin\EntityFramework.SqlServer.xml
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.pdb
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.xml
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.pdb
+D:\Sulton\Source Code Baru\DIS\bin\ExcelDataReader.DataSet.xml
+D:\Sulton\Source Code Baru\DIS\bin\LinqToExcel.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.pdb
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.Core.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.IO.RecyclableMemoryStream.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Owin.Security.xml
+D:\Sulton\Source Code Baru\DIS\bin\Newtonsoft.Json.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Buffers.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Memory.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Numerics.Vectors.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Text.Encoding.CodePages.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Threading.Tasks.Extensions.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.Helpers.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.Razor.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Deployment.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Web.WebPages.Razor.xml
+D:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CoreCompileInputs.cache
+D:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.CopyComplete
+D:\Sulton\Source Code Baru\DIS\obj\Release\AI070.dll
+D:\Sulton\Source Code Baru\DIS\obj\Release\AI070.pdb
+D:\Sulton\Source Code Baru\DIS\obj\Release\AI070.csproj.AssemblyReference.cache
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Authorization.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Http.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Http.Features.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Metadata.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Mvc.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Routing.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Caching.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Options.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Primitives.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Net.Http.Headers.dll
+D:\Sulton\Source Code Baru\DIS\bin\System.Text.Encodings.Web.dll
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Authorization.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Http.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Http.Features.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Metadata.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Mvc.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.AspNetCore.Routing.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Caching.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Logging.Abstractions.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Options.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Extensions.Primitives.xml
+D:\Sulton\Source Code Baru\DIS\bin\Microsoft.Net.Http.Headers.xml
+D:\Sulton\Source Code Baru\DIS\bin\System.Text.Encodings.Web.xml

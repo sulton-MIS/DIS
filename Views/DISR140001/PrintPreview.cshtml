@@ -1,0 +1,210 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR140001Master;
+@{
+
+    //List<AreaModel> Areas = (List<AreaModel>)ViewData["Area"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+    //List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+
+}
+
+    @*<script type="text/javascript">
+        function PrintPanel() {
+            var panel = document.getElementById("pnlContents");
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title>DIV Contents</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(panel.innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            setTimeout(function () {
+                printWindow.print();
+                printWindow.document.close();
+            }, 500);
+            return false;
+        }
+    </script>*@
+
+<style>
+      #PrintPreview {
+                       /* smaller font, no margins */
+        font-size: 90%;
+        margin-left: 0;
+        margin-right: 0;
+        }
+             
+</style>
+
+    <div id="PrintPreview" class="modal fade">
+        <div class="modal-dialog modal-md" style="width:750px!important">
+            <div class="modal-content">
+                <form id="form1" runat="server">
+                    <div id="pnlContents" runat="server">
+
+                        <style type="text/css">
+                            .tg {
+                                border-collapse: collapse;
+                                border-spacing: 0;
+                            }
+
+                                .tg td {
+                                    border-color: black;
+                                    border-style: solid;
+                                    border-width: 1px;
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    overflow: hidden;
+                                    padding: 10px 5px;
+                                    word-break: normal;
+                                }
+
+                                .tg th {
+                                    border-color: black;
+                                    border-style: solid;
+                                    border-width: 1px;
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    font-weight: normal;
+                                    overflow: hidden;
+                                    padding: 10px 5px;
+                                    word-break: normal;
+                                }
+
+                                .tg .tg-zlqz {
+                                    background-color: #c0c0c0;
+                                    border-color: inherit;
+                                    font-weight: bold;
+                                    text-align: center;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-c3ow {
+                                    border-color: inherit;
+                                    text-align: center;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-0d4z {
+                                    background-color: #c0c0c0;
+                                    border-color: inherit;
+                                    font-size: large;
+                                    font-weight: bold;
+                                    text-align: center;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-3mnj {
+                                    background-color: #ffffff;
+                                    border-color: inherit;
+                                    color: #000000;
+                                    font-size: medium;
+                                    text-align: center;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-oog7 {
+                                    background-color: #c0c0c0;
+                                    border-color: inherit;
+                                    font-family: Arial, Helvetica, sans-serif !important;
+                                    font-weight: bold;
+                                    text-align: left;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-vchd {
+                                    background-color: #c0c0c0;
+                                    border-color: inherit;
+                                    font-family: inherit;
+                                    text-align: center;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-fymr {
+                                    border-color: inherit;
+                                    font-weight: bold;
+                                    text-align: left;
+                                    vertical-align: top
+                                }
+
+                                .tg .tg-0pky {
+                                    border-color: inherit;
+                                    text-align: left;
+                                    vertical-align: top
+                                }
+                        </style>
+
+                        <table class="tg" style="undefined;table-layout: fixed; width: 517px">
+                            <colgroup>
+                                <col style="width: 94px">
+                                <col style="width: 98px">
+                                <col style="width: 90px">
+                                <col style="width: 56px">
+                                <col style="width: 55px">
+                                <col style="width: 60px">
+                                <col style="width: 64px">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="tg-0d4z" colspan="2">AST-121A080A</th>
+                                    <th class="tg-3mnj" rowspan="3"><br><br><span style="font-weight:bold">Non Campuran</span><br></th>
+                                    <th class="tg-oog7" colspan="4">* B22122600001 *</th>
+                                </tr>
+                                <tr>
+                                    <th class="tg-vchd" colspan="2">* S999999-99-9999-01 *</th>
+                                    <th class="tg-zlqz" colspan="2">Judge Checker</th>
+                                    <th class="tg-zlqz" rowspan="2"><br>Proses Ikat / Foampad<br></th>
+                                    <th class="tg-zlqz" rowspan="2"><br>Proses Inner<br></th>
+                                </tr>
+                                <tr>
+                                    <th class="tg-zlqz" colspan="2">Final Inspection<br></th>
+                                    <th class="tg-zlqz">Sesuai<br></th>
+                                    <th class="tg-zlqz">Tidak Sesuai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="tg-fymr"><br><br><br>Lotto Label<br><br><br><br></td>
+                                    <td class="tg-0pky" colspan="2">2C24D030004, 2C30D060025, 2F05D060063, 2F05D060042</td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-c3ow"></td>
+                                </tr>
+                                <tr>
+                                    <td class="tg-fymr">Jumlah</td>
+                                    <td class="tg-0pky" colspan="2">4</td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-c3ow"></td>
+                                </tr>
+                                <tr>
+                                    <td class="tg-fymr">Nama</td>
+                                    <td class="tg-0pky" colspan="2">Sulton Matin</td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-c3ow"></td>
+                                </tr>
+                                <tr>
+                                    <td class="tg-fymr">Keterangan</td>
+                                    <td class="tg-0pky" colspan="2">-</td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-0pky"></td>
+                                    <td class="tg-c3ow"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @*<Button ID="btnPrint" runat="server" Text="Print" onclick="PrintPanel()" />*@
+                    </div>
+                    <br />
+                </form>
+                <div class="modal-footer">
+                    <asp:button type="button" id="btnPrint" runat="server" class="btn btn-primary btn-sm center" OnClick = "PrintPanel()" style="width: 80px;" data-dismiss="modal">  Print </asp:button>
+                </div>
+            </div>
+        </div>
+    </div>

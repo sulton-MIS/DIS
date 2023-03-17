@@ -1,0 +1,131 @@
+﻿@using TDKUtility;
+@{
+    Paging _page = (Paging)ViewData["Paging"];
+}
+
+@if ((_page != null) && _page.CountData > 0)
+{
+    <input id="txtmaxpg" type="text" class="hidden" />
+    <input id="page-position" type="text" class="hidden" />
+    <input id="count-data" type="text" class="hidden" />
+
+    <script type="text/javascript" language="javascript">
+        $("#txtmaxpg").val(@_page.CountPage);
+        $("#page-position").val(@_page.PositionPage);
+        $("#count-data").val(@_page.CountData);
+    </script>
+    <ul class="pagination pagination-sm hidden-xs" style="margin-top: 0; width: 100%;">
+        <li><span class="_pagination-label">Showing page @_page.PositionPage of @_page.CountPage pages from @_page.CountData row(s)</span></li>
+        @if (_page.PositionPage != 1)
+        {
+            <li><a href="javascript: onCallback(@_page.First)">First</a></li>
+            <li><a href="javascript: onCallback(@_page.Prev)">Prev</a></li>
+        }
+        else
+        {
+            <li><a href="#" style="pointer-events:none;cursor:default;">First</a></li>
+            <li><a href="#" style="pointer-events:none;cursor:default;">Prev</a></li>
+        }
+        @for (int p = 1; p <= @_page.CountPage; p++)
+        {
+            if ((p >= @_page.MinPage) && (p <= @_page.MaxPage))
+            {
+                if (@p == _page.PositionPage)
+                {
+                    <li class="active"><a href="javascript: onCallback(@p)">@p</a></li>
+                }
+                else
+                {
+                    <li><a href="javascript: onCallback(@p)">@p</a></li>
+                }
+            }
+        }
+        @if (_page.PositionPage != _page.MaxPage)
+        {
+            <li><a href="javascript: onCallback(@_page.Next)">Next</a></li>
+            <li><a href="javascript: onCallback(@_page.Last)">Last</a></li>
+        }
+        else
+        {
+            <li><a href="#" style="pointer-events:none;cursor:default;">Next</a></li>
+            <li><a href="#" style="pointer-events:none;cursor:default;">Last</a></li>
+        }
+        <li><span class="_pagination-empty"></span></li>
+        <li>
+            <span class="_pagination-goto">
+                <input type="text" class="_number-only" maxlength="4" id="txtgo" style="text-align:center;" />
+            </span>
+        </li>
+        <li>
+            <span class="_pagination-goto">
+                <button id="btngo" type="button" class="_btn-go" id="btngo" onclick="javascript: onCallback($('#txtgo').val());">Go</button>
+            </span>
+        </li>
+        <li>
+            <div class="text-right" style="height: 30px; padding-top: 3px;">
+                <div class="form-inline">
+                    <span>Size</span>&nbsp;
+                    <select id="cbosizegrid" class="input-xs page-size">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="visible-xs text-center">
+        <div class="col-xs-12">
+            <span>Showing @_page.PositionPage to @_page.EndData of @_page.CountData row(s)</span>
+        </div>
+        <div class="col-xs-12">
+            <ul class="pagination pagination-sm">
+                <li><a href="javascript: onCallback(@_page.First)">First</a></li>
+                <li><a href="javascript: onCallback(@_page.Prev)">Prev</a></li>
+
+                @for (int p = 1; p <= @_page.CountPage; p++)
+                {
+                    if ((p >= @_page.MinPage) && (p <= @_page.MaxPage))
+                    {
+                        if (@p == _page.PositionPage)
+                        {
+                            <li class="active">
+                                <a href="javascript: onCallback(@p)">@p</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript: onCallback(@p)">@p</a>
+                            </li>
+                        }
+                    }
+                }
+
+                <li><a href="javascript: onCallback(@_page.Next)">Next</a></li>
+                <li><a href="javascript: onCallback(@_page.Last)">Last</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-4 col-xs-offset-4">
+            <div class="input-group">
+                <input id="txtgo" type="text" class="form-control _number-only" maxlength="4" style="text-align:center;" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-warning" id="btngo" onclick="javascript: onCallback($('#txtgo').val());">Go</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    <script language="javascript" type="text/javascript">
+        $("#txtgo").attr('class', '_number-only');
+        $("#cbosizegrid").change(function () {
+            onGetData(1);
+        });
+    </script>
+}

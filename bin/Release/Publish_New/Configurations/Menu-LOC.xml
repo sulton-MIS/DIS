@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu>
+  <menu-item Id="menuHome" Enabled="True" Visible="True" Url="Home" Text="Home" Description="Work Permit Homex Menu" Glyph="home">
+  </menu-item>
+  <!--<menu-item Id="menuDashboard" Enabled="True" Visible="True" Url="Dashboard" Text="Dashboard" Description="Work Permit Dashboard Menu" Glyph="tachometer">
+  </menu-item>-->
+  <menu-item Id="menuMaster" Enabled="True" Visible="True" Url="#" Text="Master" Description="Master" Glyph="tasks">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <!--<menu-item Id="DISRTJNMS001_MasterOperator" Enabled="True" Visible="True" Url="DISRTJNMS001_MasterOperator" Text="Master Operator" Description="Master Operator" Glyph="caret-right" />-->
+    <!--<menu-item Id="WP01002" Enabled="True" Visible="true" Url="WP01002" Text="Area Master" Description="Area Master" Glyph="caret-right" />
+    <menu-item Id="WP01003" Enabled="True" Visible="true" Url="WP01003" Text="Location Master" Description="Location Master" Glyph="caret-right" />
+    <menu-item Id="WP01004" Enabled="True" Visible="true" Url="WP01004" Text="Working Master" Description="Working Master" Glyph="caret-right" />-->
+    <!--<menu-item Id="DISA090001" Enabled="True" Visible="true" Url="DISA090001" Text="Master Qty Amount Target" Description="Master Qty Amount Target" Glyph="caret-right" />-->
+    <!--<menu-item Id="DISA100001" Enabled="True" Visible="true" Url="DISA100001" Text="Master Asset" Description="Master Asset" Glyph="caret-right" />-->
+    <!--<menu-item Id="DISA100002" Enabled="True" Visible="true" Url="DISA100002" Text="Master Lokasi" Description="Master Lokasi" Glyph="caret-right" />-->
+    <menu-item Id="DISA100003" Enabled="True" Visible="true" Url="DISA100003" Text="Master List Konpo" Description="Master List Konpo" Glyph="caret-right" />
+    <menu-item Id="DISA100004" Enabled="True" Visible="true" Url="DISA100004" Text="Master Transportation" Description="Master Transportation" Glyph="caret-right" />
+    <menu-item Id="DISR060001" Enabled="True" Visible="true" Url="DISR060001" Text="Master User" Description="Master User" Glyph="caret-right" />
+    <menu-item Id="DISR070001" Enabled="True" Visible="true" Url="DISR070001" Text="Master Operator" Description="Master Operator" Glyph="caret-right" />
+    <menu-item Id="DISR070002" Enabled="True" Visible="true" Url="DISR070002" Text="Master NG" Description="Master NG" Glyph="caret-right" />
+    <menu-item Id="DISR070003" Enabled="True" Visible="true" Url="DISR070003" Text="Master Proses" Description="Master Proses" Glyph="caret-right" />
+    <menu-item Id="DISR070004" Enabled="True" Visible="true" Url="DISR070004" Text="Master Mesin" Description="Master Mesin" Glyph="caret-right" />
+    <menu-item Id="DIST060001" Enabled="True" Visible="true" Url="DIST060001" Text="Master Convertion Table" Description="Master Convertion Table" Glyph="caret-right" />
+    <menu-item Id="DISA070001" Enabled="True" Visible="true" Url="DISA070001" Text="Actual Trouble Production" Description="Actual Trouble Production" Glyph="caret-right" />
+    <menu-item Id="DISA090001" Enabled="True" Visible="true" Url="DISA090001" Text="Target Qty Amount Produksi" Description="Target Qty Amount Produksi" Glyph="caret-right" />
+    
+    <!--<menu-item Id="WP01006" Enabled="True" Visible="true" Url="WP01006" Text="Company Master" Description="Company Master" Glyph="caret-right" />
+    <menu-item Id="WP01007" Enabled="True" Visible="true" Url="WP01007" Text="Item Master" Description="Item Master" Glyph="caret-right" />-->-->
+  </menu-item>
+  <menu-item Id="menuAddOn" Enabled="True" Visible="True" Url="#" Text="Menu Add On MNF" Description="Add-On DTI" Glyph="list-alt">
+	<menu-item Id="DISR190001" Enabled="True" Visible="true" Url="DISR190001" Text="Cari ID Produksi" Description="Cari ID Produksi" Glyph="caret-right" />
+	<!--<menu-item Id="DISR190002" Enabled="True" Visible="true" Url="DISR190002" Text="Label Chukan" Description="Label Chukan" Glyph="caret-right" />-->
+  </menu-item> 
+	<menu-item Id="menuAddOn" Enabled="True" Visible="True" Url="#" Text="Menu Add On Non-MNF" Description="Add-On DTI" Glyph="book">
+	<!--<menu-item Id="DISA200001" Enabled="True" Visible="true" Url="DISA200001" Text="History Perubahan Asset" Description="History Perubahan Asset" Glyph="caret-right" />-->
+	<menu-item Id="DISA200002" Enabled="True" Visible="true" Url="DISA200002" Text="Find Material" Description="Find Material" Glyph="caret-right" />
+	<!--<menu-item Id="DISA200003" Enabled="True" Visible="true" Url="DISA200003" Text="Penyusutan Asset" Description="Penyusutan Asset" Glyph="caret-right" />-->
+	<!--<menu-item Id="DISA200004" Enabled="True" Visible="true" Url="DISA200004" Text="Straight Line List" Description="Penyusutan Asset" Glyph="caret-right" />-->
+  </menu-item>
+  <!--<menu-item Id="menuTransaksiNonMNF" Enabled="True" Visible="True" Url="#" Text="Transaksi AddOn Non-MNF" Description="Add-On DTI" Glyph="credit-card">
+    <menu-item Id="DISA150001" Enabled="True" Visible="true" Url="DISA150001" Text="Sales Price Calculation" Description="Sales Price Calculation" Glyph="caret-right" />
+  </menu-item>--> 
+  <!--<menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Sales" Description="Sales" Glyph="book">
+  </menu-item>-->
+ 
+  <menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Dashboard Addon MNF" Description="Dashboard Addon MNF" Glyph="hourglass">
+    <menu-item Id="DISR170001" Enabled="True" Visible="true" Url="DISR170001" Text="OPMJ By Operator" Description="OPMJ By Operator" Glyph="caret-right" />
+    <menu-item Id="DISR170002" Enabled="True" Visible="true" Url="DISR170002" Text="OPMJ By Type" Description="OPMJ By Type" Glyph="caret-right" />
+    <menu-item Id="DISR170004" Enabled="True" Visible="true" Url="DISR170004" Text="LossTime Per-Halte" Description="LossTime Per-Halte" Glyph="caret-right" />    
+  </menu-item>    
+  <menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Planning" Description="Planning" Glyph="flag">
+    <menu-item Id="DISA150001" Enabled="True" Visible="true" Url="DISA150001" Text="ProdCost SalesPrice" Description="ProdCost SalesPrice" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Trial" Description="Trial" Glyph="pencil-square-o">
+  </menu-item>
+  
+  <menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Packing" Description="Packing" Glyph="inbox">
+  </menu-item>
+  
+  <menu-item Id="" Enabled="True" Visible="True" Url="#" Text="Shipping" Description="Shipping" Glyph="send">
+  </menu-item>
+  
+  
+  <!--<menu-item Id="menuSCR" Enabled="True" Visible="True" Url="#" Text="Security Menu" Description="Users Management" Glyph="lock">
+    <menu-item Id="WPSecurity" Enabled="True" Visible="true" Url="WPSecurity" Text="Security" Description="Security Menu" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="mnuIndicationProduction" Enabled="True" Visible="True" Url="#" Text="Learn Work Permit" Description="Learn Modlue" Glyph="book">
+    <menu-item Id="WP01009" Enabled="True" Visible="true" Url="WP01009" Text="Exam Header Master" Description="Exam Header Master" Glyph="caret-right" />
+    <menu-item Id="WP01011" Enabled="True" Visible="true" Url="WP01011" Text="Learn Register Master" Description="Learn Register Master" Glyph="caret-right" />
+    <menu-item Id="WP01012" Enabled="True" Visible="true" Url="WP01012" Text="Learn Answer" Description="Learn Answer" Glyph="caret-right" />
+    <menu-item Id="WP01013" Enabled="True" Visible="true" Url="WP01013" Text="Learn Q and A" Description="Learn Q and A" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuIndicationProduc" Enabled="True" Visible="True" Url="#" Text="Indication Work Permit" Description="Indication Production Module" Glyph="file">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="WP02001" Enabled="True" Visible="True" Url="WP02001" Text="Project Registration" Description="Project Registration" Glyph="caret-right" />
+    <menu-item Id="WP02002" Enabled="True" Visible="true" Url="WP02002" Text="Detail Activity Project" Description="Detail Activity Project" Glyph="caret-right" />
+    <menu-item Id="WP02003" Enabled="True" Visible="true" Url="WP02003" Text="KYK (Form Harian KYK)" Description="KYK (Form Harian KYK)" Glyph="caret-right" />
+    <menu-item Id="WP02004" Enabled="True" Visible="true" Url="WP02004" Text="Daily Check" Description="Detail Activity Project" Glyph="caret-right" />
+    <menu-item Id="WP02007" Enabled="True" Visible="true" Url="WP02007" Text="Project Execution" Description="Project Execution" Glyph="caret-right" />
+    <menu-item Id="WP02005" Enabled="True" Visible="true" Url="WP02005" Text="Project Evaluation" Description="Detail Activity Project" Glyph="caret-right" />
+    <menu-item Id="WP02006" Enabled="True" Visible="true" Url="WP02006" Text="Workflow Project" Description="Detail Activity Project" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuContractor" Enabled="True" Visible="True" Url="#" Text="Contractor Menu" Description="Contractor Menu" Glyph="flag">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="WP03008" Enabled="True" Visible="True" Url="WP03008" Text="Register Worker" Description="Register Worker" Glyph="caret-right" />
+    <menu-item Id="WP02003" Enabled="True" Visible="true" Url="WP02003" Text="KYK (Form Harian KYK)" Description="KYK (Form Harian KYK)" Glyph="caret-right" />
+    <menu-item Id="WP03013" Enabled="True" Visible="true" Url="WP03013" Text="Training Menu" Description="Training Menu" Glyph="caret-right" />
+    <menu-item Id="WP03007" Enabled="True" Visible="true" Url="WP03007" Text="Exam Menu" Description="Exam Menu" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuElearning" Enabled="True" Visible="True" Url="#" Text="Safety e-Learning" Description="Elerning Module" Glyph="pencil-square-o">
+    <authorization>
+      <role Id="PRIUS-ADMIN" />
+    </authorization>
+    <menu-item Id="WP03001" Enabled="True" Visible="True" Url="WP03001" Text="Question Bank" Description="Question Bank" Glyph="caret-right" />
+    <menu-item Id="WP03002" Enabled="True" Visible="true" Url="WP03002" Text="Exam Subject" Description="Exam Subject" Glyph="caret-right" />
+    <menu-item Id="WP03003" Enabled="True" Visible="true" Url="WP03003" Text="Manage Question On Exam" Description="Manage Question On Exam" Glyph="caret-right" />
+    <menu-item Id="WP03004" Enabled="True" Visible="true" Url="WP03004" Text="Module Training" Description="Module Training" Glyph="caret-right" />
+    <menu-item Id="WP03005" Enabled="True" Visible="true" Url="WP03005" Text="Data Participant" Description="Data Participant" Glyph="caret-right" />
+    <menu-item Id="WP03006" Enabled="True" Visible="true" Url="WP03006" Text="Data Score Participant" Description="Data Score Participant" Glyph="caret-right" />
+    <menu-item Id="WP03012" Enabled="True" Visible="true" Url="WP03012" Text="Screen Score Exam" Description="Screen Score Exam" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuReport" Enabled="True" Visible="True" Url="#" Text="Report" Description="Report Module" Glyph="book" >
+  <authorization>
+    <role Id="PRIUS-ADMIN"></role>
+  </authorization>
+    <menu-item Id="WP03009" Enabled="True" Visible="true" Url="WP03009" Text="Report Data Participant" Description="Report Data Participant" Glyph="caret-right" />
+    <menu-item Id="WP03010" Enabled="True" Visible="true" Url="WP03010" Text="Report Data Score" Description="Report Data Score" Glyph="caret-right" />
+    <menu-item Id="WP03011" Enabled="True" Visible="true" Url="WP03011" Text="Report Print Certificate" Description="Report Print Certificate" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuSCR" Enabled="True" Visible="True" Url="#" Text="Security Menu" Description="Users Management" Glyph="lock">
+    <menu-item Id="WPSecurity" Enabled="True" Visible="true" Url="WPSecurity" Text="Security" Description="Security Menu" Glyph="caret-right" />
+  </menu-item>
+  <menu-item Id="menuUserManagement" Enabled="True" Visible="True" Url="#" Text="Users Management" Description="Users Management" Glyph="users">
+    <menu-item Id="WP04001" Enabled="True" Visible="true" Url="WP04001" Text="Authorization Function" Description="Authorization Function" Glyph="caret-right" />
+    <menu-item Id="WP04002" Enabled="True" Visible="true" Url="WP04002" Text="Role Master" Description="Role Master" Glyph="caret-right" />
+    <menu-item Id="WP04003" Enabled="True" Visible="true" Url="WP04003" Text="User Mapping" Description="User Mapping" Glyph="caret-right" />
+    <menu-item Id="WP04004" Enabled="True" Visible="true" Url="WP04004" Text="User Plant" Description="Authorization Function" Glyph="caret-right" />
+  </menu-item>-->
+</menu>

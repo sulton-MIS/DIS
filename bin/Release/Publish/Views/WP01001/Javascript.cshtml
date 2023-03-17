@@ -1,0 +1,541 @@
+﻿
+<script>
+    var SITE_URL = window.location.href+"/";
+    var Message = [];
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        $('#searchDateFrom').val(new Date().toDateInputValue());
+        $('#searchDateTo').val(new Date().toDateInputValue());
+
+        $.ajax({
+            url: "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+    });
+
+    Date.prototype.toDateInputValue = (function() {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0,10);
+    });
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length -1) ) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+                
+            }
+        }
+    }
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function add_check() {
+        var SYSTEM_ID       = $('#addSystemId').val();
+        var SYSTEM_TYPE     = $('#addSystemType').val();
+        var SYSTEM_CD       = $('#addSystemCD').val();
+        var SYSTEM_VALUE_TXT= $('#addSystemValueTxt').val();
+
+        var status = true;
+
+        if (SYSTEM_ID == null || SYSTEM_ID == "") {
+            GenerateMessage("SYSTEM ID", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_TYPE == null || SYSTEM_TYPE == "") {
+            GenerateMessage("SYSTEM TYPE", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_CD == null || SYSTEM_CD == "") {
+            GenerateMessage("SYSTEM CD", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_VALUE_TXT == null || SYSTEM_VALUE_TXT == "") {
+            GenerateMessage("SYSTEM VALUE_TXT", "MWP008");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_AddNewConfirm').modal();
+        }
+    }
+
+    function edit_check() {
+        var SYSTEM_ID       = $('#editSystemId').val();
+        var SYSTEM_TYPE     = $('#editSystemType').val();
+        var SYSTEM_CD       = $('#editSystemCD').val();
+        var SYSTEM_VALUE_TXT= $('#editSystemValueTxt').val();
+
+        var status = true;
+
+        if (SYSTEM_ID == null || SYSTEM_ID == "") {
+            GenerateMessage("SYSTEM ID", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_TYPE == null || SYSTEM_TYPE == "") {
+            GenerateMessage("SYSTEM TYPE", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_CD == null || SYSTEM_CD == "") {
+            GenerateMessage("SYSTEM CD", "MWP008");
+            status = false;
+        }
+
+        if (SYSTEM_VALUE_TXT == null || SYSTEM_VALUE_TXT == "") {
+            GenerateMessage("SYSTEM VALUE_TXT", "MWP008");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        } else {
+            $('#PopupForm_EditConfirm').modal();
+        }
+    }
+
+    //tombol Add New
+    function addNew() {
+        var SYSTEM_ID       = $('#addSystemId').val();
+        var SYSTEM_TYPE     = $('#addSystemType').val();
+        var SYSTEM_CD       = $('#addSystemCD').val();
+        var SYSTEM_VALID_FR = $('#addSystemValidFR').val();
+        var SYSTEM_VALID_TO = $('#addSystemValidTO').val();
+        var SYSTEM_VALUE_TXT= $('#addSystemValueTxt').val();
+        var SYSTEM_VALUE_NUM= $('#addSystemValueNum').val();
+        var SYSTEM_VALUE_DT = $('#addSystemValueDt').val();
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                SYSTEM_ID: SYSTEM_ID,
+                SYSTEM_TYPE: SYSTEM_TYPE,
+                SYSTEM_CD: SYSTEM_CD,
+                SYSTEM_VALID_FR: SYSTEM_VALID_FR,
+                SYSTEM_VALID_TO: SYSTEM_VALID_TO,
+                SYSTEM_VALUE_TXT: SYSTEM_VALUE_TXT,
+                SYSTEM_VALUE_NUM: SYSTEM_VALUE_NUM,
+                SYSTEM_VALUE_DT: SYSTEM_VALUE_DT
+                
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success(res.message);
+                    searchData();
+                    clear_add();
+                    $('#modalForm').modal('hide');
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function clear_add() {
+        var SYSTEM_ID       = $('#addSystemId').val('');
+        var SYSTEM_TYPE     = $('#addSystemType').val('');
+        var SYSTEM_CD       = $('#addSystemCD').val('');
+        var SYSTEM_VALID_FR = $('#addSystemValidFR').val('');
+        var SYSTEM_VALID_TO = $('#addSystemValidTO').val('');
+        var SYSTEM_VALUE_TXT= $('#addSystemValueTxt').val('');
+        var SYSTEM_VALUE_NUM= $('#addSystemValueNum').val('');
+        var SYSTEM_VALUE_DT = $('#addSystemValueDt').val('');
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        $('#EditID').val(Send_Var[0]);
+        $('#EditType').val(Send_Var[1]);
+        $('#editSystemId').val(Send_Var[0]);
+        $('#editSystemType').val(Send_Var[1]);
+        $('#editSystemCD').val(Send_Var[2]);
+        $('#editSystemValidFR').val(Send_Var[3]);
+        $('#editSystemValidTO').val(Send_Var[4]);
+        $('#editSystemValueTxt').val(Send_Var[5]);
+        $('#editSystemValueNum').val(Send_Var[6]);
+        $('#editSystemValueDt').val(Send_Var[7]);
+
+        $('#modalEditForm').modal();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var TYPE = $('#EditType').val();
+                var SYSTEM_ID       = $('#editSystemId').val();
+                var SYSTEM_TYPE     = $('#editSystemType').val();
+                var SYSTEM_CD       = $('#editSystemCD').val();
+                var SYSTEM_VALID_FR = $('#editSystemValidFR').val();
+                var SYSTEM_VALID_TO = $('#editSystemValidTO').val();
+                var SYSTEM_VALUE_TXT= $('#editSystemValueTxt').val();
+                var SYSTEM_VALUE_NUM= $('#editSystemValueNum').val();
+                var SYSTEM_VALUE_DT = $('#editSystemValueDt').val();
+                var Send_Var = ID+","+TYPE+","+SYSTEM_ID+","+SYSTEM_TYPE+","+SYSTEM_CD+","+SYSTEM_VALID_FR+","+SYSTEM_VALID_TO+","+SYSTEM_VALUE_TXT+','+SYSTEM_VALUE_NUM+','+SYSTEM_VALUE_DT;
+
+                 $.ajax({
+                    type: "POST",
+                    url: 'WP01001/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                     success: function (data) {
+                         
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                            $('#btn_edit').attr('disabled', true);
+                            $('#modalEditForm').modal('hide');
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+                    
+                        OnSearch(1);
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            GenerateMessage("", "MWP012");
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            var Send_Var_Type = "";
+            var Send_Var_CD = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                        Send_Var_Type = Send_Var_Type + Var.split(',')[1] + ",";
+                        Send_Var_CD = Send_Var_CD + Var.split(',')[2] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                        Send_Var_Type = Send_Var_Type + "," + Var.split(',')[1];
+                        Send_Var_CD = Send_Var_CD + "," + Var.split(',')[2];
+                    }
+                    
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: 'WP01001/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var,
+                    TYPE: Send_Var_Type,
+                    CD : Send_Var_CD
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+                    
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchSystemID').val('');
+        $('#searchSystemType').val('');
+        $('#searchSystemValue').val('');
+        $('#searchSystemValueNum').val('');
+        $('#searchSystemDesc').val('');
+        $('#searchDateFrom').val('');
+        $('#searchDateTo').val('');
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                SYSTEM_ID : 'xxxxx',
+                SYSTEM_TYPE : 'xxxxx',
+                SYSTEM_VALUE : 'xxxxx',
+                SYSTEM_DESC : 'xxxxx',
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function ()
+    {
+        $('#addSystemId').val('');
+        $('#addSystemType').val('');
+        $('#addSystemCD').val('');
+        $('#addSystemValidFR').val('');
+        $('#addSystemValidTO').val('');
+        $('#addSystemValueTxt').val('');
+        $('#addSystemValueNum').val('');
+        $('#addSystemValueDt').val('');
+
+        //document.getElementById("tambah_data").style.display = "";
+        $('#modalForm').modal();
+
+        $("#btncloselookup").on("click", function () {
+            $('#tambah_data').hide();
+        });
+    });
+
+    // tombol pencarian data
+    function OnSearch(page)
+    {   
+        searchData(page, $('#paging').val());
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var SYSTEM_ID = $('#searchSystemID').val();
+        var SYSTEM_TYPE = $('#searchSystemType').val();
+        var SYSTEM_VALUE = $('#searchSystemValue').val();
+        var SYSTEM_VALUE_NUM = $('#searchSystemValueNum').val();
+        var SYSTEM_DESC = $('#searchSystemDesc').val();
+        var SYSTEM_FROM = $('#searchDateFrom').val();
+        var SYSTEM_TO = $('#searchDateTo').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                SYSTEM_ID: SYSTEM_ID,
+                SYSTEM_TYPE: SYSTEM_TYPE,
+                SYSTEM_VALUE_TEXT: SYSTEM_VALUE,
+                SYSTEM_VALUE_NUM : SYSTEM_VALUE_NUM,
+                SYSTEM_DESC: SYSTEM_DESC,
+                SYSTEM_FROM: SYSTEM_FROM,
+                SYSTEM_TO: SYSTEM_TO
+                
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                $('#ValidationPage').val(page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+                
+                scroll_and_checkbox();
+                cek_perdata();    
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata()
+    {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                } else {
+                    $('#btn_edit').prop('disabled', true);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 0) {
+                    $('#btn_Delete').prop('disabled', true);
+                    $('#btn_edit').prop('disabled', true);
+                } else if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                    $('#btn_Delete').prop('disabled', false);
+                }
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked"))
+            {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else
+            {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+    function OnSearchGoTo(Size) {
+        var page_goto = $("#page_goto").val();
+        var goTo = Size;
+        searchData(page_goto, goTo);
+    }
+</script>

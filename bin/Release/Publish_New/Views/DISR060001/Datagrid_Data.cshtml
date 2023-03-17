@@ -1,0 +1,142 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR060001Master;
+@{
+    List<DISR060001Master> DataWP = (List<DISR060001Master>)ViewData["DataDISR060001"];
+    List<DISR060001> Status_Cmb = (List<DISR060001>)ViewData["Status_Cmb"];
+    List<DISR060001> Time_Cmb = (List<DISR060001>)ViewData["Time_Cmb"];
+    List<DISR060001> ExecTime_Cmb = (List<DISR060001>)ViewData["Time_Cmb"];
+    List<DISR060001> Model_type = (List<DISR060001>)ViewData["Model_type"];
+
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;" rowspan="2">No</th>
+                            <th style="width: 300px;" rowspan="2">Initial User</th>
+                            <th style="width: 150px;" rowspan="2">Password</th>
+                            <th style="width: 200px;" rowspan="2">Initial User Long</th>
+                            <th style="width: 200px;" rowspan="2">Department</th>
+                            <th style="width: 200px;" rowspan="2">Authority</th>
+                            <th style="width: 150px;" rowspan="2">Email</th>
+                            <th style="width: 200px;" rowspan="2">EmailSender</th>
+                            <th style="width: 200px;" rowspan="2">Section</th>
+                            <th style="width: 200px;" rowspan="2">IdLevel</th>
+                            <th style="width: 200px;" rowspan="2">IdAccesable</th>
+                        </tr>                      
+                        <!--<tr>-->
+                            @*Colspan Dari "Created"*@
+                            <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>-->
+                            @*Colspan Dari "Created"*@
+                            <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>-->
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="10" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISR060001Master item in DataWP)
+                                    {
+                                        //string sts = "";
+                                        //if (@item.STATUSTEXT == "1")
+                                        //{
+                                        //    sts = "Active";
+                                        //}
+                                        //else
+                                        //{
+                                        //    sts = "Not Active";
+                                        //}
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px; text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox" value="@item.ID,@item.i_user,@item.c_pwd,@item.i_user_long,@item.dept,@item.authority,@item.e_mail,@item.EmailSender,@item.section,@item.IdLevel,@item.IdAccesable" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    </td>
+                                                    <td style="width: 40px">
+                                                        @item.ROW_NUM
+                                                    </td>
+                                                    <td style="width: 300px"> @item.i_user</td>
+                                                    <td style="width: 150px"> @item.c_pwd </td>
+                                                    <td style="width: 200px"> @item.i_user_long </td>
+                                                    <td style="width: 200px"> @item.dept </td>
+                                                    <td style="width: 200px"> @item.authority </td>
+                                                    <td style="width: 150px"> @item.e_mail </td>
+                                                    <td style="width: 200px"> @item.EmailSender </td>
+                                                    <td style="width: 200px"> @item.section </td>                                                             
+                                                    <td style="width: 200px"> @item.IdLevel </td>                                                             
+                                                    <td style="width: 200px"> @item.IdAccesable </td>                                                             
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

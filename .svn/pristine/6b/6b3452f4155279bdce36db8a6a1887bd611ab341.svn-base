@@ -1,0 +1,27 @@
+﻿@model AI070.Models.WP03013.TrainingModul
+    @{
+        ViewBag.Title = "Training Modul";
+        Layout = "~/Views/WP03013/_Layout.cshtml";
+    }
+    <div class="container pl-0 pr-0">
+        <h2 class="font-weight-bold mt-5 mb-4" style="font-size: 18px">ViewBag.Title</h2>
+
+        <div class="row row-cols-1" style="width: 80%">
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(model => model.TITLE)</h5>
+
+                        <p class="card-text">@Html.DisplayFor(model => model.DESCRIPTION)</p>
+                        @Html.Raw(HttpUtility.HtmlDecode(Model.CONTENT_TRAINING))
+                        @*@Html.Raw(model => model.CONTENT_TRAINING)*@
+
+                        <p class="card-text">Download file: @Html.ActionLink(Model.FILE_NAME, "DownloadFile", new { filename= Model.FILE_NAME })</p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>

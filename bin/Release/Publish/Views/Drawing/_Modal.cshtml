@@ -1,0 +1,663 @@
+﻿@using Newtonsoft.Json
+@using AI070.Models
+@using AI070.Models.PIS0102;
+@using AI070.Controllers.PIS0102
+@{
+    var styleList = (List<LookupDataStyle>
+    )ViewData["StyleList"];
+    var msgNoList = (List<LookupDataMsgNo>
+        )ViewData["MsgNoList"];
+    var typeList = (List<LookupData>
+        )ViewData["TypeList"];
+}
+
+<div class="modal fade" id="ModalInsertStyle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:960px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="width:15px">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Insert Style</h4>
+            </div>
+            <div class="modal-body">
+                <div id="container" style="width: 800px; height: 400px; margin: 0 auto">
+                    <form role="form" class="form-horizontal" id="modalForm">
+                        <div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <label class="col-xs-4 control-label" style="text-align: left;">Select Template</label>
+                                    <div class="col-xs-8">
+                                        <select id="cboTemplate" class="form-control mandatory" autofocus>
+                                            <option value="">Select Template</option>
+                                            @if (styleList != null)
+                                            {
+                                                foreach (var f in styleList.OrderBy(d => d.Key))
+                                                {
+                                                    <option value="@f.Key">@string.Format("{0}", f.Value)</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <label class="col-xs-4 control-label" style="text-align: left;">Template Preview</label>
+                                    <div class="col-xs-8">
+                                        <div style="width:100%; height:300px;overflow:auto;">
+                                            <div id="paperPreview" class="paper" style="border:dashed 1px #dedede; width:100%; height:300px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-primary btn-xs" id="btnLoad" type="button" data-dismiss="modal">Load</button>
+                    <button class="btn btn-default btn-xs" id="btnCancel" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="ModalEditStyle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:960px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="width:15px">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit Style</h4>
+            </div>
+            <div class="modal-body">
+                <div id="container" style="width: 800px; height: 400px; margin: 0 auto">
+                    <form role="form" class="form-horizontal" id="modalForm">
+                        <div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <label class="col-xs-4 control-label" style="text-align: left;">Template Id</label>
+                                    <label class="col-xs-8 control-label" style="text-align: left;" id="lblIdEdit">Id</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <label class="col-xs-4 control-label" style="text-align: left;">Template Preview</label>
+                                    <div class="col-xs-8">
+                                        <div id="paperEdit" class="paper" style="border:dashed 1px #dedede; width:100%; height:300px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-primary btn-xs" id="btnSaveEdit" type="button" data-dismiss="modal">Save</button>
+                    <button class="btn btn-default btn-xs" id="btnCancelEdit" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="ModalSetData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:660px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="width:15px">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Field Data Mapping</h4>
+            </div>
+            <div class="modal-body">
+                <div id="container" style="width: 500px; height: 280px; margin: 0 auto">
+                    <form role="form" class="form-horizontal" id="modalForm">
+                        <div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <label class="col-xs-2 control-label" style="text-align: left;">Field Name</label>
+                                    <div class="col-xs-5"><input id="txtFieldNameMapping" class="form-control" type="text" width="100%" disabled/></div>
+                                    <label class="col-xs-2 control-label" style="text-align: left;">Object No</label>
+                                    <div class="col-xs-3"><input id="txtObjectNoMapping" class="form-control" type="text" width="100%" disabled /></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6">
+                                            <input type="radio" id="rdoDataMappingMsgNo" name="rdoDataMapping" value="msgno" checked /> MSGNO
+                                            <div style="padding-left:12px;">
+                                                <div class="col-xs-6">MSGNO</div>
+                                                <div class="col-xs-3">POS</div>
+                                                <div class="col-xs-3">LEN</div>
+                                            </div>
+                                            <div style="padding-left:12px;">
+                                                <div class="col-xs-6">
+                                                    <select id="cboMsgNo" name="cboMsgNo" style="width:100%;">
+                                                        <option value=""></option>
+                                                        @if (msgNoList != null)
+                                                        {
+                                                            foreach (var f in msgNoList.OrderBy(d => d.Key))
+                                                            {
+                                                                <option value="@f.Key">@string.Format("{0}", f.Value)</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-3"><input id="txtMsgNoPos" class="form-control disabled" type="text" width="100%" disabled="disabled" /></div>
+                                                <div class="col-xs-3"><input id="txtMsgNoLen" class="form-control disabled" type="text" width="100%" disabled="disabled" /></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="col-xs-12">&nbsp;</div>
+                                            <div class="col-xs-5">
+                                                Type
+                                            </div>
+                                            <div class="col-xs-7">
+                                                <select id="cboTypeMapping" style="width:100%;">
+                                                    <option value=""></option>
+                                                    @if (typeList != null)
+                                                    {
+                                                        foreach (var f in typeList.OrderBy(d => d.Key))
+                                                        {
+                                                            <option value="@f.Key">@string.Format("{0}", f.Value)</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div style="padding-left:12px;"><input id="chkPioMapping" name="chkPioMapping" type="checkbox" /> PIO</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-xs">
+                                    <div class="col-xs-12">
+                                        <input type="radio" id="rdoDataMappingConstant" name="rdoDataMapping" value="constant" /> Constant Character
+                                        <div style="padding-left:12px;">
+                                            <input id="txtConstantCharacterMapping" class="form-control" type="text" width="100%" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-xs-4">Comment</div>
+                                <div class="col-xs-8"><input id="txtCommentMapping" class="form-control" type="text" width="100%" /></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-primary btn-xs" id="btnSaveMapping" type="button">Save</button>
+                    <button class="btn btn-default btn-xs" id="btnCancelMapping" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript">
+    function GetDataChart(appId, dt_from, dt_to) {
+
+        $.getJSON('VisitCounterApp/GetDataChart', { id: appId, DateFrom: dt_from, DateTo: dt_to }, function (res) {
+
+            var dataApp = res.arrApp;
+            var dataHitCount = '[{ "name" : "Hit Count", "data" : ' + JSON.stringify(res.arrTotal) + '}]';
+            var _data = JSON.parse(dataHitCount)
+
+
+            $('#container').highcharts({
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Hit Count'
+                },
+                xAxis: {
+                    categories: dataApp
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ' ' //
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: _data
+            });
+        });
+    }
+
+    $(document).ready(function () {
+
+        var json = [];
+        var myTemplate = null;
+
+        var w = $('.paper').width();
+        var h = $('.paper').height();
+
+        $('#paperPreview').width(w);
+        $('#paperPreview').height(h);
+
+        var paperPreview = Raphael("paperPreview", w, h);
+        //paperPreview.setViewBox($('#paperPreview').position().left, $('#paperPreview').position().right, $('#paperPreview').width(), $('#paperPreview').height());
+        paperPreview.setViewBox(0, 0, w, h, true);
+        paperPreview.setSize('100%', '100%');
+
+        var styles = {};
+        var stylesData = @(Html.Raw(JsonConvert.SerializeObject(styleList)));
+        for (var i = 0; i < stylesData.length; i++) {
+            styles[stylesData[i].Key] = stylesData[i].JsonStyle;
+        }
+
+        var msgnofieldname = {};
+        var msgnopos = {};
+        var msgnolen = {};
+        var msgnocomment = {};
+        var msgnosData = @(Html.Raw(JsonConvert.SerializeObject(msgNoList)));
+        for (var i = 0; i < msgnosData.length; i++) {
+            msgnofieldname[msgnosData[i].Key] = msgnosData[i].FieldName;
+            msgnopos[msgnosData[i].Key] = msgnosData[i].Pos;
+            msgnolen[msgnosData[i].Key] = msgnosData[i].Len;
+            msgnocomment[msgnosData[i].Key] = msgnosData[i].Comment;
+        }
+
+        $("#cboTemplate").change(function () {
+            //if ($("#cboTemplate").val() == 'style1') json = [{ "data": { "ft": { "attrs": { "x": 22, "y": 23.69997787475586, "size": { "x": 178, "y": 178 }, "center": { "x": 111, "y": 112.69997787475586 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 0, "y": 0 }, "ratio": 1 } } }, "type": "rect", "attrs": { "x": 22, "y": 23.69997787475586, "width": 178, "height": 178, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "", "id": "rect2" }, { "data": { "ft": { "attrs": { "x": 21, "y": 23.219985961914062, "size": { "x": 41, "y": 38 }, "center": { "x": 41.5, "y": 42.21998596191406 }, "rotate": 0, "scale": { "x": 1.170731707317073, "y": 1.263157894736842 }, "translate": { "x": 3.5, "y": 5 }, "ratio": 0.926829268292683 } } }, "type": "rect", "attrs": { "x": 21, "y": 23.219985961914062, "width": 41, "height": 38, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t-3.5853658536585375,-6.110522621556327s1.1707,1.2632,0,0", "id": "rect1" }, { "data": { "ft": { "attrs": { "x": 31.65999984741211, "y": 30.44999885559082, "size": { "x": 16.68000030517578, "y": 34.5 }, "center": { "x": 40, "y": 47.69999885559082 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 4, "y": 0 }, "ratio": 1 } } }, "type": "text", "attrs": { "x": 40, "y": 47.69997787475586, "text-anchor": "middle", "text": "1", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30 }, "transform": "t4,0", "id": "text1" }, { "data": { "ft": { "attrs": { "x": 2.809999942779541, "y": 31.189998626708984, "size": { "x": 268.3800048828125, "y": 34.499996185302734 }, "center": { "x": 137.0000023841858, "y": 48.43999671936035 }, "rotate": 0, "scale": { "x": 0.4150085805812781, "y": 0.8840579581946728 }, "translate": { "x": -3.5, "y": 1 }, "ratio": 0.46943594221895085 } } }, "type": "text", "attrs": { "x": 137, "y": 48.44000244140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t76.64382585509312,6.616232124685993s0.415,0.8841,0,0", "id": "text2" }, { "data": { "ft": { "attrs": { "x": 89.15999603271484, "y": 115.18999481201172, "size": { "x": 41.68000030517578, "y": 34.50000762939453 }, "center": { "x": 109.99999618530273, "y": 132.43999862670898 }, "rotate": 0, "scale": { "x": 3.471209194957937, "y": 3.956521085319832 }, "translate": { "x": 4.5, "y": 11 }, "ratio": 0.8773387327158237 } } }, "type": "text", "attrs": { "x": 110, "y": 132.43997192382812, "text-anchor": "middle", "text": "BR", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-267.3330020184581,-380.56164847959473s3.4712,3.9565,0,0", "id": "text3" }];
+            //else if ($("#cboTemplate").val() == 'style2') json = [{ "data": { "ft": { "attrs": { "x": 22, "y": 23.69997787475586, "size": { "x": 178, "y": 178 }, "center": { "x": 111, "y": 112.69997787475586 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 0, "y": 0 }, "ratio": 1 } } }, "type": "rect", "attrs": { "x": 22, "y": 23.69997787475586, "width": 178, "height": 178, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "", "id": "rect2" }, { "data": { "ft": { "attrs": { "x": 21, "y": 23.219985961914062, "size": { "x": 41, "y": 38 }, "center": { "x": 41.5, "y": 42.21998596191406 }, "rotate": 0, "scale": { "x": 1.170731707317073, "y": 1.263157894736842 }, "translate": { "x": 3.5, "y": 5 }, "ratio": 0.926829268292683 } } }, "type": "rect", "attrs": { "x": 21, "y": 23.219985961914062, "width": 41, "height": 38, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t-3.5853658536585375,-6.110522621556327s1.1707,1.2632,0,0", "id": "rect1" }, { "data": { "ft": { "attrs": { "x": 31.65999984741211, "y": 30.44999885559082, "size": { "x": 16.68000030517578, "y": 34.5 }, "center": { "x": 40, "y": 47.69999885559082 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 4, "y": 0 }, "ratio": 1 } } }, "type": "text", "attrs": { "x": 40, "y": 47.69997787475586, "text-anchor": "middle", "text": "2", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30 }, "transform": "t4,0", "id": "text1" }, { "data": { "ft": { "attrs": { "x": 2.809999942779541, "y": 31.189998626708984, "size": { "x": 268.3800048828125, "y": 34.499996185302734 }, "center": { "x": 137.0000023841858, "y": 48.43999671936035 }, "rotate": 0, "scale": { "x": 0.4150085805812781, "y": 0.8840579581946728 }, "translate": { "x": -3.5, "y": 1 }, "ratio": 0.46943594221895085 } } }, "type": "text", "attrs": { "x": 137, "y": 48.44000244140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t76.64382585509312,6.616232124685993s0.415,0.8841,0,0", "id": "text2" }, { "data": { "ft": { "attrs": { "x": 89.15999603271484, "y": 115.18999481201172, "size": { "x": 41.68000030517578, "y": 34.50000762939453 }, "center": { "x": 109.99999618530273, "y": 132.43999862670898 }, "rotate": 0, "scale": { "x": 3.471209194957937, "y": 3.956521085319832 }, "translate": { "x": 4.5, "y": 11 }, "ratio": 0.8773387327158237 } } }, "type": "text", "attrs": { "x": 110, "y": 132.43997192382812, "text-anchor": "middle", "text": "F", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-267.3330020184581,-380.56164847959473s3.4712,3.9565,0,0", "id": "text3" }];
+            //else if ($("#cboTemplate").val() == 'style3') json = [{ "data": { "ft": { "attrs": { "x": 22, "y": 23.69997787475586, "size": { "x": 178, "y": 178 }, "center": { "x": 111, "y": 112.69997787475586 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 0, "y": 0 }, "ratio": 1 } } }, "type": "rect", "attrs": { "x": 22, "y": 23.69997787475586, "width": 178, "height": 178, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "", "id": "rect2" }, { "data": { "ft": { "attrs": { "x": 21, "y": 23.219985961914062, "size": { "x": 41, "y": 38 }, "center": { "x": 41.5, "y": 42.21998596191406 }, "rotate": 0, "scale": { "x": 1.170731707317073, "y": 1.263157894736842 }, "translate": { "x": 3.5, "y": 5 }, "ratio": 0.926829268292683 } } }, "type": "rect", "attrs": { "x": 21, "y": 23.219985961914062, "width": 41, "height": 38, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t-3.5853658536585375,-6.110522621556327s1.1707,1.2632,0,0", "id": "rect1" }, { "data": { "ft": { "attrs": { "x": 31.65999984741211, "y": 30.44999885559082, "size": { "x": 16.68000030517578, "y": 34.5 }, "center": { "x": 40, "y": 47.69999885559082 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 4, "y": 0 }, "ratio": 1 } } }, "type": "text", "attrs": { "x": 40, "y": 47.69997787475586, "text-anchor": "middle", "text": "3", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30 }, "transform": "t4,0", "id": "text1" }, { "data": { "ft": { "attrs": { "x": 2.809999942779541, "y": 31.189998626708984, "size": { "x": 268.3800048828125, "y": 34.499996185302734 }, "center": { "x": 137.0000023841858, "y": 48.43999671936035 }, "rotate": 0, "scale": { "x": 0.4150085805812781, "y": 0.8840579581946728 }, "translate": { "x": -3.5, "y": 1 }, "ratio": 0.46943594221895085 } } }, "type": "text", "attrs": { "x": 137, "y": 48.44000244140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t76.64382585509312,6.616232124685993s0.415,0.8841,0,0", "id": "text2" }, { "data": { "ft": { "attrs": { "x": 89.15999603271484, "y": 115.18999481201172, "size": { "x": 41.68000030517578, "y": 34.50000762939453 }, "center": { "x": 109.99999618530273, "y": 132.43999862670898 }, "rotate": 0, "scale": { "x": 3.471209194957937, "y": 3.956521085319832 }, "translate": { "x": 4.5, "y": 11 }, "ratio": 0.8773387327158237 } } }, "type": "text", "attrs": { "x": 110, "y": 132.43997192382812, "text-anchor": "middle", "text": ".", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-267.3330020184581,-380.56164847959473s3.4712,3.9565,0,0", "id": "text3" }];
+            //else if ($("#cboTemplate").val() == 'style4') json = [{ "data": { "ft": { "attrs": { "x": 22, "y": 23.69997787475586, "size": { "x": 178, "y": 178 }, "center": { "x": 111, "y": 112.69997787475586 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 0, "y": 0 }, "ratio": 1 } } }, "type": "rect", "attrs": { "x": 22, "y": 23.69997787475586, "width": 178, "height": 178, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "", "id": "rect2" }, { "data": { "ft": { "attrs": { "x": 21, "y": 23.219985961914062, "size": { "x": 41, "y": 38 }, "center": { "x": 41.5, "y": 42.21998596191406 }, "rotate": 0, "scale": { "x": 1.170731707317073, "y": 1.263157894736842 }, "translate": { "x": 3.5, "y": 5 }, "ratio": 0.926829268292683 } } }, "type": "rect", "attrs": { "x": 21, "y": 23.219985961914062, "width": 41, "height": 38, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t-3.5853658536585375,-6.110522621556327s1.1707,1.2632,0,0", "id": "rect1" }, { "data": { "ft": { "attrs": { "x": 31.65999984741211, "y": 30.44999885559082, "size": { "x": 16.68000030517578, "y": 34.5 }, "center": { "x": 40, "y": 47.69999885559082 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 4, "y": 0 }, "ratio": 1 } } }, "type": "text", "attrs": { "x": 40, "y": 47.69997787475586, "text-anchor": "middle", "text": "4", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30 }, "transform": "t4,0", "id": "text1" }, { "data": { "ft": { "attrs": { "x": 2.809999942779541, "y": 31.189998626708984, "size": { "x": 268.3800048828125, "y": 34.499996185302734 }, "center": { "x": 137.0000023841858, "y": 48.43999671936035 }, "rotate": 0, "scale": { "x": 0.4150085805812781, "y": 0.8840579581946728 }, "translate": { "x": -3.5, "y": 1 }, "ratio": 0.46943594221895085 } } }, "type": "text", "attrs": { "x": 137, "y": 48.44000244140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t76.64382585509312,6.616232124685993s0.415,0.8841,0,0", "id": "text2" }, { "data": { "ft": { "attrs": { "x": 89.15999603271484, "y": 115.18999481201172, "size": { "x": 41.68000030517578, "y": 34.50000762939453 }, "center": { "x": 109.99999618530273, "y": 132.43999862670898 }, "rotate": 0, "scale": { "x": 3.471209194957937, "y": 3.956521085319832 }, "translate": { "x": 4.5, "y": 11 }, "ratio": 0.8773387327158237 } } }, "type": "text", "attrs": { "x": 110, "y": 132.43997192382812, "text-anchor": "middle", "text": "PIO", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-267.3330020184581,-380.56164847959473s3.4712,3.9565,0,0", "id": "text3" }];
+            //else json = [{ "data": { "ft": { "attrs": { "x": 22, "y": 23.69997787475586, "size": { "x": 178, "y": 178 }, "center": { "x": 111, "y": 112.69997787475586 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 0, "y": 0 }, "ratio": 1 } } }, "type": "rect", "attrs": { "x": 22, "y": 23.69997787475586, "width": 178, "height": 178, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "", "id": "rect2" }, { "data": { "ft": { "attrs": { "x": 21, "y": 23.219985961914062, "size": { "x": 41, "y": 38 }, "center": { "x": 41.5, "y": 42.21998596191406 }, "rotate": 0, "scale": { "x": 1.170731707317073, "y": 1.263157894736842 }, "translate": { "x": 3.5, "y": 5 }, "ratio": 0.926829268292683 } } }, "type": "rect", "attrs": { "x": 21, "y": 23.219985961914062, "width": 41, "height": 38, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t-3.5853658536585375,-6.110522621556327s1.1707,1.2632,0,0", "id": "rect1" }, { "data": { "ft": { "attrs": { "x": 31.65999984741211, "y": 30.44999885559082, "size": { "x": 16.68000030517578, "y": 34.5 }, "center": { "x": 40, "y": 47.69999885559082 }, "rotate": 0, "scale": { "x": 1, "y": 1 }, "translate": { "x": 4, "y": 0 }, "ratio": 1 } } }, "type": "text", "attrs": { "x": 40, "y": 47.69997787475586, "text-anchor": "middle", "text": "5", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30 }, "transform": "t4,0", "id": "text1" }, { "data": { "ft": { "attrs": { "x": 2.809999942779541, "y": 31.189998626708984, "size": { "x": 268.3800048828125, "y": 34.499996185302734 }, "center": { "x": 137.0000023841858, "y": 48.43999671936035 }, "rotate": 0, "scale": { "x": 0.4150085805812781, "y": 0.8840579581946728 }, "translate": { "x": -3.5, "y": 1 }, "ratio": 0.46943594221895085 } } }, "type": "text", "attrs": { "x": 137, "y": 48.44000244140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t76.64382585509312,6.616232124685993s0.415,0.8841,0,0", "id": "text2" }, { "data": { "ft": { "attrs": { "x": 89.15999603271484, "y": 115.18999481201172, "size": { "x": 41.68000030517578, "y": 34.50000762939453 }, "center": { "x": 109.99999618530273, "y": 132.43999862670898 }, "rotate": 0, "scale": { "x": 3.471209194957937, "y": 3.956521085319832 }, "translate": { "x": 4.5, "y": 11 }, "ratio": 0.8773387327158237 } } }, "type": "text", "attrs": { "x": 110, "y": 132.43997192382812, "text-anchor": "middle", "text": "", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-267.3330020184581,-380.56164847959473s3.4712,3.9565,0,0", "id": "text3" }];
+
+            json = styles[$("#cboTemplate").val()];
+
+            // Load
+            paperPreview.clear();
+            myTemplate = paperPreview.set();
+            var elem = paperPreview.fromJSON(json, function (el, data) {
+                if (data.ft && data.ft.attrs) {
+                    var ft = paper.freeTransform(el).setOpts({ draw: 'bbox' });
+                    el.freeTransform.attrs = data.ft.attrs;
+                    el.ft = ft;
+                    el.freeTransform.apply();
+
+                    // detect isField
+                    if ((el.type == 'text' && data.mappingType != null && data.mappingType != '') || (data.msgNo != null && data.msgNo != '') || (data.constanCharacter != null && data.constanCharacter != '')) data.isField = true;
+                    else data.isField = false;
+
+                    var id = el.type;
+                    if (el.type == 'text' && data.isField) id = 'field';
+
+                    if (el.type == 'path') id += (++pathCounter);
+                    else if (el.type == 'rect') id += (++rectCounter);
+                    else if (el.type == 'ellipse') id += (++circCounter);
+                    else if (el.type == 'set') id += (++setCounter);
+                    else if (el.type == 'text' && data.isField) id += (++fieldCounter);
+                    else if (el.type == 'text') id += (++textCounter);
+                    else if (el.type == 'image') id += (++imgCounter);
+
+                    if (el.type == 'text' && data.isField && mode == 'view') {
+                        if ((data.partValue != null && data.partValue != '') || (data.mappingType != null && data.mappingType != '')) {
+
+                            //todo: for now let it be
+                            if (data.partValue == null || data.partValue == '') data.partValue = data.mappingType;
+                            el.attr({
+                                'text': data.partValue.replace(/\\n/g, "\n")
+                            });
+
+                            var bbox = el.getBBox();
+                            if (data.mappingType == 'B') {
+                                generateBarcode(data.partValue, bbox.width, bbox.height, '', function (data) {
+                                    generateBarcodeCallback(data, bbox.x, bbox.y, bbox.width, bbox.height);
+                                });
+                            }
+                            else if (data.mappingType == 'Q') {
+                                generateQRCode(data.partValue, bbox.width, bbox.height, '', function (data) {
+                                    generateQRCodeCallback(data, bbox.x, bbox.y, bbox.width, bbox.height);
+                                });
+                            }
+                            else if (data.mappingType == 'C') {
+                                if (data.pioCrossed) {
+                                    // put diagonal line here
+                                    var dLine = paper.path("M" + bbox.x + ',' + (bbox.y + bbox.height) + ' L' + (bbox.x + bbox.width) + ',' + bbox.y);
+                                    dLine.id = 'line1';
+                                    dLine.isUnused = true;
+                                    dLine.attr({
+                                        fill: "red",
+                                        opacity: 1,
+                                        stroke: "black",
+                                        'stroke-width': 3
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    else if (el.type == 'image') {
+                        // detect barcode
+                        el.data('isBarcode', true);
+                        el.data('barcodeValue', data.barcodeValue);
+                    }
+
+                    $("#shapeList").append('<option value="' + id + '">' + id + '</option>');
+                    el.id = id;
+
+                    el.data('eharigami', data.eharigami || false);
+                    el.data('isField', data.isField || false);
+                    el.data('field_name', data.fieldName || null);
+                    el.data('msgnovalue', data.msgNo || null);
+                    el.data('msgnopos', data.msgNoPos || null);
+                    el.data('msgnolen', data.msgNoLen || null);
+                    el.data('constant_character', data.constanCharacter || null);
+                    el.data('mapping_type', data.mappingType || null);
+                    el.data('is_pio', data.isPio || false);
+                    el.data('pio_mapped', data.pioMapped || null);
+                    el.data('pio_crossed', data.pioCrossed || false);
+                    el.data('comment', data.comment || null);
+                    el.data('first', data.first || false);
+                    el.data('second', data.second || false);
+                    el.data('criple', data.criple || false);
+                    el.data('partValue', data.partValue || null);
+                    el.data('eHarigamiStsD', data.eHarigamiStsD || null);
+                    el.data('barcodeValue', data.barcodeValue || null);
+
+                    el.click(function (e) {
+                        setSelectedElement(this);
+                    });
+                    el.ft.hideHandles();
+                }
+
+                if (el.type == 'image') {
+                    // detect barcode
+                    el.data('isBarcode', true);
+                    el.data('barcodeValue', data.barcodeValue);
+                }
+
+                myTemplate.push(el);
+
+                return el;
+            });
+
+            // Load
+            //paperPreview.fromJSON(json, function (el, data) {
+            //    if (data.ft && data.ft.attrs) {
+            //        paperPreview.freeTransform(el);
+
+            //        el.freeTransform.attrs = data.ft.attrs;
+
+            //        el.freeTransform.apply();
+            //    }
+
+            //    myTemplate.push(el);
+
+            //    return el;
+            //});
+
+            //var bbox = myTemplate.getBBox();
+            //paperPreview.setViewBox(bbox.x, bbox.y, bbox.width, bbox.height, true);
+            //paperPreview.setSize('100%', '100%');
+        });
+
+        $('#btnLoad').click(function () {
+            var eharigamis = [];
+            var isFields = [];
+            var fieldnames = [];
+            var msgnos = [];
+            var msgnofieldnames = [];
+            var msgnoposs = [];
+            var msgnolens = [];
+            var msgnocomments = [];
+            var constancharacters = [];
+            var mappingtypes = [];
+            var ispios = [];
+            var piomappeds = [];
+            var piocrosseds = [];
+            var comments = [];
+            var firsts = [];
+            var seconds = [];
+            var criples = [];
+            var partValues = [];
+            var eHarigamiStsDs = [];
+            var barcodeValues = [];
+
+            var json = paperPreview.toJSON(function (el, data) {
+                data.ft = {};
+
+                if (el.freeTransform != null) {
+                    data.ft.attrs = el.freeTransform.attrs;
+                }
+
+                data.eharigami = el.data('eharigami') || false;
+                data.isField = el.data('isField') || false;
+                data.fieldName = el.data('field_name') || null;
+                data.msgNo = el.data('msgnovalue') || null;
+                data.msgNoPos = el.data('msgnopos') || null;
+                data.msgNoLen = el.data('msgnolen') || null;
+                data.constanCharacter = el.data('constant_character') || null;
+                data.mappingType = el.data('mapping_type') || null;
+                data.isPio = el.data('is_pio') || false;
+                data.pioMapped = el.data('pio_mapped') || null;
+                data.pioCrossed = el.data('pio_crossed') || false;
+                data.comment = el.data('comment') || null;
+                data.first = el.data('first') || false;
+                data.second = el.data('second') || false;
+                data.criple = el.data('criple') || false;
+                data.partValue = el.data('partValue') || null;
+                data.eHarigamiStsD = el.data('eHarigamiStsD') || null;
+                data.barcodeValue = el.data('barcodeValue') || null;
+
+                eharigamis.push(data.eharigami);
+                isFields.push(data.isField);
+                fieldnames.push(data.fieldName);
+                msgnos.push(data.msgNo);
+                msgnoposs.push(data.msgNoPos);
+                msgnolens.push(data.msgNoLen);
+                constancharacters.push(data.constanCharacter);
+                mappingtypes.push(data.mappingType);
+                ispios.push(data.isPio);
+                piomappeds.push(data.pioMapped);
+                piocrosseds.push(data.pioCrossed);
+                comments.push(data.comment);
+                firsts.push(data.first);
+                seconds.push(data.second);
+                criples.push(data.criple);
+                partValues.push(data.partValue);
+                eHarigamiStsDs.push(data.eHarigamiStsD);
+                barcodeValues.push(data.barcodeValue);
+
+                return data;
+            });
+
+            for (var i = 0; i < eharigamis.length; i++) {
+                json[i].eharigami = eharigamis[i];
+                json[i].isField = isFields[i];
+                json[i].fieldName = fieldnames[i];
+                json[i].msgNo = msgnos[i];
+                json[i].msgNoPos = msgnoposs[i];
+                json[i].msgNoLen = msgnolens[i];
+                json[i].constanCharacter = constancharacters[i];
+                json[i].mappingType = mappingtypes[i];
+                json[i].isPio = ispios[i];
+                json[i].pioMapped = piomappeds[i];
+                json[i].pioCrossed = piocrosseds[i];
+                json[i].comment = comments[i];
+                json[i].first = firsts[i];
+                json[i].second = seconds[i];
+                json[i].criple = criples[i];
+                json[i].partValue = partValues[i];
+                json[i].eHarigamiStsD = eHarigamiStsDs[i];
+                json[i].barcodeValue = barcodeValues[i];
+            }
+
+            drawJson(json);
+        });
+
+        $('#cboMsgNo').change(function(){
+            var fieldname = msgnofieldname[$('#cboMsgNo').val()];
+            var pos = msgnopos[$('#cboMsgNo').val()];
+            var len = msgnolen[$('#cboMsgNo').val()];
+            var comment = msgnocomment[$('#cboMsgNo').val()];
+
+            $('#txtFieldNameMapping').val(comment);
+            $('#txtMsgNoPos').val(pos);
+            $('#txtMsgNoLen').val(len);
+            $('#txtCommentMapping').val(comment);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    var myTemplateEdit = null;
+
+    var we = $('.paper').width();
+    var he = $('.paper').height();
+
+    $('#paperEdit').width(we);
+    $('#paperEdit').height(he);
+
+    var paperEdit = Raphael("paperEdit", we, he);
+    paperEdit.setViewBox(0, 0, we, he, true);
+    paperEdit.setSize('100%', '100%');
+
+    var drawTemplateEdit = function (element) {
+        $('#lblIdEdit').text(element.id);
+
+        paperEdit.clear();
+        //var myObj = cloneToPaperXXX(element, paperEdit);
+        //var myObj = element.cloneToPaper(paperEdit);
+        //element.remove();
+        //var test = element.writeToObject();
+        //var obj = paperEdit.add(test);
+
+        var json = [{ "data": { "ft": {} }, "type": "rect", "attrs": { "x": 18, "y": 22.860015869140625, "width": 202, "height": 197, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1, "stroke-width": 1 }, "transform": "t20.71287128712872,29s0.9604,1,0,0", "id": 50 }, { "data": { "ft": {} }, "type": "rect", "attrs": { "x": 342, "y": 41.860015869140625, "width": 58, "height": 57, "r": 0, "rx": 0, "ry": 0, "fill": "white", "stroke": "black", "opacity": 1 }, "transform": "t-305,10", "id": 126 }, { "data": { "ft": {} }, "type": "text", "attrs": { "x": 283, "y": 77.86001586914062, "text-anchor": "middle", "text": "1", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t-239.14397207251864,-30.352169606065658s1.0782,1.4348,0,0", "id": 174 }, { "data": { "ft": {} }, "type": "rect", "attrs": { "x": 262, "y": 100.86001586914062, "width": 24, "height": 26, "r": 0, "rx": 0, "ry": 0, "fill": "black", "stroke": "black", "opacity": 1 }, "transform": "t-145,69", "id": 208 }, { "data": { "ft": {} }, "type": "text", "attrs": { "x": 262, "y": 50.860015869140625, "text-anchor": "middle", "text": "STEERING WHEEL", "font": "10px \"Arial\"", "stroke": "black", "fill": "black", "opacity": 1, "font-family": "Arial", "font-size": 30, "stroke-width": 1 }, "transform": "t46.50545828001155,15.30956500509511s0.4523,1.3478,0,0", "id": 242 }];
+
+        paperEdit.fromJSON(json);
+
+        //var myTemplate = paperEdit.set();
+        //var elem = paperEdit.fromJSON(json, function (element, data) {
+        //    myTemplate.push(element);
+        //    return element;
+        //});
+
+        //var bbox = myTemplate.getBBox();
+        //paperEdit.setViewBox(bbox.x, bbox.y, bbox.width, bbox.height, true);
+        //paperEdit.setSize('100%', '100%');
+    };
+
+    $('#btnSaveEdit').click(function () {
+        var json = paperEdit.toJSON(function (el, data) {
+            data.ft = {};
+
+            if (el.freeTransform != null) {
+                data.ft.attrs = el.freeTransform.attrs;
+
+                paperEdit.freeTransform(el).unplug();
+            }
+
+            return data;
+        });
+
+        drawJson(json);
+    });
+
+    var extractJSON = function (element) {
+        var attr = element.attr();
+        var newNodeJSON = { type: element.type };
+        var key;
+        for (key in attr) {
+            newNodeJSON[key] = attr[key];
+        }
+        return newNodeJSON;
+    };
+
+    var cloneToPaperXXX = function (element, paper) {
+        var isSet = element.type === 'set';
+        var elementJSONArr = [];
+        var i;
+        var ln;
+        var newSet;
+
+        if (isSet) {
+            ln = element.items.length;
+            for (i = 0; i < ln; i += 1) {
+                elementJSONArr.push(extractJSON(element.items[i]));
+            }
+        }
+        else {
+            elementJSONArr.push(extractJSON(element));
+        }
+        newSet = paper.add(elementJSONArr);
+        return isSet ? newSet : newSet[0];
+    };
+
+    $('#btnSaveMapping').click(function () {
+        $('#ModalSetData').modal('hide');
+
+        selectedElement.data('field_name', $('#txtFieldNameMapping').val());
+
+        var selectedMapping = $('input:radio[name=rdoDataMapping]:checked').val();
+        selectedElement.data('selected_mapping', selectedMapping);
+
+        if (selectedMapping == 'msgno') {
+            selectedElement.data('msgnovalue', $('#cboMsgNo').val());
+            selectedElement.data('msgnopos', $('#txtMsgNoPos').val());
+            selectedElement.data('msgnolen', $('#txtMsgNoLen').val());
+
+            selectedElement.data('constant_character', null);
+        }
+        else {
+            selectedElement.data('msgnovalue', null);
+            selectedElement.data('msgnopos', null);
+            selectedElement.data('msgnolen', null);
+
+            selectedElement.data('constant_character', $('#txtConstantCharacterMapping').val());
+        }
+
+        selectedElement.data('mapping_type', $('#cboTypeMapping').val());
+        selectedElement.data('is_pio', $('#chkPioMapping').prop('checked'));
+
+        selectedElement.data('comment', $('#txtCommentMapping').val());
+    });
+
+    $('input:radio[name=rdoDataMapping]').click(function () {
+        var selectedMapping = $('input:radio[name=rdoDataMapping]:checked').val();
+        var optionMapping = selectedMapping == 'msgno';
+        $('#cboMsgNo').prop('disabled', !optionMapping);
+        $('#txtMsgNoPos').prop('disabled', true);
+        $('#txtMsgNoLen').prop('disabled', true);
+        $('#txtConstantCharacterMapping').prop('disabled', optionMapping);
+        $('#cboMsgNo').prop('disabled', !optionMapping);
+        $('#txtCommentMapping').prop('disabled', false);
+        $('#cboTypeMapping').prop('disabled', !optionMapping);
+        $('#chkPioMapping').prop('disabled',!optionMapping);
+     
+
+        if(!optionMapping){
+            $('#txtFieldNameMapping').val('');
+            $('#cboMsgNo').val('');
+            $('#txtMsgNoPos').val('');
+            $('#txtMsgNoLen').val('');
+            $('#txtCommentMapping').val('');
+            $('#cboTypeMapping').val('');
+            $('#chkPioMapping').prop('checked',optionMapping);
+            $('#cboTypeMapping').prop('disabled', !optionMapping);
+            $('#chkPioMapping').prop('disabled',!optionMapping);
+            
+        }
+    });
+
+</script>

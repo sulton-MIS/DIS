@@ -1,0 +1,143 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP02005Master;
+@{
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LocationModel> Location = (List<LocationModel>)ViewData["Location"];
+    List<CompanyModel> Companys = (List<CompanyModel>)ViewData["Company"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div id="formSearch" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td style="width:8%">Project Name: </td>
+                                    <td style="width:22%"><input id="searchProjectName" class="form-control" type="text" /></td>
+                                    <td style="width:8%">Division : </td>
+                                    <td style="width:22%">
+                                        <select id="searchDivision" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Division != null)
+                                                {
+                                                    if (Division.Count() > 0)
+                                                    {
+                                                        foreach (DivisionModel item in Division)
+                                                        {
+                                                            <option value="@item.DIV_ID">@item.DIV</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td style="width:8%">From : </td>
+                                    <td style="width:12%"><input id="searchDate" class="form-control" type="date" /></td>
+                                    <td style="width:8%">To : </td>
+                                    <td style="width:12%"><input id="searchDateTo" class="form-control" type="date" /></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Project Location : </td>
+                                    <td>
+                                        <select id="searchLocation" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Location != null)
+                                                {
+                                                    if (Location.Count() > 0)
+                                                    {
+                                                        foreach (LocationModel item in Location)
+                                                        {
+                                                            <option value="@item.ID_TB_M_LOCATION">@item.LOC_NAME</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+
+                                    <td>Company : </td>
+                                    <td>
+                                        <select id="searchCompany" class="form-control">
+                                            <option value=''>-- ALL --</option>
+                                            @{
+                                                if (Companys != null)
+                                                {
+                                                    if (Companys.Count() > 0)
+                                                    {
+                                                        foreach (CompanyModel item in Companys)
+                                                        {
+                                                            <option value="@item.ID_TB_M_COMPANY">@item.COMPANY_NAME</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            <option>Other</option>
+                                        </select>
+                                    </td>
+                                    <td>IMPB No : </td>
+                                    <td>
+                                        <input id="searchIMPB" class="form-control" />
+                                    </td>
+                                    <td>Project Code : </td>
+                                    <td>
+                                        <input id="searchCode" class="form-control" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search"><i class="fa fa-eraser"></i> Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                            @*<button type="button" class="btn btn-info btn-sm">Detail Pekerjaan</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Pelaksana</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Identifikasi</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Pengawasan</button>
+                            <button type="button" class="btn btn-info btn-sm">Detail Approval</button>*@
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            @*<button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick="showAdd()"><i class="fa fa-plus"></i> New</button>*@
+                            @*<button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

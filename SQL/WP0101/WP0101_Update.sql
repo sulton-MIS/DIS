@@ -1,0 +1,16 @@
+﻿DECLARE @@CNT INT
+	, @@CHK VARCHAR(20)
+	, @@ERR VARCHAR(MAX);
+BEGIN TRY
+	UPDATE TB_R_WP_HEADER SET Project_CD = @PROJECT_CODE, Project_Name = @PROJECT_NAME, Location = @LOCATION, Tanggal_Pelaksanaan = @DATE, Jam_Pelaksanaan = @TIME
+,Divisi_Dept = @DIVISION, Pelaksana = @EXECUTOR, Nama_Kontraktor = @CONTRACTOR, Nama_Pimpinan = @LEADER, Nama_Pengawas = @SUPERVISOR, Status = @STATUS, UPDATE_BY = @USERNAME, UPDATE_DT = GETDATE() WHERE ID = @ID
+	SET @@CHK = 'TRUE';
+	SET @@ERR = @PROJECT_CODE;
+END TRY
+BEGIN CATCH
+	SET @@CHK = 'FALSE';
+	SET @@ERR = 'ERROR UPDATE WP_HEADER:' +@PROJECT_CODE+
+	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+END CATCH
+
+SELECT @@CHK AS STACK, @ERR AS LINE_STS

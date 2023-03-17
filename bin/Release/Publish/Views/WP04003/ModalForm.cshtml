@@ -1,0 +1,223 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP04003Master;
+@{
+    List<RoleModel> RoleModels = (List<RoleModel>)ViewData["ROLE"];
+    List<UsernameModel> UsernameModels = (List<UsernameModel>)ViewData["USERNAME"];
+    List<AreaInfo> AreaInfo = (List<AreaInfo>)ViewData["AREA"];
+    List<LocationModel> Location = (List<LocationModel>)ViewData["LOCATION"];
+}
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">ADD USER MAPPING</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">USERNAME</label>
+                        <select class="select2 form-control" id="addUsername">
+                            <option value="">-- SELECT USERNAME --</option>
+                            @{
+                                if (UsernameModels != null)
+                                {
+                                    if (UsernameModels.Count() > 0)
+                                    {
+                                        foreach (UsernameModel item in UsernameModels)
+                                        {
+                                            <option>@item.USERNAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">ROLE</label>
+                        <select id="addRole" class="form-control select2">
+                            @{
+                                if (RoleModels != null)
+                                {
+                                    if (RoleModels.Count() > 0)
+                                    {
+                                        foreach (RoleModel item in RoleModels)
+                                        {
+                                            <option value="@item.ID">@item.ROLE_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>AREA</label>
+                        <select id="addArea" class="form-control select2">
+                            @{
+                                if (AreaInfo != null)
+                                {
+                                    if (AreaInfo.Count > 0)
+                                    {
+                                        foreach (AreaInfo item in AreaInfo)
+                                        {
+                                            <option image="@item.IMAGE_PATH" value="@item.ID">@item.AREA_NAME</option>
+
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>LOCATION</label>
+                        <select id="addLocation" class="form-control select2">
+                            @{
+                                if (Location != null)
+                                {
+                                    if (Location.Count > 0)
+                                    {
+                                        foreach (LocationModel item in Location)
+                                        {
+                                            <option class="addLoc" disabled area="@item.ID_AREA" value="@item.ID">@item.LOC_NAME</option>
+
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>NO REG</label>
+                        <input disabled type="text" maxlength="40" id="addNoReg" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>EMAIL</label>
+                        <input disabled type="text" maxlength="40" id="addEmail" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>FIRST NAME</label>
+                        <input disabled type="text" maxlength="40" id="addFirstName" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>LAST NAME</label>
+                        <input disabled type="text" maxlength="40" id="addLastName" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="addNew()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">USERNAME</label>
+                        <input disabled class="form-control" id="editUsername" />
+                        <input id="EditID" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">ROLE</label>
+                        <select id="editRole" class="form-control">
+                            @{
+                                if (RoleModels != null)
+                                {
+                                    if (RoleModels.Count() > 0)
+                                    {
+                                        foreach (RoleModel item in RoleModels)
+                                        {
+                                            <option value="@item.ID">@item.ROLE_NAME</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>AREA</label>
+                        <select id="editArea" class="form-control select2">
+                            @{
+                                if (AreaInfo != null)
+                                {
+                                    if (AreaInfo.Count > 0)
+                                    {
+                                        foreach (AreaInfo item in AreaInfo)
+                                        {
+                                            <option image="@item.IMAGE_PATH" value="@item.ID">@item.AREA_NAME</option>
+
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>LOCATION</label>
+                        <select id="editLocation" class="form-control select2">
+                            @{
+                                if (Location != null)
+                                {
+                                    if (Location.Count > 0)
+                                    {
+                                        foreach (LocationModel item in Location)
+                                        {
+                                            <option class="editLoc" disabled editarea="@item.ID_AREA" value="@item.ID">@item.LOC_NAME</option>
+
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>NO REG</label>
+                        <input disabled type="text" maxlength="40" id="editNoReg" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>EMAIL</label>
+                        <input disabled type="text" maxlength="40" id="editEmail" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>FIRST NAME</label>
+                        <input disabled type="text" maxlength="40" id="editFirstName" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>LAST NAME</label>
+                        <input disabled type="text" maxlength="40" id="editLastName" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="updateData()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;" data-dismiss="modal"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  NO</button>
+            </div>
+        </div>
+    </div>
+</div>

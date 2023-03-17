@@ -1,0 +1,172 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD List Konpo </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Item Code</label>
+                        <input id="addItemCode" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Jenis Packing</label>
+                        <select class="form-control" id="addJenisPacking" name="dropdown">
+                            <option id="addJenisPacking" value="NULL" selected="selected"> NULL </option>
+                            <option id="addJenisPacking" value="Master Box" selected="selected"> Master Box </option>
+                            <option id="addJenisPacking" value="Master Box Type B" selected="selected"> Master Box Type B </option>
+                            <option id="addJenisPacking" value="Master Box Tail Gunze" selected="selected"> Master Box Tail Gunze </option>
+                            <option id="addJenisPacking" value="Inner Box" selected="selected"> Inner Box </option>
+                            <option id="addJenisPacking" value="Foam Pad" selected="selected"> Foam Pad </option>
+                            <option id="addJenisPacking" value="Styrofum" selected="selected"> Styrofum </option>
+                            <option id="addJenisPacking" value="Plastic" selected="selected"> Plastic </option>
+                            <option id="addJenisPacking" value="Ring Impra" selected="selected"> Ring Impra </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Qty Pcs</label>
+                        <input id="addQtyPcs" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Factory Size</label>
+                        <input id="addFactorySize" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Indirect</label>
+                        <input id="addIndirect" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Berat</label>
+                        <input id="addBerat" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Panjang</label>
+                        <input type="text" class="form-control" id="addPanjang">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Lebar</label>
+                        <input id="addLebar" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Tinggi</label>
+                        <input type="text" class="form-control" id="addTinggi">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Harga</label>
+                        <input id="addHarga" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT List Konpo </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Item Code</label>
+                        <input id="editItemCode" required type="text" class="form-control" />
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label class="required">Jenis Packing</label>
+                        @*<input id="editJenisPacking" required type="text" class="form-control" />*@
+                        <select class="form-control" id="editJenisPacking" name="dropdown">
+                            <option id="editJenisPacking" value="Null" selected="selected"> NULL </option>
+                            <option id="editJenisPacking" value="Master Box" selected="selected"> Master Box </option>
+                            <option id="editJenisPacking" value="Master Box Type B" selected="selected"> Master Box Type B </option>
+                            <option id="editJenisPacking" value="Master Box Tail Gunze" selected="selected"> Master Box Tail Gunze </option>
+                            <option id="editJenisPacking" value="Inner Box" selected="selected"> Inner Box </option>
+                            <option id="editJenisPacking" value="Foam Pad" selected="selected"> Foam Pad </option>
+                            <option id="editJenisPacking" value="Styrofum" selected="selected"> Styrofum </option>
+                            <option id="editJenisPacking" value="Plastic" selected="selected"> Plastic </option>
+                            <option id="editJenisPacking" value="Ring Impra" selected="selected"> Ring Impra </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Qty Pcs</label>
+                        <input id="editQtyPcs" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Factory Size</label>
+                        <input id="editFactorySize" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Indirect</label>
+                        <input id="editIndirect" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Berat</label>
+                        <input id="editBerat" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Panjang</label>
+                        <input type="text" class="form-control" id="editPanjang">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Lebar</label>
+                        <input id="editLebar" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Tinggi</label>
+                        <input type="text" class="form-control" id="editTinggi">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Harga</label>
+                        <input id="editHarga" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+

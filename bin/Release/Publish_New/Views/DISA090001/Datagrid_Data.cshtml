@@ -1,0 +1,214 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA090001Master;
+@{
+    List<DISA090001Master> DataWP = (List<DISA090001Master>)ViewData["DataDISA090001"];
+    List<DISA090001> Status_Cmb = (List<DISA090001>)ViewData["Status_Cmb"];
+    List<DISA090001> Time_Cmb = (List<DISA090001>)ViewData["Time_Cmb"];
+    List<DISA090001> ExecTime_Cmb = (List<DISA090001>)ViewData["Time_Cmb"];
+    List<DISA090001> Model_type = (List<DISA090001>)ViewData["Model_type"];
+
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;">No</th>
+                            <th style="width: 100px;">Date</th>
+                            <th style="width: 40px;">Halte</th>
+                            <th style="width: 100px;">Print Qty</th>
+                            <th style="width: 100px;">Qty Jam ke-1</th>
+                            <th style="width: 100px;">Amt Jam ke-1</th>
+                            <th style="width: 100px;">Qty Jam ke-2</th>
+                            <th style="width: 100px;">Amt Jam ke-2</th>
+                            <th style="width: 100px;">Qty Jam ke-3</th>
+                            <th style="width: 100px;">Amt Jam ke-3</th>
+                            <th style="width: 100px;">Qty Jam ke-4</th>
+                            <th style="width: 100px;">Amt Jam ke-4</th>
+                            <th style="width: 100px;">Qty Jam ke-5</th>
+                            <th style="width: 100px;">Amt Jam ke-5</th>
+                            <th style="width: 100px;">Qty Jam ke-6</th>
+                            <th style="width: 100px;">Amt Jam ke-6</th>
+                            <th style="width: 100px;">Qty Jam ke-7</th>
+                            <th style="width: 100px;">Amt Jam ke-7</th>
+                            <th style="width: 100px;">Qty Jam ke-8</th>
+                            <th style="width: 100px;">Amt Jam ke-8</th>
+                            <th style="width: 100px;">Qty Jam ke-9</th>
+                            <th style="width: 100px;">Amt Jam ke-9</th>
+                            <th style="width: 100px;">Qty Jam ke-10</th>
+                            <th style="width: 100px;">Amt Jam ke-10</th>
+                            <th style="width: 100px;">Qty Jam ke-11</th>
+                            <th style="width: 100px;">Amt Jam ke-11</th>
+                            <th style="width: 100px;">Qty Jam ke-12</th>
+                            <th style="width: 100px;">Amt Jam ke-12</th>
+                            <th style="width: 100px;">Qty Jam ke-13</th>
+                            <th style="width: 100px;">Amt Jam ke-13</th>
+                            <th style="width: 100px;">Qty Jam ke-14</th>
+                            <th style="width: 100px;">Amt Jam ke-14</th>
+                            <th style="width: 100px;">Qty Jam ke-15-16</th>
+                            <th style="width: 100px;">Amt Jam ke-15-16</th>
+                            <th style="width: 100px;">Qty Jam ke-17</th>
+                            <th style="width: 100px;">Amt Jam ke-17</th>
+                            <th style="width: 100px;">Qty Jam ke-18</th>
+                            <th style="width: 100px;">Amt Jam ke-18</th>
+                            <th style="width: 100px;">Qty Jam ke-19</th>
+                            <th style="width: 100px;">Amt Jam ke-19</th>
+                            <th style="width: 100px;">Qty Jam ke-20</th>
+                            <th style="width: 100px;">Amt Jam ke-20</th>
+                            <th style="width: 100px;">Qty Jam ke-21</th>
+                            <th style="width: 100px;">Amt Jam ke-21</th>
+                            <th style="width: 100px;">Qty Jam ke-22</th>
+                            <th style="width: 100px;">Amt Jam ke-22</th>
+                        </tr>
+                        <!--<tr>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                        <th style="width: 150px; border: initial; ">Date</th>-->
+                        @*Colspan Dari "Created"*@
+                        <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>-->
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="27" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 550px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA090001Master item in DataWP)
+                                    {
+                                        //string sts = "";
+                                        //if (@item.STATUSTEXT == "1")
+                                        //{
+                                        //    sts = "Active";
+                                        //}
+                                        //else
+                                        //{
+                                        //    sts = "Not Active";
+                                        //}
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px; text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox"value="@item.ID,@(string.Format("{0:yyyy-MM-dd}",DateTime.Parse(@item.target_date))),@item.halte,@item.target_print_qty,@item.target_qty_jam_ke_1,@item.target_amount_jam_ke_1,@item.target_qty_jam_ke_2,@item.target_amount_jam_ke_2,@item.target_qty_jam_ke_3,@item.target_amount_jam_ke_3,@item.target_qty_jam_ke_4,@item.target_amount_jam_ke_4,@item.target_qty_jam_ke_5,@item.target_amount_jam_ke_5,@item.target_qty_jam_ke_6,@item.target_amount_jam_ke_6,@item.target_qty_jam_ke_7,@item.target_amount_jam_ke_7,@item.target_qty_jam_ke_8,@item.target_amount_jam_ke_8,@item.target_qty_jam_ke_9,@item.target_amount_jam_ke_9,@item.target_qty_jam_ke_10,@item.target_amount_jam_ke_10,@item.target_qty_jam_ke_11,@item.target_amount_jam_ke_11,@item.target_qty_jam_ke_12,@item.target_amount_jam_ke_12,@item.target_qty_jam_ke_13,@item.target_amount_jam_ke_13,@item.target_qty_jam_ke_14,@item.target_amount_jam_ke_14,@item.target_qty_jam_ke_15_16_istirahat,@item.target_amount_jam_ke_15_16_istirahat,@item.target_qty_jam_ke_17,@item.target_amount_jam_ke_17,@item.target_qty_jam_ke_18,@item.target_amount_jam_ke_18,@item.target_qty_jam_ke_19,@item.target_amount_jam_ke_19,@item.target_qty_jam_ke_20,@item.target_amount_jam_ke_20,@item.target_qty_jam_ke_21,@item.target_amount_jam_ke_21,@item.target_qty_jam_ke_22,@item.target_amount_jam_ke_22" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    </td>
+                                                    <td style="width: 40px">
+                                                        @item.ROW_NUM
+                                                    </td>
+                                                    <td style="width: 100px"> @(string.Format("{0:yyyy-MM-dd}",DateTime.Parse(@item.target_date))) </td>
+                                                    <td style="width: 40px"> @item.halte</td>
+                                                    <td style="width: 100px"> @item.target_print_qty</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_1</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_1</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_2</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_2</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_3</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_3</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_4</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_4</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_5</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_5</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_6</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_6</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_7</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_7</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_8</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_8</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_9</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_9</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_10</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_10</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_11</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_11</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_12</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_12</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_13</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_13</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_14</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_14</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_15_16_istirahat</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_15_16_istirahat</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_17</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_17</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_18</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_18</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_19</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_19</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_20</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_20</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_21</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_21</td>
+                                                    <td style="width: 100px"> @item.target_qty_jam_ke_22</td>
+                                                    <td style="width: 100px"> @item.target_amount_jam_ke_22</td>
+
+
+</tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

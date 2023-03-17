@@ -1,0 +1,50 @@
+﻿<script>
+    var GET_SITE_URL = (window.location.href).split('/');
+    var SITE_URL = "";
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (i == 0) {
+            SITE_URL = SITE_URL + GET_SITE_URL[i] + "//";
+        }else if (GET_SITE_URL[i] != "WPMember") {
+            SITE_URL = SITE_URL + GET_SITE_URL[i] + "";
+        }
+    }
+
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            (getMenu == "REGISTER_WORKER") ? REGISTER_WORKER_MENU() : (getMenu == "TRAINING") ? TRAINING_MENU() : (getMenu == "EXAM") ? EXAM_MENU() : (getMenu == "SCORE") ? SCORE_MENU() : REG_WORKER_PROJECT_MENU();
+            $('#menu-container').hide();
+            //$('#data-container').show();
+        });
+
+        $('.button-back').click(function () {
+            $('#menu-container').show();
+            $('#data-container').hide();
+        });
+    });
+
+    function REGISTER_WORKER_MENU() {
+        location.replace(SITE_URL + "/WP03008");
+        //location.replace(SITE_URL + "WP03008");
+    }
+
+    function TRAINING_MENU() {
+        //location.href = "/WP03013/TrainingPortal";
+        location.replace(SITE_URL + "/WP03013/TrainingPortal");
+    }
+
+    function EXAM_MENU() {
+        //location.href = "/WP03007/ExamPortal";
+        location.replace(SITE_URL + "/WP03007/ExamPortal");
+    }
+
+    function SCORE_MENU() {
+        //location.href = SITE_URL + "WP03012";
+        location.replace(SITE_URL + "/WP03012");
+    }
+
+    function REG_WORKER_PROJECT_MENU() {
+        //location.href = SITE_URL + "WP03014";
+        location.replace(SITE_URL + "/WP03014");
+    }
+</script>

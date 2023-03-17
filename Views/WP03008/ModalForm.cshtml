@@ -1,0 +1,356 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using Toyota.Common.Credential
+@using AI070.Models.WP03008Master;
+@{
+    List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    Toyota.Common.Credential.User user = Html.Toyota().Page.User;
+    string COMPANY = user.Company.Id;
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD USER / WORKER </h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">IDENTITY TYPE</label>
+                        <select disabled id="addIdentityType" class="form-control">
+                            @{
+                                if (Identity != null)
+                                {
+                                    if (Identity.Count() > 0)
+                                    {
+                                        foreach (IdentityModel item in Identity)
+                                        {
+                                            <option value="@item.ID">@item.IDENTITY_TEXT (@item.ID)</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">NO KTP</label>
+                        <input id="addIdentityNo" required type="text" onchange="searchIdentity(this.value)" class="form-control" />
+                        <input type="text" id="addStatusContractor" style="display:none" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">COMPANY</label>
+                        
+                        <select id="addCompany" required class="form-control">
+                            @{
+                                if (Companys != null)
+                                {
+                                    if (Companys.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Companys)
+                                        {
+                                            if (item.ID == COMPANY)
+                                            {
+                                                <option value="@item.ID">@item.COMPANY</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">REGISTRATION NUMBER</label>
+                        <input id="addregnumber" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">FIRST NAME</label>
+                        <input id="addfirstname" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>LAST NAME</label>
+                        <input id="addlastname" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EMAIL</label>
+                        <input id="addEmail" class="form-control" type="email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHONE</label>
+                        <input style="-webkit-appearance: none;" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" id="addPhone" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">ADDRESS</label>
+                        <textarea style="resize:none" class="form-control" id="addAddress"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">GENDER</label>
+                        <select class="form-control" id="addGender">
+                            <option>MALE</option>
+                            <option>FEMALE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">PHOTO</label>
+                        <input type="file" onchange="change_image('add',this)" class="btn btn-info btn-xs form-control" accept="image/*" id="addFoto" />
+                        <img onerror="this.style.display='none'" id="addImageBox" src="" style="height:150px;width:100%" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHOTO ID</label>
+                        <input type="file" onchange="change_image('addId', this)" class="btn btn-info btn-xs form-control" accept="image/*" id="addFotoID" />
+                        <img onerror="this.style.display='none'" id="addImageBoxID" src="" style="height:150px;width:100%" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="">CERTIFICATE</label>
+                        <input type="file" onchange="change_image('addCertificate',this)" class="btn btn-info btn-xs form-control" accept="image/*" id="addFotoCertificate" />
+                        <a style="display:none" target="_blank" id="addLinkCertificate" class="">Download Certificate</a>
+                    </div>
+                </div>
+                <br />
+                <div class="FlexLine">
+                    <span class="FlexText">SAFETY FORM</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION NO</label>
+                        <input type="text" class="form-control" id="addSafetyInductionNo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION FROM</label>
+                        <input type="text" class="form-control datepicker" id="addSafetyInductionFrom">
+                    </div>
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION TO</label>
+                        <input type="text" class="form-control datepicker" id="addSafetyInductionTo">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT  USER / WORKER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">COMPANY</label>
+                        <select id="editCompany" required class="form-control">
+                            @{
+                                if (Companys != null)
+                                {
+                                    if (Companys.Count() > 0)
+                                    {
+                                        foreach (CompanyModel item in Companys)
+                                        {
+                                            <option value="@item.ID">@item.COMPANY</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                        <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">REGISTRATION NUMBER</label>
+                        <input id="editregnumber" readonly type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">FIRST NAME</label>
+                        <input id="editfirstname" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>LAST NAME</label>
+                        <input id="editlastname" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">USERNAME</label>
+                        <input id="editUsername" class="form-control" type="text" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PASSWORD</label>
+                        <input id="editPassword" required type="password" class="form-control" />
+                        <input style="display:none" id="editHashPassword" required type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EMAIL</label>
+                        <input id="editEmail" class="form-control" type="email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHONE</label>
+                        <input style="-webkit-appearance: none;" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" id="editPhone" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">ADDRESS</label>
+                        <textarea style="resize:none" class="form-control" id="editAddress"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">GENDER</label>
+                        <select class="form-control" id="editGender">
+                            <option>MALE</option>
+                            <option>FEMALE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="required">EXECUTOR</label>
+                        <select id="editExecutor" onchange="getSection('edit', this.value)" class="form-control">
+                            @{
+                                if (Executor != null)
+                                {
+                                    if (Executor.Count() > 0)
+                                    {
+                                        foreach (ExecutorModel item in Executor)
+                                        {
+                                            <option value="@item.ID">@item.EXECUTOR_TEXT</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="required"> SEC / DIV / CONTR</label>
+                        <select id="editSection" class="form-control">
+                            @{
+                                if (Section != null)
+                                {
+                                    if (Section.Count() > 0)
+                                    {
+                                        foreach (SectionModel item in Section)
+                                        {
+                                            <option value="@item.ID">@item.SECTION_TEXT</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PIC STATUS</label>
+                        <select id="editPIC" onchange="getPIC('add', this.value)" class="form-control">
+                            @{
+                                if (PICS != null)
+                                {
+                                    if (PICS.Count() > 0)
+                                    {
+                                        foreach (PICModel item in PICS)
+                                        {
+                                            <option value="@item.ID">@item.PIC_TEXT</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">FOTO</label>
+                        <input type="file" onchange="change_image('edit',this)" class="btn btn-info btn-xs form-control" accept="image/*" id="editFoto" />
+                        <img onerror="this.style.display='none'" id="editImageBox" src="" style="height:150px;width:100%" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">PHOTO ID</label>
+                        <input type="file" onchange="change_image('editId', this)" class="btn btn-info btn-xs form-control" accept="image/*" id="editFotoID" />
+                        <img onerror="this.style.display='none'" id="editImageBoxID" src="" style="height:150px;width:100%" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="">CERTIFICATE</label>
+                        <input type="file" onchange="change_image('editCertificate',this)" class="btn btn-info btn-xs form-control" accept="image/*" id="editFotoCertificate" />
+                        <img onerror="this.style.display='none'" id="editImageBoxCertificate" src="" style="height:150px;width:100%" />
+                    </div>
+                </div>
+                <br />
+                <div class="FlexLine">
+                    <span class="FlexText">ANZEN FORM</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ANZEN SERTIFICATE NO</label>
+                        <input class="form-control" id="editAnzenSertificateNo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ANZEN DATE FROM</label>
+                        <input type="text" class="form-control datepicker" id="editAnzenDateFrom">
+                    </div>
+                    <div class="col-md-6">
+                        <label>ANZEN DATE TO</label>
+                        <input type="text" class="form-control datepicker" id="editAnzenDateTo">
+                    </div>
+                </div>
+                <div class="FlexLine">
+                    <span class="FlexText">SAFETY FORM</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION NO</label>
+                        <input type="text" class="form-control" id="editSafetyInductionNo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION FROM</label>
+                        <input type="text" class="form-control datepicker" id="editSafetyInductionFrom">
+                    </div>
+                    <div class="col-md-6">
+                        <label>SAFETY INDUCTION TO</label>
+                        <input type="text" class="form-control datepicker" id="editSafetyInductionTo">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

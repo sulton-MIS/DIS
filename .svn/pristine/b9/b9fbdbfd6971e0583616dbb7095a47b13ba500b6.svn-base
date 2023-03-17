@@ -1,0 +1,88 @@
+﻿@using AI070.Models.DTIDashboardListRepository;
+@{  
+    var Title = ViewData["Title"];
+    var Proses_List = @ViewBag.Proses_List;
+}   
+
+<html>
+<head>
+    <title>Monitoring Output Produksi</title>
+    <script type="text/javascript" src="/Content/chartjs/Chart.js"></script>
+    <script type="text/javascript" src="/Content/Bootstrap/js/jquery.js"></script>
+</head>
+<body>
+    <style type="text/css">
+        body {
+            font-family: roboto;
+        }
+    </style>
+
+    <table border="1" style=" border-style: groove; border-collapse: collapse; width: 100%;">
+        <tr>
+            <td colspan="2">
+                <div class="col-md-6" align="center">
+                    <label style="font:bold; font-size:larger;" id="title_halte">@{ @Title }</label>
+                </div>
+                <div class="col-md-6">
+                    @*<select id="NestedId" asp-for="Post.NestedCategoryId" asp-items="@(new SelectList(String.Empty, "Id", "Name"))" onchange="@Url.Action("GetFeatures","User", new { Id = Model.NestedCategory.Id })">
+                            <option value="">Select Nested</option>
+                        </select>*@
+                    <label>Output Produksi : </label>
+                    <select onchange="redirect(this.value)" class="required" data-val="true" id="DownloadValuesId" name="DownloadValuesId">
+                        <option value="123" @if (@Title.ToString() == "HALTE 1_2_3") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 1_2_3</option>
+                        <option value="41" @if (@Title.ToString() == "HALTE 4 DALAM") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 4 Dalam</option>
+                        <option value="42" @if (@Title.ToString() == "HALTE 4 LUAR") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 4 Luar</option>
+                        <option value="5" @if (@Title.ToString() == "HALTE 5") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 5</option>
+                        <option value="7" @if (@Title.ToString() == "HALTE 7") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 7</option>
+                        <option value="8" @if (@Title.ToString() == "HALTE 8") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 8</option>
+                        <option value="9" @if (@Title.ToString() == "HALTE 9") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 9</option>
+                        <option value="10" @if (@Title.ToString() == "HALTE 10") { @Html.Raw("selected")  } else { @Html.Raw("") }>Halte 10</option>
+                    </select>
+                    <script type="text/javascript">
+                       function redirect(dropDownValue) {
+                          window.location.href = '@Url.Action("rtjn_dashboard_output_produksi", "DTIDashboardList")/' + '?halte=' + dropDownValue;
+                       }
+                    </script>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            @if (@Title.ToString() == "HALTE 1_2_3")
+            {
+                @Html.Partial("Halte/_Halte123")
+            }
+            else if (@Title.ToString() == "HALTE 4 DALAM")
+            {
+                @Html.Partial("Halte/_Halte4Dalam")
+            }
+            else if (@Title.ToString() == "HALTE 4 LUAR")
+            {
+                @Html.Partial("Halte/_Halte4Luar")
+            }
+            else if (@Title.ToString() == "HALTE 5")
+            {
+                @Html.Partial("Halte/_Halte5")
+            }            
+            else if (@Title.ToString() == "HALTE 7")
+            {
+                @Html.Partial("Halte/_Halte7")
+            }
+            else if (@Title.ToString() == "HALTE 8")
+            {
+                @Html.Partial("Halte/_Halte8")
+            }
+            else if (@Title.ToString() == "HALTE 9")
+            {
+                @Html.Partial("Halte/_Halte9")
+            }
+            else
+            {
+                @Html.Partial("Halte/_Halte10")
+            }
+        </tr>
+    </table>
+
+    
+
+</body>
+</html>

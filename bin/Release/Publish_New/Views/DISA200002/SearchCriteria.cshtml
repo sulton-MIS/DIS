@@ -1,0 +1,154 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA200002Master;
+@{
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    //List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    List<MainBumoModel> MainBumo = (List<MainBumoModel>)ViewData["MAINBUMO"];
+    List<HokanModel> Hokan = (List<HokanModel>)ViewData["HOKAN"];
+}
+
+@Html.Partial("view_ManualBook")
+@Html.Partial("view_References")
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-5" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:-55px; left: 100px;  margin-left: 10px; text-align:right; border:0px solid">
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa fa-info-circle"></i> Application References</button>
+            <div class="dropdown-content">
+                <a id="openFileTest" href="#"> Document Test (PT & UAT) </a>
+                <a id="openFileTraining" href="#"> Document Training & Implementasi </a>
+                <a id="openFileEvaluasi" href="#"> Document Evaluasi </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:20px; left: 50px;  margin-left: 10px; text-align:right; border:0px solid">
+        <label class="control-label text-muted"><h7>[<a id="openBook" style="cursor: pointer">Manual Book</a>]</h7></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td> Jenis Material </td>
+                                    <td>
+                                        @*<input id="searchStatusAsset" type="text" class="form-control" />*@
+                                        <select id="searchJenisMat" name="dropdown" class="form-control">
+                                            <option id="searchJenisMat" value="" selected="selected"> </option>
+                                            <option id="searchJenisMat" value="ALL"> ALL </option>
+                                            <option id="searchJenisMat" value="1"> RAW-MATERIAL </option>
+                                            <option id="searchJenisMat" value="2"> WIP DAN FINISH GOOD </option>
+                                        </select>
+                                    </td>
+                                    <td>Nama Material (Name): </td>
+                                    <td>
+                                        <input id="searchName" type="text" class="form-control" />
+                                    </td>
+                                    <td>Item Code (Code): </td>
+                                    <td>
+                                        <input id="searchCode" type="text" class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Work Center (Mainbumo): </td>
+                                    <td>
+                                        <select id="searchMainbumo" required class="form-control">
+                                            <option value="" selected="selected"></option>
+
+                                            @{
+                                                if (MainBumo != null)
+                                                {
+                                                    if (MainBumo.Count() > 0)
+                                                    {
+                                                        foreach (MainBumoModel item in MainBumo)
+                                                        {
+                                                            <option value="@item.MAINBUMO">@item.MAINBUMO</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                        @*<input id="searchMainbumo" type="text" class="form-control" />*@
+                                    </td>
+                                    <td>Storage Work Center (Hokan): </td>
+                                    <td>
+                                        <select id="searchHokan" required class="form-control">
+                                            <option value="" selected="selected"></option>
+
+                                            @{
+                                                if (Hokan != null)
+                                                {
+                                                    if (Hokan.Count() > 0)
+                                                    {
+                                                        foreach (HokanModel item in Hokan)
+                                                        {
+                                                            <option value="@item.HOKAN">@item.HOKAN</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                        @*<input id="searchMainbumo" type="text" class="form-control" />*@
+                                    </td>
+                                    <td>Stok (Zaik): </td>
+                                    <td>
+                                        <select id="searchZaik" required class="form-control">
+                                            <option value=" "> </option>
+                                            <option value="0"> = 0 </option>
+                                            <option value="+"> > 0 </option>
+                                            <option value="-"> < 0</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row">
+                                <div style="margin-bottom: 10px"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-4">
+
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                                    <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                                    @*<button type="button" class="btn btn-success btn-xs" id="btn_print_label" style="width: 100px;" onclick=""><i class="fa fa-download"></i> Download </button>*@
+                                    <button type="button" onclick="clear_search()" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                                    <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                                    @*<a href="javascript:window.print()">Print</a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        @*<div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>*@
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

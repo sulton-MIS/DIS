@@ -1,0 +1,284 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR070001Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD USER </h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+            <span class="FlexText">WORKER FORM</span>
+        </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Initial User</label>
+                        <input id="addI_User" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Password</label>
+                        <input id="addC_Pwd" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Initial User Long</label>
+                        <input id="addI_User_Long" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Departement</label>
+                        @*<input id="addDept" required type="text" class="form-control" />*@
+                        <select id="addDept" name="dropdown" class="form-control">
+                            <option id="addDept" value="ACCOUNTING" selected="selected"> ACCOUNTING </option>
+                            <option id="addDept" value="ASSEMBLING" selected="selected"> ASSEMBLING </option>
+                            <option id="addDept" value="Bea Cukai" selected="selected"> Bea Cukai </option>
+                            <option id="addDept" value="CMS" selected="selected"> CMS </option>
+                            <option id="addDept" value="HRD & GA" selected="selected"> HRD & GA </option>
+                            <option id="addDept" value="HSE" selected="selected"> HSE </option>
+                            <option id="addDept" value="IT" selected="selected"> IT </option>
+                            <option id="addDept" value="JAPAN" selected="selected"> JAPAN </option>
+                            <option id="addDept" value="KONPO" selected="selected"> KONPO </option>
+                            <option id="addDept" value="MANAGEMENT" selected="selected"> MANAGEMENT </option>
+                            <option id="addDept" value="MARKETING" selected="selected"> MARKETING </option>
+                            <option id="addDept" value="ME" selected="selected"> ME </option>
+                            <option id="addDept" value="PE" selected="selected"> PE </option>
+                            <option id="addDept" value="PPIC" selected="selected"> PPIC </option>
+                            <option id="addDept" value="PRESS" selected="selected"> PRESS </option>
+                            <option id="addDept" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="addDept" value="PURCHASING" selected="selected"> PURCHASING </option>
+                            <option id="addDept" value="PURCHASING & EXIM" selected="selected"> PURCHASING & EXIM </option>
+                            <option id="addDept" value="QA" selected="selected"> QA </option>
+                            <option id="addDept" value="QC" selected="selected"> QC </option>
+                            <option id="addDept" value="R & D" selected="selected"> R & D </option>
+                            <option id="addDept" value="SUPERUSER" selected="selected"> SUPERUSER </option>
+                            <option id="addDept" value="WAREHOUSE" selected="selected"> WAREHOUSE </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Authority</label>
+                        @*<input id="addAuthority" required type="text" class="form-control" />*@
+                        <select id="addAuthority" name="dropdown" class="form-control">
+                            <option id="addAuthority" value="1" selected="selected"> 1 </option>
+                            <option id="addAuthority" value="2" selected="selected"> 2 </option>
+                            <option id="addAuthority" value="3" selected="selected"> 3 </option>
+                            <option id="addAuthority" value="4" selected="selected"> 4 </option>
+                            <option id="addAuthority" value="5" selected="selected"> 5 </option>
+                            <option id="addAuthority" value="6" selected="selected"> 6 </option>
+                            <option id="addAuthority" value="7" selected="selected"> 7 </option>
+                            <option id="addAuthority" value="10" selected="selected"> 10 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Email</label>
+                        <input id="addE_mail" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EmailSender</label>
+                        @*<input id="addEmailSender" required type="text" class="form-control" />*@
+                        <select id="addEmailSender" name="dropdown" class="form-control">
+                            <option id="addEmailSender" value="NULL" selected="selected"> NULL </option>
+                            <option id="addEmailSender" value="Bcc" selected="selected"> Bcc </option>
+                            <option id="addEmailSender" value="Cc" selected="selected"> Cc </option>
+                            <option id="addEmailSender" value="To" selected="selected"> To </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Section</label>
+                        <select id="addSection" name="dropdown" class="form-control">
+                            <option id="addSection" value="NULL" selected="selected"> NULL </option>
+                            <option id="addSection" value="ASSEMBLY" selected="selected"> ASSEMBLY </option>
+                            <option id="addSection" value="DEPT HEAD" selected="selected"> DEPT HEAD </option>
+                            <option id="addSection" value="DIRECTOR" selected="selected"> DIRECTOR </option>
+                            <option id="addSection" value="HR" selected="selected"> HR </option>
+                            <option id="addSection" value="HSE" selected="selected"> HSE </option>
+                            <option id="addSection" value="IT" selected="selected"> IT </option>
+                            <option id="addSection" value="PAYROLL" selected="selected"> PAYROLL </option>
+                            <option id="addSection" value="PRESDIR" selected="selected"> PRESDIR </option>
+                            <option id="addSection" value="TRIAL" selected="selected"> TRIAL </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">IdLevel</label>
+                        @*<input id="addIdLevel" required type="text" class="form-control" />*@
+                        <select id="addIdLevel" name="dropdown" class="form-control">
+                            <option id="addIdLevel" value="0" selected="selected"> 0 </option>
+                            <option id="addIdLevel" value="6" selected="selected"> 6 </option>
+                            <option id="addIdLevel" value="7" selected="selected"> 7 </option>
+                            <option id="addIdLevel" value="8" selected="selected"> 8 </option>
+                            <option id="addIdLevel" value="9" selected="selected"> 9 </option>
+                            <option id="addIdLevel" value="10" selected="selected"> 10 </option>
+                            <option id="addIdLevel" value="11" selected="selected"> 11 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>IdAccesable</label>
+                        @*<input id="addIdAccesable" required type="text" class="form-control" />*@
+                        <select id="addIdAccesable" name="dropdown" class="form-control">
+                            <option id="addIdAccesable" value="0" selected="selected">  </option>
+                            <option id="addIdAccesable" value="19" selected="selected"> 19 </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT  USER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Initial User</label>
+                        <input id="editI_User" required type="text" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Password</label>
+                        <input id="editC_Pwd" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Initial User Long</label>
+                        <input id="editI_User_Long" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Departement</label>
+                        @*<input id="addDept" required type="text" class="form-control" />*@
+                        <select id="editDept" name="dropdown" class="form-control">
+                            <option id="editDept" value="ACCOUNTING" selected="selected"> ACCOUNTING </option>
+                            <option id="editDept" value="ASSEMBLING" selected="selected"> ASSEMBLING </option>
+                            <option id="editDept" value="Bea Cukai" selected="selected"> Bea Cukai </option>
+                            <option id="editDept" value="CMS" selected="selected"> CMS </option>
+                            <option id="editDept" value="HRD & GA" selected="selected"> HRD & GA </option>
+                            <option id="editDept" value="HSE" selected="selected"> HSE </option>
+                            <option id="editDept" value="IT" selected="selected"> IT </option>
+                            <option id="editDept" value="JAPAN" selected="selected"> JAPAN </option>
+                            <option id="editDept" value="KONPO" selected="selected"> KONPO </option>
+                            <option id="editDept" value="MANAGEMENT" selected="selected"> MANAGEMENT </option>
+                            <option id="editDept" value="MARKETING" selected="selected"> MARKETING </option>
+                            <option id="editDept" value="ME" selected="selected"> ME </option>
+                            <option id="editDept" value="PE" selected="selected"> PE </option>
+                            <option id="editDept" value="PPIC" selected="selected"> PPIC </option>
+                            <option id="editDept" value="PRESS" selected="selected"> PRESS </option>
+                            <option id="editDept" value="PRINTING" selected="selected"> PRINTING </option>
+                            <option id="editDept" value="PURCHASING" selected="selected"> PURCHASING </option>
+                            <option id="editDept" value="PURCHASING & EXIM" selected="selected"> PURCHASING & EXIM </option>
+                            <option id="editDept" value="QA" selected="selected"> QA </option>
+                            <option id="editDept" value="QC" selected="selected"> QC </option>
+                            <option id="editDept" value="R & D" selected="selected"> R & D </option>
+                            <option id="editDept" value="SUPERUSER" selected="selected"> SUPERUSER </option>
+                            <option id="editDept" value="WAREHOUSE" selected="selected"> WAREHOUSE </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Authority</label>
+                        @*<input id="addAuthority" required type="text" class="form-control" />*@
+                        <select id="editAuthority" name="dropdown" class="form-control">
+                            <option id="editAuthority" value="1" selected="selected"> 1 </option>
+                            <option id="editAuthority" value="2" selected="selected"> 2 </option>
+                            <option id="editAuthority" value="3" selected="selected"> 3 </option>
+                            <option id="editAuthority" value="4" selected="selected"> 4 </option>
+                            <option id="editAuthority" value="5" selected="selected"> 5 </option>
+                            <option id="editAuthority" value="6" selected="selected"> 6 </option>
+                            <option id="editAuthority" value="7" selected="selected"> 7 </option>
+                            <option id="editAuthority" value="10" selected="selected"> 10 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Email</label>
+                        <input id="editE_mail" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">EmailSender</label>
+                        @*<input id="addEmailSender" required type="text" class="form-control" />*@
+                        <select id="editEmailSender" name="dropdown" class="form-control">
+                            <option id="editEmailSender" value="NULL" selected="selected"> NULL </option>
+                            <option id="editEmailSender" value="Bcc" selected="selected"> Bcc </option>
+                            <option id="editEmailSender" value="Cc" selected="selected"> Cc </option>
+                            <option id="editEmailSender" value="To" selected="selected"> To </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Section</label>
+                        <select id="editSection" name="dropdown" class="form-control">
+                            <option id="editSection" value="NULL" selected="selected"> NULL </option>
+                            <option id="editSection" value="ASSEMBLY" selected="selected"> ASSEMBLY </option>
+                            <option id="editSection" value="DEPT HEAD" selected="selected"> DEPT HEAD </option>
+                            <option id="editSection" value="DIRECTOR" selected="selected"> DIRECTOR </option>
+                            <option id="editSection" value="HR" selected="selected"> HR </option>
+                            <option id="editSection" value="HSE" selected="selected"> HSE </option>
+                            <option id="editSection" value="IT" selected="selected"> IT </option>
+                            <option id="editSection" value="PAYROLL" selected="selected"> PAYROLL </option>
+                            <option id="editSection" value="PRESDIR" selected="selected"> PRESDIR </option>
+                            <option id="editSection" value="TRIAL" selected="selected"> TRIAL </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">IdLevel</label>
+                        @*<input id="addIdLevel" required type="text" class="form-control" />*@
+                        <select id="editIdLevel" name="dropdown" class="form-control">
+                            <option id="editIdLevel" value="0" selected="selected"> 0 </option>
+                            <option id="editIdLevel" value="6" selected="selected"> 6 </option>
+                            <option id="editIdLevel" value="7" selected="selected"> 7 </option>
+                            <option id="editIdLevel" value="8" selected="selected"> 8 </option>
+                            <option id="editIdLevel" value="9" selected="selected"> 9 </option>
+                            <option id="editIdLevel" value="10" selected="selected"> 10 </option>
+                            <option id="editIdLevel" value="11" selected="selected"> 11 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>IdAccesable</label>
+                        @*<input id="addIdAccesable" required type="text" class="form-control" />*@
+                        <select id="editIdAccesable" name="dropdown" class="form-control">
+                            <option id="editIdAccesable" value="0" selected="selected">  </option>
+                            <option id="editIdAccesable" value="19" selected="selected"> 19 </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

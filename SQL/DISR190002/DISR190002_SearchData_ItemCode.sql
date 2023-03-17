@@ -1,0 +1,28 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50)= @START;
+DECLARE @@DISPLAY VARCHAR(50)= @DISPLAY;
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY CODE ASC) ROW_NUM,
+	    CODE as ID,
+		*
+	FROM 
+		dbo.XPRTS 	
+	WHERE 1=1	
+';
+IF(@CODE <> '')
+    BEGIN
+        SET @@QUERY = @@QUERY + 'AND KCODE LIKE ''' + RTRIM(@CODE) + '%'' ';
+	END
+
+SET @@QUERY = @@QUERY + ') as TB
+';
+IF(@@START > 0
+   AND @@DISPLAY > 0)
+    BEGIN
+        SET @@QUERY = @@QUERY + ' WHERE ROW_NUM BETWEEN ' + @@START + ' AND ''' + @@DISPLAY + ''' ';
+END;
+EXEC (@@QUERY);

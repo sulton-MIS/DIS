@@ -1,0 +1,144 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03001Master;
+@using System.Net;
+
+@{
+    List<WP03001Master> DataWP = (List<WP03001Master>)ViewData["DataWP03001"];
+    List<WP03001> Status_Cmb = (List<WP03001>)ViewData["Status_Cmb"];
+    List<WP03001> Time_Cmb = (List<WP03001>)ViewData["Time_Cmb"];
+    List<WP03001> ExecTime_Cmb = (List<WP03001>)ViewData["Time_Cmb"];
+    List<WP03001> Model_type = (List<WP03001>)ViewData["Model_type"];
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100.15%; border-right:17px solid #fff; position:sticky; top:0;">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center; " class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 60px;" rowspan="2">No</th>
+                            <th style="width: 150px;" rowspan="2">Category</th>
+                            <th style="width: 350px;" rowspan="2">Question</th>
+                            <th style="width: 150px;" rowspan="2">Answer Choice A</th>
+                            <th style="width: 150px;" rowspan="2">Answer Choice B</th>
+                            <th style="width: 150px;" rowspan="2">Answer Choice C</th>
+                            <th style="width: 150px;" rowspan="2">Answer Choice D</th>
+                            <th style="width: 150px;" rowspan="2">Answer Choice E</th>
+                            <th style="width: 150px;" rowspan="2">Answer Key</th>
+                            <th style="width: 350px;" rowspan="2">Image</th>
+                            <th style="width: 300px;" colspan="2">Created</th>
+                            <th style="width: 300px;" colspan="2">Changed</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (WP03001Master item in DataWP)
+                                    {
+                                        <tr id="row-@number" class="row-@item.ROW_NUM">
+                                            <td style="width: 40px;text-align: center;" class="grid-checkbox-col">
+                                                <input class="grid-checkbox" value="@item.ID"
+                                                       data-edit_id="@item.ID" data-edit_category="@item.CATEGORY_ID" data-edit_question="@item.QUESTION" data-edit_answer_a="@item.ANSWER_CHOICE_A" data-edit_answer_b="@item.ANSWER_CHOICE_B" data-edit_answer_c="@item.ANSWER_CHOICE_C" data-edit_answer_d="@item.ANSWER_CHOICE_D" data-edit_answer_e="@item.ANSWER_CHOICE_E" data-edit_answer_key="@item.ANSWER_KEY" data-edit_image="@item.IMAGE" data-edit_is_deleted="@item.IS_DELETED"
+                                                       type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                            </td>
+                                            <td style="width: 60px; text-align: right;">
+                                                @item.ROW_NUM
+                                            </td>
+
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.CATEGORY) </td>
+                                            <td style="width: 350px; word-break: break-all;"> @Html.Raw(@item.QUESTION) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_CHOICE_A) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_CHOICE_B) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_CHOICE_C) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_CHOICE_D) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_CHOICE_E) </td>
+                                            <td style="width: 150px; word-break: break-all;"> @Html.Raw(@item.ANSWER_KEY) </td>
+                                            <td style="width: 350px"> <a class="btn btn-primary btn-xs" target="_blank" href="@item.IMAGE">Image</a></td>
+                                            <td style="width: 150px;"> @item.CREATED_BY </td>
+                                            <td style="width: 150px;"> @item.CREATED_DT.ToString("dd-MMM-yyy hh:mm:ss") </td>
+                                            <td style="width: 150px;"> @item.UPDATED_BY </td>
+                                            <td style="width: 150px;"> @item.UPDATED_DT.ToString("dd-MMM-yyy hh:mm:ss") </td>
+                                        </tr>
+                                        number++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="NoDataFound">
+                                        <td colspan="8" width="90%" class="text-center">No data found</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="NoDataFound">
+                                    <td colspan="8" width="90%" class="text-center">No data found</td>
+                                </tr>
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

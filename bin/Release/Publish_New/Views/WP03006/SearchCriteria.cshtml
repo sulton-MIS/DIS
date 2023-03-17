@@ -1,0 +1,79 @@
+﻿<style>
+
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row" style="margin-top: -13px; margin-left: -13px; margin-right: 10px">
+    <div class="col-xs-12 col-sm-12 col-md-11">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+
+                    <div class="row" style="margin-bottom: -10px;margin-top: -10px">
+                        <div class="col">
+                            <table id="tableSearch">
+                                <tr>
+                                    <td>Registration No. : </td>
+                                    <td>
+                                        <input type="text" maxlength="20" id="searchRegNo" class="form-control" placeholder="">
+                                    </td>
+                                    <td>Identity Type: </td>
+                                    <td>
+                                        <select class="form-control" id="searchIdentityType">
+                                            <option value="">- All -</option>
+                                            <option value="KTP">KTP</option>
+                                            <option value="SIM">SIM</option>
+                                        </select>
+                                    </td>
+                                    <td>Identity No. : </td>
+                                    <td>
+                                        <input type="text" maxlength="20" id="searchIdentityNo" class="form-control" placeholder="">
+                                    </td>
+                                    <td>Username : </td>
+                                    <td>
+                                        <input type="text" maxlength="20" id="searchUserName" class="form-control" placeholder="">
+                                    </td>
+                                    <td>Email : </td>
+                                    <td>
+                                        <input type="text" maxlength="20" id="searchEmail" class="form-control" placeholder="">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <br />
+                    <div class="row">
+                        <div style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-4"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_search" style="width: 80px;" onclick="OnSearch(1)"><i class="fa fa-search"></i> Search</button>
+                            <button type="button" class="btn btn-grey btn-xs" id="btn_clear" style="width: 80px;" onclick="clear_search()"><i class="fa fa-eraser"></i> Clear</button>
+
+                            <div class="dropdown" style="float:right; padding-left: 4px">
+                                <button class="btn btn-yellow btn-xs dropdown-toggle" style="width: 80px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                                <div class="dropdown-content" style="text-align:left;">
+                                    <a class="dropdown-item" href="#" onclick="printPDF()">Printout PDF</a>
+                                    <a class="dropdown-item" href="#" onclick="printEXCEL()">Printout EXCEL</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

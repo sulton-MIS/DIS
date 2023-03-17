@@ -1,0 +1,29 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50) = @START;
+DECLARE @@DISPLAY VARCHAR(50) = @DISPLAY;
+
+
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY a.ID ASC) ROW_NUM, ID,
+	Project_CD, Location, Pekerjaan AS JOBS, HighLevel, MediumLevel, LowLevel, convert(varchar(10),Tanggal_Pekerjaan) AS DATE, remarks, CREATE_BY, CREATE_DT, UPDATE_BY, UPDATE_DT, Category
+	FROM dbo.TB_R_WP_DETAIL as a
+	WHERE 1 = 1 
+';
+
+IF(@PROJECT_CODE <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND Project_CD LIKE ''%'+@PROJECT_CODE+'%'' ';
+	END
+
+SET @@QUERY = @@QUERY +') as TB';
+
+IF(@@START > 0 AND @@DISPLAY > 0)
+BEGIN	
+	SET @@QUERY = @@QUERY +' WHERE ROW_NUM BETWEEN '+@@START+' AND '''+@@DISPLAY+''' ';
+END
+
+EXEC(@@QUERY)

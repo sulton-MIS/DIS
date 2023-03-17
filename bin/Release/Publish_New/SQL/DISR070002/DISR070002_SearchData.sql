@@ -1,0 +1,33 @@
+﻿DECLARE @@QUERY VARCHAR(MAX);
+DECLARE @@START VARCHAR(50) = @START;
+DECLARE @@DISPLAY VARCHAR(50) = @DISPLAY;
+
+SET @@QUERY = '';
+SET @@QUERY = 'SELECT 
+	*
+ FROM 
+(
+	SELECT ROW_NUMBER() OVER (ORDER BY id_ng ASC) ROW_NUM,
+	id_ng as ID, 
+	*
+	FROM Z_RT_master_NG		
+	WHERE 1=1	
+';
+
+IF(@ID_NG <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND id_ng LIKE ''%'+RTRIM(@ID_NG)+'%'' ';
+	END
+IF(@NAME_NG <> '')
+	BEGIN
+		SET @@QUERY = @@QUERY + 'AND name_ng LIKE ''%'+RTRIM(@NAME_NG)+'%'' ';
+	END
+
+SET @@QUERY = @@QUERY +') as TB';
+
+IF(@@START > 0 AND @@DISPLAY > 0)
+BEGIN	
+	SET @@QUERY = @@QUERY +' WHERE ROW_NUM BETWEEN '+@@START+' AND '''+@@DISPLAY+''' ';
+END
+
+EXEC(@@QUERY)

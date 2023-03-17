@@ -1,0 +1,113 @@
+﻿<div class="modal fade" id="modalContractor" tabindex="-1" role="dialog" aria-labelledby="modalContractorTittle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalContractorTittle">Data Kontraktor</h5>
+                <button style="margin-top:-30px" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="" id="foto-contractor" style="width:100%; height: 200px" />
+                        </div>
+
+                        <div class="col-md-9" style="padding:0">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>REG NO</label>
+                                    <input id="viewRegNo" readonly type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>COMPANY</label>
+                                    <input id="viewCompany" readonly type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>ANZEN SERTIFICATE NO</label>
+                                    <input id="viewSertificateNo" readonly type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>VALID DARI</label>
+                                    <input id="viewValidDari" readonly type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>VALID SAMPAI</label>
+                                    <input id="viewValidSampai" readonly type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>SAFETY INDUCTION NO</label>
+                                    <input id="viewNoSafetyInduction" readonly type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>VALID DARI</label>
+                                    <input id="viewSValidDari" readonly type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>VALID SAMPAI</label>
+                                    <input id="viewSValidSampai" readonly type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>TIPE IDENTITAS</label>
+                            <input id="viewTipeIdentitas" readonly type="text" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>NO IDENTITAS</label>
+                            <input id="viewNoIdentitas" readonly type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>FIRST NAME</label>
+                            <input id="viewFirstName" readonly type="text" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>LAST NAME</label>
+                            <input id="viewLastName" readonly type="text" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>EMAIL</label>
+                            <input id="viewEmail" readonly type="text" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>PHONE</label>
+                            <input id="viewPhone" readonly type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>ALAMAT</label>
+                            <textarea style="resize:none" id="viewAlamat" readonly type="text" class="form-control"></textarea>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>JENIS KELAMIN</label>
+                            <input id="viewGender" readonly type="text" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>PIC STATUS</label>
+                            <input id="viewPicStatus" readonly type="text" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+        </div>
+    </div>
+</div>

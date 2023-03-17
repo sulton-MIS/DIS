@@ -1,0 +1,181 @@
+﻿<!-- bootstrap & fontawesome -->
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap.css")" />
+
+
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/chosen.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/tdk.css")" />
+<!-- text fonts -->
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace-fonts.css")" />
+
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-datetimepicker.css")" />
+
+<link href="~/Content/Datatable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<link href="~/Content/UI/select2.min.css" rel="stylesheet" />
+
+
+
+<!-- CSS -->
+<style type="text/css">
+    ::-webkit-scrollbar {
+        width: 0.8em;
+        height: 0.8em
+    }
+
+    ::-webkit-scrollbar-button {
+        background: white
+    }
+
+    ::-webkit-scrollbar-track-piece {
+        background: white;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(200,200,200,1);
+    }
+
+    .FlexLine {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #000;
+        line-height: 0.1em;
+        margin: 10px 0 20px;
+    }
+
+    .FlexText {
+        background: #fff;
+        padding: 0 10px;
+    }
+
+    /* some elements used in demo only */
+    .spinner-preview {
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        margin-top: 60px;
+    }
+
+    .dropdown-preview {
+        margin: 0 5px;
+        display: inline-block;
+    }
+
+        .dropdown-preview > .dropdown-menu {
+            display: block;
+            position: static;
+            margin-bottom: 5px;
+        }
+
+    #clock {
+        color: White;
+        padding: 0 10px;
+    }
+
+    .select2-search:after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-family: LeagueSpartan;
+        font-size: 20px;
+        line-height: 1;
+        vertical-align: bottom;
+    }
+
+    .bg-danger {
+        background-color: #f2dede !important;
+    }
+
+    .bg-success {
+        background-color: #dff0d8 !important;
+    }
+
+    .bg-warning {
+        background-color: #fcf8e3 !important;
+    }
+
+    .logo-title {
+        width: 22px;
+    }
+
+    .li-logout {
+        background-color: #2D3E5C;
+    }
+
+    .user-info {
+        line-height: 16px !important;
+    }
+
+    .ace-nav .nav-user-photo {
+        max-width: 35px !important;
+    }
+
+    /* change header navbar default background color */
+    .no-skin .navbar {
+        //background: #393939 none repeat scroll 0 0;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#606c88+0,3f4c6b+100;Grey+3D+%232 */
+        background: #606c88; /* Old browsers */
+        background: -moz-linear-gradient(top, #606c88 0%, #3f4c6b 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #606c88 0%,#3f4c6b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#3f4c6b',GradientType=0 ); /* IE6-9 */
+        box-shadow: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .dataTable > thead > tr > th[class*=sort]:after {
+        float: none !important;
+        margin-left: 5px;
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    @@media (min-width: 992px) {
+        .modal-xl {
+            width: 95%;
+        }
+    }
+
+    /* change free space on the left header navbar */
+    #navbar-container {
+        padding-left: 0;
+    }
+
+    .navbar-brand {
+        padding-left: 8px;
+    }
+
+    /* change padding for page content */
+    .page-content {
+        padding: 8px 8px 0 !important;
+    }
+</style>
+
+@Html.Toyota().Initialize()
+
+<!-- ace styles -->
+<link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace.css")" class="ace-main-stylesheet" id="main-ace-style" />
+<link type="text/css" rel="stylesheet" id="ace-skins-stylesheet" href="/Content/Bootstrap/css/ace-skins.css">
+<!--[if lte IE 9]>
+    <link rel="stylesheet" href="/Content/Bootstrap/css/ace-part2.css" class="ace-main-stylesheet" />
+<![endif]-->
+<!--[if lte IE 9]>
+  <link rel="stylesheet" href="/Content/Bootstrap/css/ace-ie.css" />
+<![endif]-->
+<!-- ace settings handler -->
+<script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/ace-extra.js")"></script>
+
+<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+<!--[if !IE]> -->
+<!--[if lte IE 8]-->
+<script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/html5shiv.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/respond.js")"></script>
+<!--[endif]-->
+<!-- basic scripts -->
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/Content/Bootstrap/js/jquery.js'>" + "<" + "/script>");
+    if ('ontouchstart' in document.documentElement) document.write("<script src='/Content/Bootstrap/js/jquery.mobile.custom.js'>" + "<" + "/script>");
+</script>

@@ -1,0 +1,126 @@
+﻿
+@using AI070.Models;
+@{
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add new System Master</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">System ID</label>
+                        <input type="text" maxlength="50" id="addSystemId" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">System Type</label>
+                        <input type="text" maxlength="20" id="addSystemType" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>System Value Date</label>
+                        <input type="text" id="addSystemValueDt" class="form-control datepicker" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">System CD</label>
+                        <input type="text" maxlength="20" id="addSystemCD" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>System Valid FROM</label>
+                        <input type="text" id="addSystemValidFR" class="form-control datepicker" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>System Valid TO</label>
+                        <input type="text" id="addSystemValidTO" class="form-control datepicker" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">System Value Text</label>
+                        <input type="text"  maxlength="50" id="addSystemValueTxt" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>System Value Number</label>
+                        <input type="number" id="addSystemValueNum" class="form-control" placeholder="">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit System Master</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">System ID</label>
+                        <input type="text" maxlength="50" id="editSystemId" class="form-control" placeholder="">
+                        <input id="EditID" type="text" style="display:none" />
+                        <input id="EditType" type="text" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">System Type</label>
+                        <input type="text" maxlength="20" id="editSystemType" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>System Value Date</label>
+                        <input type="text" id="editSystemValueDt" class="form-control datepicker" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">System CD</label>
+                        <input type="text" maxlength="20" id="editSystemCD" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>System Valid FROM</label>
+                        <input type="text" id="editSystemValidFR" class="form-control datepicker" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>System Valid TO</label>
+                        <input type="text" id="editSystemValidTO" class="form-control datepicker" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">System Value Text</label>
+                        <input type="text" maxlength="50" id="editSystemValueTxt" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-6">
+                        <label>System Value Number</label>
+                        <input type="number" id="editSystemValueNum" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

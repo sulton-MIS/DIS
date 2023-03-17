@@ -1,0 +1,74 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA150001Master;
+@{
+//List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+//List<StatusModel> Status = (List<StatusModel>)ViewData["Status"];
+//List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+}
+
+<style>
+    #tableSearch {
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+</style>
+
+<div class="row">
+    @*<div class="col align-right align-bottom">
+        <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back_menu()"><i class="fa fa-close"></i></button>
+    </div>*@
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-left: 20px;">
+        <label class="control-label text-muted"><h2>Master Type Customer</h2></label>
+    </div>
+</div>
+
+<div class="row">   
+    <div class="col-xs-12 col-sm-12 col-md-12">        
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form" class="form-horizontal" id="searchForm">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px">
+                        <div class="col-md-12">
+                            <table id="tableSearch" style="width:100%">
+                                <tr>
+                                    <td>DMC TYPE :</td>
+                                    <td>
+                                        <input id="searchDmcType" type="text" class="form-control" />
+                                    </td>
+                                    <td>CUSTOMER :</td>
+                                    <td>
+                                        <input id="searchCustomer" type="text" class="form-control" />
+                                    </td>
+                                    <td>LOT SIZE : </td>
+                                    <td>
+                                        <input id="searchLotSize" type="text" class="form-control" />
+                                    </td>
+
+                                    <td style="text-align:right;padding:0!important">
+                                        <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                                        <button type="button" class="btn btn-primary btn-xs" id="btn_search_typeCust" style="width: 80px;"><i class="fa fa-search"></i> Search</button>
+                                        <button type="button" onclick="clear_search_typeCust()" class="btn btn-grey btn-xs" style="width: 80px;"><i class="fa fa-eraser"></i> Clear</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="hr hr-10" style="margin-bottom: 10px"></div>
+                        <div class="col-xs-12 col-sm-12 col-md-7">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-5 text-right">
+                            <img id="_reloading" src="Content/Bootstrap/img/loading.gif" alt="Please Wait" style="width: 30px; height: 30px; margin-right: 4px; opacity: 0;" />
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_new" style="width: 80px;" onclick=""><i class="fa fa-plus"></i> New</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="btn_edit" style="width: 80px;" onclick=""><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" id="btn_Delete" style="width: 80px;" onclick=""><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>

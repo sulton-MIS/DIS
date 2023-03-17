@@ -1,0 +1,1349 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "WP02007") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+
+        $(".rateyo").rateYo({
+            rating: 3.0
+        });
+
+        $('.select2').select2({ width: '100%' });
+        $('.datepicker').datepicker({
+            format: 'dd M yyyy'
+        });
+
+        $.ajax({
+            url: NEW_SITE_URL + "Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP020") {
+                        $('#modal-submit-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+
+        $('#WP02007_DDL_ADD_REPORTED_BY').val($('#UserIDLogin').val());
+        $('#WP02007_DDL_EDIT_REPORTED_BY').val($('#UserIDLogin').val());
+        console.log($('#WP02007_DDL_ADD_REPORTED_BY').val());
+    });
+
+    $('#searchStatus').on('click', function () {
+
+    });
+
+    $('.btnEditProject').on('click', function () {
+        var data = this.data('title');
+        alert(data);
+    });
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    function searchByKTP(data) {
+        $.ajax({
+            url: SITE_URL + 'SearchByKTP',
+            method: 'POST',
+            data: {
+                NO_KTP: data,
+                NO_IMPB: $('#IMPBNO').val()
+            },
+            success: function (e) {
+                $('#WP02007_TXT_ADD_PII')
+                $('#WP02007_TXT_ADD_COMPANY')
+                $('#WP02007_TXT_ADD_AREA')
+                $('#WP02007_TXT_ADD_LOCATION')
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+    //tombol Add New
+    function addNew() {
+        var project_code = $('#addProjectCode').val();
+        var project_name = $('#addProjectName').val();
+        var date = $('#addDate').val();
+        var time = $('#addTime').val();
+        var location = $('#addLocation').val();
+        var division = $('#addDivision').val();
+        var executor = $('#addExecutor').val();
+        var contractor = $('#addContractorName').val();
+        var leaderName = $('#addLeaderName').val();
+        var superVisor = $('#addSupervisorName').val();
+        var status = $('#addStatus').val();
+
+        if (project_code == null || project_code == '') {
+            toastr.warning('Project Code Cannot Be Empty');
+            return;
+        }
+
+        if (project_name == null || project_name == '') {
+            toastr.warning('Project Name Cannot Be Empty');
+            return;
+        }
+
+        if (location == null || location == '') {
+            toastr.warning('Location Cannot Be Empty');
+            return;
+        }
+
+        if (date == null || date == '') {
+            toastr.warning('Date Cannot Be Empty');
+            return;
+        }
+
+        if (division == null || division == '') {
+            toastr.warning('Division Cannot Be Empty');
+            return;
+        }
+
+        if (executor == null || executor == '') {
+            toastr.warning('Executor Cannot Be Empty');
+            return;
+        }
+
+        if (contractor == null || contractor == '') {
+            toastr.warning('Contractor Cannot Be Empty');
+            return;
+        }
+
+        if (leaderName == null || leaderName == '') {
+            toastr.warning('Leader Cannot Be Empty');
+            return;
+        }
+
+        if (superVisor == null || superVisor == '') {
+            toastr.warning('Supervisor Cannot Be Empty');
+            return;
+        }
+
+        if (status == null || status == '') {
+            toastr.warning('Status Cannot Be Empty');
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'ADD_NEW',
+            async: false,
+            data: {
+                PROJECT_CODE: project_code,
+                PROJECT_NAME: project_name,
+                LOCATION: location,
+                DATE: date,
+                TIME: time,
+                DIVISION: division,
+                EXECUTOR: executor,
+                CONTRACTOR: contractor,
+                LEADER_NAME: leaderName,
+                SUPERVISOR_NAME: superVisor,
+                STATUS: status
+            },
+            success: function (res) {
+                if (res.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                    searchData();
+                    $('#btncloselookup').click();
+                } else {
+                    toastr.warning(res.Exec[0].LINE_STS);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#EditID');
+        var project_code = $('#EditProjectCode');
+        var project_name = $('#EditProjectName');
+        var location = $('#EditLocation');
+        var date = $('#EditDate');
+        var time = $('#EditTime');
+        var division = $('#EditDivision');
+        var executor = $('#EditExecutor');
+        var contractor_name = $('#EditContractorName');
+        var leader_name = $('#EditLeaderName');
+        var supervisor = $('#EditSupervisorName');
+        var status = $('#EditStatus');
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+        ID.val(Send_Var[0]);
+        project_code.val(Send_Var[1]);
+        project_name.val(Send_Var[2]);
+        location.val(Send_Var[3]);
+        date.val(Send_Var[4]);
+        time.val(Send_Var[5]);
+        division.val(Send_Var[6]);
+        executor.val(Send_Var[7]);
+        contractor_name.val(Send_Var[8]);
+        leader_name.val(Send_Var[9]);
+        supervisor.val(Send_Var[10]);
+        status.val(Send_Var[11]);
+
+        $('#edit_data').show();
+        $('.row-' + Send_Var[0]).hide();
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+                var project_code = $('#EditProjectCode').val();
+                var project_name = $('#EditProjectName').val();
+                var location = $('#EditLocation').val();
+                var date = $('#EditDate').val();
+                var time = $('#EditTime').val();
+                var division = $('#EditDivision').val();
+                var executor = $('#EditExecutor').val();
+                var contractor_name = $('#EditContractorName').val();
+                var leader_name = $('#EditLeaderName').val();
+                var supervisor = $('#EditSupervisorName').val();
+                var status = $('#EditStatus').val();
+                var Send_Var = ID + "," + project_code + "," + project_name + "," + location + "," + date + "," + time + "," + division + "," + executor + "," + contractor_name + "," + leader_name + "," + supervisor + "," + status;
+
+                if (project_code == null || project_code == '') {
+                    toastr.warning('Project Code Cannot Be Empty');
+                    return;
+                }
+
+                if (project_name == null || project_name == '') {
+                    toastr.warning('Project Name Cannot Be Empty');
+                    return;
+                }
+
+                if (location == null || location == '') {
+                    toastr.warning('Location Cannot Be Empty');
+                    return;
+                }
+
+                if (division == null || division == '') {
+                    toastr.warning('Division Cannot Be Empty');
+                    return;
+                }
+
+                if (executor == null || executor == '') {
+                    toastr.warning('Executor Cannot Be Empty');
+                    return;
+                }
+
+                if (status == null || status == '') {
+                    toastr.warning('Status Cannot Be Empty');
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: 'WP02001/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP02001/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchIMPB').val("");
+        $('#searchProjectName').val("");
+        $('#searchLocation').val("");
+        $('#searchDate').val("");
+        $('#searchDateTo').val("");
+        $('#searchDivision').val("");
+        $('#tableBody').html("");
+        $('#searchCompany').val("");
+        $('#searchCode').val("");
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var project_name = $('#searchProjectName').val();
+        var project_location = $('#searchLocation').val();
+        var project_date = $('#searchDate').val();
+        var project_dateTo = $('#searchDateTo').val();
+        var division = $('#searchDivision').val();
+        //var incident_title = $('#searchTitle').val();
+        var project_code = $('#searchCode').val();
+        var company = $('#searchCompany').val();
+
+        if (status == 'Other') {
+            status = $('#otherStatus').val();
+        }
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                DATA_ID: $("#data_nm").val(),
+                EXECUTION_TIME: $("#exec_time_cd").val(),
+                TIME_UNIT_CRITERIA: $("#time_unit_cd").val(),
+                STATUS_ACTIVE: $("#sts_cd").val(),
+                PROJECT_NAME: project_name,
+                PROJECT_LOCATION: project_location,
+                PROJECT_DATE: project_date,
+                PROJECT_DATETO: project_dateTo,
+                DIVISION: division,
+                PROJECT_CODE: project_code,
+                WP_IMPB_NO: $('#searchIMPB').val(),
+                COMPANY: company
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+
+                //// time unit
+                //var time_unit_val = Var.split(',')[6].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_unit_val).prop('disabled', true);
+
+                //// time value
+                //var time_value_val = Var.split(',')[7].replace(/^\s+|\s+$/g, '');
+                //$('#' + time_value_val).prop('disabled', true);
+                //$('#' + time_value_val).attr('placeholder', Var.split(',')[2].replace(/^\s+|\s+$/g, ''));
+
+                //// exec time
+                //var exec_time_val = Var.split(',')[8].replace(/^\s+|\s+$/g, '');
+                //$('#' + exec_time_val).prop('disabled', true);
+
+                //// status
+                //var status_val = Var.split(',')[9].replace(/^\s+|\s+$/g, '');
+                //$('#' + status_val).prop('disabled', true);
+
+
+                // tombol save edit
+                //var save_edit = Var.split(',')[11].replace(/^\s+|\s+$/g, '');
+
+                //// tombol cancel edit
+                //var cancel_edit = Var.split(',')[12].replace(/^\s+|\s+$/g, '');
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+   
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    function showDetail(element) {
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#rowData-' + data).val());
+
+        //console.log(Obj);
+        Binding.Screen();
+        Binding.DataProject(Obj);
+    }
+
+    function cancelAdd() {
+        $('#GridProject').show();
+        $('#inputForm').hide();
+        $('#tambah_data').hide();
+        $('#formData').show();
+        $('#formPage').show();
+        $('#formSearch').show();
+    }
+
+    var Binding = {
+        Screen: function () {
+            $('.submitbtn').show();
+            $('.actionbtn').removeAttr("disabled");
+            $('.input-project').removeAttr("disabled");
+            $('#inputForm').show();
+            $('#formData').hide();
+            $('#formPage').hide();
+            $('#formSearch').hide();
+            $('#GridProject').hide();
+            document.getElementById("WP02007_ADD_EVIDENCE").value = null;
+            document.getElementById("WP02007_EDIT_EVIDENCE").value = null;
+            $('#LinkPhoto').html('');
+            $('#LinkDoc').html('');
+        },
+        DataProject: function (Obj) {
+            $('#PROJECTCODE').val(Obj.PROJECT_CODE);
+            $('#PROJECTNAME').val(Obj.PROJECT_NAME);
+            $('#JOBNAME').val(Obj.JOB_NAME);
+            $('#IMPBNO').val(Obj.WP_IMPB_NO);
+            $('#LEADER_NAME').val(Obj.LEADER_NAME);
+            $('#SUPERVISOR_NAME').val(Obj.SUPERVISOR_NAME);
+            $('#JOB_COMPANY').val(Obj.ID_TB_M_COMPANY).trigger("change");
+            $('#WP_PROJECT_JOB_ID').val(Obj.ID);
+            $('#WP_PROJECT_ID').val(Obj.WP_PROJECT_ID);
+            $('#JOB_AREA').val(Obj.ID_TB_M_AREA).trigger("change"); 
+            $('#WP02007_DDL_EDIT_AREA').val(Obj.ID_TB_M_AREA).trigger("change");
+            $('#WP02007_DDL_ADD_AREA').val(Obj.ID_TB_M_AREA).trigger("change");
+
+            BindDataIncident(Obj.ID);
+            BindDataItemCheck(Obj.ID);
+            BindDataListPIC(Obj.ID);
+
+            $("#WP02007_DDL_ADD_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_ADD_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+            $("#WP02007_DDL_EDIT_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_EDIT_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+
+            $("#WP02007_DDL_ADD_INCIDENT_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_ADD_INCIDENT_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+            $("#WP02007_DDL_EDIT_INCIDENT_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_EDIT_INCIDENT_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+
+            $("#WP02007_DDL_ADD_REPORTED_BY option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_ADD_REPORTED_BY option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+            $("#WP02007_DDL_EDIT_REPORTED_BY option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+            $("#WP02007_DDL_EDIT_REPORTED_BY option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+        }
+    }
+
+    function BindDataIncident(ProjectId) {
+        $('#WP02007_TBL_LIST_INCIDENT').html('');
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'getListIncident',
+            async: false,
+            data: { WP_PROJECT_JOB_ID: ProjectId },
+            success: function (res) {
+                console.log(res);
+                if (res.sts == "TRUE") {
+                    for (var i = 0; i < res.list.length; i++) {
+                        var DataIncident = {
+                            WP_PROJECT_JOB_ID: res.list[i].WP_PROJECT_JOB_ID,
+                            INCIDENT_TITLE: res.list[i].INCIDENT_TITLE,
+                            ID_TB_M_EMPLOYEE: res.list[i].ID_TB_M_EMPLOYEE,
+                            ID_TB_M_COMPANY: res.list[i].ID_TB_M_COMPANY,
+                            ID_TB_M_AREA: res.list[i].ID_TB_M_AREA,
+                            INCIDENT_DATE: res.list[i].INCIDENT_DATE,
+                            INCIDENT_LEVEL: res.list[i].INCIDENT_LEVEL,
+                            USER_REPORT: res.list[i].USER_REPORT,
+                            ACTION: res.list[i].ACTION,
+                            ATTACHMENT: res.list[i].ATTACHMENT,
+                            ID: res.list[i].ID
+                        }
+
+                        tableBuilderINCIDENT(res.list[i].INCIDENT_TITLE, res.list[i].PIC_NAME, res.list[i].AREA_NAME,
+                            formatDate(new Date(res.list[i].INCIDENT_DATE)), res.list[i].INCIDENT_LEVEL, res.list[i].ATTACHMENT
+                            , res.list[i].REPORTER_NAME, res.list[i].ACTION, res.list[i].ID, DataIncident );
+                    }
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function BindDataItemCheck(ProjectId) {
+        $('#WP02007_TBL_LIST_ITEMCHECK').html('');
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'getListItemCheck',
+            async: false,
+            data: { WP_PROJECT_JOB_ID: ProjectId },
+            success: function (res) {
+                
+                if (res.sts == "TRUE") {
+                    for (var i = 0; i < res.list.length; i++) {
+                        LoadtableITEMCHECK(res.list[i].ID_TB_M_EMPLOYEE, res.list[i].PIC_NAME, res.list[i].ITEM_NAME,
+                            res.list[i].ITEM_DESCRIPTION, res.list[i].ITEM_STATUS, res.list[i].ID);
+                    }
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function BindDataListPIC(ProjectId) {
+        $('#WP02007_DDL_ADD_INCIDENT_PIC').html('');
+        $('#WP02007_DDL_EDIT_INCIDENT_PIC').html('');
+        $('#WP02007_DDL_ADD_PIC').html('');
+        $('#WP02007_DDL_EDIT_PIC').html('');
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'getListEmployee',
+            async: false,
+            data: { WP_PROJECT_JOB_ID: ProjectId },
+            success: function (res) {
+
+                if (res.sts == "TRUE") {
+
+                    var strappnd = "";
+                    for (var i = 0; i < res.list.length; i++) {
+                        strappnd += "<option value='" + res.list[i].ID_TB_M_EMPLOYEE + "' code='" + res.list[i].ID_TB_M_COMPANY + "'>" + res.list[i].NAME + "</option>";
+                    }
+
+                    $('#WP02007_DDL_ADD_INCIDENT_PIC').append(strappnd);
+                    $('#WP02007_DDL_EDIT_INCIDENT_PIC').append(strappnd);
+                    $('#WP02007_DDL_ADD_PIC').append(strappnd);
+                    $('#WP02007_DDL_EDIT_PIC').append(strappnd);
+
+                    $('#WP02007_DDL_ADD_INCIDENT_PIC').select2({ width: '100%' });
+                    $('#WP02007_DDL_EDIT_INCIDENT_PIC').select2({ width: '100%' });
+                    $('#WP02007_DDL_ADD_PIC').select2({ width: '100%' });
+                    $('#WP02007_DDL_EDIT_PIC').select2({ width: '100%' });
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function SubmitTrx() {
+        var SupportPhoto = document.getElementById("SupportPhoto");
+        var SupportDoc = document.getElementById("SupportDoc");
+
+        var PhotoName = "";
+        var DocName = "";
+
+
+        if (SupportPhoto != null && PhotoFile != null) {
+            PhotoName = $('#IMPBNO').val() + "_PHOTO." + SupportPhoto.files[0].name.split('.').pop();
+        }
+
+        if (SupportDoc != null && DocFile != null) {
+            DocName = $('#IMPBNO').val() + "DOC." + SupportDoc.files[0].name.split('.').pop()
+        }
+
+        var _data = JSON.stringify({
+            WP_PROJECT_JOB_ID: $('#WP_PROJECT_JOB_ID').val(),
+            ItemCheckList: getListItemCheck()
+        });
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Submit_Data",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+                
+                if (res.sts == "TRUE") {
+                    var formData = new FormData();
+
+                    if (SupportPhoto != null && SupportPhoto.files[0] != null) {
+                        formData.append("PHOTO_NAME", $('#IMPBNO').val() + "_PHOTO." + SupportPhoto.files[0].name.split('.').pop());
+                        formData.append("SUPPORT_PHOTO", SupportPhoto.files[0]);
+                    }
+                    else {
+                        formData.append("PHOTO_NAME", "");
+                        formData.append("SUPPORT_PHOTO", null);
+                    }
+
+                    if (SupportDoc != null && SupportDoc.files[0] != null) {
+                        formData.append("DOC_NAME", $('#IMPBNO').val() + "DOC." + SupportDoc.files[0].name.split('.').pop());
+                        formData.append("SUPPORT_DOC", SupportDoc.files[0]);
+                    }
+                    else {
+                        formData.append("DOC_NAME", "");
+                        formData.append("SUPPORT_DOC", null);
+                    }
+
+                    $.ajax({
+                        url: SITE_URL + "UploadFile",
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        async: false,
+                        data: formData,
+                        success: function (e) {
+                            console.log(e);
+                        }
+                    });
+
+                    cancelAdd();
+                    btnsearch = document.getElementById("btn_search");
+                    btnsearch.click();
+                    toastr.success("Data Has Been Save Successfuly");
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function formatDate(date) {
+        var monthNames = [
+            "Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct",
+            "Nov", "Dec"
+        ];
+
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
+    //<----------------------------------------------START ITEM CHECK------------------------------------------->
+    function addDataITEMCHECK() {
+        //$('#add_ID').val('shift');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        if ($('#WP02007_TXT_ADD_ITEMNAME').val() == null || $('#WP02007_TXT_ADD_ITEMNAME').val() == '') {
+            GenerateMessage("Item Name", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_DDL_ADD_PIC').val() == null || $('#WP02007_DDL_ADD_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        confirmAddITEMCHECK();
+    }
+
+    function editDataITEMCHECK() {
+        //$('#edit_ID').val('shift');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditITEMCHECK();
+    }
+
+    function deleteDataITEMCHECK(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('shift');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeleteITEMCHECK();
+    }
+
+    $("#WP02007_BTN_ADD_SHOW_ITEMCHECK").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+
+        $('#WP02007_TXT_ADD_ITEMNAME').val('');
+        $('#WP02007_TXT_ADD_ITEMDESCRIPTION').val('');
+        $('#WP02007_DDL_ADD_PIC').val(null).trigger("change");
+        $('#WP02007_DDL_ADD_STATUS_ITEM').val('Available');
+
+        $("#WP02007_DDL_ADD_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+        $("#WP02007_DDL_ADD_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+        $("#WP02007_DDL_EDIT_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+        $("#WP02007_DDL_EDIT_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+
+        document.getElementById("WP02007_TBL_ADD_ITEMCHECK").style.display = "";
+
+        $("#WP02007_BTN_ADD_ITEMCHECK_CLOSE").on("click", function () {
+            $('#WP02007_TBL_ADD_ITEMCHECK').hide();
+        });
+    });
+
+    function confirmDeleteITEMCHECK() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        if (parseInt(Id) > 0) {
+            var _data = JSON.stringify({
+                ID: Id,
+                TYPES: "ItemCheck"
+            });
+
+            $.ajax({
+                type: "POST",
+                url: SITE_URL + "Delete_Data",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                data: _data,
+                success: function (res) {
+                    toastr.success('Data Has Been Deleted');
+                    _row.remove();
+                },
+                error: function (res) {
+                    toastr.error(res.Message);
+                }
+            });
+        }
+        else {
+            toastr.success('Data Has Been Deleted');
+            _row.remove();
+        }
+        
+    }
+
+    function confirmAddITEMCHECK() {
+
+        if ($('#WP02007_TXT_ADD_ITEMNAME').val() == null || $('#WP02007_TXT_ADD_ITEMNAME').val() == '') {
+            GenerateMessage("Item Name", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_DDL_ADD_PIC').val() == null || $('#WP02007_DDL_ADD_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        tableBuilderITEMCHECK($('#WP02007_DDL_ADD_PIC option:selected'), $('#WP02007_TXT_ADD_ITEMNAME').val(),
+            $('#WP02007_TXT_ADD_ITEMDESCRIPTION').val(), $('#WP02007_DDL_ADD_STATUS_ITEM').val(), 0);
+
+    }
+
+    function tableBuilderITEMCHECK(_PIC, _itemName, _description, _Status, _id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id + '" style="width: 30%; padding:0!important">' + _itemName + '</td>';
+        html += '<td style="width: 20%; padding:0!important">' + _description + '</td>';
+        html += '<td style="width: 15%; padding:0!important" name="' + _PIC.val() + '">' + _PIC.text() + '</td>';
+        html += '<td style="width: 15%; padding:0!important">' + _Status + '</td>';
+        html += '<td style="width: 20%">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditITEMCHECK(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataITEMCHECK(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02007_TBL_LIST_ITEMCHECK').append(html);
+        $('#WP02007_TBL_ADD_ITEMCHECK').hide();
+
+    }
+
+    function LoadtableITEMCHECK(_PIC,_PICName, _itemName, _description, _Status, _id) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id + '" style="width: 30%; padding:0!important">' + _itemName + '</td>';
+        html += '<td style="width: 20%; padding:0!important">' + _description + '</td>';
+        html += '<td style="width: 15%; padding:0!important" name="' + _PIC + '">' + _PICName + '</td>';
+        html += '<td style="width: 15%; padding:0!important">' + _Status + '</td>';
+        html += '<td style="width: 20%">';
+        html += '<button type="button" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditITEMCHECK(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataITEMCHECK(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02007_TBL_LIST_ITEMCHECK').append(html);
+        $('#WP02007_TBL_ADD_ITEMCHECK').hide();
+
+    }
+
+    function actionEditITEMCHECK(obj) {
+        var row = $(obj).closest("tr")[0];
+        _row = row;
+        $(row).hide();
+        var name = $(_row).find('td:first-child').attr('id') + ',' + $(_row).find('td:first-child').text();
+        $.each(row.cells, function (index, value) {
+            if (index == 0) { //set value for dropdown pekerjaan
+                var itemName = $(_row).find('td:first-child').text();
+                $('#WP02007_TXT_EDIT_ITEMNAME').val(itemName);
+            }
+            else if (index == 1) {
+                $('#WP02007_TXT_EDIT_ITEMDESCRIPTION').val($(value).text());
+            }
+            else if (index == 2) {
+                var pics = $(value).attr("name");
+                $('#WP02007_DDL_EDIT_PIC').val(pics).trigger('change');
+            }
+            else if (index == 3) {
+                $('#WP02007_DDL_EDIT_STATUS_ITEM').val($(value).text());
+            }
+        });
+
+        $('button[name="btn_edit_row"').attr('disabled', 'disabled');
+        $('button[name="btn_delete_row"').attr('disabled', 'disabled');
+        $('#WP02007_BTN_ADD_SHOW_ITEMCHECK').attr('disabled', 'disabled');
+
+        $('#WP02007_TBL_EDIT_ITEMCHECK').show();
+        $("#WP02007_BTN_EDIT_ITEMCHECK_CLOSE").on("click", function () {
+            $(row).show();
+            $('#WP02007_TBL_EDIT_ITEMCHECK').hide();
+            $('button[name="btn_edit_row"]').removeAttr('disabled');
+            $('button[name="btn_delete_row"]').removeAttr('disabled');
+            $('#WP02007_BTN_ADD_SHOW_ITEMCHECK').removeAttr('disabled');
+        });
+
+        $('#WP02007_BTN_EDIT_ITEMCHECK').on("click", function () {
+            editDataITEMCHECK();
+        })
+    }
+
+    function confirmEditITEMCHECK() {
+        var ItemName = $('#WP02007_TXT_EDIT_ITEMNAME').val();
+        var ItemDescription = $('#WP02007_TXT_EDIT_ITEMDESCRIPTION').val();
+        var PICs = $('#WP02007_DDL_EDIT_PIC option:selected');
+        var Statusitem = $('#WP02007_DDL_EDIT_STATUS_ITEM').val();
+
+
+        $(_row).find('td:first-child').text(ItemName);
+        $(_row).find('td:nth-child(2)').text(ItemDescription);
+        $(_row).find('td:nth-child(3)').text(PICs.text());
+        $(_row).find('td:nth-child(3)').attr('name', PICs.val());
+        $(_row).find('td:nth-child(4)').text(Statusitem);
+
+        $(_row).show();
+        $('#WP02007_TBL_EDIT_ITEMCHECK').hide();
+        $('button[name="btn_edit_row"').removeAttr('disabled');
+        $('button[name="btn_delete_row"').removeAttr('disabled');
+        $('#WP02007_BTN_ADD_SHOW_ITEMCHECK').removeAttr('disabled');
+    }
+
+    //<----------------------------------------------END ITEM CHECK------------------------------------------->
+
+    //<----------------------------------------------START   INCIDENT------------------------------------------->
+    function addDataINCIDENT() {
+        //$('#add_ID').val('shift');
+        //$('#PopupForm_AddIMPBConfirm').modal();
+        confirmAddINCIDENT();
+    }
+
+    function editDataINCIDENT() {
+        //$('#edit_ID').val('shift');
+        //$('#PopupForm_EditIMPBConfirm').modal();
+        confirmEditINCIDENT();
+    }
+
+    function deleteDataINCIDENT(obj) {
+        _row = $(obj).closest("tr")[0];
+        //$('#delete_ID').val('shift');
+        //$('#PopupForm_DeleteIMPBConfirm').modal();
+        confirmDeleteINCIDENT();
+    }
+
+    $("#WP02007_BTN_ADD_SHOW_INCIDENT").on("click", function () {
+        $('#NoDataFound').closest('tr').remove();
+
+        $('#WP02007_TXT_ADD_INCIDENT_TITLE').val('');
+        $('#WP02007_TXT_ADD_INCIDENT_DATE').val('');
+        $('#WP02007_DDL_ADD_INCIDENT_PIC').val(null).trigger("change");
+        $('#WP02007_DDL_ADD_INCIDENT_LEVEL').val('Low');
+
+        $("#WP02007_DDL_ADD_INCIDENT_PIC option:not([code=" + $('#JOB_COMPANY').val() +"])").prop('disabled', true);
+        $("#WP02007_DDL_ADD_INCIDENT_PIC option[code=" + $('#JOB_COMPANY').val() +"]").prop('disabled', false);
+        $("#WP02007_DDL_EDIT_INCIDENT_PIC option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+        $("#WP02007_DDL_EDIT_INCIDENT_PIC option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+
+        $("#WP02007_DDL_ADD_REPORTED_BY option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+        $("#WP02007_DDL_ADD_REPORTED_BY option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+        $("#WP02007_DDL_EDIT_REPORTED_BY option:not([code=" + $('#JOB_COMPANY').val() + "])").prop('disabled', true);
+        $("#WP02007_DDL_EDIT_REPORTED_BY option[code=" + $('#JOB_COMPANY').val() + "]").prop('disabled', false);
+
+        $('#modalForm').modal("toggle");
+        $('#WP02007_DDL_ADD_AREA').val($('#JOB_AREA').val()).trigger("change");
+        //document.getElementById("WP02007_TBL_ADD_INCIDENT").style.display = "";
+
+        //$("#WP02007_BTN_ADD_INCIDENT_CLOSE").on("click", function () {
+        //    $('#WP02007_TBL_ADD_INCIDENT').hide();
+        //});
+    });
+
+    function confirmDeleteINCIDENT() {
+        var Id = $(_row).find('td:first-child').attr('data-title');
+
+        var _data = JSON.stringify({
+            ID: Id,
+            TYPES: "Incident"
+        });
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + "Delete_Data",
+            async: false,
+            dataType: "json",
+            contentType: "application/json",
+            data: _data,
+            success: function (res) {
+                toastr.success('Data Has Been Deleted');
+                _row.remove();
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+    }
+
+    function confirmAddINCIDENT() {
+
+        if ($('#WP02007_DDL_ADD_INCIDENT').val() == null || $('#WP02007_DDL_ADD_INCIDENT').val() == '') {
+            GenerateMessage("Shift", "MWP008");
+            return;
+        }
+
+        var total_data_wh = $('#WP02007_DDL_ADD_INCIDENT option:selected').length;
+        if (total_data_wh > 0) {
+            var _data = $('#WP02007_DDL_ADD_INCIDENT option:selected').attr('name').split(',');
+
+            tableBuilderINCIDENT($('#WP02007_DDL_ADD_INCIDENT option:selected'), _data[0], _data[1], 0);
+        }
+
+        var _INCIDENT = $('#WP02007_DDL_ADD_INCIDENT').val();
+        $("#WP02007_DDL_ADD_INCIDENT option[value='" + _INCIDENT + "']").remove();
+
+        $("#WP02007_DDL_EDIT_INCIDENT option[value='" + _INCIDENT + "']").remove();
+
+
+    }
+
+    function tableBuilderINCIDENT(_Title, _PIC, _Area,_Date,_Level,_Evidence,_UserReport,_Action, _id,_data) {
+        var html = '<tr>';
+        html += '<td data-title="' + _id + '" style="width: 20%; padding:0!important;word-wrap:break-word;">' + _Title + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;">' + _PIC + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;">' + _Area + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;text-align:center">' + _Date + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;">' + _Level + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;"><a target="_blank" href="../../Content/Upload/Execution/' + _Evidence +'">' + _Evidence + '</a></td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;">' + _UserReport + '</td>';
+        html += '<td style="width: 10%; padding:0!important;word-wrap:break-word;">' + _Action + '</td>';
+        html += '<td style="width: 10%">';
+        html += "<input type='hidden' id='Incident-" + _id + "' value='" + JSON.stringify(_data) + "'>";
+        html += '<button type="button" data-title="' + _id + '" class="btn btn-primary btn-xs jobbtn" id="btn_edit_row" name="btn_edit_row" style="width: 60px; margin-left:5px;" onclick="actionEditINCIDENT(this)" ><i class="fa fa-pencil-square-o"></i> Edit</button>';
+        html += '<button type="button" data-title="' + _id + '" class="btn btn-danger btn-xs jobbtn" id="btn_delete_row" name="btn_delete_row" style="width: 60px; margin-left:3px;" onclick="deleteDataINCIDENT(this)" ><i class="fa fa-trash-o"></i> Delete</button>'
+        html += '</td>';
+        html += '</tr>'
+
+        $('#WP02007_TBL_LIST_INCIDENT').append(html);
+    }
+
+    function actionEditINCIDENT(element) {
+        var row = $(element).closest("tr")[0];
+        _row = row;
+        var data = element.dataset.title;
+        var Obj = JSON.parse($('#Incident-' + data).val());
+
+        $('#WP02007_TXT_EDIT_INCIDENT_TITLE').val(Obj.INCIDENT_TITLE);
+        $('#WP02007_DDL_EDIT_INCIDENT_PIC').val(Obj.ID_TB_M_EMPLOYEE).trigger("change");
+        $('#WP02007_DDL_EDIT_AREA').val($('#JOB_AREA').val()).trigger("change");
+        $('#WP02007_TXT_EDIT_INCIDENT_DATE').datepicker("update", new Date(Obj.INCIDENT_DATE));
+        $('#WP02007_DDL_EDIT_INCIDENT_LEVEL').val(Obj.INCIDENT_LEVEL);
+        $('#WP02007_DDL_EDIT_REPORTED_BY').val(Obj.USER_REPORT).trigger("change");
+        $('#WP02007_TXT_EDIT_ACTION').val(Obj.ACTION);
+
+        $('#CurrentIncidentID').val(data);
+        $('#CurrentIncidentFile').val(Obj.ATTACHMENT);
+        $('#modalEditForm').modal("toggle");
+
+    }
+
+    function InsertIncident() {
+        if ($('#WP02007_TXT_ADD_INCIDENT_TITLE').val() == null || $('#WP02007_TXT_ADD_INCIDENT_TITLE').val() == '') {
+            GenerateMessage("Incident Title", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_DDL_ADD_INCIDENT_PIC').val() == null || $('#WP02007_DDL_ADD_INCIDENT_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_TXT_ADD_INCIDENT_DATE').val() == null || $('#WP02007_TXT_ADD_INCIDENT_DATE').val() == '') {
+            GenerateMessage("Incident Date", "MWP008");
+            return;
+        }
+
+        $('#WP02007_DDL_ADD_REPORTED_BY').val($('#UserIDLogin').val());
+        $('#WP02007_DDL_EDIT_REPORTED_BY').val($('#UserIDLogin').val());
+
+        var DataIncident = {
+            WP_PROJECT_JOB_ID: $('#WP_PROJECT_JOB_ID').val(),
+            INCIDENT_TITLE: $('#WP02007_TXT_ADD_INCIDENT_TITLE').val(),
+            ID_TB_M_EMPLOYEE: $('#WP02007_DDL_ADD_INCIDENT_PIC').val(),
+            ID_TB_M_COMPANY: $('#JOB_COMPANY').val(),
+            ID_TB_M_AREA: $('#JOB_AREA').val(),
+            INCIDENT_DATE: $('#WP02007_TXT_ADD_INCIDENT_DATE').val(),
+            INCIDENT_LEVEL: $('#WP02007_DDL_ADD_INCIDENT_LEVEL').val(),
+            USER_REPORT: $('#WP02007_DDL_ADD_REPORTED_BY').val(),
+            ACTION: $('#WP02007_TXT_ADD_ACTION').val(),
+            ATTACHMENT: '',
+            ID: 0
+        }
+
+        var PICSelected = $('#WP02007_DDL_ADD_INCIDENT_PIC')
+
+        var fileInput = document.getElementById("WP02007_ADD_EVIDENCE");
+        var formData = new FormData();
+        var fsFileName = fileInput.files[0].name;
+        var fsExtension = fsFileName.split('.').pop();
+        var CurrentDate = new Date();
+
+        fsFileName = $('#WP_PROJECT_JOB_ID').val()+ "_" + Math.random().toString() + "_EVIDENCE" + CurrentDate.getFullYear().toString() + (CurrentDate.getMonth() + 1).toString()
+            + CurrentDate.getDate().toString()
+            + CurrentDate.getHours().toString()
+            + CurrentDate.getMinutes().toString()
+            + "." + fsExtension;
+        formData.append("EVIDENCENAME", fsFileName);
+
+        var fsFile = fileInput.files[0];
+        formData.append('EVIDENCEFILE', fsFile);
+
+        formData.append('INCIDENTDATA', JSON.stringify(DataIncident));
+
+        $.ajax({
+            url: SITE_URL + "InsertIncident",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            async: false,
+            data: formData,
+            success: function (res) {
+                DataIncident.ATTACHMENT = fsFileName;
+                DataIncident.ID = res.data.ID;
+
+                tableBuilderINCIDENT(DataIncident.INCIDENT_TITLE, $('#WP02007_DDL_ADD_INCIDENT_PIC option:selected')[0].text,
+                    $('#JOB_AREA option:selected')[0].text, $('#WP02007_TXT_ADD_INCIDENT_DATE').val()
+                    , $('#WP02007_DDL_ADD_INCIDENT_LEVEL option:selected').text(), fsFileName
+                    , $('#WP02007_DDL_ADD_REPORTED_BY option:selected')[0].text, $('#WP02007_TXT_ADD_ACTION').val(), res.data.ID, DataIncident);
+
+                document.getElementById("WP02007_ADD_EVIDENCE").value = null;
+                document.getElementById("WP02007_EDIT_EVIDENCE").value = null;
+
+                GenerateMessage("", "MWP001");
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+
+        $('#modalForm').modal("toggle");
+    }
+
+    function UpdateIncident() {
+        if ($('#WP02007_TXT_EDIT_INCIDENT_TITLE').val() == null || $('#WP02007_TXT_EDIT_INCIDENT_TITLE').val() == '') {
+            GenerateMessage("Incident Title", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_DDL_EDIT_INCIDENT_PIC').val() == null || $('#WP02007_DDL_EDIT_INCIDENT_PIC').val() == '') {
+            GenerateMessage("PIC", "MWP008");
+            return;
+        }
+
+        if ($('#WP02007_TXT_EDIT_INCIDENT_DATE').val() == null || $('#WP02007_TXT_EDIT_INCIDENT_DATE').val() == '') {
+            GenerateMessage("Incident Date", "MWP008");
+            return;
+        }
+
+        $('#WP02007_DDL_ADD_REPORTED_BY').val($('#UserIDLogin').val());
+        $('#WP02007_DDL_EDIT_REPORTED_BY').val($('#UserIDLogin').val());
+        
+
+        var DataIncident = {
+            WP_PROJECT_JOB_ID: $('#WP_PROJECT_JOB_ID').val(),
+            INCIDENT_TITLE: $('#WP02007_TXT_EDIT_INCIDENT_TITLE').val(),
+            ID_TB_M_EMPLOYEE: $('#WP02007_DDL_EDIT_INCIDENT_PIC').val(),
+            ID_TB_M_COMPANY: $('#JOB_COMPANY').val(),
+            ID_TB_M_AREA: $('#JOB_AREA').val(),
+            INCIDENT_DATE: $('#WP02007_TXT_EDIT_INCIDENT_DATE').val(),
+            INCIDENT_LEVEL: $('#WP02007_DDL_EDIT_INCIDENT_LEVEL').val(),
+            USER_REPORT: $('#WP02007_DDL_EDIT_REPORTED_BY').val(),
+            ACTION: $('#WP02007_TXT_EDIT_ACTION').val(),
+            ATTACHMENT: '',
+            ID: $('#CurrentIncidentID').val()
+        }
+
+        var PICSelected = $('#WP02007_DDL_EDIT_INCIDENT_PIC')
+
+        var fileInput = document.getElementById("WP02007_EDIT_EVIDENCE");
+        var formData = new FormData();
+        var CurrentDate = new Date();
+
+        var fsFile = fileInput.files[0];
+        var fsFileName = '';
+        var fsExtension = '';
+
+        if (fsFile == null) {
+            fsFileName = $('#CurrentIncidentFile').val();
+            formData.append("EVIDENCENAME", "");
+            formData.append('EVIDENCEFILE', null);
+        }
+        else {
+            fsFileName = fileInput.files[0].name;
+            fsExtension = fsFileName.split('.').pop();
+            fsFileName = $('#WP_PROJECT_JOB_ID').val() + "_" + Math.random().toString()  +"_EVIDENCE" + CurrentDate.getFullYear().toString() + (CurrentDate.getMonth() + 1).toString()
+                + CurrentDate.getDate().toString()
+                + CurrentDate.getHours().toString()
+                + CurrentDate.getMinutes().toString()
+                + "." + fsExtension;
+            formData.append("EVIDENCENAME", fsFileName);
+
+
+            formData.append('EVIDENCEFILE', fsFile);
+        }
+
+        formData.append('INCIDENTDATA', JSON.stringify(DataIncident));
+
+        $.ajax({
+            url: SITE_URL + "UpdateIncident",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            async: false,
+            data: formData,
+            success: function (res) {
+
+                _row.remove();
+                DataIncident.ATTACHMENT = fsFileName;
+
+                tableBuilderINCIDENT(DataIncident.INCIDENT_TITLE, $('#WP02007_DDL_EDIT_INCIDENT_PIC option:selected')[0].text,
+                    $('#JOB_AREA option:selected')[0].text, $('#WP02007_TXT_EDIT_INCIDENT_DATE').val()
+                    , $('#WP02007_DDL_EDIT_INCIDENT_LEVEL option:selected').text(), fsFileName
+                    , $('#WP02007_DDL_EDIT_REPORTED_BY option:selected')[0].text, $('#WP02007_TXT_EDIT_ACTION').val(), DataIncident.ID, DataIncident);
+
+                document.getElementById("WP02007_ADD_EVIDENCE").value = null;
+                document.getElementById("WP02007_EDIT_EVIDENCE").value = null;
+
+                GenerateMessage("", "MWP001");
+            },
+            error: function (res) {
+                toastr.error(res.Message);
+            }
+        });
+
+        $('#modalEditForm').modal("toggle");
+    }
+
+    //<----------------------------------------------END   INCIDENT------------------------------------------->
+
+    function getListItemCheck() {
+        var _list = [];
+
+        $('#WP02007_TBL_LIST_ITEMCHECK > tr').each(function (index, value) {
+            var _data = {};
+            _data["ITEM_NAME"] = $(value).find('td:first-child').text();
+            _data["ITEM_DESCRIPTION"] = $(value).find('td:nth-child(2)').text()
+            _data["ID_TB_M_EMPLOYEE"] = $(value).find('td:nth-child(3)').attr("name");
+            _data["ITEM_STATUS"] = $(value).find('td:nth-child(4)').text();
+            _data["WP_PROJECT_JOB_ID"] = $('#WP_PROJECT_JOB_ID').val();
+            _data["ID"] = $(value).find('td:first-child')[0].dataset.title;
+            _list.push(_data);
+        });
+        return _list;
+    }
+
+    function GenerateMessage(M, Text) {
+        for (var i = 0; i < Message.length; i++) {
+            var MSG_ID = Message[i].MSG_ID;
+            var MSG_TXT = (Message[i].MSG_TEXT).split('{0}');
+            if (MSG_ID == Text) {
+                var NEW_TXT = "";
+                for (var e = 0; e < MSG_TXT.length; e++) {
+                    if (e < (MSG_TXT.length - 1)) {
+                        NEW_TXT = NEW_TXT + MSG_TXT[e] + " " + M;
+                    } else {
+                        NEW_TXT = NEW_TXT + " " + MSG_TXT[e];
+                    }
+                }
+                if (Text == 'MWP001' || Text == 'MWP003') {
+                    toastr.success(NEW_TXT);
+                } else if (Text == "MWP011" || Text == "MWP013" || Text == "MWP016" || Text == "MWP017") {
+                    toastr.error(NEW_TXT);
+                } else {
+                    toastr.warning(NEW_TXT);
+                }
+
+            }
+        }
+    }
+
+    function confirmSubmit() {
+        var value_id = $('#submit_ID').val();
+
+        switch (value_id) {
+            case 'submit':
+                SubmitTrx();
+                break;
+        }
+    }
+
+    function SubmitButton(element) {
+        $('#submit_ID').val('submit');
+        $('#PopupForm_SubmitIMPBConfirm').modal();
+    }
+</script>

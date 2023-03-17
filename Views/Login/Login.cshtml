@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+
+    <title>@Html.Toyota().Application.Alias - Login</title>
+
+    <meta name="description" content="User login page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/font-awesome.css")" />
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace-fonts.css")" />
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace.css")" />
+    @*<link href="@Url.Content("~/Content/Bootstrap/css/anim.css")" rel="stylesheet"/>*@
+
+    <!--[if lte IE 9]-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace-part2.css")" />
+    <!--[endif]-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace-rtl.css")" />
+
+    <!--[if lte IE 9]-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/ace-ie.css")" />
+    <!--[endif]-->
+
+    <style>
+        .login-container {
+            width: auto;
+            max-width: 900px;
+        }
+
+        #carousel-login {
+            max-width: 470px;
+            margin: 0 auto;
+        }
+
+        #forgot-box, #signup-box {
+            max-width: 375px;
+            margin: 0 auto;
+        }
+
+        .login-main {
+            padding-bottom: 36px !important;
+            padding-top: 36px !important;
+        }
+
+        .logo-title {
+            width: 110px;
+        }
+
+        .login-app {
+            font-family: LeagueSpartan;
+            color: royalblue;
+            /*color: darkblue;*/
+            /*color: midnightblue;*/
+        }
+
+        #company-name {
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        /* footer login box */
+        .login-box .toolbar {
+            background: #f7f7f7 !important;
+            border-top: 2px solid #bcbcbc;
+        }
+
+        /* no border on the login box */
+        .light-login .widget-box {
+            box-shadow: none !important;
+            background-color: inherit !important;
+            border-bottom: none;
+        }
+
+            .light-login .widget-box.login-box {
+                background-color: inherit !important;
+            }
+
+        /* dashboard */
+        .fa-dashboard :hover {
+            opacity: 0.7;
+        }
+
+        .fa-dashboard {
+            /*background: #3B5998;*/
+            background: royalblue;
+            color: white;
+            padding: 0px;
+            font-size: 70px;
+            width: 85px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]-->
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/html5shiv.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/respond.js")"></script>
+    <!--[endif]-->
+    <script type="text/javascript" src="@Url.Content("~/Content/UI/jquery.min.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Content/UI/message.js")"></script>*@
+    @*<script type="text/javascript" src="@Url.Content("~/Content/UI/jquery.bootstrap-growl.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Content/UI/jquery.cookie.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/bootstrap-datepicker.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/daterangepicker.js")"></script>
+</head>
+
+<body class="login-layout light-login">
+    <div class="main-container">
+        <div class="main-content">
+            <div class="row">
+                <a href="../DTIDashboardList/rtjn_dashboard_output_produksi" class="fa fa-dashboard"></a>
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="login-container">
+                        <div class="center">
+                            <h1>
+                                <img src="@Url.Content("~/Content/Bootstrap/img/dmcti.png")" class="logo-title" alt="ISTD Logo" />
+                                <span class="login-app">@Html.Toyota().Application.Name</span>
+                            </h1>
+
+                        </div>
+
+                        <div class="space-6"></div>
+
+                        <div class="position-relative">
+                            <div id="login-box" class="login-box visible widget-box no-border">
+                                <div class="widget-body">
+                                    <div class="widget-main login-main">
+
+                                        <div class="row">
+                                            <div class="col-sm-5">
+                                                <h4 class="header blue lighter bigger">
+                                                    <i class="ace-icon fa fa-coffee green"></i>
+                                                    Silakan Login
+                                                </h4>
+
+                                                <div class="space-6"></div>
+
+                                                <form>
+                                                    <fieldset>
+                                                        <label class="block clearfix">
+                                                            <span class="block input-icon input-icon-right">
+                                                                <input type="text" class="form-control" id="txtusername" placeholder="Username" onkeypress="onEnter(event)" maxlength="30" autofocus />
+                                                                <i class="ace-icon fa fa-user"></i>
+                                                            </span>
+                                                        </label>
+
+                                                        <label class="block clearfix">
+                                                            <span class="block input-icon input-icon-right">
+                                                                <input type="password" class="form-control" placeholder="Password" id="txtpassword" onkeypress="onEnter(event)" maxlength="30" />
+                                                                <i class="ace-icon fa fa-lock"></i>
+                                                            </span>
+                                                        </label>
+                                                        <div class="clearfix">
+                                                            <button id="btnlogin" type="button" data-loading-text="<i class='glyphicon-refresh-animate glyphicon glyphicon-refresh'></i> login" class="width-35 pull-right btn btn-sm btn-primary">
+                                                                <i class="ace-icon fa fa-key"></i>
+                                                                <span class="bigger-110">Login</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="space-4"></div>
+                                                    </fieldset>
+                                                </form>
+                                            </div><!-- /.col -->
+
+                                            <div class="col-sm-7 hidden-xs">
+                                                @Html.Partial("_Carousel")
+                                            </div><!-- /.col -->
+                                        </div><!-- /.row -->
+
+                                    </div><!-- /.widget-main -->
+                                </div><!-- /.widget-body -->
+                            </div><!-- /.login-box -->
+                        </div><!-- /.position-relative -->
+                        <center><span id="company-name">2021 &copy;@Html.Toyota().Application.OwnerName V.1.0<!--</span></center>-->
+                    </div>
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container -->
+
+    @Html.Partial("_Agreement")
+
+    <!-- basic scripts -->
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='/content/Bootstrap/js/jquery.js'>" + "<" + "/script>");
+        if ('ontouchstart' in document.documentElement) document.write("<script src='/content/Bootstrap/js/jquery.mobile.custom.js'>" + "<" + "/script>");
+    </script>
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/bootstrap.js")"></script>
+
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+
+            var SITE_URL = ((window.location.href).split('#')[0]).split('?')[0];
+            var HASH_CHECK = false;
+            var GET_PARAM1 = '';
+            var GET_PARAM2 = '';
+		    jQuery(function ($) {
+		        $(document).on('click', '.toolbar a[data-target]', function (e) {
+		            e.preventDefault();
+		            var target = $(this).data('target');
+		            $('.widget-box.visible').removeClass('visible'); //hide others
+		            $(target).addClass('visible'); //show target
+                });
+                GET_PARAM1 = getParameterByName('CODE');
+                GET_PARAM2 = getParameterByName('IMPB');
+                if (window.location.hash != '') {
+                    HASH_CHECK = true;
+                }
+                if (GET_PARAM1 != '' && GET_PARAM2 != '' && HASH_CHECK == true){
+					location.replace(SITE_URL + '?CODE=' + GET_PARAM1 + '&IMPB=' + GET_PARAM2);
+				}
+		    });
+
+			function getParameterByName(name, url) {
+				if (!url) url = window.location.href;
+				name = name.replace(/[\[\]]/g, '\\$&');
+				var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, ' '));
+			}
+
+		    $("#link-agreement").click(function () {
+		        $("#agreement-popup").modal();
+		    });
+
+		    // Skin layout login
+		    function setCookie(cname, cvalue) {
+		        document.cookie = cname + '=' + cvalue;
+		    }
+
+		    function getCookie(cname) {
+		        var name = cname + "=";
+		        var ca = document.cookie.split(';');
+		        for (var i = 0; i < ca.length; i++) {
+		            var c = ca[i];
+		            while (c.charAt(0) == ' ') c = c.substring(1);
+		            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		        }
+		        return "";
+		    }
+
+
+            $("#btnlogin").click(function () {
+
+		        if (!LoginValidationCheck()) return;
+                //Callajaxlogin();
+                checkUserPlantMapping();
+		    });
+
+		    function LoginValidationCheck() {
+		        var userName = $("#txtusername");
+		        if (userName.val().length == 0) {
+		            //var param = ['User Name'];
+		            //getMessage('MPISSTD002E', param, 'error', false);
+		            alert('Username should not be empty');
+		            txtusername.select();
+		            return false;
+		        }
+		        var password = $("#txtpassword");
+		        if (password.val().length == 0) {
+		            //var param = ['Password'];
+		            //getMessage('MPISSTD002E', param, 'error', false);
+		            alert('Password should not be empty');
+		            txtpassword.select();
+		            return false;
+		        }
+		        return true;
+		    }
+
+
+		    function onEnter(e) {
+		        var key = e.keyCode || e.which;
+		        if (key == 13) {
+		            //Callajaxlogin();
+                    checkUserPlantMapping();
+		        }
+		    }
+		    function checkUserPlantMapping() {
+		        $.ajax({
+		            method: "post",
+		            url: SITE_URL+"/CheckUserPassword",
+		            data: {
+                        username: $("#txtusername").val(),
+						password: $("#txtpassword").val()
+		            },
+		            beforeSend:
+                    function () {
+                        $('#btnlogin').button('loading');
+                    },
+                    success: function (data) {
+                        if (data.checkUser > 0) {
+                            if (data.userinfo.length > 0) {
+                                if (GET_PARAM1 != null && GET_PARAM2 != null) {
+                                    window.location.href = 'WP02003' + '?IMPB=' + GET_PARAM2;
+                                }
+                                else if (data.userData.Roles[0].Name == "Security") {
+                                    window.location.href = 'WPSecurity';
+                                } else {
+                                    window.location.href = "@Html.Toyota().Page.HomeUrl";
+                                }
+                            } else {
+                                alert("Your User ID is not registered in plant mapping please contact administrator!");
+                            }
+                        } else {
+							alert("Your User is not registered in Workpermit System!");
+                        }
+
+		            },
+		            error:
+                    function (data) {
+                        alert("Incorrect username or password");
+                    },
+		            complete:
+                    function () {
+                        $('#btnlogin').button('reset');
+                    }
+		        });
+            }
+
+		    function Callajaxlogin() {
+		        $.ajax({
+		            method: "post",
+		            url: "@Html.Toyota().Page.AjaxLoginActionUrl",
+		            data: {
+		                username: $("#txtusername").val(),
+		                password: $("#txtpassword").val()
+		            },
+		            beforeSend:
+                    function () {
+                        $('#btnlogin').button('loading');
+                    },
+		            success: function (data) {
+		                if (data == 'true') {
+		                    checkUserPlantMapping();
+		                } else {
+		                    alert("Incorrect username or password");
+		                }
+		            },
+		            error:
+                    function(data){
+                       alert("Incorrect username or password");
+                    },
+		            complete:
+                    function () {
+                        $('#btnlogin').button('reset');
+                    }
+		        });
+		    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+﻿DECLARE @@CNT INT
+	, @@CHK VARCHAR(20)
+	, @@ERR VARCHAR(MAX);
+DECLARE @@MSG_TEXT VARCHAR(MAX);
+DECLARE @@MSG_TYPE VARCHAR(MAX);
+
+BEGIN TRY
+	SET @@CNT = (SELECT COUNT(1) FROM TB_R_WP_DETAIL WHERE PROJECT_CODE = @PROJECT_CODE);
+	IF(@@CNT > 0)
+	BEGIN
+		SET @@CHK = 'FALSE';
+		SET @@ERR = 'Data Has been Registered';
+		
+	END ELSE
+	BEGIN
+		
+		INSERT INTO TB_R_WP_DETAIL
+		(
+			 [PROJECT_CODE]
+			,[JOBS]
+			,[HIGHLEVEL]
+			,[MEDIUMLEVEL]
+			,[LOWLEVEL]
+			,[DATE]
+			,[CAT_A]
+			,[CAT_B]
+			,[CAT_C]
+			,[CAT_D]
+			,[CAT_E]
+			,[CAT_F]
+			,[REMARKS]
+			,[STATUS]
+			,[CREATED_BY]
+			,[CREATED_DT]
+			,[CHANGED_BY]
+			,[CHANGED_DT]
+			
+		)
+		VALUES
+		(
+			@PROJECT_CODE,
+			@JOBS,
+			CASE WHEN @DANGERLEVEL = 3 THEN
+				1
+				ELSE
+				0
+			END,
+			CASE WHEN @DANGERLEVEL = 2 THEN
+				1
+				ELSE
+				0
+			END,
+			CASE WHEN @DANGERLEVEL = 1 THEN
+				1
+				ELSE
+				0
+			END,
+			@DATE,
+			@CATA,
+			@CATB,
+			@CATC,
+			@CATD,
+			@CATE,
+			@CATF,
+			@REMARKS,
+			0,
+			@USERNAME,
+			GETDATE(),
+			@USERNAME,
+			GETDATE()
+		);
+
+
+		SET @@CHK = 'TRUE';
+		SET @@ERR = 'NOTHING';
+	END
+END TRY
+BEGIN CATCH
+	SET @@CHK = 'FALSE';
+	SET @@ERR = 'ERROR INSERT WP_HEADER:' +@PROJECT_CODE+
+	'<br/>Detail Error :|: ' + ERROR_MESSAGE() + ' :|: ';	
+END CATCH
+
+SELECT @@CHK AS STACK, @@ERR AS LINE_STS

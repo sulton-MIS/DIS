@@ -1,0 +1,124 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP01007Master;
+@{
+    List<ItemModel> ItemType = (List<ItemModel>)ViewData["ItemType"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">ADD ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <label class="required">ITEM NAME</label>
+                        <input type="text" maxlength="50" id="addItemName" class="form-control" placeholder="">
+                    </div>
+                    <div class="col" style="padding:0;">
+                        <label class="required">ITEM TYPE</label>
+                        <select id="addItemType" style="padding:0" class="form-control">
+                            @{
+                                if (ItemType != null)
+                                {
+                                    if (ItemType.Count() > 0)
+                                    {
+                                        foreach (ItemModel item in ItemType)
+                                        {
+                                            <option value="@item.CD">@item.ITEM_TYPE</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="required">ITEM STATUS</label>
+                        <select id="addItemStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Not Active</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="padding:0;">
+                        <label>ITEM DESCRIPTION</label>
+                        <textarea maxlength="100" style="resize:none" type="text" id="addItemDescription" class="form-control" placeholder="">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit ITEM MASTER</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <label class="required">ITEM NAME</label>
+                        <input type="text" maxlength="100" id="EditID" style="display:none" class="form-control" placeholder="">
+                        <input type="text" maxlength="100" id="editItemName" class="form-control" placeholder="">
+                    </div>
+                    <div class="col" style="padding:0;">
+                        <label class="required">ITEM TYPE</label>
+                        <select id="editItemType" style="padding:0" class="form-control">
+                            @{
+                                if (ItemType != null)
+                                {
+                                    if (ItemType.Count() > 0)
+                                    {
+                                        foreach (ItemModel item in ItemType)
+                                        {
+                                            <option value="@item.CD">@item.ITEM_TYPE</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>ITEM STATUS</label>
+                        <select id="editItemStatus" class="form-control">
+                            <option value="1">Active</option>
+                            <option value="0">Not Active</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="pediting:0;">
+                        <label>ITEM DESCRIPTION</label>
+                        <textarea style="resize:none" type="text" id="editItemDescription" class="form-control" placeholder="">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

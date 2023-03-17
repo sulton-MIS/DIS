@@ -1,0 +1,12 @@
+﻿select
+	COUNT(A.ID_TB_R_LEARN_EXAM_SCORE)
+from 
+	TB_R_LEARN_EXAM_SCORE A
+	LEFT JOIN TB_M_EMPLOYEE B ON A.ID_TB_M_EMPLOYEE = B.ID_TB_M_EMPLOYEE
+	LEFT JOIN TB_R_LEARN_EXAM_SUBJECT C ON A.ID_TB_R_LEARN_EXAM_SUBJECT = C.ID_TB_R_LEARN_EXAM_SUBJECT
+where
+	B.REG_NO like '%' + @RegNo + '%'
+	AND B.IDENTITY_NO like '%'+ @IdentityNo +'%' 
+	AND B.USERNAME like '%'+ @UserName +'%' 
+	AND B.EMAIL like '%'+ @Email +'%'
+

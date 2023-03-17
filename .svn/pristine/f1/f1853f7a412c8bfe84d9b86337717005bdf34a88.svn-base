@@ -1,0 +1,95 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.WP02003Master
+
+
+    <style>
+        .icon-danger {
+        }
+
+            .icon-danger:hover {
+                background-color: aquamarine;
+                cursor: pointer;
+            }
+
+        .icon-selected {
+            background-color: aquamarine;
+        }
+
+        caption{
+            font-size:20px;
+            font-weight:bold;
+            color:black;
+        }
+        .nopadding{
+            margin:0!important;
+            padding:0!important;
+        }
+
+        .middleCheck {
+            vertical-align: middle!important;
+        }
+
+        .badge{
+            font-size:14px;
+            font-weight:bold;
+        }
+    </style>
+
+    <!--form add new data-->
+    <div id="modalForm" class="modal fade">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                    <h4 class="modal-title" id="modalForm-title">Add employee</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" style="width:100%" id="tblEmployee">
+                                    <caption>Employee List</caption>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px">No</th>
+                                            <th scope="col">Action</th>
+                                            <th scope="col">NIK</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Incident</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" style="width:100%" id="tblIncident">
+                                    <caption class="captionIncidentList">Incident List</caption>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px">No</th>
+                                            <th scope="col">IMPB</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Level</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="add_employee()" id="btn_Confirm_Add" class="btn btn-primary btn-sm" data-dismiss="modal" style="width: 80px;"><i class="fa fa-check"></i> Add</button>
+                    <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

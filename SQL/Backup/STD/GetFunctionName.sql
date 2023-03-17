@@ -1,0 +1,10 @@
+﻿SELECT [FUNCTION_ID]
+      ,[MODULE_ID]
+      ,[FUNCTION_TYPE]
+      ,[FUNCTION_NAME]
+      ,[CREATED_DT]
+      ,[CHANGED_DT]
+      ,[CREATED_BY]
+      ,[CHANGED_BY]
+  FROM [dbo].[TB_M_FUNCTION]
+

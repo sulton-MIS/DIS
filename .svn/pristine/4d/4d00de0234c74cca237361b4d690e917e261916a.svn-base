@@ -1,0 +1,264 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Toyota.Common.Database;
+using Toyota.Common.Web.Platform;
+using Toyota.Common.Credential;
+using AI070.Models;
+using NPOI.SS.UserModel;
+
+namespace AI070.Models.WP01005Master
+{
+    public class WP01005Repository
+    {
+        #region Get_Data_Grid_WP01005
+        public List<WP01005Master> getDataWP01005(int Start, int Display, string EMPLOYEE_NAME, string IDENTITYNUMBER, string DEPARTEMENT, string DIVISION, string POSITION, string GROUP)
+        {
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            var d = db.Fetch<WP01005Master>("WP01005/WP01005_SearchData", new
+            {
+                START = Start,
+                DISPLAY = Display,                
+                EMPLOYEE_NAME,
+                IDENTITYNUMBER,
+                DEPARTEMENT,
+                DIVISION,
+                POSITION,
+                GROUP
+            });
+            db.Close();
+            return d.ToList();
+        }
+        #endregion
+
+        #region Count_Get_Data_Grid_WP01005
+        public int getCountWP01005(string DATA_ID, string EMPLOYEE_NAME, string IDENTITYNUMBER, string DEPARTEMENT, string DIVISION, string POSITION, string GROUP)
+        {
+
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            int result = db.SingleOrDefault<int>("WP01005/WP01005_SearchCount", new
+            {
+                DATA_ID = DATA_ID,
+                EMPLOYEE_NAME,
+                IDENTITYNUMBER,
+                DEPARTEMENT,
+                DIVISION,
+                POSITION,
+                GROUP
+            });
+            db.Close();
+            return result;
+        }
+        #endregion
+
+        #region Add Data
+        public static List<WP01005> Create(string name_sagyosha, string id_sagyosha, string dept, string bagian, string jabatan, string grp, string comment, string tmk, string username)
+        {
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            var d = db.Fetch<WP01005>("WP01005/WP01005_Create", new
+            {
+                name_sagyosha,
+                id_sagyosha,
+                dept,
+                bagian,
+                jabatan,     
+                grp,
+                comment,
+                tmk,
+                username
+            });
+            db.Close();
+            return d.ToList();
+        }
+        #endregion
+
+        #region Delete Data
+        public string Delete_Data(string ID)
+        {
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            var d = db.SingleOrDefault<string>("WP01005/WP01005_Delete", new
+            {
+                ID
+            });
+            db.Close();
+            return d;
+        }
+        #endregion
+
+        #region Update Data
+        public List<WP01005> Update_Data(string ID, string name_sagyosha, string id_sagyosha, string dept, string bagian, string jabatan, string grp, string comment, string tmk, string STATUS, string username)
+        {
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            var d = db.Fetch<WP01005>("WP01005/WP01005_Update", new
+            {
+                ID,
+                name_sagyosha,
+                id_sagyosha,
+                dept,
+                bagian,
+                jabatan,
+                grp,
+                comment,
+                tmk,
+                STATUS,                
+                username
+            });
+            db.Close();
+            return d.ToList();
+        }
+        #endregion
+
+        //#region Get Division
+        //public List<DivisionModel> getDivision()
+        //{
+        //    IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+        //    var d = db.Fetch<DivisionModel>("WP01005/WP01005_getDivision");
+
+        //    db.Close();
+        //    return d.ToList();
+        //}
+        //#endregion
+
+
+        //#region Get Project Location
+        //public List<CompanyModel> getCompany()
+        //{
+        //    IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+        //    var d = db.Fetch<CompanyModel>("WP01005/WP01005_getCompany");
+
+        //    db.Close();
+        //    return d.ToList();
+        //}
+        //#endregion
+
+        //#region Get Identity
+        //public List<IdentityModel> getIdentity()
+        //{
+        //    IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+        //    var d = db.Fetch<IdentityModel>("WP01005/WP01005_getIdentity");
+
+        //    db.Close();
+        //    return d.ToList();
+        //}
+        //#endregion
+
+        //#region Get Section
+        //public List<SectionModel> getSection(string SYSTEM_CD)
+        //{
+        //    IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+        //    var d = db.Fetch<SectionModel>("WP01005/WP01005_getSection", new
+        //    {
+        //        SYSTEM_CD
+        //    });
+
+        //    db.Close();
+        //    return d.ToList();
+        //}
+
+
+
+        //#endregion
+
+        //#region Get PIC
+        //public List<PICModel> getPIC()
+        //{
+        //    IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+        //    var d = db.Fetch<PICModel>("WP01005/WP01005_getPic");
+
+        //    db.Close();
+        //    return d.ToList();
+        //}
+        //#endregion
+
+
+
+        #region Get Executor
+        public List<ExecutorModel> getExecutor()
+        {
+            IDBContext db = DatabaseManager.Instance.GetContext("RTJN_PRD_3");
+            var d = db.Fetch<ExecutorModel>("WP01005/WP01005_getExecutor");
+
+            db.Close();
+            return d.ToList();
+        }
+        #endregion
+    }
+
+    //public class StatusModel
+    //{
+    //    public string ID { get; set; }
+    //    public string Status { get; set; }
+    //}
+
+    //public class DivisionModel
+    //{
+    //    public string Division { get; set; }
+    //    public string DIV { get; set; }
+    //    public string DIV_ID { get; set; }
+    //}
+
+    //public class CompanyModel
+    //{
+    //    public string ID { get; set; }
+    //    public string COMPANY { get; set; }
+    //}
+
+    //public class IdentityModel
+    //{
+    //    public string ID { get; set; }
+    //    public string IDENTITY_TEXT { get; set; }
+    //}
+
+    //public class PICModel
+    //{
+    //    public string ID { get; set; }
+    //    public string PIC_TEXT { get; set; }
+    //}
+
+    public class DeleteModel
+    {
+        public string DELETE_NAME { get; set; }
+        public string DELETE_MSG { get; set; }
+    }
+
+    //public class SectionModel
+    //{
+    //    public string ID { get; set; }
+    //    public string SECTION_TEXT { get; set; }
+    //}
+
+    public class ExecutorModel
+    {
+        public string ID { get; set; }
+        public string EXECUTOR_TEXT { get; set; }
+    }
+
+    public class PagingModel_WP01005
+    {
+        public int CountData { get; set; }
+        public int StartData { get; set; }
+        public int EndData { get; set; }
+        public int PositionPage { get; set; }
+        public List<int> ListIndex { get; set; }
+        public PagingModel_WP01005(int countdata, int positionpage, int dataperpage)
+        {
+            List<int> list = new List<int>();
+            EndData = positionpage * dataperpage;
+            CountData = countdata;
+            PositionPage = positionpage;
+            StartData = (positionpage - 1) * dataperpage + 1;
+            Double jml = countdata / dataperpage;
+            if (countdata % dataperpage > 0)
+            {
+                jml = jml + 1;
+            }
+
+            for (int i = 0; i < jml; i++)
+            {
+                list.Add(i);
+            }
+            ListIndex = list;
+        }
+    }
+}

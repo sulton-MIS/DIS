@@ -1,0 +1,143 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100004Master;
+@{
+    List<DISA100004Master> DataWP = (List<DISA100004Master>)ViewData["DataDISA100004"];
+    List<DISA100004> Status_Cmb = (List<DISA100004>)ViewData["Status_Cmb"];
+    List<DISA100004> Time_Cmb = (List<DISA100004>)ViewData["Time_Cmb"];
+    List<DISA100004> ExecTime_Cmb = (List<DISA100004>)ViewData["Time_Cmb"];
+    List<DISA100004> Model_type = (List<DISA100004>)ViewData["Model_type"];
+
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center;" class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 40px;" rowspan="2">No</th>
+                            <th style="width: 300px;" rowspan="2">Item Code</th>
+                            <th style="width: 150px;" rowspan="2">Lot Size</th>
+                            <th style="width: 200px;" rowspan="2">Master Qty</th>
+                            <th style="width: 200px;" rowspan="2">Box Qty</th>
+                            <th style="width: 200px;" rowspan="2">Weight</th>
+                            <th style="width: 150px;" rowspan="2">Total Weight</th>
+                            <th style="width: 200px;" rowspan="2">Jenis Transportation</th>
+                            <th style="width: 200px;" rowspan="2">Transportation Cost</th>
+                            <th style="width: 200px;" rowspan="2">AWB Free JPN</th>
+                            <th style="width: 200px;" rowspan="2">EDI Free JPN</th>
+                            <th style="width: 200px;" rowspan="2">AMS Free JPN</th>
+                            <th style="width: 200px;" rowspan="2">Trucking 0-250 Kg</th>
+                            <th style="width: 200px;" rowspan="2">Handling Air < 50 Kg</th>
+                            <th style="width: 200px;" rowspan="2">Handling Air > 50 Kg</th>
+                            <th style="width: 200px;" rowspan="2">Total Cost</th>
+                        </tr>                      
+                        <!--<tr>-->
+                            @*Colspan Dari "Created"*@
+                            <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>-->
+                            @*Colspan Dari "Created"*@
+                            <!--<th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>-->
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="12" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (DISA100004Master item in DataWP)
+                                    {                                       
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px; text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox" value="@item.ID,@item.item_code,@item.lot_size,@item.master_qty,@item.box_qty,@item.weight,@item.total_weight,@item.jenis_transportation,@item.transportation_cost,@item.awb_free_jpn,@item.edi_free_jpn,@item.ams_free_jpn,@item.trucking_0_250_kg_jpn,@item.handling_air_under_50_kg_jpn,@item.handling_air_upto_50_kg,@item.total_cost" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                   </td>
+                                                    <td style="width: 40px">
+                                                        @item.ROW_NUM
+                                                    </td>
+                                                    <td style="width: 300px"> @item.item_code</td>
+                                                    <td style="width: 150px"> @item.lot_size </td>
+                                                    <td style="width: 200px"> @item.master_qty </td>
+                                                    <td style="width: 200px"> @item.box_qty </td>
+                                                    <td style="width: 200px"> @item.weight </td>
+                                                    <td style="width: 150px"> @item.total_weight </td>
+                                                    <td style="width: 200px"> @item.jenis_transportation </td>
+                                                    <td style="width: 200px"> @item.transportation_cost </td>
+                                                    <td style="width: 200px"> @item.awb_free_jpn </td>
+                                                    <td style="width: 200px"> @item.edi_free_jpn </td>
+                                                    <td style="width: 200px"> @item.ams_free_jpn </td>
+                                                    <td style="width: 200px"> @item.trucking_0_250_kg_jpn </td>
+                                                    <td style="width: 200px"> @item.handling_air_under_50_kg_jpn </td>
+                                                    <td style="width: 200px"> @item.handling_air_upto_50_kg </td>
+                                                    <td style="width: 200px"> @item.total_cost </td>
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

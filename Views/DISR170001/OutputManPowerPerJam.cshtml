@@ -1,0 +1,200 @@
+﻿<style>
+    .highlight-red {
+        font-weight: bold;
+        background-color: #F5B7B1;
+    }
+
+    .highlight-yellow {
+        font-weight: bold;
+        background-color: #F7DC6F;
+    }
+
+    .highlight-green {
+        font-weight: bold;
+        background-color: #ABEBC6;
+    }
+
+    .highlight-blue {
+        font-weight: bold;
+        background-color: #AED6F1;
+    }
+
+    hr {
+        border: 1px dotted;
+    }
+
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+
+    html {
+        zoom: 65%;
+    }
+</style>
+<div class="row zero-padding">
+    <div class="col">
+        <h3 class="data-header">
+            DATA OUTPUT MAN POWER PERJAM BEDASARKAN OPERATOR
+            <b id="log"></b>
+        </h3>
+        <hr />
+        @*<div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:-55px; left: 100px;  margin-left: 10px; text-align:right; border:0px solid">*@
+        <div style="position: relative; top: -70px; text-align: right;">
+            <button id="openBook" class="btn btn-dark btn-xs"><i class="fa fa-book"></i> Manual Book</button>
+            <div class="dropdown" style="position:relative">                
+                <button class="btn btn-dark btn-xs"><i class="fa fa-info-circle"></i> Application References</button>
+                <div class="dropdown-content">
+                    <a id="openFileRoi"> Document ROI </a>
+                    <a id="openFileUrd"> Document URD </a>
+                    <a id="openFileFsd"> Document FSD </a>
+                    <a id="openFileTest"> Document Test (PT & UAT) </a>
+                    <a id="openFileTraining"> Document Training & Implementasi </a>
+                    <a id="openFileEvaluasi"> Document Evaluasi </a>
+                    <!--<a id="openFileEvaluasi" href="#">--> @*Document Evaluasi*@ <!--</a>-->
+                </div>
+            </div>
+        </div>
+
+    </div>    
+</div>
+
+<div class="row" style="position: relative; top: -50px;">
+    <div class="col">
+        <div class="table-responsive" style="padding: 10px">
+            <table style="border-spacing: 10px;border-collapse: separate;">
+                <tr>
+                    <td style="text-align:right">NIK : </td>
+                    <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchNik" /></td>
+                    <td style="width:80px;text-align:right">NAMA : </td>
+                    <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchNama" /></td>
+                    <td style="width:80px;text-align:right">GROUP : </td>
+                    <td style="width:150px;text-align:right">
+                        <select class="form-control" id="searchGroup" name="dropdown">
+                            <option id="searchGroup" value="A" selected="selected">A</option>
+                            <option id="searchGroup" value="B" selected="selected">B</option>
+                            <option id="searchGroup" value="C" selected="selected">C</option>
+                            <option id="searchGroup" value="" selected="selected"></option>
+                        </select>
+                    </td>
+                    <td style="width:80px;text-align:right">MONTHLY : </td>
+                    <td style="width:150px;text-align:right"><input id="searchMDate" type="text" class="form-control datepicker" /></td>
+                    <td><button onclick="getTabelOpmj()" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Filter</button></td>
+                    <td><button id="btnExport" class="btn btn-warning btn-xs"><i class="fa fa-download"></i> Export</button></td>
+                    <td> || </td>
+                    <td><button onclick="location.href='../../DISR090001'" class="btn btn-light btn-xs"><i class="fa fa-user"></i> Setting Komposisi ManPower </button></td>                 
+                    <!--td>-->
+                        @*<div class="col-xs-4 col-sm-4 col-md-3" style="position:relative; margin-top: 13px; top:-55px; left: 100px;  margin-left: 10px; text-align:right; border:0px solid">*@
+                            <!--<div class="dropdown" style="position:relative">
+                                <button class="btn btn-dark btn-xs"><i class="fa fa-info-circle"></i> Application References</button>
+                                <div class="dropdown-content">
+                                    <a id="openFileTest" href="#"> Document Test (PT & UAT) </a>
+                                    <a id="openFileTraining" href="#"> Document Training & Implementasi </a>
+                                    <a id="openFileEvaluasi" href="#"> Document Evaluasi </a>
+                                </div>
+                            </div>-->
+                        @*</div>*@
+                    <!--</td>-->
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
+
+<div class="row" style="position: relative; top: -65px;">
+    <div class="col">
+        <div class="table-responsive" style="padding: 10px">
+            <table id="tabel-contractor" class="table table-striped table-borderless table-hover" style="width:100%" border="1">
+                @*<caption>List of OPMJ</caption>*@
+                <thead>
+                    <tr>
+                        <th>NIK</th>
+                        <th>NAMA</th>
+                        <th>GRP</th>
+                        <th>H 01</th>
+                        <th>H 02</th>
+                        <th>H 03</th>
+                        <th>H 04</th>
+                        <th>H 05</th>
+                        <th>H 06</th>
+                        <th>H 07</th>
+                        <th>H 08</th>
+                        <th>H 09</th>
+                        <th>H 10</th>
+                        <th>H 11</th>
+                        <th>H 12</th>
+                        <th>H 13</th>
+                        <th>H 14</th>
+                        <th>H 15</th>
+                        <th>H 16</th>
+                        <th>H 17</th>
+                        <th>H 18</th>
+                        <th>H 19</th>
+                        <th>H 20</th>
+                        <th>H 21</th>
+                        <th>H 22</th>
+                        <th>H 23</th>
+                        <th>H 24</th>
+                        <th>H 25</th>
+                        <th>H 26</th>
+                        <th>H 27</th>
+                        <th>H 28</th>
+                        <th>H 29</th>
+                        <th>H 30</th>
+                        <th>H 31</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <!--<tbody>-->
+                @*@{
+                        foreach (WPSecurityMaster item in DataWP)
+                        {
+                    <tr>
+                        <td>@item.NIK</td>
+                    </tr>
+                        }
+                    }*@
+                <!--</tbody>-->
+            </table>
+        </div>
+    </div>
+</div>

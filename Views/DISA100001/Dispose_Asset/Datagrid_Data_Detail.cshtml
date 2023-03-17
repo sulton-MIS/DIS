@@ -1,0 +1,259 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    List<DISA100001DetailAsset> DataDetail_Asset = (List<DISA100001DetailAsset>)ViewData["DataDetail_Asset"];
+}
+<style>
+    table {
+        border-collapse: collapse;
+        /*font-family: Tahoma, Geneva, sans-serif;*/
+        font-size: 18px;
+    }
+
+        table td {
+            padding: 15px;
+        }
+
+        .thead1{
+            background-color:#f9fafb;
+            color: red;
+            font-weight: bold;
+            font-family: Segoe MDL2 Assets;
+        }
+
+        table thead td {
+            background-color: #54585d;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 13px;
+            border: 1px solid #dddfe1;
+        }
+
+        table tbody td {
+            color: #636363;
+            border: 1px solid #dddfe1;
+        }
+
+       /* table tbody tr {
+            background-color: #f9fafb;
+        }*/
+
+        table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+</style>
+
+<div class="row" style="margin-top: -13px; margin-left: 10px; margin-right: 10px">
+    <div class="col-xs-12 col-sm-12 col-md-11">
+        <h2><b>[@ViewData["Title"]]</b></h2>
+        @*<h4>@ViewData["NO_ASSET"]  ,  @ViewData["NAMA_ASSET"]</h4>*@
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="panel panel-default" style="border: none;">
+                <div class="panel-body" style="border: none;">
+                    <div class="row" style="margin-bottom: -25px;margin-top: -10px; border:none;">
+                        <div class="col-md-12">
+                            <center>
+                                <img src="~/Content/Upload/Foto/ManajementAsset/@ViewData["NAMA_FOTO"]" style="width:250px; height:230px; border: 0.5px solid #dddfe1; border-radius: 20px" />
+                            </center>
+                                
+                            <center>
+                            <table style="width:100%; margin-top: 10px; ">
+                                @{
+                                    if (DataDetail_Asset != null)
+                                    {
+                                        if (DataDetail_Asset.Count > 0)
+                                        {
+                                            var number = 1;
+                                            foreach (DISA100001DetailAsset item in DataDetail_Asset)
+                                            {
+                                                @*<tr>
+                                                    <td>NO. ASSET</td>
+                                                    <td> : </td>
+                                                    <td>@item.NO_ASSET</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><h4> NAMA ASSET: @item.NAMA_ASSET </h4></td>
+                                                </tr>*@
+	                                        <tbody>
+                                                <tr>
+                                                    <td class="thead1">NO. ASSET</td>
+                                                    <td colspan="2">@item.NO_ASSET</td>
+                                                    <td class="thead1">NAMA ASSET</td>
+                                                    <td colspan="2">@item.NAMA_ASSET</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">STATUS ASSET</td>
+                                                    <td colspan="2">@item.STATUS</td>
+                                                    <td class="thead1">STATUS DISPOSE ASSET</td>
+                                                    @{
+                                                        if (@item.FLG_DISPOSE_ASSET == "Dispose")
+                                                        {
+                                                            <td colspan="2"> DISPOSE </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td colspan="2"> NON-DISPOSE </td>
+                                                        }
+                                                    }
+                                                </tr>
+                                                <tr>
+                                                    @{
+                                                        if (item.JENIS_ASSET == "FA")
+                                                        {
+                                                            <td class="thead1">JENIS ASSET</td>
+                                                            <td colspan="2">@item.JENIS_ASSET (FIXED ASSET)</td>
+                                                        }
+                                                        else if (item.JENIS_ASSET == "A")
+                                                        {
+                                                            <td class="thead1">JENIS ASSET</td>
+                                                            <td colspan="2">@item.JENIS_ASSET (ASSET)</td>
+                                                        }
+                                                    }
+                                                    <td class="thead1">KATEGORI ASSET</td>
+                                                    <td colspan="2">@item.KATEGORI_ASSET</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">TAHUN PEROLEHAN</td>
+                                                    <td colspan="2">@item.TAHUN</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">MEREK</td>
+                                                    <td colspan="2">@item.MEREK</td>
+                                                    <td class="thead1">TIPE</td>
+                                                    <td colspan="2">@item.TIPE</td>
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">TIPE</td>
+                                                    <td colspan="2">@item.TIPE</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">SUPPLIER</td>
+                                                    <td colspan="2">@item.SUPPLIER</td>
+                                                        
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">TAHUN</td>
+                                                    <td colspan="2">@item.TAHUN</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">QTY</td>
+                                                    <td colspan="2">@item.QTY pcs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">HARGA SATUAN</td>
+                                                    <td colspan="2">Rp.@item.HARGA_SATUAN,-</td>
+                                                    <td class="thead1">TOTAL</td>
+                                                    <td colspan="2">Rp.@item.TOTAL,-</td>
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">TOTAL</td>
+                                                    <td colspan="2">@item.TOTAL</td>
+                                                </tr>*@
+                                                <tr>
+                                                    @{
+                                                        if (item.JENIS_ASSET == "FA")
+                                                        {
+                                                            <td class="thead1">JENIS ASSET</td>
+                                                            <td colspan="2">FIXED ASSET</td>
+                                                            <td class="thead1">KATEGORI ASSET</td>
+                                                            <td colspan="2">@item.KATEGORI_ASSET</td>
+                                                        }
+                                                        else if (item.JENIS_ASSET == "A")
+                                                        {
+                                                            <td class="thead1">JENIS ASSET</td>
+                                                            <td colspan="2">ASSET</td>
+                                                            <td class="thead1">KATEGORI ASSET</td>
+                                                            <td colspan="2">@item.KATEGORI_ASSET</td>
+                                                        }
+                                                    }
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">KATEGORI ASSET</td>
+                                                    <td colspan="2">@item.KATEGORI_ASSET</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">PIC BELI</td>
+                                                    <td colspan="2">@item.PIC_BELI</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">DEPARTMENT USER</td>
+                                                    <td colspan="2">@item.DEPT_USER</td>
+                                                    <td class="thead1">NAMA USER</td>
+                                                    <td colspan="2">@item.NAMA_USER</td>
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">NAMA USER</td>
+                                                    <td colspan="2">@item.NAMA_USER</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">KODE LOKASI</td>
+                                                    <td colspan="2">@item.KD_LOKASI</td>
+                                                    <td class="thead1">NAMA LOKASI</td>
+                                                    <td colspan="2">@item.NAMA_LOKASI</td>
+                                                </tr>
+                                                @*<tr>
+                                                    <td class="thead1">NAMA LOKASI</td>
+                                                    <td colspan="2">@item.NAMA_LOKASI</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">HALTE</td>
+                                                    <td colspan="2">@item.HALTE</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="thead1">JENIS DOKUMEN</td>
+                                                    <td colspan="2">@item.JENIS_DOC</td>
+                                                        <td class="thead1">NO. BC</td>
+                                                    <td colspan="2">@item.NO_BC</td>
+                                                </tr>
+                                                    @*<tr>
+                                                    <td class="thead1">NO. BC</td>
+                                                    <td colspan="2">@item.NO_BC</td>
+                                                </tr>*@
+                                                <tr>
+                                                    <td class="thead1">TANGGAL BC</td>
+                                                    <td colspan="2">@item.TGL_BC</td>
+                                                    <td class="thead1">TANGGAL REGISTER</td>
+                                                    <td colspan="2">@item.TGL_REGIST</td>
+                                                </tr>
+                                                    @*<tr>
+                                                    <td class="thead1">TANGGAL REGISTER</td>
+                                                    <td colspan="2">@item.TGL_REGIST</td>
+                                                </tr>*@
+                                                    <tr>
+                                                    <td class="thead1">HALTE</td>
+                                                    <td colspan="2">@item.HALTE</td>
+                                                </tr>
+	                                        </tbody>
+
+                                                number++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr id="NoDataFound">
+                                                <td colspan="8" width="90%" class="text-center">No data found</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr id="NoDataFound">
+                                            <td colspan="8" width="90%" class="text-center">No data found</td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col align-right align-bottom">
+        <button type="button" class="btn btn-danger btn-sm btn-close" id="btn_close" onclick="back()"><i class="fa fa-close"></i></button>
+    </div>
+</div>
+
+

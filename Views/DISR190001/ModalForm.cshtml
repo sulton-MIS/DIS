@@ -1,0 +1,295 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISR190001Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD MASTER QTY AMOUNT</h4>
+            </div>
+
+            <div class="modal-body">
+                @*<div class="FlexLine">
+                        <span class="FlexText">WORKER FORM</span>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Date</label>
+                        <input type="text" class="form-control datepicker" id="addDate">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount</label>
+                        <input id="addTargetAmount" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Print</label>
+                        <input id="addTargetPrint" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 1</label>
+                        <input id="add_T_Jam_Ke_1" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 2</label>
+                        <input id="add_T_Jam_Ke_2" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 3</label>
+                        <input id="add_T_Jam_Ke_3" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 4</label>
+                        <input id="add_T_Jam_Ke_4" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 5</label>
+                        <input id="add_T_Jam_Ke_5" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 6</label>
+                        <input id="add_T_Jam_Ke_6" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 7</label>
+                        <input id="add_T_Jam_Ke_7" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 8</label>
+                        <input id="add_T_Jam_Ke_8" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 9</label>
+                        <input id="add_T_Jam_Ke_9" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 10</label>
+                        <input id="add_T_Jam_Ke_10" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 11</label>
+                        <input id="add_T_Jam_Ke_11" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 12</label>
+                        <input id="add_T_Jam_Ke_12" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 13</label>
+                        <input id="add_T_Jam_Ke_13" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 14</label>
+                        <input id="add_T_Jam_Ke_14" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 15 - 16</label>
+                        <input id="add_T_Jam_Ke_15_16" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 17</label>
+                        <input id="add_T_Jam_Ke_17" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 18</label>
+                        <input id="add_T_Jam_Ke_18" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 19</label>
+                        <input id="add_T_Jam_Ke_19" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 20</label>
+                        <input id="add_T_Jam_Ke_20" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 21</label>
+                        <input id="add_T_Jam_Ke_21" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 22</label>
+                        <input id="add_T_Jam_Ke_22" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT MASTER QTY AMOUNT</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Date</label>
+                        <input type="text" class="form-control datepicker" id="addDate">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount</label>
+                        <input id="addTargetAmount" required type="text" class="form-control" />
+                    </div>
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Print</label>
+                        <input id="addTargetPrint" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 1</label>
+                        <input id="add_T_Jam_Ke_1" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 2</label>
+                        <input id="add_T_Jam_Ke_2" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 3</label>
+                        <input id="add_T_Jam_Ke_3" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 4</label>
+                        <input id="add_T_Jam_Ke_4" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 5</label>
+                        <input id="add_T_Jam_Ke_5" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 6</label>
+                        <input id="add_T_Jam_Ke_6" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 7</label>
+                        <input id="add_T_Jam_Ke_7" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 8</label>
+                        <input id="add_T_Jam_Ke_8" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 9</label>
+                        <input id="add_T_Jam_Ke_9" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 10</label>
+                        <input id="add_T_Jam_Ke_10" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 11</label>
+                        <input id="add_T_Jam_Ke_11" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 12</label>
+                        <input id="add_T_Jam_Ke_12" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 13</label>
+                        <input id="add_T_Jam_Ke_13" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 14</label>
+                        <input id="add_T_Jam_Ke_14" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 15 - 16</label>
+                        <input id="add_T_Jam_Ke_15_16" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 17</label>
+                        <input id="add_T_Jam_Ke_17" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 18</label>
+                        <input id="add_T_Jam_Ke_18" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 19</label>
+                        <input id="add_T_Jam_Ke_19" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 20</label>
+                        <input id="add_T_Jam_Ke_20" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 21</label>
+                        <input id="add_T_Jam_Ke_21" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Target Amount Jam Ke 22</label>
+                        <input id="add_T_Jam_Ke_22" required type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

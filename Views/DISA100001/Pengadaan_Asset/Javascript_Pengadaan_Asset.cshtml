@@ -1,0 +1,79 @@
+﻿
+<script>
+    var SITE_URL = window.location.href + "/";
+
+    var Message = [];
+
+    var GET_SITE_URL = (window.location.href).split('/');
+    var NEW_SITE_URL = "";
+
+    for (var i = 0; i < GET_SITE_URL.length; i++) {
+        if (GET_SITE_URL[i] != "PENGADAAN_ASSET") {
+            NEW_SITE_URL = NEW_SITE_URL + GET_SITE_URL[i] + "/";
+        }
+    }
+
+    //Get Message From TB_M_MESSAGE
+    $.ajax({
+        url: "../Message/GenerateMessage",
+        success: function (e) {
+            Message = e.res;
+        },
+        error: function (e) {
+            toastr.error('Generate Message Error, Not Instance to the Object');
+        }
+    });
+
+    $(document).ready(function () {
+        $('.menu-panel').click(function (e) {
+            var getMenu = $(this).attr('data-target');
+            (getMenu == "REQ_ASSET") ? REQ_ASSET() : (getMenu == "REG_ASSET") ? REG_ASSET() : (getMenu == "DATA_ASSET") ? DATA_ASSET() :
+                (getMenu == "REPAIR_ASSET") ? REPAIR_ASSET() : DATA();
+            //alert(getMenu);
+
+        });
+
+        $.ajax({
+            url: "../Message/GenerateMessage",
+            success: function (e) {
+                Message = e.res;
+
+                for (var i = 0; i < Message.length; i++) {
+                    var MSG_ID = Message[i].MSG_ID;
+                    if (MSG_ID == "MWP005") {
+                        $('#modal-save-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP006") {
+                        $('#modal-delete-tittle').text(Message[i].MSG_TEXT);
+                    } else if (MSG_ID == "MWP007") {
+                        $('#modal-update-tittle').text(Message[i].MSG_TEXT);
+                    }
+                }
+            }
+        });
+    });
+
+
+    function REQ_ASSET() {
+        //var win = window.open(SITE_URL + 'REQ_ASSET', '_blank');
+        var win = window.open(SITE_URL + 'REQ_ASSET', '_blank');
+        win.focus();
+    }
+
+    function REG_ASSET() {
+        var win = window.open(SITE_URL + 'REG_ASSET', '_blank');
+        win.focus();
+    }
+
+    function DATA_ASSET() {
+        var win = window.open(SITE_URL + 'DATA_ASSET', '_blank');
+        win.focus();
+    }
+
+    function REPAIR_ASSET() {
+        var win = window.open(SITE_URL + 'REPAIR_ASSET', '_blank');
+        win.focus();
+    }
+
+
+
+</script>

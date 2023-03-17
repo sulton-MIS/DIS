@@ -1,0 +1,167 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.WP03008Master;
+@{
+    List<WP03008Master> DataWP = (List<WP03008Master>)ViewData["DataWP03008"];
+    List<WP03008> Status_Cmb = (List<WP03008>)ViewData["Status_Cmb"];
+    List<WP03008> Time_Cmb = (List<WP03008>)ViewData["Time_Cmb"];
+    List<WP03008> ExecTime_Cmb = (List<WP03008>)ViewData["Time_Cmb"];
+    List<WP03008> Model_type = (List<WP03008>)ViewData["Model_type"];
+  
+    var seletc_data_unit_time = "";
+    var seletc_data_exec_time = "";
+    var seletc_data_status = "";
+    var error = 0;
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+
+    #tblScroll tbody td {
+        vertical-align: middle;
+    }
+
+    #bungkusTable {
+        overflow-y: hidden;
+    }
+
+    #dataGrid {
+        overflow-x: hidden;
+    }
+
+    td {
+        padding: 0 5px 0 5px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="table-responsive col-xs-12 col-sm-12" style="overflow: hidden;" id="GridTable">
+        <div style="border: 1pt solid #ccc; overflow:scroll; position: relative;">
+            <div id="gutterGrid" style="position: absolute; display: block; top: 0; right: 0; width: 17px; height: auto; border-left: 0px solid #ddd; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: rgb(241, 241, 241);"></div>
+            <div id="tScrollHead" style="width: 100%; border-right:17px solid #fff; position:sticky; top:0">
+                <table id="dynamic-table" class="table table-striped table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px; text-align: center; " class="grid-checkbox-col" rowspan="2">
+                                <input type="checkbox" value="All" style="height: 12px;" id="checkall" />
+                            </th>
+                            <th style="width: 30px;" rowspan="2">No</th>
+                            <th style="width: 200px;" rowspan="2">No Reg</th>
+                            <th style="width: 250px;" rowspan="2">Company</th>
+                            <th style="width: 200px;" rowspan="2">Full Name</th>
+                            <th style="width: 75px;" rowspan="2">Gender</th>
+                            <th style="width: 200px;" rowspan="2">Email</th>
+                            <th style="width: 120px;" rowspan="2">Status</th>
+                            <th style="width: 120px;" rowspan="2">Phone</th>
+                            <th style="width: 150px;" rowspan="2">Identity Type</th>
+                            <th style="width: 150px;" rowspan="2">No KTP</th>
+                            <th style="width: 150px;" rowspan="2">PIC Status</th>
+                            <th style="width: 150px;" rowspan="2">Anzen Sertificate No</th>
+                            <th style="width: 150px;" rowspan="2">Anzen Date From</th>
+                            <th style="width: 150px;" rowspan="2">Anzen Date To</th>
+                            <th style="width: 150px;" rowspan="2">Safety Induction No</th>
+                            <th style="width: 150px;" rowspan="2">Safety Date From</th>
+                            <th style="width: 150px;" rowspan="2">Safety Date To</th>
+                            <th style="width: 150px;" rowspan="2">Executor</th>
+                            <th style="width: 150px;" rowspan="2">Section</th>
+                            <th style="width: 400px;" rowspan="2">Address</th>
+                            <th style="width: 300px;" colspan="2">Created</th>
+                            <th style="width: 300px;" colspan="2">Changed</th>
+                        </tr>
+                        <tr>
+                            <!--Colspan Dari "Created"-->
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                            <!--Colspan Dari "Created"-->
+                            <th style="width: 150px; ">By</th>
+                            <th style="width: 150px; border: initial; ">Date</th>
+                        </tr>
+                    </thead>
+                    @{
+                        if (DataWP == null || DataWP.Count == 0)
+                        {
+                            <tr id="NoDataFound">
+                                <td colspan="23" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <!--data grid-->
+            <div id="tScrollBody" style="height: 200px;">
+                <table id="tblScroll" class="table table-bordered table-condensed table-fixed" style="min-width: 100%; table-layout: fixed; border: none">
+                    <tbody id="tableBody">
+                        <!----><!----><!---->
+                        @{
+                            if (DataWP != null)
+                            {
+                                if (DataWP.Count > 0)
+                                {
+                                    var number = 1;
+                                    foreach (WP03008Master item in DataWP)
+                                    {
+                                        string sts = "";
+                                        if (@item.STATUSTEXT == "1")
+                                        {
+                                            sts = "Active";
+                                        }
+                                        else
+                                        {
+                                            sts = "Not Active";
+                                        }
+                                                <tr id="row-@number" class="row-@item.ID">
+                                                    <td style="width: 100px;text-align: center;" class="grid-checkbox-col">
+                                                        <input class="grid-checkbox" value="@item.ID,@item.NOREG,@item.ID_TB_M_COMPANY,@item.FIRST_NAME,@item.LAST_NAME,@item.USERNAME,@item.PASSWORD,@item.EMAIL,@item.ADDRESS,@item.PHONE,@item.IDENTITY_TYPE,@item.IDENTITY_NO,@item.PIC_STATUS,@item.ANZEN_SERTIFICATE_NO,@item.ANZEN_DT_FROM.ToString("yyyy-MM-dd"),@item.ANZEN_DT_TO.ToString("yyyy-MM-dd"),@item.SAFETY_INDUCTION_NO,@item.SAFETY_INDUCTION_FROM.ToString("yyyy-MM-dd"),@item.SAFETY_INDUCTION_TO.ToString("yyyy-MM-dd"),@item.SECTION,@item.STATUS,@item.GENDER,@item.EXECUTOR" type="checkbox" name="checkdata[]" id="check-@number" style="height: 12px; display: inline-block;" />
+                                                    </td>
+                                                    <td style="width: 30px">
+                                                        @item.ROW_NUM
+                                                    </td>
+                                                    <td style="width: 200px"> @item.NOREG </td>
+                                                    <td style="width: 250px"> @item.COMPANY </td>
+                                                    <td style="width: 200px"> @item.FIRST_NAME @item.LAST_NAME</td>
+                                                    <td style="width: 75px"> @item.GENDER</td>
+                                                    <td style="width: 200px"> @item.EMAIL </td>
+                                                    <td style="width: 120px"> @sts </td>
+                                                    <td style="width: 120px"> @item.PHONE </td>
+                                                    <td style="width: 150px"> @item.IDENTITY_TYPE </td>
+                                                    <td style="width: 150px"> @item.IDENTITY_NO </td>
+                                                    <td style="width: 150px"> @item.PIC_STATUS_VAL </td>
+                                                    <td style="width: 150px"> @item.ANZEN_SERTIFICATE_NO </td>
+                                                    <td style="width: 150px"> @item.ANZEN_DT_FROM.ToString("dd-MMM-yyyy") </td>
+                                                    <td style="width: 150px"> @item.ANZEN_DT_TO.ToString("dd-MMM-yyyy") </td>
+                                                    <td style="width: 150px"> @item.SAFETY_INDUCTION_NO </td>
+                                                    <td style="width: 150px"> @item.SAFETY_INDUCTION_FROM.ToString("dd-MMM-yyyy") </td>
+                                                    <td style="width: 150px"> @item.SAFETY_INDUCTION_TO.ToString("dd-MMM-yyyy") </td>
+                                                    <td style="width: 150px"> @item.EXECUTOR </td>
+                                                    <td style="width: 150px"> @item.SECTION_NAME </td>
+                                                    <td style="width: 400px"> @item.ADDRESS </td>
+                                                    <td style="width: 150px"> @item.CREATE_BY </td>
+                                                    <td style="width: 150px"> @item.CREATE_DT.ToString("dd-MMM-yyyy HH:mm:ss") </td>
+                                                    <td style="width: 150px"> @item.UPDATE_BY </td>
+                                                    <td style="width: 150px"> @item.UPDATE_DT.ToString("dd-MMM-yyyy HH:mm:ss") </td>
+
+                                                </tr>
+                                        number++;
+                                    }
+                                }
+                            }
+                        }
+                        <!----><!----><!---->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-fixed" style="width: 100%">
+            <tfoot>
+                <tr>
+                    <td colspan="8" id="partialPaging">
+                        @Html.Partial("Datagrid_Paging")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

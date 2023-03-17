@@ -1,0 +1,7 @@
+﻿SELECT	
+		[Key] = STYLE_CD
+	,	[Value] = STYLE_NM
+	,	[JsonStyle] = OBJECT_ARGUMENT
+FROM	dbo.TB_M_STYLE
+ORDER BY 
+		STYLE_CD ASC

@@ -1,0 +1,176 @@
+﻿<script>
+
+	$(document).ready(function () {
+		reloadSelectedData();
+		reloadUnSelectedData();
+    });
+
+	function back() {
+		location.href = "/WP03003/"
+	}
+
+	function removeFromSubject() {
+        var chk = $("input[name='questionCheck-LeftSide']:checked").length;
+        //alert('hai >> ' + chk);
+
+        var id = $('#IdSubject').val();
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Remove');
+		}
+        else {
+            var Var = "";
+			var Send_Var = "";
+			var i = 0;
+            $("input[name='questionCheck-LeftSide']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+
+					if (Var != '') {
+						if (Send_Var == "") {
+							Send_Var = Var.split(',')[0];
+						} else {
+                            Send_Var = Send_Var + ","+ Var.split(',')[0];
+						}
+						i++;
+                    }
+                }
+			});
+
+            $.ajax({
+                type: "POST",
+                url: 'Move',
+                async: false,
+				data: {
+                    IdSubject: id,
+					IdQuestions: Send_Var,
+					removeFromSubject: true
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+				}
+                
+			});
+
+            reloadSelectedData();
+			reloadUnSelectedData();
+        }
+	}
+
+    function moveToSubject() {
+        var chk = $("input[name='questionCheck-RightSide']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Move');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+			var Send_Var = "";
+			var i = 0;
+            $("input[name='questionCheck-RightSide']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+
+					if (Var != '') {
+						if (Send_Var == "") {
+							Send_Var = Var.split(',')[0];
+						} else {
+                            Send_Var = Send_Var + ","+ Var.split(',')[0];
+						}
+						i++;
+                    }
+                }
+            });
+			var id = $('#IdSubject').val();
+
+            var table = document.getElementById("tabel-LeftSide");
+		    var tbodyRowCount = table.tBodies[0].rows.length;
+
+			if ((tbodyRowCount + i) > $('#MaxQuestion').val()) {
+				toastr.warning('Hanya dapat memiliki ' + $('#MaxQuestion').val() + ' pertanyaan!!');
+			} else {
+                $.ajax({
+                type: "POST",
+                url: 'Move',
+                async: false,
+				data: {
+                    IdSubject: id,
+					IdQuestions: Send_Var,
+					removeFromSubject: false
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+				}
+			});
+
+				reloadSelectedData();
+				reloadUnSelectedData();
+			}
+
+            
+		}
+	}
+
+	function reloadSelectedData() {
+        $.ajax({
+            type: "GET",
+            url: 'QuestionTableSelected',
+			async: false,
+			data: {
+			    id : parseInt($('#IdSubject').val()),
+				question : $('#question-LeftSide').val(),
+				category : $('#selectCategory-LeftSide').val()
+            },
+			success: function (data) {
+                $('#LeftSideTable').html(data);
+			}
+		});
+	}
+
+    function reloadUnSelectedData() {
+        $.ajax({
+            type: "GET",
+            url: 'QuestionTableUnSelected',
+			async: false,
+            data: {
+			    id : parseInt($('#IdSubject').val()),
+				question : $('#question-RightSide').val(),
+				category : $('#selectCategory-RightSide').val()
+            },
+			success: function (data) {
+                $('#RightSideTable').html(data);
+			}
+		});
+	}
+
+	$('#question-RightSide').keyup(function () {
+		reloadUnSelectedData();
+	});
+
+    $('#selectCategory-RightSide').change(function () {
+		reloadUnSelectedData();
+	});
+
+	$('#question-LeftSide').keyup(function () {
+		reloadSelectedData();
+	});
+
+	$('#selectCategory-LeftSide').change(function () {
+		reloadSelectedData();
+	});
+
+</script>

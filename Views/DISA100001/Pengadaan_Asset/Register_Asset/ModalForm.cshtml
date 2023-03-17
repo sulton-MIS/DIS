@@ -1,0 +1,427 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.Shared;
+@using Toyota.Common.Credential
+@using AI070.Models.DISA100001Master;
+@{
+    //List<CompanyModel> Companys = (List<CompanyModel>)ViewData["COMPANY"];
+    //List<IdentityModel> Identity = (List<IdentityModel>)ViewData["IDENTITY"];
+    List<ExecutorModel> Executor = (List<ExecutorModel>)ViewData["EXECUTOR"];
+    //List<SectionModel> Section = (List<SectionModel>)ViewData["SECTION"];
+    //List<PICModel> PICS = (List<PICModel>)ViewData["PIC"];
+    //List<DivisionModel> Division = (List<DivisionModel>)ViewData["Division"];
+    List<LokasiModel> Lokasi = (List<LokasiModel>)ViewData["nama_lokasi"];
+    //List<UrutanModel> Urutan = (List<UrutanModel>)ViewData["no_urut"];
+    //var Urutan_no = ViewData["no_urut"];
+
+}
+@*<script>
+    window.addEventListener('load', () => {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('addTimeKoshin').value = now.toISOString().slice(0, -1);
+    });
+    </script>*@
+
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM ADD MASTER ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                @*<input id="addNoUrut" type="hidden" class="form-control" value="@Urutan_no" />*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> NAMA ASSET </label>
+                        <input id="addNamaAsset" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> GAMBAR </label>
+                        <input type="file" onchange="change_image('add',this)" class="btn btn-white btn-xs form-control" accept="image/*" id="addNamaFoto" />
+                        <img onerror="this.style.display='none'" id="addImageBox" src="" style="height:150px;width:100%" />
+                        @*<input id="addNamaFoto" required type="file" class="form-control" />*@
+                        @*<input id="addSourceFoto" required type="hidden" class="form-control"/>*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> MEREK </label>
+                        <input id="addMerek" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TIPE </label>
+                        <input id="addTipe" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">SUPPLIER</label>
+                        <input id="addSupplier" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> TAHUN </label>
+                        <input id="addTahun" required type="number" class="form-control" />
+                        @*<input id="addTahun" required type="date" class="form-control" />*@
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> QTY </label>
+                        <input id="addQty" required type="number" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> HARGA SATUAN </label>
+                        <input id="addHargaSatuan" required type="number" class="form-control" />
+                    </div>
+                    @*<div class="col-md-6">
+                <label class="required"> TOTAL </label>
+                <input id="addTotal" required type="number" class="form-control" />
+            </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> JENIS ASSET </label>
+                        <select class="form-control" id="addJenisAsset" name="dropdown">
+                            <option id="addJenisAsset" value="" selected="selected"> </option>
+                            <option id="addJenisAsset" value="FA"> FIXED ASSET </option>
+                            <option id="addJenisAsset" value="A"> ASSET </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> KATEGORI ASSET </label>
+                        <select class="form-control" id="addKategoriAsset" name="dropdown">
+                            <option id="addKategoriAsset" value="" selected="selected">  </option>
+                            <option id="addKategoriAsset" value="A"> A </option>
+                            <option id="addKategoriAsset" value="B"> B </option>
+                            <option id="addKategoriAsset" value="C"> C </option>
+                            <option id="addKategoriAsset" value="D"> D </option>
+                            <option id="addKategoriAsset" value="E"> E </option>
+                            <option id="addKategoriAsset" value="F"> F </option>
+                            <option id="addKategoriAsset" value="G"> G </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> PIC BELI </label>
+                        <input id="addPicBeli" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> DEPT. USER </label>
+                        <select class="form-control" id="addDeptUser" name="dropdown">
+                            <option id="addDeptUser" value="" selected="selected">  </option>
+                            <option id="addDeptUser" value="ACCOUNTING"> ACCOUNTING </option>
+                            <option id="addDeptUser" value="BP"> BP </option>
+                            <option id="addDeptUser" value="CMS"> CMS </option>
+                            <option id="addDeptUser" value="GO"> GO </option>
+                            <option id="addDeptUser" value="ME"> ME </option>
+                            <option id="addDeptUser" value="MNF"> MNF </option>
+                            <option id="addDeptUser" value="WAREHOUSE"> WAREHOUSE </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> NAMA USER </label>
+                        <input id="addNamaUser" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> LOKASI </label>
+                        @*<input id="addKdLokasi" required type="text" class="form-control" />*@
+                        <select id="addKdLokasi" required class="form-control">
+                            @{
+                                if (Lokasi != null)
+                                {
+                                    if (Lokasi.Count() > 0)
+                                    {
+                                        foreach (LokasiModel item in Lokasi)
+                                        {
+                                            <option value="@item.kd_lokasi">@item.nama_lokasi</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> HALTE </label>
+                        <input id="addHalte" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> JENIS DOKUMEN </label>
+                        <select class="form-control" id="addJenisDoc" name="dropdown">
+                            <option id="addJenisDoc" value="" selected="selected"> </option>
+                            <option id="addJenisDoc" value="BC 3.2"> BC 3.2 </option>
+                            <option id="addJenisDoc" value="BC 4.0"> BC 4.0 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> NO. BC </label>
+                        <input id="addNoBC" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> TGL. BC </label>
+                        <input id="addTglBC" required type="date" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TGL. REGISTER </label>
+                        <input id="addTglRegister" required type="date" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> STATUS KONDISI ASSET </label>
+                        <select class="form-control" id="addStatus" name="dropdown">
+                            <option id="addStatus" value="" selected="selected">  </option>
+                            <option id="addStatus" value="Pakai"> Pakai </option>
+                            <option id="addStatus" value="Tidak Pakai"> Tidak Pakai </option>
+                            <option id="addStatus" value="Rusak"> Rusak </option>
+                            <option id="addStatus" value="Hilang"> Hilang </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> STATUS LABEL </label>
+                        <select class="form-control" id="addFlgStatusLabel" name="dropdown">
+                            <option id="addSFlgtatusLabel" value="0"> Belum Label </option>
+                            <option id="addFlgStatusLabel" value="1"> Sudah Label </option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="add_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">FORM EDIT MASTER ASSET</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-12">
+                        <label style="background-color:orange; border: 1px solid grey;"> 
+                        <b><u>**NOTES:</u></b> Harap isi seluruh kolom jika ingin lakukan perubahan data! Data yang telah diubah akan masuk ke dalam <b>History Perubahan Data </b>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="" />
+                    <div class="col-md-6">
+                        <label> NO. ASSET </label>
+                        <input id="editNoAsset" readonly type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TAHUN </label>
+                        <input id="editTahun" readonly type="text" class="form-control" />
+                        @*<input id="addTahun" required type="date" class="form-control" />*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> JENIS ASSET </label>
+                        <input id="editJenisAsset" readonly type="text" class="form-control" />
+                        @*<select required class="form-control" id="editJenisAsset" name="dropdown">
+                            <option id="editJenisAsset" value="" selected="selected">  </option>
+                            <option id="editJenisAsset" value="FA" selected="selected"> Fixed Asset </option>
+                            <option id="editJenisAsset" value="A" selected="selected"> Asset </option>
+                        </select>*@
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> KATEGORI ASSET </label>
+                        <input id="editKategoriAsset" readonly type="text" class="form-control" />
+                        @*<select required class="form-control" id="editKategoriAsset" name="dropdown">
+                            <option id="editKategoriAsset" value="" selected="selected">  </option>
+                            <option id="editKategoriAsset" value="A" selected="selected"> A </option>
+                            <option id="editKategoriAsset" value="B" selected="selected"> B </option>
+                            <option id="editKategoriAsset" value="C" selected="selected"> C </option>
+                            <option id="editKategoriAsset" value="D" selected="selected"> D </option>
+                            <option id="editKategoriAsset" value="E" selected="selected"> E </option>
+                            <option id="editKategoriAsset" value="F" selected="selected"> F </option>
+                            <option id="editKategoriAsset" value="G" selected="selected"> G </option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> NAMA ASSET </label>
+                        <input id="editNamaAsset" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> GAMBAR </label>
+                        <input type="file" onchange="change_image('edit',this)" class="btn btn-white btn-xs form-control" accept="image/*" id="editNamaFoto" />
+                        <img onerror="this.style.display='none'" id="editImageBox" src="" style="height:150px;width:100%" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> MEREK </label>
+                        <input id="editMerek" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TIPE </label>
+                        <input id="editTipe" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required">SUPPLIER</label>
+                        <input id="editSupplier" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> QTY </label>
+                        <input id="editQty" required type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> HARGA SATUAN </label>
+                        <input id="editHargaSatuan" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> HARGA SATUAN </label>
+                        <input id="editHargaSatuan" required type="text" class="form-control" />
+                    </div>-->
+                    @*<div class="col-md-6">
+                        label class="required"> TOTAL </label>
+                        <input id="addTotal" required type="number" class="form-control" />
+                    </div>*@
+                <!--</div>-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> PIC BELI </label>
+                        <input id="editPicBeli" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> DEPT. USER </label>
+                        <select required class="form-control" id="editDeptUser" name="dropdown">
+                            <option id="editDeptUser" value="" selected="selected">  </option>
+                            <option id="editDeptUser" value="ACCOUNTING" selected="selected"> ACCOUNTING </option>
+                            <option id="editDeptUser" value="BP" selected="selected"> BP </option>
+                            <option id="editDeptUser" value="CMS" selected="selected"> CMS </option>
+                            <option id="editDeptUser" value="GO" selected="selected"> GO </option>
+                            <option id="editDeptUser" value="ME" selected="selected"> ME </option>
+                            <option id="editDeptUser" value="MNF" selected="selected"> MNF </option>
+                            <option id="editDeptUser" value="WAREHOUSE" selected="selected"> WAREHOUSE </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> NAMA USER </label>
+                        <input id="editNamaUser" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> LOKASI </label>
+                        <select required id="editKdLokasi" class="form-control">
+                            @{
+                                if (Lokasi != null)
+                                {
+                                    if (Lokasi.Count() > 0)
+                                    {
+                                        foreach (LokasiModel item in Lokasi)
+                                        {
+                                            <option value="@item.kd_lokasi">@item.nama_lokasi</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> HALTE </label>
+                        <input id="editHalte" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> JENIS DOKUMEN </label>
+                        <select required class="form-control" id="editJenisDoc" name="dropdown">
+                            <option id="editJenisDoc" value="" selected="selected"> </option>
+                            <option id="editJenisDoc" value="BC 3.2" selected="selected"> BC 3.2 </option>
+                            <option id="editJenisDoc" value="BC 4.0" selected="selected"> BC 4.0 </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> NO. BC </label>
+                        <input id="editNoBC" required type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> TGL. BC </label>
+                        <input required type="text" class="form-control datepicker" id="editTglBC" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TGL. REGISTER </label>
+                        <input required type="text" class="form-control datepicker" id="editTglRegister" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> STATUS KONDISI ASSET </label>
+                        <select required class="form-control" id="editStatus" name="dropdown">
+                            <option id="editStatus" value="" selected="selected">  </option>
+                            <option id="editStatus" value="Pakai" selected="selected"> Pakai </option>
+                            <option id="editStatus" value="Tidak Pakai" selected="selected"> Tidak Pakai </option>
+                            <option id="editStatus" value="Rusak" selected="selected"> Rusak </option>
+                            <option id="editStatus" value="Hilang" selected="selected"> Hilang </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> STATUS LABEL </label>
+                        <select required class="form-control" id="editFlgStatusLabel" name="dropdown">
+                            <option id="editFlgStatusLabel" value="" selected="selected"> Belum Label </option>
+                            <option id="editFlgStatusLabel" value="1" selected="selected"> Sudah Label </option>
+                        </select>
+                    </div>
+                </div>
+                @*<div class="row">
+                    <div class="col-md-6">
+                        <label class="required"> STATUS DISPOSE </label>
+                        <select class="form-control" selected="selected" id="editFlgDispose" name="dropdown">
+                            <option id="editFlgDispose" value="" selected="selected"> Non-Dispose </option>
+                            <option id="editFlgDispose" value="1" selected="selected"> Dispose </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required"> TGL. DISPOSE </label>
+                        <input required type="text" class="form-control datepicker" id="editTglDispose" />
+                    </div>
+                </div>*@
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="edit_check()" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="editBtnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

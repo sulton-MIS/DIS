@@ -1,0 +1,245 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA100001Master;
+@{
+    var Reg_No = ViewData["RegNo"];
+}
+
+
+
+<!-- Style Desain Page -->
+<style>
+    .menu-text-panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .menu-panel:hover {
+        background-color: rgb(84, 96, 125);
+        cursor: pointer;
+    }
+
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border: 0;
+        border-top: 2px solid black;
+    }
+
+    .row {
+        margin: 0;
+        padding: 0;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .menu-panel {
+            min-height: 250px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+
+    @@media only screen and (min-width: 600px) {
+        .menu-panel {
+            min-height: 350px;
+        }
+
+        .fa-menu-icon {
+            font-size: 80px;
+            font-weight: 800;
+        }
+
+        .menu-text {
+            font-size: 25px;
+        }
+
+        #menu-container {
+            margin: 20px 20px 20px 20px;
+            padding: 10px;
+        }
+    }
+</style>
+
+
+<!-- Page View -->
+<div id="menu-container" class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <input data-target="userLogin" id="userLogin" style="display:none" type="button" value="@ViewData["User"]" />
+            <input data-target="regLogin" id="regLogin" style="" type="button" value="@ViewData["RegNo"]" />
+
+        </div>
+        <!--Baris 1-->
+        <div class="row">
+            <!--Pengadaan Asset-->
+            <div class="col-sm-6 col-md-6" style="border:1px solid black">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 0px;">
+                    <h1><b><u>MENU PENGADAAN ASSET</u></b></h1>
+                </div>
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="REQ_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-shopping-basket fa-menu-icon"></i><br />
+                                <b class="menu-text">LIST REQUEST ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-sm-3 col-md-4">
+                        <div class="panel panel-default menu-panel" data-target="PENGADAAN_ASSET">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-list fa-menu-icon"></i><br />
+                                    <b class="menu-text">LIST PENGADAAN ASSET</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-4">
+                        <div class="panel panel-default menu-panel" data-target="REG_ASSET">
+                            <div class="panel-body">
+                                <p class="menu-text-panel">
+                                    <i class="fa fa-registered fa-menu-icon"></i><br />
+                                    <b class="menu-text">LIST REGISTER ASSET</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>*@
+
+            </div>
+
+            <!-- Inventarisasi Asset -->
+            <div class="col-sm-6 col-md-6" style="border:1px double; left:10px">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 0px;">
+                    <h1><b><u>MENU INVENTARISASI ASSET</u></b></h1>
+                </div>
+
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="DATA_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                                <b class="menu-text">LIST DATA MASTER ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Baris 2-->
+        <div class="row" style="margin-top:20px">
+            <!-- List Lapor/Operasi Asset -->
+            <div class="col-sm-6 col-md-6" style="border:1px solid black">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 10px;">
+                    <h1><b><u>MENU LAPOR ASSET</u></b></h1>
+                </div>
+
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="LAPOR_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-list-ul fa-menu-icon"></i><br />
+                                <b class="menu-text">LIST LAPOR ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Asset -->
+            <div class="col-sm-6 col-md-6" style="border:1px solid black; left:10px;">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 10px;">
+                    <h1><b><u>MENU AUDIT ASSET</u></b></h1>
+                </div>
+
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="PAGE_INPUT_AUDIT_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-pencil fa-menu-icon"></i><br />
+                                <b class="menu-text">INPUT FORM AUDIT ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="PAGE_DATA_AUDIT_ASSET_BULANAN">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-moon-o fa-menu-icon"></i><br />
+                                <b class="menu-text">REPORT AUDIT BULANAN </b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="PAGE_DATA_AUDIT_ASSET_SEMESTER">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-calendar-check-o fa-menu-icon"></i><br />
+                                <b class="menu-text">REPORT AUDIT SEMESTER</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Baris 3-->
+        <div class="row" style="margin-top:20px;">
+            <!-- Repair Asset -->
+            @*<div class="col-sm-6 col-md-6" style="border:1px solid black;">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 10px;">
+                    <h1><b><u>MENU REPAIR ASSET</u></b></h1>
+                </div>
+
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default  menu-panel" data-target="REPAIR_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-edit fa-menu-icon"></i><br />
+                                <b class="menu-text"> REPAIR DATA ASSET </b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+            <!-- Dispose Asset -->
+            <div class="col-sm-6 col-md-6" style="border:1px solid black;">
+                <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -10px; margin-left: 10px;">
+                    <h1><b><u>MENU DISPOSE ASSET</u></b></h1>
+                </div>
+
+                <div class="col-sm-3 col-md-4">
+                    <div class="panel panel-default menu-panel" data-target="DISPOSE_ASSET">
+                        <div class="panel-body">
+                            <p class="menu-text-panel">
+                                <i class="fa fa-trash-o fa-menu-icon"></i><br />
+                                <b class="menu-text">LIST DISPOSE ASSET</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,115 @@
+﻿
+<style>
+    .highlight-red {
+        font-weight: bold;
+        background-color: #F5B7B1;
+    }
+    .highlight-yellow {
+        font-weight: bold;
+        background-color: #F7DC6F;
+    }
+    .highlight-green {
+        font-weight: bold;
+        background-color: #ABEBC6;
+    }
+    .highlight-blue {
+        font-weight: bold;
+        background-color: #AED6F1;
+    }
+</style>
+    <div class="row zero-padding">
+        <div class="col">
+            <h3 class="data-header">DATA OUTPUT MAN POWER PERJAM</h3>
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive" style="padding: 10px">
+                <table style="border-spacing: 10px;border-collapse: separate;">
+                    <tr>
+                        <td style="text-align:right">NIK : </td>
+                        <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchNik" /></td>
+                        <td style="width:80px;text-align:right">NAMA : </td>
+                        <td style="width:150px;text-align:right"><input class="form-control" type="text" id="searchNama" /></td>
+                        <td style="width:80px;text-align:right">GROUP : </td>
+                        <td style="width:150px;text-align:right">                        
+                            <select class="form-control" id="searchGroup" name="dropdown">
+                                <option id="searchGroup" value="A" selected="selected">A</option>
+                                <option id="searchGroup" value="B" selected="selected">B</option>
+                                <option id="searchGroup" value="C" selected="selected">C</option>
+                                <option id="searchGroup" value="" selected="selected"></option>
+                            </select>
+
+                        </td>
+                        <td style="width:80px;text-align:right">DATE : </td>
+                        <td style="width:150px;text-align:right"><input id="searchMDate" type="text" class="form-control datepicker" /></td>
+                        <td><button onclick="getTabelContractor()" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Filter</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive" style="padding: 10px">
+                <table id="tabel-contractor" class="table table-striped table-borderless table-hover" style="width:100%">
+                    <caption>List of OPMJ</caption>
+                    <thead>
+                        <tr>
+       
+                            <th>NIK</th>
+                            <th>NAMA</th>
+                            <th>GRP</th>
+                            <th>HARI 01</th>
+                            <th>HARI 02</th>
+                            <th>HARI 03</th>
+                            <th>HARI 04</th>
+                            <th>HARI 05</th>
+                            <th>HARI 06</th>
+                            <th>HARI 07</th>
+                            <th>HARI 08</th>
+                            <th>HARI 09</th>
+                            <th>HARI 10</th>
+                            <th>HARI 11</th>
+                            <th>HARI 12</th>
+                            <th>HARI 13</th>
+                            <th>HARI 14</th>
+                            <th>HARI 15</th>
+                            <th>HARI 16</th>
+                            <th>HARI 17</th>
+                            <th>HARI 18</th>
+                            <th>HARI 19</th>
+                            <th>HARI 20</th>
+                            <th>HARI 21</th>
+                            <th>HARI 22</th>
+                            <th>HARI 23</th>
+                            <th>HARI 24</th>
+                            <th>HARI 25</th>
+                            <th>HARI 26</th>
+                            <th>HARI 27</th>
+                            <th>HARI 28</th>
+                            <th>HARI 29</th>
+                            <th>HARI 30</th>
+                            <th>HARI 31</th>
+                        </tr>
+                    </thead>            
+                    <tbody>
+
+                    </tbody>
+                    <!--<tbody>-->
+                        @*@{ 
+                            foreach (WPSecurityMaster item in DataWP)
+                            {
+                        <tr>
+                            <td>@item.NIK</td>
+                        </tr>
+                            }
+                        }*@
+                    <!--</tbody>-->
+                </table>
+            </div>
+        </div>
+    </div>

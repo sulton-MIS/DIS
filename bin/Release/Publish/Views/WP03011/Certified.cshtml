@@ -1,0 +1,182 @@
+﻿@using AI070.Models.WP03011;
+
+@{
+    Layout = null;
+}
+
+@{
+    Employee employee = (Employee)ViewData["employee"];
+    byte[] qrCode = (byte[])ViewData["qrCode"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sertifikat</title>
+
+    <style>
+        @@font-face {
+            font-family: alluraregular;
+            src: url('../Content/UI/allura_regular_macroman/Allura-Regular-webfont.eot');
+            src: url('../Content/UI/allura_regular_macroman/Allura-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('../Content/UI/allura_regular_macroman/Allura-Regular-webfont.woff') format('woff'), url('../Content/UI/allura_regular_macroman/Allura-Regular-webfont.ttf') format('truetype'), url('../Content/UI/allura_regular_macroman/Allura-Regular-webfont.svg#alluraregular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .container {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+        }
+
+        .center {
+            position: absolute;
+            left: 0;
+            top: 20%;
+            width: 100%;
+            text-align: center;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .centered {
+            left: 50%;
+            transform: translate(0, -50%);
+        }
+
+        .employee-name {
+            position: absolute;
+            top: 30%;
+        }
+
+        .presented {
+            font-family: alluraregular;
+            font-size: 30px;
+            display: block;
+        }
+
+        .completed {
+            font-family: alluraregular;
+            font-size: 30px;
+            display: block;
+        }
+
+        .work-permit {
+            font-family: sans-serif;
+            font-size: 25px;
+            display: block;
+        }
+
+        .recognition {
+            font-family: sans-serif;
+            font-size: 25px;
+            display: block;
+        }
+
+        .noreg {
+            font-family: sans-serif;
+            font-size: 20px;
+            display: block;
+            margin: -10% 0 0 38%;
+        }
+
+        .qr-image {
+            width: 100%;
+            margin-left: 25%;
+            height: auto;
+        }
+
+        .first-td {
+            width: 25%;
+            padding-top: 3%;
+        }
+
+        .second-td {
+            vertical-align: initial;
+            padding-top: 4%;
+        }
+
+        .table-container {
+            width: 90%;
+            height: auto;
+            position: absolute;
+            left: 5%;
+            top: 20%;
+        }
+
+        /*.name {
+            font-family: sans;
+            font-size: 35px;
+        }*/
+
+        .the-date {
+            font-size: 25px;
+        }
+
+        .safety-no {
+            font-size: 30px;
+        }
+
+        .font_worker_name {
+            font-size: 60px;
+            /*font-family: "Times New Roman", Times, serif;*/
+            font-family: cursive;
+            font-weight: 900;
+            line-height: 0.02;
+        }
+
+        .font_worker_text {
+            font-size: 30px;
+            font-family: cursive;
+            font-weight: 900;
+            line-height: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="~/Content/TemplateReport/Certificate.png" />
+        <table class="table-container">
+            <tr>
+                <td class="first-td">
+                    <img class="qr-image" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(qrCode))" class="qr-image" />
+                    <b class="noreg">@employee.IdentityNo</b>
+                </td>
+
+                <td class="second-td">
+                    <p class="font_worker_text">Presented &nbsp;To :</p>
+                    <p class="font_worker_name">@employee.Name</p>
+                    <p class="font_worker_text">Has Successfully Completed</p>
+                    <p class="font_worker_text">Contractor Work Permit Receiver Prerequisite</p>
+                    <p class="font_worker_text">( Hazard Recognition, Confined Space, Lock Out, Tag Out )</p>
+                    <table style="width:95%; text-align:center">
+                        <tr>
+                            <td colspan="2" style="font-weight:bold;font-size:45vw">
+                                <span class="safety-no">No Safety: @employee.SafetyNo</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="the-date">Issue Date: @employee.SafetyFrom.ToString("dd-MMM-yyyy")</span></td>
+                            <td><span class="the-date">Expire Date: @employee.SafetyTo.ToString("dd-MMM-yyyy")</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><span class="the-date"> Duration: @((employee.SafetyTo - employee.SafetyFrom).TotalDays) Days</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="box1">
+
+    </div>
+</body>
+</html>

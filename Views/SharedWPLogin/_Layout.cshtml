@@ -1,0 +1,274 @@
+﻿@using Toyota.Common.Utilities
+@{
+    MenuList menuList = Html.Toyota().Page.Menu;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>@Html.Toyota().Application.Name - @Html.Toyota().Page.Title</title>
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <style>
+        /* Loading */
+        .loader {
+            background-color: rgba(0, 0, 0, 0.8);
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 999;
+            margin-top: 0px;
+            top: 0px;
+        }
+
+        /*.loader-centered {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            height: 200px;
+            width: 200px;
+            margin-top: -100px;
+            margin-left: -100px;
+        }*/
+
+        .object {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0);
+            margin-right: auto;
+            margin-left: auto;
+            border: 4px solid #fff;
+            left: 73px;
+            top: 73px;
+            position: absolute;
+        }
+
+        .square-one {
+            -webkit-animation: first_object_animate 1s infinite ease-in-out;
+            animation: first_object_animate 1s infinite ease-in-out;
+        }
+
+        .square-two {
+            -webkit-animation: second_object 1s forwards, second_object_animate 1s infinite ease-in-out;
+            animation: second_object 1s forwards, second_object_animate 1s infinite ease-in-out;
+        }
+
+        .square-three {
+            -webkit-animation: third_object 1s forwards, third_object_animate 1s infinite ease-in-out;
+            animation: third_object 1s forwards, third_object_animate 1s infinite ease-in-out;
+        }
+
+        @@-webkit-keyframes second_object {
+            100% {
+                width: 100px;
+                height: 100px;
+                left: 48px;
+                top: 48px;
+            }
+        }
+
+        @@keyframes second_object {
+            100% {
+                width: 100px;
+                height: 100px;
+                left: 48px;
+                top: 48px;
+            }
+        }
+
+        @@-webkit-keyframes third_object {
+            100% {
+                width: 150px;
+                height: 150px;
+                left: 23px;
+                top: 23px;
+            }
+        }
+
+        @@keyframes third_object {
+            100% {
+                width: 150px;
+                height: 150px;
+                left: 23px;
+                top: 23px;
+            }
+        }
+
+        @@-webkit-keyframes first_object_animate {
+            0% {
+                -webkit-transform: perspective(100px);
+            }
+
+            50% {
+                -webkit-transform: perspective(100px) rotateY(-180deg);
+            }
+
+            100% {
+                -webkit-transform: perspective(100px) rotateY(-180deg) rotateX(-180deg);
+            }
+        }
+
+        @@keyframes first_object_animate {
+            0% {
+                transform: perspective(100px) rotateX(0deg) rotateY(0deg);
+                -webkit-transform: perspective(100px) rotateX(0deg) rotateY(0deg);
+            }
+
+            50% {
+                transform: perspective(100px) rotateX(-180deg) rotateY(0deg);
+                -webkit-transform: perspective(100px) rotateX(-180deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: perspective(100px) rotateX(-180deg) rotateY(-180deg);
+                -webkit-transform: perspective(100px) rotateX(-180deg) rotateY(-180deg);
+            }
+        }
+
+        @@-webkit-keyframes second_object_animate {
+            0% {
+                -webkit-transform: perspective(200px);
+            }
+
+            50% {
+                -webkit-transform: perspective(200px) rotateY(180deg);
+            }
+
+            100% {
+                -webkit-transform: perspective(200px) rotateY(180deg) rotateX(180deg);
+            }
+        }
+
+        @@keyframes second_object_animate {
+            0% {
+                transform: perspective(200px) rotateX(0deg) rotateY(0deg);
+                -webkit-transform: perspective(200px) rotateX(0deg) rotateY(0deg);
+            }
+
+            50% {
+                transform: perspective(200px) rotateX(180deg) rotateY(0deg);
+                -webkit-transform: perspective(200px) rotateX(180deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: perspective(200px) rotateX(180deg) rotateY(180deg);
+                -webkit-transform: perspective(200px) rotateX(180deg) rotateY(180deg);
+            }
+        }
+
+        @@-webkit-keyframes third_object_animate {
+            0% {
+                -webkit-transform: perspective(300px);
+            }
+
+            50% {
+                -webkit-transform: perspective(300px) rotateY(-180deg);
+            }
+
+            100% {
+                -webkit-transform: perspective(300px) rotateY(-180deg) rotateX(-180deg);
+            }
+        }
+
+        @@keyframes third_object_animate {
+            0% {
+                transform: perspective(300px) rotateX(0deg) rotateY(0deg);
+                -webkit-transform: perspective(300px) rotateX(0deg) rotateY(0deg);
+            }
+
+            50% {
+                transform: perspective(300px) rotateX(-180deg) rotateY(0deg);
+                -webkit-transform: perspective(300px) rotateX(-180deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: perspective(300px) rotateX(-180deg) rotateY(-180deg);
+                -webkit-transform: perspective(300px) rotateX(-180deg) rotateY(-180deg);
+            }
+        }
+        /*---LOADING---*/
+
+        #clock {
+            color: White;
+            padding: 0 10px;
+        }
+    </style>
+
+</head>
+    @Html.Partial("../SharedWPLogin/_Header")
+<body class="no-skin" ng-app="app">
+    <!-- toastr scripts -->
+    <script src="/Content/Bootstrap/js/toastr.js"></script>
+    <!-- toastr css -->
+    <link rel="stylesheet" href="/Content/Bootstrap/css/toastr.css" />
+
+    @Html.Partial("../SharedWPLogin/_Navbar")
+    @RenderBody()
+
+    @Html.Partial("../SharedWPLogin/_Script")
+
+    <script type="text/javascript" src="@Url.Content("~/Content/Bootstrap/js/date-time/bootstrap-datepicker.js")"></script>
+    @*<script src="~/Content/Bootstrap/js/date-time/bootstrap-datetimepicker.js"></script>*@
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'yyyymm',
+                changeYear: true,
+                showAnim: 'fadeIn',
+                duration: 200,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                currentText: 'Now',
+                shortYearCutoff: '+20',
+                numberOfMonths: 1,
+                showButtonPanel: true,
+                yearRange: 'c-200:c',
+            });
+        });
+
+
+        /** start show clock **/
+        var tday = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+        var tmonth = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+        function GetClock() {
+            var d = new Date();
+            var nday = d.getDay(), nmonth = d.getMonth(), ndate = d.getDate(), nyear = d.getFullYear(), nhour = d.getHours(), nmin = d.getMinutes(), nsec = d.getSeconds();
+            var nclock = tday[nday] + ", " + " " + ndate + " " + tmonth[nmonth] + " " + nyear + " " + nhour + ":" + nmin + ":" + nsec;
+            $("#clock").text(nclock);
+        }
+
+        GetClock();
+        setInterval(GetClock, 1000);
+        /** end show clock **/
+        /** End skin layout **/
+    </script>
+
+
+    <!-- LOADING -->
+    @*<div class="loader">
+        <div class="loader-centered">
+            <div class="object square-one"></div>
+            <div class="object square-two"></div>
+            <div class="object square-three"></div>
+        </div>
+    </div>*@
+    @*<div class="container bootstrap snippets bootdeys">
+            <div class="jumbotron">
+                <h1 id="loading-text">Loading...</h1>
+            </div>
+        </div>*@
+    <script>
+        //Loading
+        $(document).ajaxStart(function () {
+            $('.loader').show();
+        }).ajaxStop(function () {
+            $(".loader").delay(500).fadeOut("slow");
+        });
+    </script>
+
+</body>
+</html>

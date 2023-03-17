@@ -1,0 +1,504 @@
+﻿<script>
+    var SITE_URL = window.location.href + "/";
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        //OnSearch(1);
+
+    });
+
+    // open form new
+    $("#btn_new").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Add',
+            async: false,
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+    });
+
+    // back botton
+    function back() {
+        location.href = "/WP03008"
+    }
+
+    // back botton
+    function back_to_home() {
+        location.href = "/WPMember"
+    }
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+    }
+
+    //tombol Save / Insert
+    function Insert() {
+        var RegNo = $('#addRegNo').val();
+        var FirstName = $('#addFirstName').val();
+        var LastName = $('#addLastName').val();
+        var Username_member = $('#addUsername').val();
+        var Password = $('#addPassword').val();
+        var Email = $('#addEmail').val();
+        var Address = $('#addAddress').val();
+        var Phone = $('#addPhone').val();
+        var IdentityType = $('#addIdentityType').val();
+        var IdentityNo = $('#addIdentityNo').val();
+        var SINo = $('#addSINo').val();
+        var SIFrom = $('#addSIFrom').val();
+        var SITo = $('#addSITo').val();
+
+        var status = true;
+
+        if (RegNo == null || RegNo == "") {
+            toastr.warning("Registration Number Cannot Be Empty");
+            status = false;
+        }
+        if (FirstName == null || FirstName == "") {
+            toastr.warning("First Name Cannot Be Empty");
+            status = false;
+        }
+        if (LastName == null || LastName == "") {
+            toastr.warning("Last Name Cannot Be Empty");
+            status = false;
+        }
+        if (Username_member == null || Username_member == "") {
+            toastr.warning("Username Cannot Be Empty");
+            status = false;
+        }
+        if (Password == null || Password == "") {
+            toastr.warning("Password Cannot Be Empty");
+            status = false;
+        }
+        if (Email == null || Email == "") {
+            toastr.warning("Email Cannot Be Empty");
+            status = false;
+        }
+        if (Address == null || Address == "") {
+            toastr.warning("Address Cannot Be Empty");
+            status = false;
+        }
+        if (Phone == null || Phone == "") {
+            toastr.warning("Phone Cannot Be Empty");
+            status = false;
+        }
+        if (IdentityType == null || IdentityType == "") {
+            toastr.warning("Identity Type Cannot Be Empty");
+            status = false;
+        }
+        if (IdentityNo == null || IdentityNo == "") {
+            toastr.warning("Identity No Type Cannot Be Empty");
+            status = false;
+        }
+        if (SINo == null || SINo == "") {
+            toastr.warning("Safety Induction No Cannot Be Empty");
+            status = false;
+        }
+        if (SIFrom == null || SIFrom == "") {
+            toastr.warning("Safety Induction From Cannot Be Empty");
+            status = false;
+        }
+        if (SITo == null || SITo == "") {
+            toastr.warning("Safety Induction To Cannot Be Empty");
+            status = false;
+        }
+
+        if (status == false) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: 'WP03008/Insert',
+            async: false,
+            data: {
+                RegNo: RegNo
+                , FirstName: FirstName
+                , LastName: LastName
+                , Username_member: Username_member
+                , Password: Password
+                , Email: Email
+                , Address: Address
+                , Phone: Phone
+                , IdentityType: IdentityType
+                , IdentityNo: IdentityNo
+                , SINo: SINo
+                , SIFrom: SIFrom
+                , SITo: SITo
+            }
+            , success: function (data) {
+                if (data.sts == "TRUE") {
+                    toastr.success("Data Has Been Save Successfuly");
+                }
+                else {
+                    toastr.warning(data.message);
+                    return;
+                }
+                back();
+            }
+        });
+
+    }
+
+    //tombol Edit
+
+    $('#btn_edit').on('click', function () {
+        var ID = $('#editID');
+        var RegNo = $('#ediRegNo');
+        var FirstName = $('#ediFirstName');
+        var LastName = $('#ediLastName');
+        var Username_member = $('#ediUsername');
+        var Email = $('#ediEmail');
+        var Address = $('#ediAddress');
+        var Phone = $('#ediPhone');
+        var IdentityType = $('#ediIdentityType');
+        var IdentityNo = $('#ediIdentityNo');
+        var SINo = $('#ediSINo');
+        var SIFrom = $('#ediSIFrom');
+        var SITo = $('#ediSITo');
+
+        var Var = "";
+        var Send_Var = "";
+        var Send_Var = "";
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                Var = "";
+                Var = Var + $(this).val();
+                Send_Var = Var.split(',');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Edit',
+            async: false,
+            data: {
+                Id: Send_Var[0],
+                RegNo: Send_Var[1],
+                FirstName: Send_Var[2],
+                LastName: Send_Var[3],
+                Username_member: Send_Var[4],
+                Email: Send_Var[5],
+                Address: Send_Var[6],
+                Phone: Send_Var[7],
+                IdentityType: Send_Var[8],
+                IdentityNo: Send_Var[9],
+                SINo: Send_Var[10],
+                SIFrom: Send_Var[11],
+                SITo: Send_Var[12]
+            },
+            success: function (data) {
+                $('#main-data').html(data);
+            }
+        });
+
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function Update() {
+        var ID = $('#editID').val();
+        var RegNo = $('#editRegNo').val();
+        var FirstName = $('#editFirstName').val();
+        var LastName = $('#editLastName').val();
+        var Username_member = $('#editUsername').val();
+        var Email = $('#editEmail').val();
+        var Address = $('#editAddress').val();
+        var Phone = $('#editPhone').val();
+        var IdentityType = $('#editIdentityType').val();
+        var IdentityNo = $('#editIdentityNo').val();
+        var SINo = $('#editSINo').val();
+        var SIFrom = $('#editSIFrom').val();
+        var SITo = $('#editSITo').val();
+
+        var Send_Var = ID + "," + RegNo + "," + FirstName + "," + LastName + "," + Username_member + "," + Email + "," + Address + "," + Phone + "," + IdentityType + "," + IdentityNo + "," + SINo + "," + SIFrom + "," + SITo;
+
+        if (RegNo == null || RegNo == "") {
+            toastr.warning("Registration Number Cannot Be Empty");
+            return;
+        }
+        if (FirstName == null || FirstName == "") {
+            toastr.warning("First Name Cannot Be Empty");
+            return;
+        }
+        if (LastName == null || LastName == "") {
+            toastr.warning("Last Name Cannot Be Empty");
+            return;
+        }
+        if (Username_member == null || Username_member == "") {
+            toastr.warning("Username Cannot Be Empty");
+            return;
+        }
+        if (Email == null || Email == "") {
+            toastr.warning("Email Cannot Be Empty");
+            return;
+        }
+        if (Address == null || Address == "") {
+            toastr.warning("Address Cannot Be Empty");
+            return;
+        }
+        if (Phone == null || Phone == "") {
+            toastr.warning("Phone Cannot Be Empty");
+            return;
+        }
+        if (IdentityType == null || IdentityType == "") {
+            toastr.warning("Identity Type Cannot Be Empty");
+            return;
+        }
+        if (IdentityNo == null || IdentityNo == "") {
+            toastr.warning("Identity No Cannot Be Empty");
+            return;
+        }
+        if (SINo == null || SINo == "") {
+            toastr.warning("Safety Induction No Cannot Be Empty");
+            return;
+        }
+        if (SIFrom == null || SIFrom == "") {
+            toastr.warning("Safety Induction From Cannot Be Empty");
+            return;
+        }
+        if (SITo == null || SITo == "") {
+            toastr.warning("Safety Induction To Cannot Be Empty");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: 'WP03008/Update',
+            async: false,
+            data: {
+                DATA: Send_Var
+            },
+            success: function (data) {
+                console.log(Var);
+                if (data.sts == "TRUE") {
+                    toastr.success(data.message);
+                    cancel_edit();
+                }
+                else {
+                    toastr.warning(data.message);
+                }
+                $("#PopupForm_EditConfirm").modal('hide');
+
+                back();
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP03008/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#searchRegNo').val("");
+        $('#searchIdentityNo').val("");
+        $('#searchUserName').val("");
+        $('#searchEmail').val("");
+
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+                display: 10,
+                RegNo: "",
+                IdentityNo: "",
+                UserName: "",
+                Email: ""
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+    function searchData(page, size) {
+        var RegNo = $('#searchRegNo').val();
+        var IdentityNo = $('#searchIdentityNo').val();
+        var UserName = $('#searchUserName').val();
+        var Email = $('#searchEmail').val();
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "POST",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                RegNo: RegNo,
+                IdentityNo: IdentityNo,
+                UserName: UserName,
+                Email: Email
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // ceklist per data
+    function cek_perdata() {
+        $("input[name='checkdata[]']").on("click", function () {
+            if ($(this).is(':checked')) {
+                $('#btn_Delete').prop('disabled', false);
+                total_check = $('.grid-checkbox:checkbox:checked').length;
+                if (total_check == 1) {
+                    $('#btn_edit').prop('disabled', false);
+                }
+
+                Var = "";
+
+                $("input[name='checkdata[]']").each(function () {
+                    if ($(this).is(':checked')) {
+                        Var = Var + $(this).val();
+                    }
+                });
+
+            }
+            else {
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+
+                $("input[name='time_unit_data[]']").prop('disabled', true);
+                $("input[name='time_value_data[]']").prop('disabled', true);
+                $("input[name='exec_time_data[]']").prop('disabled', true);
+                $("input[name='status_data[]']").prop('disabled', true);
+
+                $("button[name='btnConfirmEditData[]']").prop('disabled', true);
+                $("button[name='btncloselookup[]']").prop('disabled', true);
+            }
+        });
+    }
+
+    // ceklist all data dan scroll
+    function scroll_and_checkbox() {
+        $("#tScrollBody").scroll(function () {
+            $("#tScrollHead").scrollLeft($("#tScrollBody").scrollLeft());
+        });
+
+
+        $("#checkall").click(function () {
+            if ($("#checkall").is(":checked")) {
+                $(".grid-checkbox").prop('checked', true);
+                $('#btn_Delete').prop('disabled', false);
+                $('#btn_edit').prop('disabled', true);
+            }
+            else {
+                $(".grid-checkbox").prop('checked', false);
+                $('#btn_Delete').prop('disabled', true);
+                $('#btn_edit').prop('disabled', true);
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,71 @@
+﻿@using AI070.Models;
+@using AI070.Models.Shared;
+@using AI070.Models.DISA090002Master;
+@{
+
+}
+
+<style>
+    input[type="file"] {
+        /*position: absolute;*/
+        margin-top: 0px;
+        /*margin-left: 150px;*/
+        font-size: 25px;
+        color: #b8b8b8;
+        /*position: absolute;
+        z-index: -1;
+        left: 8px;
+        font-size: 17px;
+        color: #b8b8b8;*/
+    }
+    /*input[type=checkbox] {*/
+        /*visibility: hidden;*/
+        /*margin-top: 5px;
+        height: 20px;
+        width: 20px;
+        border: 1px solid;
+        cursor: pointer;
+    }*/
+    .button-wrap {
+        position: relative;
+    }
+
+    .button-upload {
+        display: inline-block;
+        padding: 10px 18px;
+        /*margin-left: 150px;*/
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: #8ebf42;
+        font-size: 16px;
+        color: #fff;
+    }
+    .label-check-all {
+        margin-left: 400px;
+        font-size: 30px;
+        font-family: Perpetua;
+        color: darkslategray;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-11" style="margin-top: -13px; margin-left: 10px;">
+        <label class="control-label text-muted"><h2>@ViewData["Title"]</h2></label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-xs-12 col-sm-12 col-md-5 text-left" style="margin-top:0px; width:100%;">
+                    <p style="margin-left: 0px; margin-bottom:-10px">
+                        <label style="font-size:20px;">Select File: </label><br />
+                        <input type="file" onchange="" accept="media_type" id="addNamaFile" style="margin-left: 0px; border: 1px solid; padding-top:2px; padding-bottom:5px; padding-left: 5px;" />
+                        <button onclick="distribusi_check()" type="button" class="btn btn-primary btn-xs" id="btn_distribusi" style="width: 120px; height: 45px; margin-top:-70px; margin-left:505px"><i class="fa fa-send-o"></i> Distribute </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

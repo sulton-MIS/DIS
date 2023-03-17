@@ -1,0 +1,353 @@
+﻿@*WP03003 - Manage Question*@
+
+<script>
+	var SITE_URL = window.location.href + "/";
+	var subjectId = $('#listExamSubject').val();
+
+    $(document).ready(function () {
+        $('#btn_Delete').prop('disabled', true);
+        $('#btn_edit').prop('disabled', true);
+        $('#btn_clear').prop('disabled', true);
+
+        $('#searchStatus').on('change', function () {
+            if (this.value == 'Other') {
+                $('#otherStatus').show();
+            } else {
+                $('#otherStatus').hide();
+            }
+        });
+
+        //OnSearch(1);
+
+	});
+
+
+
+    // tombol Add Confirm
+    function addDataConfirm() {
+        $('#PopupForm_AddNewConfirm').modal();
+	}
+
+	function subject_OnChange(id) {
+        if (id == "" || id == 0) {
+			$('#btn_edit').prop('disabled', true);
+			subjectId = 0;
+		} else {
+			$('#btn_edit').prop('disabled', false);
+			subjectId = parseInt(id);
+		}
+	}
+
+    //tombol Edit
+
+	$('#btn_edit').on('click', function () {
+
+        window.IdSubject = $('#listExamSubject').val();
+        location.href = SITE_URL + "Edit?id=" + $('#listExamSubject').val();
+    });
+
+    function cancel_edit() {
+        var ID = $('#EditID').val();
+        $('#edit_data').hide();
+        $('.row-' + ID).show();
+    }
+
+    //EditDataConfirm
+    function EditDataConfirm() {
+        $('#PopupForm_EditConfirm').modal();
+    }
+
+    function updateData() {
+        $("input[name='checkdata[]']").each(function () {
+            if ($(this).is(':checked')) {
+                var ID = $('#EditID').val();
+
+                var TITLE = $('#EditTITLE').val();
+                var PASSING_SCORE_REQUIREMENT = $('#EditPASSING_SCORE_REQUIREMENT').val();
+                var EXAM_DURATION = $('#EditEXAM_DURATION').val();
+                var DATE_EXAM_PERIOD_START = $('#EditDATE_EXAM_PERIOD_START').val();
+                var DATE_EXAM_PERIOD_END = $('#EditDATE_EXAM_PERIOD_END').val();
+                var REMEDIAL = $('#EditREMEDIAL_input').val();
+                var EXAM_TYPE = $('#EditEXAM_TYPE').val();
+                var TOTAL_PUBLISHED = $('#EditTOTAL_PUBLISHED').val();
+                var IS_PUBLISHED = $('#EditIS_PUBLISHED').val();
+
+                var Send_Var = ID + "," + TITLE + "," + PASSING_SCORE_REQUIREMENT + "," + EXAM_DURATION + "," + DATE_EXAM_PERIOD_START + "," + DATE_EXAM_PERIOD_END + "," + REMEDIAL + "," + EXAM_TYPE + "," + TOTAL_PUBLISHED + "," + IS_PUBLISHED;
+
+                if (TITLE == null || TITLE == "") {
+                    toastr.warning("TITLE Cannot Be Empty");
+                    return;
+                }
+
+                if (PASSING_SCORE_REQUIREMENT == null || PASSING_SCORE_REQUIREMENT == "") {
+                    toastr.warning("PASSING SCORE REQUIREMENT Cannot Be Empty");
+                    return;
+                }
+
+                if (EXAM_DURATION == null || EXAM_DURATION == "") {
+                    toastr.warning("EXAM DURATION Cannot Be Empty");
+                    return;
+                }
+
+                if (DATE_EXAM_PERIOD_START == null || DATE_EXAM_PERIOD_START == "") {
+                    toastr.warning("DATE EXAM PERIOD START Cannot Be Empty");
+                    return;
+                }
+
+                if (DATE_EXAM_PERIOD_END == null || DATE_EXAM_PERIOD_END == "") {
+                    toastr.warning("DATE EXAM PERIOD END Cannot Be Empty");
+                    return;
+                }
+
+                if (REMEDIAL == null || REMEDIAL == "") {
+                    toastr.warning("REMEDIAL Cannot Be Empty");
+                    return;
+                }
+
+                if (EXAM_TYPE == null || EXAM_TYPE == "") {
+                    toastr.warning("EXAM TYPE Cannot Be Empty");
+                    return;
+                }
+
+                if (TOTAL_PUBLISHED == null || TOTAL_PUBLISHED == "") {
+                    toastr.warning("TOTAL PUBLISHED Cannot Be Empty");
+                    return;
+                }
+
+                if (IS_PUBLISHED == null || IS_PUBLISHED == "") {
+                    toastr.warning("IS PUBLISHED Cannot Be Empty");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: 'WP03003/Update_Data',
+                    async: false,
+                    data: {
+                        DATA: Send_Var
+                    },
+                    success: function (data) {
+                        console.log(Var);
+                        if (data.sts == "TRUE") {
+                            toastr.success(data.message);
+                            cancel_edit();
+                        }
+                        else {
+                            toastr.warning(data.message);
+                        }
+                        $("#PopupForm_EditConfirm").modal('hide');
+
+                        OnSearch(1);
+                        //xxx
+                    }
+                });
+            }
+        });
+
+    }
+
+    //tombol Delete
+    $("#btn_Delete").on("click", function () {
+        $('#Confirmation_Delete_Popup').modal();
+    });
+
+    function delete_data() {
+        var chk = $("input[name='checkdata[]']:checked").length;
+        //alert('hai >> ' + chk);
+
+        if (chk == 0) {
+            toastr.warning('Select One or More record to Delete');
+            //toastr.warning('Select One or More record to delete.');
+        }
+        else {
+            var Var = "";
+            var Send_Var = "";
+            $("input[name='checkdata[]']").each(function () {
+                if ($(this).is(':checked')) {
+                    Var = "";
+                    Var = Var + $(this).val();
+                    if (Var != '') {
+                        Send_Var = Send_Var + Var.split(',')[0] + ",";
+                    } else {
+                        Send_Var = Send_Var + "," + Var.split(',')[0];
+                    }
+
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'WP03003/Delete_Data',
+                async: false,
+                data: {
+                    DATA: Send_Var
+                },
+                success: function (data) {
+                    if (data.sts == "TRUE") {
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.warning(data.message);
+                    }
+                    $("#Confirmation_Delete_Popup").modal('hide');
+
+                    OnSearch(1);
+                    //xxx
+                }
+            });
+        }
+    }
+
+    //tombol clear
+    function clear_search() {
+        $('#listExamSubject').val(0);
+		//$('#listQuestion').val("");
+
+        $('#btn_edit').prop('disabled', true);
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: 1,
+				display: 10,
+				subjectId:99999999
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                    $('#btn_edit').prop('disabled', true);
+                    $('#btn_Delete').prop('disabled', true);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    // tombol search
+    $("#btn_search").on("click", function () {
+        OnSearch(1);
+    });
+
+    // tombol new
+    $("#btn_new").on("click", function () {
+
+        //$('#addID_TB_R_LEARN_EXAM_SUBJECT').;
+
+        $('#addID_TB_R_LEARN_EXAM_SUBJECT').val('');
+        $('#addID_TB_M_LEARN_QUESTION').val('');
+
+        $('#modalForm').modal();
+        $('#btncloselookup').on("click", function () {
+            $('#tambah_data').hide();
+        });
+	});
+
+    // tombol pencarian data
+    function OnSearch(page) {
+        searchData(page, $('#paging').val());
+
+        $('#btn_download').prop('disabled', false);
+        $('#btn_clear').prop('disabled', false);
+    }
+
+    // proses pencarian data
+	function searchData(page, size) {
+		var ID_TB_R_LEARN_EXAM_SUBJECT = $('#listExamSubject').val();
+		//var ID_TB_M_LEARN_QUESTION = $('#listQuestion').val();
+
+		if (ID_TB_R_LEARN_EXAM_SUBJECT == "") {
+            ID_TB_R_LEARN_EXAM_SUBJECT = 0
+		}
+
+  //      if (ID_TB_M_LEARN_QUESTION == "") {
+  //          ID_TB_M_LEARN_QUESTION = 0
+		//}
+
+        if (status == 'Other') {
+            status = $('#otherStatus').val();
+        }
+
+        Last_Record_Per_Page = $("#paging").val();
+        $.ajax({
+            type: "GET",
+            url: SITE_URL + 'Search_Data',
+            async: false,
+            data: {
+                start: page,
+                display: size,
+                subjectId
+            },
+            success: function (data) {
+                $("#GridTable").html(data);
+                $("#paging").val(Last_Record_Per_Page);
+                if ($('#cntPage').val() == "1") {
+                    $('#btn_clear').prop('disabled', false);
+                } else {
+                    $('#btn_clear').prop('disabled', false);
+                }
+
+                scroll_and_checkbox();
+                cek_perdata();
+            }
+        });
+    }
+
+    function getDetailExamSubject(form_type, id) {
+        
+        $.ajax({
+            url: SITE_URL + 'GetDetailExamSubject',
+            data: {
+                ID: id
+            },
+            dataType: 'JSON',
+            success: function (e) {
+                $('#addTITLE').val(e.message[0].TITLE);
+                $('#addPASSING_SCORE_REQUIREMENT').val(e.message[0].PASSING_SCORE_REQUIREMENT);
+                $('#addEXAM_DURATION').val(e.message[0].EXAM_DURATION);
+                $('#addDATE_EXAM_PERIOD_START').val(e.message[0].DATE_START);
+                $('#addDATE_EXAM_PERIOD_END').val(e.message[0].DATE_END);
+                $('#addREMEDIAL').val(e.message[0].REMEDIAL);
+                $('#addEXAM_TYPE').val(e.message[0].EXAM_TYPE);
+                $('#addTOTAL_PUBLISHED').val(e.message[0].TOTAL_PUBLISHED);
+                $('#addIS_PUBLISHED').val(e.message[0].IS_PUBLISHED);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    function getDetailQuestionBank(form_type, id) {
+        
+        $.ajax({
+            url: SITE_URL + 'GetDetailQuestionBank',
+            data: {
+                ID: id
+            },
+            dataType: 'JSON',
+            success: function (e) {
+                $('#addQUESTION').val(e.message[0].QUESTION);
+                $('#addANSWER_CHOICE_A').val(e.message[0].ANSWER_CHOICE_A);
+                $('#addANSWER_CHOICE_B').val(e.message[0].ANSWER_CHOICE_B);
+                $('#addANSWER_CHOICE_C').val(e.message[0].ANSWER_CHOICE_C);
+                $('#addANSWER_CHOICE_D').val(e.message[0].ANSWER_CHOICE_D);
+                $('#addANSWER_CHOICE_E').val(e.message[0].ANSWER_CHOICE_E);
+                $('#addANSWER_KEY').val(e.message[0].ANSWER_KEY);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+
+</script>

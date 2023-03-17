@@ -1,0 +1,243 @@
+﻿
+@using AI070.Models;
+@using AI070.Models.WP03001Master;
+@{
+    List<CategoryModel> Category = (List<CategoryModel>)ViewData["CATEGORY"];
+}
+
+<!--form add new data-->
+<div id="modalForm" class="modal fade" style="overflow-y:auto !important;">
+    <div class="modal-dialog modal-md" style="width:1025px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Add New Question</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">QUESTION</label>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addQUESTION" class="form-control" placeholder=""></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label class="required">CATEGORY</label>
+                                <select id="addCategory" required class="form-control">
+                                    <option value=""></option>
+                                    @{
+                                        if (Category != null)
+                                        {
+                                            if (Category.Count() > 0)
+                                            {
+                                                foreach (CategoryModel item in Category)
+                                                {
+                                                    <option value="@item.ID">@item.CATEGORY</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label>IMAGE FILE</label>
+                                <div class="custom-file">
+                                    @*<input type="file" class="custom-file-input" id="addIMAGE" aria-describedby="addIMAGE">*@
+                                    <form id="form1" runat="server">
+                                        @*<p>Select JPEG file to upload (Max total size 500KB)</p>*@
+                                        <label>Select files to upload (Max total size <b id="editLabelMaxUpload">100 KB</b>)</label>
+                                        <input type='file' id="imgInp" accept="image/png, .jpeg, .jpg, image/gif" />
+                                        <img id="blah" src="#" style="width: 450px" alt=" " />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE A</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKey", "A") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addANSWER_CHOICE_A" class="form-control" placeholder=""></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE B</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKey", "B") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addANSWER_CHOICE_B" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE C</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKey", "C") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addANSWER_CHOICE_C" class="form-control" placeholder=""></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE D</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKey", "D") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addANSWER_CHOICE_D" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE E</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKey", "E") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="addANSWER_CHOICE_E" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="add_check()" id="btn_save" class="btn btn-primary btn-sm" style="width: 80px;"><i class="fa fa-check"></i> SAVE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--form edit data-->
+<div id="modalEditForm" class="modal fade" style="overflow-y:auto !important;">
+    <div class="modal-dialog modal-md" style="width:1025px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                <h4 class="modal-title" id="modalForm-title">Edit Question</h4>
+            </div>
+
+            <div class="modal-body">
+                    
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <!--ID Value Hide-->
+                        <input style="display:none" type="text" maxlength="50" id="EditID" class="form-control" placeholder="">
+
+                        <label class="required">QUESTION</label>
+                        <textarea type="text" maxlength="20" id="editQUESTION" class="form-control" placeholder=""></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label class="required">CATEGORY</label>
+                                <select id="editCategory" required class="form-control">
+                                    <option value=""></option>
+                                    @{
+                                        if (Category != null)
+                                        {
+                                            if (Category.Count() > 0)
+                                            {
+                                                foreach (CategoryModel item in Category)
+                                                {
+                                                    <option value="@item.ID">@item.CATEGORY</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label>IMAGE FILE</label>
+                                <div class="custom-file">
+                                    @*<form name="foo" id="form2" runat="server" enctype="multipart/form-data">
+                                        <p>Select JPEG file to upload (Max total size 500KB)</p>
+                                        <input type='file' id="imgInpEdit" value="d:/passwords.txt" />
+                                        <img id="editblah" src="#" style="width: 450px" alt=" " />
+                                    </form>*@
+                                    <label>Select files to upload (Max total size <b id="editLabelMaxUpload">100 KB</b>)</label>
+                                    @*<input style="display:none" id="editFoto" onchange="change_image('edit',this)" type="file" /><br />*@
+                                    <input style="display:none" id="imgInpEdit" onchange="change_image('edit',this)" accept="image/png, .jpeg, .jpg, image/gif" type="file" /><br />
+                                    <button onclick="$('#imgInpEdit').click()" id="editFakeFoto" style="color:black">Choose File</button>  <label id="editFileName"></label>
+                                    <img onerror="this.style.display='none'" id="editblah" style="width: 100%; height:250px" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE A</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKeyEdit", "A") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="editANSWER_CHOICE_A" class="form-control" placeholder=""></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE B</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKeyEdit", "B") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="editANSWER_CHOICE_B" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE C</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKeyEdit", "C") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="editANSWER_CHOICE_C" class="form-control" placeholder=""></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE D</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKeyEdit", "D") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="editANSWER_CHOICE_D" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="label-question">
+                            <label class="required">ANSWER CHOICE E</label>
+                            <div style="color:blue">Please choose the right answer  >> [ @Html.RadioButton("AnswereKeyEdit", "E") ]<p style="color:red; display:inline; font-weight: bold;">*</p></div>
+                        </div>
+                        <textarea type="text" maxlength="20" id="editANSWER_CHOICE_E" class="form-control" placeholder=""></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="edit_check()" id="btn_Confirm_Delete" class="btn btn-primary btn-sm" style="width: 85px;"><i class="fa fa-check"></i> UPDATE</button>
+                <button type="button" id="btnNo" class="btn btn-danger btn-sm" style="width: 80px;" data-dismiss="modal"><i class="fa fa-times"></i>  CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+
+    .label-question {
+        display: inline;
+        padding-left: 4px;
+    }
+
+    /*label {
+        font-weight: bold;
+        color: black;
+        padding-right: 12px;
+    }*/
+
+    .row {
+        padding-bottom: 12px;
+    }
+</style>

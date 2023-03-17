@@ -1,0 +1,80 @@
+﻿ 
+@{ 
+    List<AI070.Models.App> App = (List<AI070.Models.App>)ViewData["ListFunction"];
+    List<string> list = (List<string>)ViewData["ListDate"];
+    string from = "";
+    string to = "";
+    
+    if ((list!=null)&&(list.Count==2))
+    {
+        from = list[0].Substring(3);
+        to = list[1].Substring(3);
+    }
+    
+}
+
+<form role="form" class="form-horizontal" id="searchForm">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group form-group-xs">
+                <label class="col-xs-4 col-sm-6 col-md-5 col-lg-5 control-label">Period from</label>
+                <div class="col-xs-8 col-sm-6 col-md-7">
+                    <input type="text" class="form-control _datepicker" id="txtappperiodefrom" value="@from"/>
+                </div>
+            </div> 
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4"> 
+            <div class="form-group form-group-xs">
+                <label class="col-xs-4 col-sm-6 col-md-5 col-lg-5 control-label">Period to</label>
+                <div class="col-xs-8 col-sm-6 col-md-7">
+                    <input type="text" class="form-control _datepicker" id="txtappperiodeto"  value="@to"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4"> 
+            <div class="form-group form-group-xs">
+                <label class="col-xs-4 col-sm-6 col-md-4 col-lg-3 control-label">Application</label>
+                <div class="col-xs-8 col-sm-6 col-md-8 col-lg-9"> 
+                    <select id="txtappsearch" class="form-control" >
+                        @if (App != null)
+                        {
+                            <option value="">All</option>
+                            foreach (AI070.Models.App f in App)
+                            {
+                                <option value="@f.Id">@f.Name</option> 
+                            } 
+                        }
+                    </select> 
+                </div>
+            </div>
+        </div> 
+    </div>
+    <div class="row"> 
+        <div class="col-xs-12 col-sm-6 col-md-4"> 
+            <div class="form-group form-group-xs">
+                <label class="col-xs-4 col-sm-6 col-md-5 col-lg-5 control-label">Function name</label>
+                <div class="col-xs-8 col-sm-6 col-md-7">
+                    <input type="text" class="form-control " id="txtfunction"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4"> 
+            <div class="form-group form-group-xs">
+                <label class="col-xs-4 col-sm-6 col-md-5 col-lg-5 control-label">User name</label>
+                <div class="col-xs-8 col-sm-6 col-md-7">
+                    <input type="text" class="form-control _datepicker" id="txtusername" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4"> 
+            <div class="form-group form-group-xs text-right">
+                <div class="col-xs-12">
+                    <button class="btn btn-primary btn-xs" id="btnSearch" type="button" data-loading-text="<i class='glyphicon-refresh-animate glyphicon glyphicon-refresh'></i>"><i class="fa fa-search"></i> Search</button>
+                    <button class="btn btn-default btn-xs" id="btnClearSearch" type="button">Clear</button>
+                    <button id="btnDownload" class="btn btn-warning btn-xs" data-loading-text="<i class='glyphicon-refresh-animate glyphicon glyphicon-refresh'></i> login">Download</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+</form>
+<div class="_line-br"></div>

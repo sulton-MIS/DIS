@@ -1,0 +1,81 @@
+﻿@using AI070.Models.WP03006;
+
+@{
+    Layout = null;
+}
+
+@{
+    Employee employee = (Employee)ViewData["employee"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sertifikat</title>
+    <style>
+        .container {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .container img {
+
+        }
+
+		.center {
+			position: absolute;
+			left: 0;
+			top: 20%;
+			width: 100%;
+			text-align: center;
+		}
+
+		img {
+			width: 100%;
+		}
+
+		h1 {
+			font-size: 100px;
+			color: #5c0000;
+			padding: 0px;
+			margin: 0px;
+		}
+
+        h2 {
+            font-size: 70px;
+            color: #5c0000;
+            padding-top: 30px;
+            padding-bottom: 2px;
+            margin: 0px;
+        }
+
+        h3 {
+            font-size: 35px;
+            color: #0c4800;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        p {
+            font-size: 25px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="~/Content/TemplateReport/CertifiedTemplate1.jpg" alt="Cinque Terre">
+        <div class="center">
+            <h1>SERTIFIKAT</h1>
+            <h3>Diberikan Kepada</h3>
+            <h2>@employee.Name</h2>
+            <h3>Atas Pencapaian Yang Dilakukan</h3>
+            <p>Dalam penyelenggaraan pelatihan untuk menunjang Industri 4.0</p>
+        </div>
+    </div>
+
+</body>
+</html>

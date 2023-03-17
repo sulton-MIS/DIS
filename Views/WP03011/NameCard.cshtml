@@ -1,0 +1,265 @@
+﻿@using AI070.Models.WP03011;
+@{
+    Layout = null;
+}
+
+@{ 
+	Employee employee = (Employee)ViewData["employee"];
+    byte[] qrCode = (byte[])ViewData["qrCode"];
+}
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>NameCard</title>
+
+        <style>
+
+            body {
+                margin: 0;
+            }
+
+            .body-employee-card {
+                padding: 0;
+                font-family: sans-serif;
+                border: solid 1px black;
+                border-radius: 5px;
+                max-height: 90mm;
+                max-width: 56mm;
+                margin: 0;
+                /*padding: 1mm;*/
+            }
+
+            .card-employee {
+                /*border: 2px dashed grey;*/
+                border-radius: 5%;
+                background: rgb(255,255,255);
+                background: linear-gradient(0deg, rgba(255,255,255,1) 14%, rgba(147,178,254,1) 36%, rgba(63,119,255,1) 75%, rgba(0,74,255,1) 100%);
+            }
+
+            .card-header {
+            }
+
+            .card-employee-header {
+                padding: 3.5mm;
+                background-color: #b40404;
+                text-align: center;
+                font-family: serif;
+            }
+
+            .card-employee-header2 {
+                background-color: black;
+                text-align: center;
+                color: white;
+                display: flex;
+            }
+
+            .card-employee-header-tittle {
+                color: white;
+                font-size: 4mm;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .card-employee-body {
+                height: 28mm;
+                padding: 1mm;
+            }
+
+            .contractor-tittle {
+                font-size: 2.5mm;
+                font-weight: 500;
+                width: 100%;
+                text-align: center;
+                display: block;
+                padding: 1mm;
+            }
+
+            .photo-contractor {
+                -webkit-box-shadow: 0.8mm 0.8mm 0.8mm 0px rgba(0,0,0,0.75);
+                -moz-box-shadow: 0.8mm 0.8mm 0.8mm 0px rgba(0,0,0,0.75);
+                box-shadow: 0.8mm 0.8mm 0.8mm 0px rgba(0,0,0,0.75);
+                width: 100%;
+                height: 26.5mm;
+            }
+
+            .label-detail {
+                font-size: 1.8mm;
+                color: black;
+                font-weight: bold;
+            }
+
+            .text-detail {
+                font-size: 1.8mm;
+                color: white;
+                font-weight: 700;
+            }
+
+            .text-exp {
+                margin: 0;
+                font-size: 2.5mm;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            hr {
+                margin: 1mm;
+            }
+
+            .qr-container {
+                margin-top: -0.5mm;
+            }
+
+            .toyota-image {
+                width: 100%;
+                height: auto;
+            }
+
+            hr {
+                margin: 0.5mm;
+            }
+
+            .qr-image {
+                width: 100%;
+                height: auto;
+                border-left: 1px solid lightgrey;
+            }
+
+            .footer-container {
+                text-align: center;
+                background: rgb(87,87,87);
+                background: linear-gradient(0deg, rgb(145, 144, 144) 20%, rgb(184, 182, 182) 50%, rgba(195,195,195,1) 75%, rgba(255,255,255,1) 100%);
+                font-size: 2.5mm;
+                color: red;
+                padding: 1.25mm;
+            }
+        </style>
+    </head>
+    <div class="body-employee-card">
+        <div class="card-employee">
+            <div class="card-employee-header">
+                <span class="card-employee-header-tittle">
+                    EMPLOYEE ID CARD
+                </span>
+            </div>
+            <div class="card-employee-header2">
+                <span class="contractor-tittle">
+                    CONTRACTOR
+                </span>
+            </div>
+            <div class="card-employee-body">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 48%">
+                            <img class="photo-contractor" src="~/Content/Upload/Foto/@(Request["regNumber"]).PNG" />
+                        </td>
+                        <td style="vertical-align: initial">
+                            <table style="margin-top:7%">
+                                <tr>
+                                    <td class="label-detail">Name:</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-detail">
+                                        @{ 
+                                            if(employee.Name != null)
+                                            {
+                                            <span>@employee.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Null</span>
+                                            }
+                                        }
+                                        
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="label-detail">Company:</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-detail">
+                                        @{
+                                            if (employee.Company != null)
+                                            {
+                                                <span>@employee.Company</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Null</span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="label-detail">No Safety:</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-detail">
+                                        @{
+                                            if (employee.SafetyNo != null)
+                                            {
+                                                <span>@employee.SafetyNo</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Null</span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="label-detail">NIK:</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-detail">
+                                        @{
+                                            if (employee.IdentityNo != null)
+                                            {
+                                                <span>@employee.IdentityNo</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Null</span>
+                                            }
+                                                                        }
+                                                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr />
+            <div class="text-exp">
+                @{
+                    if (employee.SafetyTo != null)
+                    {
+                        <span>Exp : @employee.SafetyTo.ToString("dd-MMM-yyyy")</span>
+                    }
+                    else
+                    {
+                        <span>Exp : Null</span>
+                    }
+                }
+            </div>
+            <hr />
+            <div class="qr-container">
+                <table style="padding:1.2mm">
+                    <tr>
+                        <td style="width:50%; padding:0.2mm">
+                            <img class="toyota-image" src="~/Content/Images/toyota.png" />
+                        </td>
+                        <td style="width: 50%">
+                            <img id="qr-image" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(qrCode))" class="qr-image" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="footer-container">
+                <b>WORK PERMIT</b>
+            </div>
+        </div>
+    </div>
+</html>
